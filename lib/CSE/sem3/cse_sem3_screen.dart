@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CSE/sem3/units.dart';  // Import the correct file for units
+import 'package:flutter_application_2/CIVIL/sem3/LSPE/lspe.dart';
+import 'package:flutter_application_2/CSE/sem3/AP/ap.dart';
+import 'package:flutter_application_2/CSE/sem3/COA/coa.dart';
+import 'package:flutter_application_2/CSE/sem3/DSA/dsa.dart';
+import 'package:flutter_application_2/CSE/sem3/LSPE/lspe.dart';
+import 'package:flutter_application_2/CSE/sem3/PDE/pde-copy.dart';
+import 'package:flutter_application_2/CSE/sem3/PDE/pde.dart';
+import 'package:flutter_application_2/CSE/sem3/PSO/pso.dart';
+import 'package:flutter_application_2/CSE/sem3/units.dart'; // Import the correct file for units
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
 class CSESem3Screen extends StatefulWidget {
@@ -33,33 +41,92 @@ class _CSESem3ScreenState extends State<CSESem3Screen> {
     _subjects = {
       'Notes & Books': [
         {
-          'name': 'Data Management System',
-          'description': 'DBMS is a software system used to store, retrieve, and...',
-          'image': 'assets/s3.png',
-          'page': () => ComputerNetworksPage(fullName: widget.fullName),
+          'name':
+              'Advanced Linear Algebra, Complex Analysis and Partial Differential Equations',
+          'description':
+              'This module covers advanced topics in linear algebra, complex analysis, and partial differential equations...',
+          'image': 'assets/s1.png',
+          'page': () => Pde(fullName: widget.fullName),
         },
         {
-          'name': 'Design Thinking',
-          'description': 'Design thinking is a process for solving problems by pr...',
-          'image': 'assets/s2.png',
-          'page': () => ComputerNetworksPage(fullName: widget.fullName),
+          'name': 'Probability, Statistics and Optimization',
+          'description':
+              'This module delves into probability theory, statistical methods, and optimization techniques...',
+          'image': 'assets/s4.png',
+          'page': () => Pso(fullName: widget.fullName),
         },
-        // Add more subjects as needed
+        {
+          'name': 'Advanced Programming',
+          'description':
+              'This module focuses on advanced programming concepts and techniques...',
+          'image': 'assets/s5.png',
+          'page': () => Ap(fullName: widget.fullName),
+        },
+        {
+          'name': 'Data Structures and Algorithms',
+          'description':
+              'This module covers the fundamental concepts of data structures and algorithms...',
+          'image': 'assets/s6.png',
+          'page': () => Dsa(fullName: widget.fullName),
+        },
+        {
+          'name': 'Computer Organization and Architecture',
+          'description':
+              'This module explains the basics of computer organization and architecture...',
+          'image': 'assets/s7.png',
+          'page': () => Coa(fullName: widget.fullName),
+        },
+        {
+          'name': 'Life Skills and Professional Ethics',
+          'description':
+              'This module covers essential life skills and professional ethics...',
+          'image': 'assets/s8.png',
+          'page': () => lspe(fullName: widget.fullName),
+        },
       ],
       'PYQs': [
         {
-          'name': 'Data Management System PYQs',
-          'description': 'Previous Year Questions for DBMS...',
-          'image': 'assets/s3.png',
-          'page': () => ComputerNetworksPage(fullName: widget.fullName),
+          'name':
+              'Advanced Linear Algebra, Complex Analysis and Partial Differential Equations PYQs',
+          'description':
+              'Previous Year Questions for Advanced Linear Algebra, Complex Analysis, and Partial Differential Equations...',
+          'image': 'assets/s1.png',
+          'page': () => Pde(fullName: widget.fullName),
         },
         {
-          'name': 'Design Thinking PYQs',
-          'description': 'Previous Year Questions for Design Thinking...',
-          'image': 'assets/s2.png',
-          'page': () => ComputerNetworksPage(fullName: widget.fullName),
+          'name': 'Probability, Statistics and Optimization PYQs',
+          'description':
+              'Previous Year Questions for Probability, Statistics, and Optimization...',
+          'image': 'assets/s4.png',
+          'page': () => Pso(fullName: widget.fullName),
         },
-        // Add more subjects as needed
+        {
+          'name': 'Advanced Programming PYQs',
+          'description': 'Previous Year Questions for Advanced Programming...',
+          'image': 'assets/s5.png',
+          'page': () => Ap(fullName: widget.fullName),
+        },
+        {
+          'name': 'Data Structures and Algorithms PYQs',
+          'description':
+              'Previous Year Questions for Data Structures and Algorithms...',
+          'image': 'assets/s6.png',
+          'page': () => Dsa(fullName: widget.fullName),
+        },
+        {
+          'name': 'Computer Organization and Architecture PYQs',
+          'description':
+              'Previous Year Questions for Computer Organization and Architecture...',
+          'image': 'assets/s7.png',
+          'page': () => Coa(fullName: widget.fullName),
+        },
+        {
+          'name': 'Life Skills and Professional Ethics PYQs',
+          'description':
+              'Previous Year Questions for Life Skills and Professional Ethics...',
+          'image': 'assets/s8.png',
+          'page': () => Lspe(fullName: widget.fullName),
+        },
       ],
     };
   }
@@ -82,7 +149,10 @@ class _CSESem3ScreenState extends State<CSESem3Screen> {
                     children: [
                       Text(
                         'Hey ${widget.fullName}',
-                        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                        style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
                       const Text(
                         'Select Subject',
@@ -109,7 +179,10 @@ class _CSESem3ScreenState extends State<CSESem3Screen> {
                       radius: 30,
                       child: Text(
                         widget.fullName[0].toUpperCase(),
-                        style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -130,7 +203,8 @@ class _CSESem3ScreenState extends State<CSESem3Screen> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 22),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 36.0, vertical: 22),
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
@@ -143,9 +217,11 @@ class _CSESem3ScreenState extends State<CSESem3Screen> {
                             _tabs.length,
                             (index) => Expanded(
                               child: GestureDetector(
-                                onTap: () => setState(() => _selectedIndex = index),
+                                onTap: () =>
+                                    setState(() => _selectedIndex = index),
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(vertical: 32),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 32),
                                   decoration: BoxDecoration(
                                     color: _selectedIndex == index
                                         ? Colors.black
@@ -170,17 +246,25 @@ class _CSESem3ScreenState extends State<CSESem3Screen> {
                         padding: const EdgeInsets.symmetric(horizontal: 36),
                         itemCount: _subjects[_tabs[_selectedIndex]]!.length,
                         itemBuilder: (context, index) {
-                          var subject = _subjects[_tabs[_selectedIndex]]![index];
+                          var subject =
+                              _subjects[_tabs[_selectedIndex]]![index];
                           return Card(
                             color: const Color.fromARGB(255, 58, 58, 58),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(32)),
                             child: ListTile(
                               contentPadding: const EdgeInsets.all(8),
                               leading: subject['image'] != null
-                                  ? Image.asset(subject['image'], width: 80, height: 80)
+                                  ? Image.asset(subject['image'],
+                                      width: 80, height: 80)
                                   : null,
-                              title: Text(subject['name'], style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                              subtitle: Text(subject['description'], style: const TextStyle(color: Colors.white70)),
+                              title: Text(subject['name'],
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold)),
+                              subtitle: Text(subject['description'],
+                                  style:
+                                      const TextStyle(color: Colors.white70)),
                               onTap: () {
                                 Navigator.push(
                                   context,
