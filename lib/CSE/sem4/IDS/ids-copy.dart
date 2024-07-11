@@ -2,37 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
 
-class Fa1 extends StatelessWidget {
+class Ids1 extends StatelessWidget {
   final String fullName; // Full name received as a parameter
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: Introduction to Book keeping and Accounting',
+      title: 'MODULE I: Introduction & Entity Relationship Model',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_1',
     ),
     UnitItem(
-      title: 'MODULE II: Financial Statements',
+      title: 'MODULE II: Relational Model and SQL DDL',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_2',
     ),
     UnitItem(
-      title: 'MODULE III: Financial Management and Functions',
+      title: 'MODULE III:  SQL DML and Physical Data Organization',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_3',
     ),
     UnitItem(
-      title: 'MODULE IV: Banking',
+      title: 'MODULE IV: Database Normalization',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_4',
     ),
     UnitItem(
-      title: 'MODULE V: Introduction to Budgeting and Auditing',
+      title: 'MODULE V: Transactions, Concurrency and Recovery, NoSQL, JDBC ',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_5',
     ),
   ];
 
-  Fa1({required this.fullName}); // Constructor accepting fullName
+  Ids1({required this.fullName}); // Constructor accepting fullName
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +65,7 @@ class Fa1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Calculus and Linear Algebra',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

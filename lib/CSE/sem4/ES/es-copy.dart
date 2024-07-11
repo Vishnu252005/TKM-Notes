@@ -1,38 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/EEE/sem4/ES/es-copy.dart';
 import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
 
-class Fa1 extends StatelessWidget {
+class Es1 extends StatelessWidget {
   final String fullName; // Full name received as a parameter
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: Introduction to Book keeping and Accounting',
+      title: 'MODULE I: Environment and Ecosystem',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_1',
     ),
     UnitItem(
-      title: 'MODULE II: Financial Statements',
+      title: 'MODULE II: Air and Noise pollution',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_2',
     ),
     UnitItem(
-      title: 'MODULE III: Financial Management and Functions',
+      title: 'MODULE III: Water and Wastewater',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_3',
     ),
     UnitItem(
-      title: 'MODULE IV: Banking',
+      title: 'MODULE IV: Solid and Hazardous Waste Management',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_4',
     ),
     UnitItem(
-      title: 'MODULE V: Introduction to Budgeting and Auditing',
+      title: 'MODULE V: Climate Action ',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_5',
     ),
   ];
 
-  Fa1({required this.fullName}); // Constructor accepting fullName
+  Es1({required this.fullName}); // Constructor accepting fullName
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +66,7 @@ class Fa1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Calculus and Linear Algebra',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
