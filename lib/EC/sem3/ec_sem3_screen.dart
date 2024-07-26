@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/EC/sem3/units.dart';  // Import the correct file for units
+import 'package:flutter_application_2/CSE/sem3/DSA/dsa.dart';
+import 'package:flutter_application_2/CSE/sem3/PDE/pde.dart';
+import 'package:flutter_application_2/EC/sem3/NT/nt.dart';
+import 'package:flutter_application_2/EC/sem3/SSC/ssc.dart';
+import 'package:flutter_application_2/EC/sem3/SSVIL/ssvil.dart';
+import 'package:flutter_application_2/EC/sem3/units.dart'; // Import the correct file for units
+import 'package:flutter_application_2/EEE/sem3/DELD/deld.dart';
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
 class ECSem3Screen extends StatefulWidget {
@@ -28,111 +34,93 @@ class _ECSem3ScreenState extends State<ECSem3Screen> {
 
   @override
   void initState() {
-  super.initState();
+    super.initState();
 
-  _subjects = {
-    'Notes & Books': [
-      {
-        'name': 'Calculus and Linear Algebra',
-        'description': 'Study of calculus and linear algebra including...',
-        'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry',
-        'description': 'Exploration of fundamental concepts in chemistry...',
-        'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Fundamentals of Electronics Engineering',
-        'description': 'Basics of electronics and electrical engineering...',
-        'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics',
-        'description': 'Fundamentals of engineering drawing and graphics...',
-        'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices',
-        'description': 'Introduction to various manufacturing processes...',
-        'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga',
-        'description': 'Physical education and well-being through sports and yoga...',
-        'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Basics of Electrical Engineering',
-        'description': 'Introduction to electrical engineering principles...',
-        'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Computer Aided Drafting and Modelling',
-        'description': 'Basics of computer-aided drafting and modelling...',
-        'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-    ],
-    'PYQs': [
-      {
-        'name': 'Calculus and Linear Algebra PYQs',
-        'description': 'Previous Year Questions for Calculus and Linear Algebra...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry PYQs',
-        'description': 'Previous Year Questions for Engineering Chemistry...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Fundamentals of Electronics Engineering PYQs',
-        'description': 'Previous Year Questions for Fundamentals of Electronics Engineering...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics PYQs',
-        'description': 'Previous Year Questions for Engineering Graphics...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices PYQs',
-        'description': 'Previous Year Questions for Manufacturing Practices...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga PYQs',
-        'description': 'Previous Year Questions for Sports and Yoga...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Basics of Electrical Engineering PYQs',
-        'description': 'Previous Year Questions for Basics of Electrical Engineering...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Computer Aided Drafting and Modelling PYQs',
-        'description': 'Previous Year Questions for Computer Aided Drafting and Modelling...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-    ],
-  };
-}
+    _subjects = {
+      'Notes & Books': [
+        {
+          'name':
+              'Advanced Linear Algebra, Complex Analysis and Partial Differential Equations',
+          'description': 'Study of calculus and linear algebra including...',
+          'image': 'assets/s3.png',
+          'page': () => Pde(fullName: widget.fullName),
+        },
+        {
+          'name': 'NETWORK THEORY',
+          'description': 'Exploration of fundamental concepts in chemistry...',
+          'image': 'assets/s3.png',
+          'page': () => Nt(fullName: widget.fullName),
+        },
+        {
+          'name': 'DIGITAL ELECTRONICS AND LOGIC DESIGN',
+          'description': 'Basics of electronics and electrical engineering...',
+          'image': 'assets/s3.png',
+          'page': () => Deld(fullName: widget.fullName),
+        },
+        {
+          'name': 'Data Structures and Algorithms',
+          'description': 'Fundamentals of engineering drawing and graphics...',
+          'image': 'assets/s3.png',
+          'page': () => Dsa(fullName: widget.fullName),
+        },
+        {
+          'name': 'SENSOR & SENSOR CIRCUITS',
+          'description': 'Introduction to various manufacturing processes...',
+          'image': 'assets/s3.png',
+          'page': () => Ssc(fullName: widget.fullName),
+        },
+        {
+          'name': 'System Simulation and Virtual Instrumentation Lab',
+          'description':
+              'Physical education and well-being through sports and yoga...',
+          'image': 'assets/s3.png',
+          'page': () => Ssvil(fullName: widget.fullName),
+        },
+      ],
+      'pyqs': [
+        {
+          'name':
+              'Advanced Linear Algebra, Complex Analysis and Partial Differential Equations PYQs',
+          'description':
+              'Previous Year Questions for Calculus and Linear Algebra...',
+          'image': 'assets/s2.png',
+          'page': () => Pde(fullName: widget.fullName),
+        },
+        {
+          'name': 'NETWORK THEORY PYQs',
+          'description': 'Previous Year Questions for Engineering Chemistry...',
+          'image': 'assets/s2.png',
+          'page': () => Nt(fullName: widget.fullName),
+        },
+        {
+          'name': 'DIGITAL ELECTRONICS AND LOGIC DESIGN PYQs',
+          'description':
+              'Previous Year Questions for Fundamentals of Electronics Engineering...',
+          'image': 'assets/s2.png',
+          'page': () => Deld(fullName: widget.fullName),
+        },
+        {
+          'name': 'Data Structures and Algorithms PYQs',
+          'description': 'Previous Year Questions for Engineering Graphics...',
+          'image': 'assets/s2.png',
+          'page': () => Dsa(fullName: widget.fullName),
+        },
+        {
+          'name': 'SENSOR & SENSOR CIRCUITS PYQs',
+          'description':
+              'Previous Year Questions for Manufacturing Practices...',
+          'image': 'assets/s2.png',
+          'page': () => Ssc(fullName: widget.fullName),
+        },
+        {
+          'name': 'System Simulation and Virtual Instrumentation Lab PYQs',
+          'description': 'Previous Year Questions for Sports and Yoga...',
+          'image': 'assets/s2.png',
+          'page': () => Ssvil(fullName: widget.fullName),
+        },
+      ],
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +140,10 @@ class _ECSem3ScreenState extends State<ECSem3Screen> {
                     children: [
                       Text(
                         'Hey ${widget.fullName}',
-                        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                        style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
                       const Text(
                         'Select Subject',
@@ -179,7 +170,10 @@ class _ECSem3ScreenState extends State<ECSem3Screen> {
                       radius: 30,
                       child: Text(
                         widget.fullName[0].toUpperCase(),
-                        style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -200,7 +194,8 @@ class _ECSem3ScreenState extends State<ECSem3Screen> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 22),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 36.0, vertical: 22),
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
@@ -213,9 +208,11 @@ class _ECSem3ScreenState extends State<ECSem3Screen> {
                             _tabs.length,
                             (index) => Expanded(
                               child: GestureDetector(
-                                onTap: () => setState(() => _selectedIndex = index),
+                                onTap: () =>
+                                    setState(() => _selectedIndex = index),
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(vertical: 32),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 32),
                                   decoration: BoxDecoration(
                                     color: _selectedIndex == index
                                         ? Colors.black
@@ -240,17 +237,25 @@ class _ECSem3ScreenState extends State<ECSem3Screen> {
                         padding: const EdgeInsets.symmetric(horizontal: 36),
                         itemCount: _subjects[_tabs[_selectedIndex]]!.length,
                         itemBuilder: (context, index) {
-                          var subject = _subjects[_tabs[_selectedIndex]]![index];
+                          var subject =
+                              _subjects[_tabs[_selectedIndex]]![index];
                           return Card(
                             color: const Color.fromARGB(255, 58, 58, 58),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(32)),
                             child: ListTile(
                               contentPadding: const EdgeInsets.all(8),
                               leading: subject['image'] != null
-                                  ? Image.asset(subject['image'], width: 80, height: 80)
+                                  ? Image.asset(subject['image'],
+                                      width: 80, height: 80)
                                   : null,
-                              title: Text(subject['name'], style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                              subtitle: Text(subject['description'], style: const TextStyle(color: Colors.white70)),
+                              title: Text(subject['name'],
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold)),
+                              subtitle: Text(subject['description'],
+                                  style:
+                                      const TextStyle(color: Colors.white70)),
                               onTap: () {
                                 Navigator.push(
                                   context,

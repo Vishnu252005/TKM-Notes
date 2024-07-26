@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
 
-class dm extends StatelessWidget {
+class DM extends StatelessWidget {
   final String fullName; // Full name received as a parameter
   final List<UnitItem> units = [
     UnitItem(
@@ -32,7 +32,7 @@ class dm extends StatelessWidget {
     ),
   ];
 
-  dm({required this.fullName}); // Constructor accepting fullName
+  DM({required this.fullName}); // Constructor accepting fullName
 
   @override
   Widget build(BuildContext context) {

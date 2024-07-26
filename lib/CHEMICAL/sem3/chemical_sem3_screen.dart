@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CHEMICAL/sem3/units.dart';  // Import the correct file for units
+import 'package:flutter_application_2/CHEMICAL/sem3/CPE/cpe.dart';
+import 'package:flutter_application_2/CHEMICAL/sem3/MEBC/mebc.dart';
+import 'package:flutter_application_2/CHEMICAL/sem3/OCI/oci.dart';
+import 'package:flutter_application_2/CHEMICAL/sem3/PBCA/pbca.dart';
+import 'package:flutter_application_2/CHEMICAL/sem3/PS/ps.dart';
+import 'package:flutter_application_2/CHEMICAL/sem3/units.dart'; // Import the correct file for units
+import 'package:flutter_application_2/CIVIL/sem3/LSPE/lspe.dart';
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
 class CHEMICALSem3Screen extends StatefulWidget {
@@ -28,112 +34,98 @@ class _CHEMICALSem3ScreenState extends State<CHEMICALSem3Screen> {
 
   @override
   void initState() {
-  super.initState();
+    super.initState();
 
-  _subjects = {
-    'Notes & Books': [
-      {
-        'name': 'Calculus and Linear Algebra',
-        'description': 'Study of calculus and linear algebra including...',
-        'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry',
-        'description': 'Exploration of fundamental concepts in chemistry...',
-        'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Fundamentals of Electrical Engineering',
-        'description': 'Introduction to basic principles in electrical engineering...',
-        'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics',
-        'description': 'Fundamentals of engineering drawing and graphics...',
-        'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices',
-        'description': 'Introduction to various manufacturing processes...',
-        'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga',
-        'description': 'Physical education and well-being through sports and yoga...',
-        'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Introduction to Chemical Engineering',
-        'description': 'Basic concepts in chemical engineering...',
-        'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Basics of Electronics Engineering',
-        'description': 'Introduction to fundamental concepts in electronics engineering...',
-        'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-    ],
-    'PYQs': [
-      {
-        'name': 'Calculus and Linear Algebra PYQs',
-        'description': 'Previous Year Questions for Calculus and Linear Algebra...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry PYQs',
-        'description': 'Previous Year Questions for Engineering Chemistry...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Fundamentals of Electrical Engineering PYQs',
-        'description': 'Previous Year Questions for Fundamentals of Electrical Engineering...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics PYQs',
-        'description': 'Previous Year Questions for Engineering Graphics...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices PYQs',
-        'description': 'Previous Year Questions for Manufacturing Practices...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga PYQs',
-        'description': 'Previous Year Questions for Sports and Yoga...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Introduction to Chemical Engineering PYQs',
-        'description': 'Previous Year Questions for Introduction to Chemical Engineering...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Basics of Electronics Engineering PYQs',
-        'description': 'Previous Year Questions for Basics of Electronics Engineering...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-    ],
-  };
-}
-
+    _subjects = {
+      'Notes & Books': [
+        {
+          'name': 'Probability Distributions and Complex Analysis',
+          'description':
+              'Overview of probability distributions and complex analysis...',
+          'image': 'assets/s3.png',
+          'page': () => Pbca(fullName: widget.fullName),
+        },
+        {
+          'name': 'Overview of Chemical Industries',
+          'description':
+              'Sustainable development and pollution control in chemical industries...',
+          'image': 'assets/s3.png',
+          'page': () => Oci(fullName: widget.fullName),
+        },
+        {
+          'name': 'Chemistry for Process Engineers',
+          'description':
+              'Fundamental chemistry concepts relevant to process engineering...',
+          'image': 'assets/s3.png',
+          'page': () => Cpe(fullName: widget.fullName),
+        },
+        {
+          'name': 'Material & Energy Balance Computations',
+          'description':
+              'Techniques for performing material and energy balance calculations...',
+          'image': 'assets/s3.png',
+          'page': () => Mebc(fullName: widget.fullName),
+        },
+        {
+          'name': 'Life Skills and Professional Ethics',
+          'description':
+              'Development of life skills and understanding professional ethics...',
+          'image': 'assets/s3.png',
+          'page': () => lspe(fullName: widget.fullName),
+        },
+        {
+          'name': 'Process Safety',
+          'description':
+              'Principles and practices of ensuring safety in process industries...',
+          'image': 'assets/s3.png',
+          'page': () => Ps(fullName: widget.fullName),
+        },
+      ],
+      'PYQs': [
+        {
+          'name': 'Probability Distributions and Complex Analysis PYQs',
+          'description':
+              'Previous Year Questions for Probability Distributions and Complex Analysis...',
+          'image': 'assets/s2.png',
+          'page': () => Pbca(fullName: widget.fullName),
+        },
+        {
+          'name': 'Overview of Chemical Industries PYQs',
+          'description':
+              'Previous Year Questions for Overview of Chemical Industries...',
+          'image': 'assets/s2.png',
+          'page': () => Oci(fullName: widget.fullName),
+        },
+        {
+          'name': 'Chemistry for Process Engineers PYQs',
+          'description':
+              'Previous Year Questions for Chemistry for Process Engineers...',
+          'image': 'assets/s2.png',
+          'page': () => Cpe(fullName: widget.fullName),
+        },
+        {
+          'name': 'Material & Energy Balance Computations PYQs',
+          'description':
+              'Previous Year Questions for Material & Energy Balance Computations...',
+          'image': 'assets/s2.png',
+          'page': () => Mebc(fullName: widget.fullName),
+        },
+        {
+          'name': 'Life Skills and Professional Ethics PYQs',
+          'description':
+              'Previous Year Questions for Life Skills and Professional Ethics...',
+          'image': 'assets/s2.png',
+          'page': () => lspe(fullName: widget.fullName),
+        },
+        {
+          'name': 'Process Safety PYQs',
+          'description': 'Previous Year Questions for Process Safety...',
+          'image': 'assets/s2.png',
+          'page': () => Ps(fullName: widget.fullName),
+        },
+      ],
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +145,10 @@ class _CHEMICALSem3ScreenState extends State<CHEMICALSem3Screen> {
                     children: [
                       Text(
                         'Hey ${widget.fullName}',
-                        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                        style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
                       const Text(
                         'Select Subject',
@@ -180,7 +175,10 @@ class _CHEMICALSem3ScreenState extends State<CHEMICALSem3Screen> {
                       radius: 30,
                       child: Text(
                         widget.fullName[0].toUpperCase(),
-                        style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -201,7 +199,8 @@ class _CHEMICALSem3ScreenState extends State<CHEMICALSem3Screen> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 22),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 36.0, vertical: 22),
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
@@ -214,9 +213,11 @@ class _CHEMICALSem3ScreenState extends State<CHEMICALSem3Screen> {
                             _tabs.length,
                             (index) => Expanded(
                               child: GestureDetector(
-                                onTap: () => setState(() => _selectedIndex = index),
+                                onTap: () =>
+                                    setState(() => _selectedIndex = index),
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(vertical: 32),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 32),
                                   decoration: BoxDecoration(
                                     color: _selectedIndex == index
                                         ? Colors.black
@@ -241,17 +242,25 @@ class _CHEMICALSem3ScreenState extends State<CHEMICALSem3Screen> {
                         padding: const EdgeInsets.symmetric(horizontal: 36),
                         itemCount: _subjects[_tabs[_selectedIndex]]!.length,
                         itemBuilder: (context, index) {
-                          var subject = _subjects[_tabs[_selectedIndex]]![index];
+                          var subject =
+                              _subjects[_tabs[_selectedIndex]]![index];
                           return Card(
                             color: const Color.fromARGB(255, 58, 58, 58),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(32)),
                             child: ListTile(
                               contentPadding: const EdgeInsets.all(8),
                               leading: subject['image'] != null
-                                  ? Image.asset(subject['image'], width: 80, height: 80)
+                                  ? Image.asset(subject['image'],
+                                      width: 80, height: 80)
                                   : null,
-                              title: Text(subject['name'], style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                              subtitle: Text(subject['description'], style: const TextStyle(color: Colors.white70)),
+                              title: Text(subject['name'],
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold)),
+                              subtitle: Text(subject['description'],
+                                  style:
+                                      const TextStyle(color: Colors.white70)),
                               onTap: () {
                                 Navigator.push(
                                   context,

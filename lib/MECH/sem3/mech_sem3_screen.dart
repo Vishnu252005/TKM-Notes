@@ -1,5 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/MECH/sem3/units.dart';  // Import the correct file for units
+import 'package:flutter_application_2/CHEMICAL/sem1/BEE/bee.dart';
+import 'package:flutter_application_2/CHEMICAL/sem3/PBCA/pbca.dart';
+import 'package:flutter_application_2/CIVIL/sem5/EE/ee.dart';
+import 'package:flutter_application_2/EEE/sem3/BEM/bem.dart';
+import 'package:flutter_application_2/EEE/sem5/IEM/iem.dart';
+import 'package:flutter_application_2/MECH/sem3/AT/at.dart';
+import 'package:flutter_application_2/MECH/sem3/EMA/ema.dart';
+import 'package:flutter_application_2/MECH/sem3/FMHM/fmhm.dart';
+import 'package:flutter_application_2/MECH/sem3/FMM/fmm.dart';
+import 'package:flutter_application_2/MECH/sem3/MM/mm.dart';
+import 'package:flutter_application_2/MECH/sem3/MMT/mmt.dart';
+import 'package:flutter_application_2/MECH/sem3/SE/se.dart';
+import 'package:flutter_application_2/MECH/sem3/units.dart'; // Import the correct file for units
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
 class MECHSem3Screen extends StatefulWidget {
@@ -28,111 +40,164 @@ class _MECHSem3ScreenState extends State<MECHSem3Screen> {
 
   @override
   void initState() {
-  super.initState();
+    super.initState();
 
-  _subjects = {
-    'Notes & Books': [
-      {
-        'name': 'Calculus and Linear Algebra',
-        'description': 'Study of calculus and linear algebra including...',
-        'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry',
-        'description': 'Exploration of fundamental concepts in chemistry...',
-        'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Fundamentals of Electronics Engineering',
-        'description': 'Basics of electronics and electrical engineering...',
-        'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics',
-        'description': 'Fundamentals of engineering drawing and graphics...',
-        'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices',
-        'description': 'Introduction to various manufacturing processes...',
-        'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga',
-        'description': 'Physical education and well-being through sports and yoga...',
-        'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Basics of Electrical Engineering',
-        'description': 'Introduction to electrical engineering principles...',
-        'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Computer Aided Drafting and Modelling',
-        'description': 'Basics of computer-aided drafting and modelling...',
-        'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-    ],
-    'PYQs': [
-      {
-        'name': 'Calculus and Linear Algebra PYQs',
-        'description': 'Previous Year Questions for Calculus and Linear Algebra...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry PYQs',
-        'description': 'Previous Year Questions for Engineering Chemistry...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Fundamentals of Electronics Engineering PYQs',
-        'description': 'Previous Year Questions for Fundamentals of Electronics Engineering...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics PYQs',
-        'description': 'Previous Year Questions for Engineering Graphics...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices PYQs',
-        'description': 'Previous Year Questions for Manufacturing Practices...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga PYQs',
-        'description': 'Previous Year Questions for Sports and Yoga...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Basics of Electrical Engineering PYQs',
-        'description': 'Previous Year Questions for Basics of Electrical Engineering...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Computer Aided Drafting and Modelling PYQs',
-        'description': 'Previous Year Questions for Computer Aided Drafting and Modelling...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-    ],
-  };
-}
+    _subjects = {
+      'Notes & Books': [
+        {
+          'name': 'Probability Distributions and Complex Analysis',
+          'description':
+              'Study of probability distributions and complex analysis including...',
+          'image': 'assets/s3.png',
+          'page': () => Pbca(fullName: widget.fullName),
+        },
+        {
+          'name': 'Sustainable Engineering',
+          'description':
+              'Introduction to sustainable engineering practices and principles...',
+          'image': 'assets/s3.png',
+          'page': () => Se(fullName: widget.fullName),
+        },
+        {
+          'name': 'Engineering Materials & Applications',
+          'description':
+              'Exploration of engineering materials and their applications...',
+          'image': 'assets/s3.png',
+          'page': () => Ema(fullName: widget.fullName),
+        },
+        {
+          'name': 'Fluid Mechanics & Hydraulic Machines',
+          'description':
+              'Fundamentals of fluid mechanics and hydraulic machines...',
+          'image': 'assets/s3.png',
+          'page': () => Fmhm(fullName: widget.fullName),
+        },
+        {
+          'name': 'Applied Thermodynamics',
+          'description':
+              'Study of applied thermodynamics and its applications...',
+          'image': 'assets/s3.png',
+          'page': () => At(fullName: widget.fullName),
+        },
+        {
+          'name': 'Engineering Economics',
+          'description':
+              'Introduction to engineering economics and financial principles...',
+          'image': 'assets/s3.png',
+          'page': () => Ee(fullName: widget.fullName),
+        },
+        {
+          'name': 'Basic Engineering Mechanics',
+          'description': 'Fundamentals of engineering mechanics...',
+          'image': 'assets/s3.png',
+          'page': () => Bem(fullName: widget.fullName),
+        },
+        {
+          'name': 'Fluid Mechanics & Machinery',
+          'description': 'Basics of fluid mechanics and machinery...',
+          'image': 'assets/s3.png',
+          'page': () => Fmm(fullName: widget.fullName),
+        },
+        {
+          'name': 'Mechanics of Materials',
+          'description': 'Principles of Mechanics of Materials...',
+          'image': 'assets/s3.png',
+          'page': () => Mm(fullName: widget.fullName),
+        },
+        {
+          'name': 'Material Science and Technology',
+          'description': 'Study of material science and technology...',
+          'image': 'assets/s3.png',
+          'page': () => Mmt(fullName: widget.fullName),
+        },
+        {
+          'name': 'Industrial Engineering and Management',
+          'description':
+              'Principles of industrial engineering and management...',
+          'image': 'assets/s3.png',
+          'page': () => Iem(fullName: widget.fullName),
+        },
+      ],
+      'PYQs': [
+        {
+          'name': 'Probability Distributions and Complex Analysis PYQs',
+          'description':
+              'Previous Year Questions for Probability Distributions and Complex Analysis...',
+          'image': 'assets/s2.png',
+          'page': () => Pbca(fullName: widget.fullName),
+        },
+        {
+          'name': 'Sustainable Engineering PYQs',
+          'description':
+              'Previous Year Questions for Sustainable Engineering...',
+          'image': 'assets/s2.png',
+          'page': () => Se(fullName: widget.fullName),
+        },
+        {
+          'name': 'Engineering Materials & Applications PYQs',
+          'description':
+              'Previous Year Questions for Engineering Materials & Applications...',
+          'image': 'assets/s2.png',
+          'page': () => Ema(fullName: widget.fullName),
+        },
+        {
+          'name': 'Fluid Mechanics & Hydraulic Machines PYQs',
+          'description':
+              'Previous Year Questions for Fluid Mechanics & Hydraulic Machines...',
+          'image': 'assets/s2.png',
+          'page': () => Fmhm(fullName: widget.fullName),
+        },
+        {
+          'name': 'Applied Thermodynamics PYQs',
+          'description':
+              'Previous Year Questions for Applied Thermodynamics...',
+          'image': 'assets/s2.png',
+          'page': () => At(fullName: widget.fullName),
+        },
+        {
+          'name': 'Engineering Economics PYQs',
+          'description': 'Previous Year Questions for Engineering Economics...',
+          'image': 'assets/s2.png',
+          'page': () => Ee(fullName: widget.fullName),
+        },
+        {
+          'name': 'Basic Engineering Mechanics PYQs',
+          'description':
+              'Previous Year Questions for Basic Engineering Mechanics...',
+          'image': 'assets/s2.png',
+          'page': () => bee(fullName: widget.fullName),
+        },
+        {
+          'name': 'Fluid Mechanics & Machinery PYQs',
+          'description':
+              'Previous Year Questions for Fluid Mechanics & Machinery...',
+          'image': 'assets/s2.png',
+          'page': () => Fmm(fullName: widget.fullName),
+        },
+        {
+          'name': 'Mechanics of Materials PYQs',
+          'description':
+              'Previous Year Questions for Mechanics of Materials...',
+          'image': 'assets/s2.png',
+          'page': () => Mm(fullName: widget.fullName),
+        },
+        {
+          'name': 'Material Science and Technology PYQs',
+          'description':
+              'Previous Year Questions for Material Science and Technology...',
+          'image': 'assets/s2.png',
+          'page': () => Mmt(fullName: widget.fullName),
+        },
+        {
+          'name': 'Industrial Engineering and Management PYQs',
+          'description':
+              'Previous Year Questions for Industrial Engineering and Management...',
+          'image': 'assets/s2.png',
+          'page': () => Iem(fullName: widget.fullName),
+        },
+      ],
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +217,10 @@ class _MECHSem3ScreenState extends State<MECHSem3Screen> {
                     children: [
                       Text(
                         'Hey ${widget.fullName}',
-                        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                        style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
                       const Text(
                         'Select Subject',
@@ -179,7 +247,10 @@ class _MECHSem3ScreenState extends State<MECHSem3Screen> {
                       radius: 30,
                       child: Text(
                         widget.fullName[0].toUpperCase(),
-                        style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -200,7 +271,8 @@ class _MECHSem3ScreenState extends State<MECHSem3Screen> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 22),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 36.0, vertical: 22),
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
@@ -213,9 +285,11 @@ class _MECHSem3ScreenState extends State<MECHSem3Screen> {
                             _tabs.length,
                             (index) => Expanded(
                               child: GestureDetector(
-                                onTap: () => setState(() => _selectedIndex = index),
+                                onTap: () =>
+                                    setState(() => _selectedIndex = index),
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(vertical: 32),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 32),
                                   decoration: BoxDecoration(
                                     color: _selectedIndex == index
                                         ? Colors.black
@@ -240,17 +314,25 @@ class _MECHSem3ScreenState extends State<MECHSem3Screen> {
                         padding: const EdgeInsets.symmetric(horizontal: 36),
                         itemCount: _subjects[_tabs[_selectedIndex]]!.length,
                         itemBuilder: (context, index) {
-                          var subject = _subjects[_tabs[_selectedIndex]]![index];
+                          var subject =
+                              _subjects[_tabs[_selectedIndex]]![index];
                           return Card(
                             color: const Color.fromARGB(255, 58, 58, 58),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(32)),
                             child: ListTile(
                               contentPadding: const EdgeInsets.all(8),
                               leading: subject['image'] != null
-                                  ? Image.asset(subject['image'], width: 80, height: 80)
+                                  ? Image.asset(subject['image'],
+                                      width: 80, height: 80)
                                   : null,
-                              title: Text(subject['name'], style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                              subtitle: Text(subject['description'], style: const TextStyle(color: Colors.white70)),
+                              title: Text(subject['name'],
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold)),
+                              subtitle: Text(subject['description'],
+                                  style:
+                                      const TextStyle(color: Colors.white70)),
                               onTap: () {
                                 Navigator.push(
                                   context,

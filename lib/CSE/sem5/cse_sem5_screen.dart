@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/CHEMICAL/sem5/COI/coi.dart';
+import 'package:flutter_application_2/CSE/sem5/AIML/aiml.dart';
+import 'package:flutter_application_2/CSE/sem5/AWT/awt.dart';
+import 'package:flutter_application_2/CSE/sem5/DAA/daa.dart';
+import 'package:flutter_application_2/CSE/sem5/TW/tw.dart';
 import 'package:flutter_application_2/CSE/sem5/units.dart';  // Import the correct file for units
+import 'package:flutter_application_2/EEE/sem4/FA/fa.dart';
+import 'package:flutter_application_2/MECH/sem3/SE/se.dart';
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
 class CSESem5Screen extends StatefulWidget {
@@ -32,35 +39,94 @@ class _CSESem5ScreenState extends State<CSESem5Screen> {
 
     _subjects = {
       'Notes & Books': [
-        {
-          'name': 'Data Management System',
-          'description': 'DBMS is a software system used to store, retrieve, and...',
-          'image': 'assets/s5.png',
-          'page': () => ComputerNetworksPage(fullName: widget.fullName),
-        },
-        {
-          'name': 'Design Thinking',
-          'description': 'Design thinking is a process for solving problems by pr...',
-          'image': 'assets/s2.png',
-          'page': () => ComputerNetworksPage(fullName: widget.fullName),
-        },
-        // Add more subjects as needed
-      ],
-      'PYQs': [
-        {
-          'name': 'Data Management System PYQs',
-          'description': 'Previous Year Questions for DBMS...',
-          'image': 'assets/s5.png',
-          'page': () => ComputerNetworksPage(fullName: widget.fullName),
-        },
-        {
-          'name': 'Design Thinking PYQs',
-          'description': 'Previous Year Questions for Design Thinking...',
-          'image': 'assets/s2.png',
-          'page': () => ComputerNetworksPage(fullName: widget.fullName),
-        },
-        // Add more subjects as needed
-      ],
+  {
+    'name': 'Design & Analysis of Algorithms',
+    'description': 'Study of design and analysis of algorithms...',
+    'image': 'assets/s5.png',
+    'page': () => Daa(fullName: widget.fullName),
+  },
+  {
+    'name': 'Software Engineering',
+    'description': 'Exploration of software engineering principles and practices...',
+    'image': 'assets/s5.png',
+    'page': () => Se(fullName: widget.fullName),
+  },
+  {
+    'name': 'Artificial Intelligence & Machine Learning',
+    'description': 'Introduction to artificial intelligence and machine learning concepts...',
+    'image': 'assets/s5.png',
+    'page': () => Aiml(fullName: widget.fullName),
+  },
+  {
+    'name': 'Advanced Web Technologies',
+    'description': 'Study of advanced web technologies and their applications...',
+    'image': 'assets/s5.png',
+    'page': () => Awt(fullName: widget.fullName),
+  },
+  {
+    'name': 'Finance and Accounting',
+    'description': 'Introduction to finance and accounting principles...',
+    'image': 'assets/s5.png',
+    'page': () => Fa(fullName: widget.fullName),
+  },
+  {
+    'name': 'Constitution of India',
+    'description': 'Study of the Constitution of India and its significance...',
+    'image': 'assets/s5.png',
+    'page': () => Coi(fullName: widget.fullName),
+  },
+  {
+    'name': 'Technical Writing',
+    'description': 'Basics of technical writing for effective communication...',
+    'image': 'assets/s5.png',
+    'page': () => Tw(fullName: widget.fullName),
+  },
+],
+'PYQs': [
+  {
+    'name': 'Design & Analysis of Algorithms PYQs',
+    'description': 'Previous Year Questions for Design & Analysis of Algorithms...',
+    'image': 'assets/s5.png',
+    'page': () => Daa(fullName: widget.fullName),
+  },
+  {
+    'name': 'Software Engineering PYQs',
+    'description': 'Previous Year Questions for Software Engineering...',
+    'image': 'assets/s5.png',
+    'page': () => Se(fullName: widget.fullName),
+  },
+  {
+    'name': 'Artificial Intelligence & Machine Learning PYQs',
+    'description': 'Previous Year Questions for Artificial Intelligence & Machine Learning...',
+    'image': 'assets/s5.png',
+    'page': () => Aiml(fullName: widget.fullName),
+  },
+  {
+    'name': 'Advanced Web Technologies PYQs',
+    'description': 'Previous Year Questions for Advanced Web Technologies...',
+    'image': 'assets/s5.png',
+    'page': () => Awt(fullName: widget.fullName),
+  },
+  {
+    'name': 'Finance and Accounting PYQs',
+    'description': 'Previous Year Questions for Finance and Accounting...',
+    'image': 'assets/s5.png',
+    'page': () => Fa(fullName: widget.fullName),
+  },
+  {
+    'name': 'Constitution of India PYQs',
+    'description': 'Previous Year Questions for Constitution of India...',
+    'image': 'assets/s5.png',
+    'page': () => Coi(fullName: widget.fullName),
+  },
+  {
+    'name': 'Technical Writing PYQs',
+    'description': 'Previous Year Questions for Technical Writing...',
+    'image': 'assets/s5.png',
+    'page': () => Tw(fullName: widget.fullName),
+  },
+],
+
     };
   }
 

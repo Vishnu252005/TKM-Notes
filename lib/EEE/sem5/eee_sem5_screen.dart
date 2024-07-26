@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/EEE/sem5/units.dart';  // Import the correct file for units
+import 'package:flutter_application_2/EEE/sem5/AM/am.dart';
+import 'package:flutter_application_2/EEE/sem5/CI/ci.dart';
+import 'package:flutter_application_2/EEE/sem5/CSE/cse.dart';
+import 'package:flutter_application_2/EEE/sem5/IEM/iem.dart';
+import 'package:flutter_application_2/EEE/sem5/IML/iml.dart';
+import 'package:flutter_application_2/EEE/sem5/IOT/iot.dart';
+import 'package:flutter_application_2/EEE/sem5/PE/pe.dart';
+import 'package:flutter_application_2/EEE/sem5/units.dart'; // Import the correct file for units
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
 class EEESem5Screen extends StatefulWidget {
@@ -27,101 +34,111 @@ class _EEESem5ScreenState extends State<EEESem5Screen> {
   late Map<String, List<Map<String, dynamic>>> _subjects;
 
   @override
- void initState() {
-  super.initState();
+  void initState() {
+    super.initState();
 
-  _subjects = {
-    'Notes & Books': [
-      {
-        'name': 'Ordinary Differential Equations and Transforms',
-        'description': 'Study of differential equations and various transforms...',
-        'image': 'assets/s1.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry',
-        'description': 'Exploration of fundamental concepts in chemistry...',
-        'image': 'assets/s1.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Problem Solving and Programming',
-        'description': 'Basics of programming and problem-solving techniques...',
-        'image': 'assets/s1.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics',
-        'description': 'Fundamentals of engineering drawing and graphics...',
-        'image': 'assets/s1.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices',
-        'description': 'Introduction to various manufacturing processes...',
-        'image': 'assets/s1.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga',
-        'description': 'Physical education and well-being through sports and yoga...',
-        'image': 'assets/s1.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Universal Human Values-II',
-        'description': 'Exploration of universal human values...',
-        'image': 'assets/s1.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-    ],
-    'PYQs': [
-      {
-        'name': 'Ordinary Differential Equations and Transforms PYQs',
-        'description': 'Previous Year Questions for Ordinary Differential Equations and Transforms...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry PYQs',
-        'description': 'Previous Year Questions for Engineering Chemistry...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Problem Solving and Programming PYQs',
-        'description': 'Previous Year Questions for Problem Solving and Programming...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics PYQs',
-        'description': 'Previous Year Questions for Engineering Graphics...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices PYQs',
-        'description': 'Previous Year Questions for Manufacturing Practices...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga PYQs',
-        'description': 'Previous Year Questions for Sports and Yoga...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Universal Human Values-II PYQs',
-        'description': 'Previous Year Questions for Universal Human Values-II...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-    ],
-  };
-}
-
+    _subjects = {
+      'Notes & Books': [
+        {
+          'name': 'Control System Engineering',
+          'description':
+              'Study of control system principles and applications...',
+          'image': 'assets/control_system_engineering.png',
+          'page': () => Cse(fullName: widget.fullName),
+        },
+        {
+          'name': 'Embedded System Design and IoT',
+          'description': 'Introduction to embedded systems and IoT...',
+          'image': 'assets/embedded_system_design.png',
+          'page': () => Iot(fullName: widget.fullName),
+        },
+        {
+          'name': 'Power Electronics',
+          'description':
+              'Study of electronic devices and circuits used in power electronics...',
+          'image': 'assets/power_electronics.png',
+          'page': () => Pe(fullName: widget.fullName),
+        },
+        {
+          'name': 'AC Machines',
+          'description':
+              'Comprehensive study of alternating current machines...',
+          'image': 'assets/ac_machines.png',
+          'page': () => Am(fullName: widget.fullName),
+        },
+        {
+          'name': 'Industrial Engineering and Management',
+          'description':
+              'Principles of industrial engineering and management...',
+          'image': 'assets/industrial_engineering.png',
+          'page': () => Iem(fullName: widget.fullName),
+        },
+        {
+          'name': 'Constitution of India',
+          'description': 'Study of the Constitution of India...',
+          'image': 'assets/constitution_of_india.png',
+          'page': () => Ci(fullName: widget.fullName),
+        },
+        {
+          'name': 'Introduction to Machine Learning',
+          'description':
+              'Basics of machine learning concepts and applications...',
+          'image': 'assets/machine_learning.png',
+          'page': () => Iml(fullName: widget.fullName),
+        },
+        // Add more subjects as needed
+      ],
+      'PYQs': [
+        {
+          'name': 'Control System Engineering PYQs',
+          'description':
+              'Previous Year Questions for Control System Engineering...',
+          'image': 'assets/control_system_engineering.png',
+          'page': () => Cse(fullName: widget.fullName),
+        },
+        {
+          'name': 'Embedded System Design and IoT PYQs',
+          'description':
+              'Previous Year Questions for Embedded System Design and IoT...',
+          'image': 'assets/embedded_system_design.png',
+          'page': () => Iot(fullName: widget.fullName),
+        },
+        {
+          'name': 'Power Electronics PYQs',
+          'description': 'Previous Year Questions for Power Electronics...',
+          'image': 'assets/power_electronics.png',
+          'page': () => Pe(fullName: widget.fullName),
+        },
+        {
+          'name': 'AC Machines PYQs',
+          'description': 'Previous Year Questions for AC Machines...',
+          'image': 'assets/ac_machines.png',
+          'page': () => Am(fullName: widget.fullName),
+        },
+        {
+          'name': 'Industrial Engineering and Management PYQs',
+          'description':
+              'Previous Year Questions for Industrial Engineering and Management...',
+          'image': 'assets/industrial_engineering.png',
+          'page': () => Iem(fullName: widget.fullName),
+        },
+        {
+          'name': 'Constitution of India PYQs',
+          'description': 'Previous Year Questions for Constitution of India...',
+          'image': 'assets/constitution_of_india.png',
+          'page': () => Ci(fullName: widget.fullName),
+        },
+        {
+          'name': 'Introduction to Machine Learning PYQs',
+          'description':
+              'Previous Year Questions for Introduction to Machine Learning...',
+          'image': 'assets/machine_learning.png',
+          'page': () => Iml(fullName: widget.fullName),
+        },
+        // Add more subjects as needed
+      ],
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +158,10 @@ class _EEESem5ScreenState extends State<EEESem5Screen> {
                     children: [
                       Text(
                         'Hey ${widget.fullName}',
-                        style: const TextStyle(fontSize: 54, fontWeight: FontWeight.bold, color: Colors.white),
+                        style: const TextStyle(
+                            fontSize: 54,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
                       const Text(
                         'Select Subject',
@@ -168,7 +188,10 @@ class _EEESem5ScreenState extends State<EEESem5Screen> {
                       radius: 50,
                       child: Text(
                         widget.fullName[0].toUpperCase(),
-                        style: const TextStyle(color: Colors.white, fontSize: 54, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 54,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -189,7 +212,8 @@ class _EEESem5ScreenState extends State<EEESem5Screen> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 55),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 55),
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
@@ -202,9 +226,11 @@ class _EEESem5ScreenState extends State<EEESem5Screen> {
                             _tabs.length,
                             (index) => Expanded(
                               child: GestureDetector(
-                                onTap: () => setState(() => _selectedIndex = index),
+                                onTap: () =>
+                                    setState(() => _selectedIndex = index),
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(vertical: 15),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 15),
                                   decoration: BoxDecoration(
                                     color: _selectedIndex == index
                                         ? Colors.black
@@ -229,17 +255,25 @@ class _EEESem5ScreenState extends State<EEESem5Screen> {
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         itemCount: _subjects[_tabs[_selectedIndex]]!.length,
                         itemBuilder: (context, index) {
-                          var subject = _subjects[_tabs[_selectedIndex]]![index];
+                          var subject =
+                              _subjects[_tabs[_selectedIndex]]![index];
                           return Card(
                             color: const Color.fromARGB(555, 58, 58, 58),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
                             child: ListTile(
                               contentPadding: const EdgeInsets.all(8),
                               leading: subject['image'] != null
-                                  ? Image.asset(subject['image'], width: 80, height: 80)
+                                  ? Image.asset(subject['image'],
+                                      width: 80, height: 80)
                                   : null,
-                              title: Text(subject['name'], style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                              subtitle: Text(subject['description'], style: const TextStyle(color: Colors.white70)),
+                              title: Text(subject['name'],
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold)),
+                              subtitle: Text(subject['description'],
+                                  style:
+                                      const TextStyle(color: Colors.white70)),
                               onTap: () {
                                 Navigator.push(
                                   context,

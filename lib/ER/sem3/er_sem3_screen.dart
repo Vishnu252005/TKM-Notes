@@ -1,4 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/CIVIL/sem3/LSPE/lspe.dart';
+import 'package:flutter_application_2/CSE/sem3/LSPE/lspe.dart';
+import 'package:flutter_application_2/CSE/sem3/PDE/pde.dart';
+import 'package:flutter_application_2/EC/sem3/NT/nt.dart';
+import 'package:flutter_application_2/ER/sem3/CA/ca.dart';
+import 'package:flutter_application_2/ER/sem3/LCD/lcd.dart';
+import 'package:flutter_application_2/ER/sem3/SCP/scp.dart';
+import 'package:flutter_application_2/ER/sem3/SD/sd-copy.dart';
+import 'package:flutter_application_2/ER/sem3/SD/sd.dart';
 import 'package:flutter_application_2/ER/sem3/units.dart';  // Import the correct file for units
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
@@ -33,104 +42,93 @@ class _ERSem3ScreenState extends State<ERSem3Screen> {
   _subjects = {
     'Notes & Books': [
       {
-        'name': 'Calculus and Linear Algebra',
-        'description': 'Study of calculus and linear algebra including...',
+        'name': 'Advanced Linear Algebra Complex Analysis and Partial Differential Equations',
+        'description': 'Study of advanced linear algebra, complex analysis, and partial differential equations...',
         'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'page': () => Pde(fullName: widget.fullName),
       },
       {
-        'name': 'Engineering Chemistry',
-        'description': 'Exploration of fundamental concepts in chemistry...',
+        'name': 'Scientific Computing Using Python',
+        'description': 'Exploration of scientific computing using Python...',
         'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'page': () => Scp(fullName: widget.fullName),
       },
       {
-        'name': 'Fundamentals of Electronics Engineering',
-        'description': 'Basics of electronics and electrical engineering...',
+        'name': 'Logic Circuit Design',
+        'description': 'Basics of logic circuit design...',
         'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'page': () => Lcd(fullName: widget.fullName),
       },
       {
-        'name': 'Engineering Graphics',
-        'description': 'Fundamentals of engineering drawing and graphics...',
+        'name': 'Semiconductor Devices',
+        'description': 'Fundamentals of semiconductor devices...',
         'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'page': () => Sd(fullName: widget.fullName),
       },
       {
-        'name': 'Manufacturing Practices',
-        'description': 'Introduction to various manufacturing processes...',
+        'name': 'Network Theory',
+        'description': 'Introduction to network theory...',
         'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'page': () => Nt(fullName: widget.fullName),
       },
       {
-        'name': 'Sports and Yoga',
-        'description': 'Physical education and well-being through sports and yoga...',
+        'name': 'Life Skills and Professional Ethics',
+        'description': 'Physical education and well-being through life skills and professional ethics...',
         'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'page': () => Lspe(fullName: widget.fullName),
       },
       {
-        'name': 'Basics of Electrical Engineering',
-        'description': 'Introduction to electrical engineering principles...',
+        'name': 'Computer Architecture',
+        'description': 'Introduction to computer architecture principles...',
         'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Computer Aided Drafting and Modelling',
-        'description': 'Basics of computer-aided drafting and modelling...',
-        'image': 'assets/s3.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'page': () => Ca(fullName: widget.fullName),
       },
     ],
     'PYQs': [
       {
-        'name': 'Calculus and Linear Algebra PYQs',
-        'description': 'Previous Year Questions for Calculus and Linear Algebra...',
+        'name': 'Advanced Linear Algebra Complex Analysis and Partial Differential Equations PYQs',
+        'description': 'Previous Year Questions for Advanced Linear Algebra, Complex Analysis, and Partial Differential Equations...',
         'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'page': () => Pde(fullName: widget.fullName),
       },
       {
-        'name': 'Engineering Chemistry PYQs',
-        'description': 'Previous Year Questions for Engineering Chemistry...',
+        'name': 'Scientific Computing Using Python PYQs',
+        'description': 'Previous Year Questions for Scientific Computing Using Python...',
         'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'page': () => Scp(fullName: widget.fullName),
       },
       {
-        'name': 'Fundamentals of Electronics Engineering PYQs',
-        'description': 'Previous Year Questions for Fundamentals of Electronics Engineering...',
+        'name': 'Logic Circuit Design PYQs',
+        'description': 'Previous Year Questions for Logic Circuit Design...',
         'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'page': () =>   Lcd(fullName: widget.fullName),
       },
       {
-        'name': 'Engineering Graphics PYQs',
-        'description': 'Previous Year Questions for Engineering Graphics...',
+        'name': 'Semiconductor Devices PYQs',
+        'description': 'Previous Year Questions for Semiconductor Devices...',
         'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'page': () => Sd(fullName: widget.fullName),
       },
       {
-        'name': 'Manufacturing Practices PYQs',
-        'description': 'Previous Year Questions for Manufacturing Practices...',
+        'name': 'Network Theory PYQs',
+        'description': 'Previous Year Questions for Network Theory...',
         'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'page': () => Nt(fullName: widget.fullName),
       },
       {
-        'name': 'Sports and Yoga PYQs',
-        'description': 'Previous Year Questions for Sports and Yoga...',
+        'name': 'Life Skills and Professional Ethics PYQs',
+        'description': 'Previous Year Questions for Life Skills and Professional Ethics...',
         'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'page': () => Lspe(fullName: widget.fullName),
       },
       {
-        'name': 'Basics of Electrical Engineering PYQs',
-        'description': 'Previous Year Questions for Basics of Electrical Engineering...',
+        'name': 'Computer Architecture PYQs',
+        'description': 'Previous Year Questions for Computer Architecture...',
         'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Computer Aided Drafting and Modelling PYQs',
-        'description': 'Previous Year Questions for Computer Aided Drafting and Modelling...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'page': () => Ca(fullName: widget.fullName),
       },
     ],
+
   };
 }
 
