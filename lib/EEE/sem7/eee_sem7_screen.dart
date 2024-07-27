@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/EEE/sem7/units.dart';  // Import the correct file for units
+import 'package:flutter_application_2/EEE/sem7/units.dart'; // Import the correct file for units
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
 class EEESem7Screen extends StatefulWidget {
@@ -27,101 +27,42 @@ class _EEESem7ScreenState extends State<EEESem7Screen> {
   late Map<String, List<Map<String, dynamic>>> _subjects;
 
   @override
- void initState() {
-  super.initState();
+  void initState() {
+    super.initState();
 
-  _subjects = {
-    'Notes & Books': [
-      {
-        'name': 'Ordinary Differential Equations and Transforms',
-        'description': 'Study of differential equations and various transforms...',
-        'image': 'assets/s1.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry',
-        'description': 'Exploration of fundamental concepts in chemistry...',
-        'image': 'assets/s1.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Problem Solving and Programming',
-        'description': 'Basics of programming and problem-solving techniques...',
-        'image': 'assets/s1.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics',
-        'description': 'Fundamentals of engineering drawing and graphics...',
-        'image': 'assets/s1.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices',
-        'description': 'Introduction to various manufacturing processes...',
-        'image': 'assets/s1.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga',
-        'description': 'Physical education and well-being through sports and yoga...',
-        'image': 'assets/s1.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Universal Human Values-II',
-        'description': 'Exploration of universal human values...',
-        'image': 'assets/s1.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-    ],
-    'PYQs': [
-      {
-        'name': 'Ordinary Differential Equations and Transforms PYQs',
-        'description': 'Previous Year Questions for Ordinary Differential Equations and Transforms...',
-        'image': 'assets/s7.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry PYQs',
-        'description': 'Previous Year Questions for Engineering Chemistry...',
-        'image': 'assets/s7.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Problem Solving and Programming PYQs',
-        'description': 'Previous Year Questions for Problem Solving and Programming...',
-        'image': 'assets/s7.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics PYQs',
-        'description': 'Previous Year Questions for Engineering Graphics...',
-        'image': 'assets/s7.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices PYQs',
-        'description': 'Previous Year Questions for Manufacturing Practices...',
-        'image': 'assets/s7.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga PYQs',
-        'description': 'Previous Year Questions for Sports and Yoga...',
-        'image': 'assets/s7.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Universal Human Values-II PYQs',
-        'description': 'Previous Year Questions for Universal Human Values-II...',
-        'image': 'assets/s7.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-    ],
-  };
-}
-
+    _subjects = {
+      'Notes & Books': [
+        {
+          'name': 'Power System Analysis',
+          'description': 'Analysis of power systems and their components...',
+          'image': 'assets/s5.png',
+          'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        },
+        {
+          'name': 'Electrical System Design',
+          'description':
+              'Design principles and practices for electrical systems...',
+          'image': 'assets/s5.png',
+          'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        },
+      ],
+      'PYQs': [
+        {
+          'name': 'Power System Analysis PYQs',
+          'description': 'Previous Year Questions for Power System Analysis...',
+          'image': 'assets/s5.png',
+          'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        },
+        {
+          'name': 'Electrical System Design PYQs',
+          'description':
+              'Previous Year Questions for Electrical System Design...',
+          'image': 'assets/s5.png',
+          'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        },
+      ],
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +82,10 @@ class _EEESem7ScreenState extends State<EEESem7Screen> {
                     children: [
                       Text(
                         'Hey ${widget.fullName}',
-                        style: const TextStyle(fontSize: 74, fontWeight: FontWeight.bold, color: Colors.white),
+                        style: const TextStyle(
+                            fontSize: 74,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
                       const Text(
                         'Select Subject',
@@ -168,7 +112,10 @@ class _EEESem7ScreenState extends State<EEESem7Screen> {
                       radius: 70,
                       child: Text(
                         widget.fullName[0].toUpperCase(),
-                        style: const TextStyle(color: Colors.white, fontSize: 74, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 74,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -189,7 +136,8 @@ class _EEESem7ScreenState extends State<EEESem7Screen> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 77),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 77),
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
@@ -202,9 +150,11 @@ class _EEESem7ScreenState extends State<EEESem7Screen> {
                             _tabs.length,
                             (index) => Expanded(
                               child: GestureDetector(
-                                onTap: () => setState(() => _selectedIndex = index),
+                                onTap: () =>
+                                    setState(() => _selectedIndex = index),
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(vertical: 17),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 17),
                                   decoration: BoxDecoration(
                                     color: _selectedIndex == index
                                         ? Colors.black
@@ -229,17 +179,25 @@ class _EEESem7ScreenState extends State<EEESem7Screen> {
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         itemCount: _subjects[_tabs[_selectedIndex]]!.length,
                         itemBuilder: (context, index) {
-                          var subject = _subjects[_tabs[_selectedIndex]]![index];
+                          var subject =
+                              _subjects[_tabs[_selectedIndex]]![index];
                           return Card(
                             color: const Color.fromARGB(755, 58, 58, 58),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(17)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(17)),
                             child: ListTile(
                               contentPadding: const EdgeInsets.all(8),
                               leading: subject['image'] != null
-                                  ? Image.asset(subject['image'], width: 80, height: 80)
+                                  ? Image.asset(subject['image'],
+                                      width: 80, height: 80)
                                   : null,
-                              title: Text(subject['name'], style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                              subtitle: Text(subject['description'], style: const TextStyle(color: Colors.white70)),
+                              title: Text(subject['name'],
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold)),
+                              subtitle: Text(subject['description'],
+                                  style:
+                                      const TextStyle(color: Colors.white70)),
                               onTap: () {
                                 Navigator.push(
                                   context,

@@ -6,28 +6,28 @@ class Evt extends StatelessWidget {
   final String fullName; // Full name received as a parameter
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: Introduction to hybrid/electric, conventional & autonomous vehicles',
+      title: 'MODULE I: Fault Analysis',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_1',
     ),
     UnitItem(
-      title: 'MODULE II: Hybrid & Electric drive-trains',
+      title: 'MODULE II: Load Flow Analysis',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_2',
     ),
     UnitItem(
       title:
-          'MODULE III: Electric Propulsion System',
+          'MODULE III: Stability Analysis',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_3',
     ),
     UnitItem(
-      title: 'MODULE IV: Energy Storage',
+      title: 'MODULE IV: Automatic Generation Control',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_4',
     ),
     UnitItem(
-      title: 'MODULE V: : Sizing the drive system',
+      title: 'MODULE V: Generation Scheduling',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_5',
     ),
