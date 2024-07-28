@@ -134,34 +134,39 @@ class _ECSem4ScreenState extends State<ECSem4Screen> {
     };
   }
 
-  @override
+ @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isPortrait = screenSize.height > screenSize.width;
+
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 3, 43, 448),
+      backgroundColor: const Color.fromARGB(755, 7, 17, 148),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(25.0),
+              padding: EdgeInsets.all(isPortrait ? 24.0 : 16.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Hey ${widget.fullName}',
-                        style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ),
-                      const Text(
-                        'Select Subject',
-                        style: TextStyle(fontSize: 46, color: Colors.white70),
-                      ),
-                    ],
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Hey ${widget.fullName}',
+                          style: TextStyle(
+                              fontSize: isPortrait ? 24 : 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                        const Text(
+                          'Select Subject',
+                          style: TextStyle(fontSize: 16, color: Colors.white70),
+                        ),
+                      ],
+                    ),
                   ),
                   GestureDetector(
                     onTap: () {
@@ -179,12 +184,12 @@ class _ECSem4ScreenState extends State<ECSem4Screen> {
                     },
                     child: CircleAvatar(
                       backgroundColor: Colors.red[600],
-                      radius: 30,
+                      radius: isPortrait ? 30 : 20,
                       child: Text(
                         widget.fullName[0].toUpperCase(),
-                        style: const TextStyle(
+                        style: TextStyle(
                             color: Colors.white,
-                            fontSize: 24,
+                            fontSize: isPortrait ? 30 : 20,
                             fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -192,27 +197,27 @@ class _ECSem4ScreenState extends State<ECSem4Screen> {
                 ],
               ),
             ),
-            const SizedBox(height: 46),
+            const SizedBox(height: 16),
             Expanded(
               child: Container(
                 width: double.infinity,
                 decoration: const BoxDecoration(
                   color: Colors.black,
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25),
-                    topRight: Radius.circular(25),
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
                   ),
                 ),
                 child: Column(
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 46.0, vertical: 22),
+                          horizontal: 16.0, vertical: 24),
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 58, 58, 58),
-                          borderRadius: BorderRadius.circular(25),
+                          color: const Color.fromARGB(755, 58, 58, 58),
+                          borderRadius: BorderRadius.circular(24),
                         ),
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
@@ -224,12 +229,12 @@ class _ECSem4ScreenState extends State<ECSem4Screen> {
                                     setState(() => _selectedIndex = index),
                                 child: Container(
                                   padding:
-                                      const EdgeInsets.symmetric(vertical: 42),
+                                      const EdgeInsets.symmetric(vertical: 16),
                                   decoration: BoxDecoration(
                                     color: _selectedIndex == index
                                         ? Colors.black
-                                        : const Color.fromARGB(255, 58, 58, 58),
-                                    borderRadius: BorderRadius.circular(25),
+                                        : const Color.fromARGB(755, 58, 58, 58),
+                                    borderRadius: BorderRadius.circular(24),
                                   ),
                                   child: Text(
                                     _tabs[index],
@@ -243,23 +248,23 @@ class _ECSem4ScreenState extends State<ECSem4Screen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 16),
                     Expanded(
                       child: ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 46),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         itemCount: _subjects[_tabs[_selectedIndex]]!.length,
                         itemBuilder: (context, index) {
                           var subject =
                               _subjects[_tabs[_selectedIndex]]![index];
                           return Card(
-                            color: const Color.fromARGB(255, 58, 58, 58),
+                            color: const Color.fromARGB(755, 58, 58, 58),
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(42)),
+                                borderRadius: BorderRadius.circular(16)),
                             child: ListTile(
                               contentPadding: const EdgeInsets.all(8),
                               leading: subject['image'] != null
                                   ? Image.asset(subject['image'],
-                                      width: 80, height: 80)
+                                      width: 50, height: 50)
                                   : null,
                               title: Text(subject['name'],
                                   style: const TextStyle(
