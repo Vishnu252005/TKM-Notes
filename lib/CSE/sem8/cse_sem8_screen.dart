@@ -35,7 +35,7 @@ class _CSESem8ScreenState extends State<CSESem8Screen> {
         {
           'name': 'Data Management System',
           'description': 'DBMS is a software system used to store, retrieve, and...',
-          'image': 'assets/s8.png',
+          'image': 'assets/s1.png',
           'page': () => ComputerNetworksPage(fullName: widget.fullName),
         },
         {
@@ -50,7 +50,7 @@ class _CSESem8ScreenState extends State<CSESem8Screen> {
         {
           'name': 'Data Management System PYQs',
           'description': 'Previous Year Questions for DBMS...',
-          'image': 'assets/s8.png',
+          'image': 'assets/s1.png',
           'page': () => ComputerNetworksPage(fullName: widget.fullName),
         },
         {

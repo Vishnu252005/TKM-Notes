@@ -13,7 +13,7 @@ class Psp1 extends StatelessWidget {
   UnitItem(
     title: 'MODULE II: Program Basics',
     isAvailable: true,
-    pdfUrl: 'https://drive.google.com/file/d/19wFcQRs4SQo1cc3EB34cuiAAqFUZ581R/view?usp=sharing',
+    pdfUrl: 'https://drive.google.com/file/d/19wFcQRs2SQo1cc3EB34cuiAAqFUZ581R/view?usp=sharing',
   ),
   UnitItem(
     title: 'MODULE III: Arrays and Strings',

@@ -35,13 +35,13 @@ class _MECHSem7ScreenState extends State<MECHSem7Screen> {
       {
         'name': 'Refrigeration and Air Conditioning',
         'description': 'Study of refrigeration and air conditioning systems...',
-        'image': 'assets/s7.png',
+        'image': 'assets/s1.png',
         'page': () => ComputerNetworksPage(fullName: widget.fullName),
       },
       {
         'name': 'Product Innovation & Entrepreneurship',
         'description': 'Concepts of product innovation and entrepreneurship...',
-        'image': 'assets/s7.png',
+        'image': 'assets/s1.png',
         'page': () => ComputerNetworksPage(fullName: widget.fullName),
       },
     ],

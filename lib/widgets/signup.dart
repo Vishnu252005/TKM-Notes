@@ -138,7 +138,7 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   String? _fullName, _branch, _year, _semester;
-  List<String> _branchOptions = ['CSE', 'ECE', 'MECH', 'EEE', 'CIVIL', 'CHEMICAL', 'EC' , 'ER'];
+  List<String> _branchOptions = ['CSE',  'MECH', 'EEE', 'CIVIL', 'CHEMICAL', 'EC' , 'ER'];
   List<String> _yearOptions = ['FE', 'SE', 'TE', 'BE'];
   Map<String, List<String>> _semesterOptions = {
     'FE': ['Sem1', 'Sem2'],

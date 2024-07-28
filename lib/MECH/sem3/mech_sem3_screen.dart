@@ -48,73 +48,73 @@ class _MECHSem3ScreenState extends State<MECHSem3Screen> {
           'name': 'Probability Distributions and Complex Analysis',
           'description':
               'Study of probability distributions and complex analysis including...',
-          'image': 'assets/s3.png',
+          'image': 'assets/s1.png',
           'page': () => Pbca(fullName: widget.fullName),
         },
         {
           'name': 'Sustainable Engineering',
           'description':
               'Introduction to sustainable engineering practices and principles...',
-          'image': 'assets/s3.png',
+          'image': 'assets/s1.png',
           'page': () => Se(fullName: widget.fullName),
         },
         {
           'name': 'Engineering Materials & Applications',
           'description':
               'Exploration of engineering materials and their applications...',
-          'image': 'assets/s3.png',
+          'image': 'assets/s1.png',
           'page': () => Ema(fullName: widget.fullName),
         },
         {
           'name': 'Fluid Mechanics & Hydraulic Machines',
           'description':
               'Fundamentals of fluid mechanics and hydraulic machines...',
-          'image': 'assets/s3.png',
+          'image': 'assets/s1.png',
           'page': () => Fmhm(fullName: widget.fullName),
         },
         {
           'name': 'Applied Thermodynamics',
           'description':
               'Study of applied thermodynamics and its applications...',
-          'image': 'assets/s3.png',
+          'image': 'assets/s1.png',
           'page': () => At(fullName: widget.fullName),
         },
         {
           'name': 'Engineering Economics',
           'description':
               'Introduction to engineering economics and financial principles...',
-          'image': 'assets/s3.png',
+          'image': 'assets/s1.png',
           'page': () => Ee(fullName: widget.fullName),
         },
         {
           'name': 'Basic Engineering Mechanics',
           'description': 'Fundamentals of engineering mechanics...',
-          'image': 'assets/s3.png',
+          'image': 'assets/s1.png',
           'page': () => Bem(fullName: widget.fullName),
         },
         {
           'name': 'Fluid Mechanics & Machinery',
           'description': 'Basics of fluid mechanics and machinery...',
-          'image': 'assets/s3.png',
+          'image': 'assets/s1.png',
           'page': () => Fmm(fullName: widget.fullName),
         },
         {
           'name': 'Mechanics of Materials',
           'description': 'Principles of Mechanics of Materials...',
-          'image': 'assets/s3.png',
+          'image': 'assets/s1.png',
           'page': () => Mm(fullName: widget.fullName),
         },
         {
           'name': 'Material Science and Technology',
           'description': 'Study of material science and technology...',
-          'image': 'assets/s3.png',
+          'image': 'assets/s1.png',
           'page': () => Mmt(fullName: widget.fullName),
         },
         {
           'name': 'Industrial Engineering and Management',
           'description':
               'Principles of industrial engineering and management...',
-          'image': 'assets/s3.png',
+          'image': 'assets/s1.png',
           'page': () => Iem(fullName: widget.fullName),
         },
       ],

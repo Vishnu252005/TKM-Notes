@@ -52,35 +52,35 @@ class _CSESem3ScreenState extends State<CSESem3Screen> {
           'name': 'Probability, Statistics and Optimization',
           'description':
               'This module delves into probability theory, statistical methods, and optimization techniques...',
-          'image': 'assets/s4.png',
+          'image': 'assets/s2.png',
           'page': () => Pso(fullName: widget.fullName),
         },
         {
           'name': 'Advanced Programming',
           'description':
               'This module focuses on advanced programming concepts and techniques...',
-          'image': 'assets/s5.png',
+          'image': 'assets/s1.png',
           'page': () => Ap(fullName: widget.fullName),
         },
         {
           'name': 'Data Structures and Algorithms',
           'description':
               'This module covers the fundamental concepts of data structures and algorithms...',
-          'image': 'assets/s6.png',
+          'image': 'assets/s1.png',
           'page': () => Dsa(fullName: widget.fullName),
         },
         {
           'name': 'Computer Organization and Architecture',
           'description':
               'This module explains the basics of computer organization and architecture...',
-          'image': 'assets/s7.png',
+          'image': 'assets/s1.png',
           'page': () => Coa(fullName: widget.fullName),
         },
         {
           'name': 'Life Skills and Professional Ethics',
           'description':
               'This module covers essential life skills and professional ethics...',
-          'image': 'assets/s8.png',
+          'image': 'assets/s1.png',
           'page': () => lspe(fullName: widget.fullName),
         },
       ],
@@ -97,34 +97,34 @@ class _CSESem3ScreenState extends State<CSESem3Screen> {
           'name': 'Probability, Statistics and Optimization PYQs',
           'description':
               'Previous Year Questions for Probability, Statistics, and Optimization...',
-          'image': 'assets/s4.png',
+          'image': 'assets/s2.png',
           'page': () => Pso(fullName: widget.fullName),
         },
         {
           'name': 'Advanced Programming PYQs',
           'description': 'Previous Year Questions for Advanced Programming...',
-          'image': 'assets/s5.png',
+          'image': 'assets/s1.png',
           'page': () => Ap(fullName: widget.fullName),
         },
         {
           'name': 'Data Structures and Algorithms PYQs',
           'description':
               'Previous Year Questions for Data Structures and Algorithms...',
-          'image': 'assets/s6.png',
+          'image': 'assets/s1.png',
           'page': () => Dsa(fullName: widget.fullName),
         },
         {
           'name': 'Computer Organization and Architecture PYQs',
           'description':
               'Previous Year Questions for Computer Organization and Architecture...',
-          'image': 'assets/s7.png',
+          'image': 'assets/s1.png',
           'page': () => Coa(fullName: widget.fullName),
         },
         {
           'name': 'Life Skills and Professional Ethics PYQs',
           'description':
               'Previous Year Questions for Life Skills and Professional Ethics...',
-          'image': 'assets/s8.png',
+          'image': 'assets/s1.png',
           'page': () => Lspe(fullName: widget.fullName),
         },
       ],

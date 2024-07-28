@@ -38,19 +38,19 @@ class _ECSem6ScreenState extends State<ECSem6Screen> {
       {
         'name': 'Computer Networks',
         'description': 'Study of computer networks and their applications...',
-        'image': 'assets/s7.png',
+        'image': 'assets/s1.png',
         'page': () => Cn(fullName: widget.fullName),
       },
       {
         'name': 'Database Management Systems',
         'description': 'Study of database management systems and applications...',
-        'image': 'assets/s7.png',
+        'image': 'assets/s1.png',
         'page': () => Dms(fullName: widget.fullName),
       },
       {
         'name': 'Power Electronics & Drives',
         'description': 'Study of power electronics and drive systems...',
-        'image': 'assets/s7.png',
+        'image': 'assets/s1.png',
         'page': () => Ped(fullName: widget.fullName),
       },
     ],

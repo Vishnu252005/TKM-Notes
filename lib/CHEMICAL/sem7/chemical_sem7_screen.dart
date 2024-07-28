@@ -37,13 +37,13 @@ class _CHEMICALSem7ScreenState extends State<CHEMICALSem7Screen> {
   {
     'name': 'COMPUTER AIDED PROCESS DESIGN',
     'description': 'Study of computer-aided design techniques in process engineering...',
-    'image': 'assets/s5.png',
+    'image': 'assets/s1.png',
     'page': () => Capd(fullName: widget.fullName),
   },
   {
     'name': 'BIOLOGY & BIOCHEMICAL ENGINEERING',
     'description': 'Introduction to biology and biochemical engineering principles...',
-    'image': 'assets/s5.png',
+    'image': 'assets/s1.png',
     'page': () => Bbe(fullName: widget.fullName),
   },
   

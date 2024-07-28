@@ -38,19 +38,19 @@ class _MECHSem6ScreenState extends State<MECHSem6Screen> {
       {
         'name': 'Industrial Safety',
         'description': 'Principles and practices of industrial safety...',
-        'image': 'assets/s7.png',
+        'image': 'assets/s1.png',
         'page': () => Is(fullName: widget.fullName),
       },
       {
         'name': 'Computer Aided Design & Analysis',
         'description': 'Study and application of computer-aided design and analysis...',
-        'image': 'assets/s7.png',
+        'image': 'assets/s1.png',
         'page': () => Cada(fullName: widget.fullName),
       },
       {
         'name': 'Manufacturing Automation',
         'description': 'Concepts and techniques of manufacturing automation...',
-        'image': 'assets/s7.png',
+        'image': 'assets/s1.png',
         'page': () => Ma(fullName: widget.fullName),
       },
     ],

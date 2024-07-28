@@ -37,13 +37,13 @@ class _CSESem7ScreenState extends State<CSESem7Screen> {
         {
     'name': 'Compiler Design',
     'description': 'Study of compiler design principles and practices...',
-    'image': 'assets/s5.png',
+    'image': 'assets/s1.png',
     'page': () => Cd(fullName: widget.fullName),
   },
   {
     'name': 'Cloud Computing',
     'description': 'Introduction to cloud computing and its applications...',
-    'image': 'assets/s5.png',
+    'image': 'assets/s1.png',
     'page': () => Cc(fullName: widget.fullName),
   },
       ],
@@ -51,13 +51,13 @@ class _CSESem7ScreenState extends State<CSESem7Screen> {
         {
     'name': 'Compiler Design PYQs',
     'description': 'Previous Year Questions for Compiler Design...',
-    'image': 'assets/s5.png',
+    'image': 'assets/s1.png',
     'page': () => Cd(fullName: widget.fullName),
   },
   {
     'name': 'Cloud Computing PYQs',
     'description': 'Previous Year Questions for Cloud Computing...',
-    'image': 'assets/s5.png',
+    'image': 'assets/s1.png',
     'page': () => Cc(fullName: widget.fullName),
   },
       ],

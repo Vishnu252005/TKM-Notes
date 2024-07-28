@@ -43,45 +43,45 @@ class _CIVILSem4ScreenState extends State<CIVILSem4Screen> {
         {
           "name": "Structural Analysis",
           "description": "Study of calculus and linear algebra including...",
-          "image": "assets/s4.png",
+          "image": "assets/s2.png",
           "page": () => sa(fullName: widget.fullName),
         },
         {
           "name": "Soil Mechanics",
           "description": "Exploration of fundamental concepts in chemistry...",
-          "image": "assets/s4.png",
+          "image": "assets/s2.png",
           "page": () => Sm(fullName: widget.fullName),
         },
         {
           "name": "Fluid Mechanics",
           "description": "Introduction to engineering mechanics principles...",
-          "image": "assets/s4.png",
+          "image": "assets/s2.png",
           "page": () => Fm(fullName: widget.fullName),
         },
         {
           "name": "Transportation Engineering",
           "description": "Fundamentals of engineering drawing and graphics...",
-          "image": "assets/s4.png",
+          "image": "assets/s2.png",
           "page": () => Te(fullName: widget.fullName),
         },
         {
           "name": "Disaster Management and Resilient Infrastructure",
           "description": "Introduction to various manufacturing processes...",
-          "image": "assets/s4.png",
+          "image": "assets/s2.png",
           "page": () => Dmri(fullName: widget.fullName),
         },
         {
           "name": "Environmental Sciences",
           "description":
               "Physical education and well-being through sports and yoga...",
-          "image": "assets/s4.png",
+          "image": "assets/s2.png",
           "page": () => Es(fullName: widget.fullName),
         },
         {
           "name": "Construction Technology",
           "description":
               "Basic concepts in electrical and electronics engineering...",
-          "image": "assets/s4.png",
+          "image": "assets/s2.png",
           "page": () => Ct(fullName: widget.fullName),
         }
       ],
