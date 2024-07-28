@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/CHEMICAL/sem4/ES/es.dart';
+import 'package:flutter_application_2/CHEMICAL/sem5/COI/coi.dart';
+import 'package:flutter_application_2/EEE/sem4/DC/dc.dart';
+import 'package:flutter_application_2/EEE/sem6/DSP/dsp.dart';
+import 'package:flutter_application_2/ER/sem5/CS/cs.dart';
+import 'package:flutter_application_2/ER/sem5/ESIOT/esiot.dart';
+import 'package:flutter_application_2/ER/sem5/LIC/lic.dart';
 import 'package:flutter_application_2/ER/sem5/units.dart';  // Import the correct file for units
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
@@ -32,105 +39,94 @@ class _ERSem5ScreenState extends State<ERSem5Screen> {
 
   _subjects = {
     'Notes & Books': [
-      {
-        'name': 'Calculus and Linear Algebra',
-        'description': 'Study of calculus and linear algebra including...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry',
-        'description': 'Exploration of fundamental concepts in chemistry...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Fundamentals of Electronics Engineering',
-        'description': 'Basics of electronics and electrical engineering...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics',
-        'description': 'Fundamentals of engineering drawing and graphics...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices',
-        'description': 'Introduction to various manufacturing processes...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga',
-        'description': 'Physical education and well-being through sports and yoga...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Basics of Electrical Engineering',
-        'description': 'Introduction to electrical engineering principles...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Computer Aided Drafting and Modelling',
-        'description': 'Basics of computer-aided drafting and modelling...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-    ],
-    'PYQs': [
-      {
-        'name': 'Calculus and Linear Algebra PYQs',
-        'description': 'Previous Year Questions for Calculus and Linear Algebra...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry PYQs',
-        'description': 'Previous Year Questions for Engineering Chemistry...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Fundamentals of Electronics Engineering PYQs',
-        'description': 'Previous Year Questions for Fundamentals of Electronics Engineering...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics PYQs',
-        'description': 'Previous Year Questions for Engineering Graphics...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices PYQs',
-        'description': 'Previous Year Questions for Manufacturing Practices...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga PYQs',
-        'description': 'Previous Year Questions for Sports and Yoga...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Basics of Electrical Engineering PYQs',
-        'description': 'Previous Year Questions for Basics of Electrical Engineering...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Computer Aided Drafting and Modelling PYQs',
-        'description': 'Previous Year Questions for Computer Aided Drafting and Modelling...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-    ],
+  {
+    'name': 'Control Systems',
+    'description': 'Study of feedback and control systems in engineering...',
+    'image': 'assets/s5.png',
+    'page': () => Cs(fullName: widget.fullName),
+  },
+  {
+    'name': 'Digital Signal Processing',
+    'description': 'Introduction to digital signal processing techniques and applications...',
+    'image': 'assets/s5.png',
+    'page': () => Dsp(fullName: widget.fullName),
+  },
+  {
+    'name': 'Embedded Systems and IoT',
+    'description': 'Study of embedded systems and the Internet of Things...',
+    'image': 'assets/s5.png',
+    'page': () => Esiot(fullName: widget.fullName),
+  },
+  {
+    'name': 'Digital Communication',
+    'description': 'Fundamentals of digital communication systems...',
+    'image': 'assets/s5.png',
+    'page': () => Dc(fullName: widget.fullName),
+  },
+  {
+    'name': 'Entrepreneurship and Startups',
+    'description': 'Principles and practices of entrepreneurship and startup development...',
+    'image': 'assets/s5.png',
+    'page': () => Es(fullName: widget.fullName),
+  },
+  {
+    'name': 'Constitution of India',
+    'description': 'Study of the Constitution of India and its significance...',
+    'image': 'assets/s5.png',
+    'page': () => Coi(fullName: widget.fullName),
+  },
+  {
+    'name': 'Linear Integrated Circuits',
+    'description': 'Introduction to linear integrated circuits and their applications...',
+    'image': 'assets/s5.png',
+    'page': () => Lic(fullName: widget.fullName),
+  },
+],
+'PYQs': [
+  {
+    'name': 'Control Systems PYQs',
+    'description': 'Previous Year Questions for Control Systems...',
+    'image': 'assets/s2.png',
+    'page': () => Cs(fullName: widget.fullName),
+  },
+  {
+    'name': 'Digital Signal Processing PYQs',
+    'description': 'Previous Year Questions for Digital Signal Processing...',
+    'image': 'assets/s2.png',
+    'page': () => Dsp(fullName: widget.fullName),
+  },
+  {
+    'name': 'Embedded Systems and IoT PYQs',
+    'description': 'Previous Year Questions for Embedded Systems and IoT...',
+    'image': 'assets/s2.png',
+    'page': () => Esiot(fullName: widget.fullName),
+  },
+  {
+    'name': 'Digital Communication PYQs',
+    'description': 'Previous Year Questions for Digital Communication...',
+    'image': 'assets/s2.png',
+    'page': () => Dc(fullName: widget.fullName),
+  },
+  {
+    'name': 'Entrepreneurship and Startups PYQs',
+    'description': 'Previous Year Questions for Entrepreneurship and Startups...',
+    'image': 'assets/s2.png',
+    'page': () => Es(fullName: widget.fullName),
+  },
+  {
+    'name': 'Constitution of India PYQs',
+    'description': 'Previous Year Questions for Constitution of India...',
+    'image': 'assets/s2.png',
+    'page': () => Coi(fullName: widget.fullName),
+  },
+  {
+    'name': 'Linear Integrated Circuits PYQs',
+    'description': 'Previous Year Questions for Linear Integrated Circuits...',
+    'image': 'assets/s2.png',
+    'page': () => Lic(fullName: widget.fullName),
+  },
+],
+
   };
 }
 

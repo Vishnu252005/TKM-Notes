@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/CSE/sem6/ICS/ics.dart';
+import 'package:flutter_application_2/CSE/sem6/TC/tc.dart';
 import 'package:flutter_application_2/CSE/sem6/units.dart';  // Import the correct file for units
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
@@ -32,34 +34,32 @@ class _CSESem6ScreenState extends State<CSESem6Screen> {
 
     _subjects = {
       'Notes & Books': [
-        {
-          'name': 'Data Management System',
-          'description': 'DBMS is a software system used to store, retrieve, and...',
-          'image': 'assets/s6.png',
-          'page': () => ComputerNetworksPage(fullName: widget.fullName),
-        },
-        {
-          'name': 'Design Thinking',
-          'description': 'Design thinking is a process for solving problems by pr...',
-          'image': 'assets/s2.png',
-          'page': () => ComputerNetworksPage(fullName: widget.fullName),
-        },
-        // Add more subjects as needed
+    {
+    'name': 'Theory of Computation',
+    'description': 'Study of the fundamental concepts in the theory of computation...',
+    'image': 'assets/s5.png',
+    'page': () => Tc(fullName: widget.fullName),
+     },
+     {
+    'name': 'Introductory Cyber Security',
+    'description': 'Introduction to the basics of cyber security...',
+    'image': 'assets/s5.png',
+    'page': () => Ics(fullName: widget.fullName),
+    },
       ],
       'PYQs': [
         {
-          'name': 'Data Management System PYQs',
-          'description': 'Previous Year Questions for DBMS...',
-          'image': 'assets/s6.png',
-          'page': () => ComputerNetworksPage(fullName: widget.fullName),
-        },
+    'name': 'Theory of Computation PYQs',
+    'description': 'Previous Year Questions for Theory of Computation...',
+    'image': 'assets/s5.png',
+    'page': () => Tc(fullName: widget.fullName),
+       },
         {
-          'name': 'Design Thinking PYQs',
-          'description': 'Previous Year Questions for Design Thinking...',
-          'image': 'assets/s2.png',
-          'page': () => ComputerNetworksPage(fullName: widget.fullName),
+    'name': 'Introductory Cyber Security PYQs',
+    'description': 'Previous Year Questions for Introductory Cyber Security...',
+    'image': 'assets/s5.png',
+    'page': () => Ics(fullName: widget.fullName),
         },
-        // Add more subjects as needed
       ],
     };
   }

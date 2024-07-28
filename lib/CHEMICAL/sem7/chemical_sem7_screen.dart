@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/CHEMICAL/sem7/BBE/bbe.dart';
+import 'package:flutter_application_2/CHEMICAL/sem7/CAPD/capd.dart';
 import 'package:flutter_application_2/CHEMICAL/sem7/units.dart';  // Import the correct file for units
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
@@ -32,105 +34,36 @@ class _CHEMICALSem7ScreenState extends State<CHEMICALSem7Screen> {
 
   _subjects = {
     'Notes & Books': [
-      {
-        'name': 'Calculus and Linear Algebra',
-        'description': 'Study of calculus and linear algebra including...',
-        'image': 'assets/s7.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry',
-        'description': 'Exploration of fundamental concepts in chemistry...',
-        'image': 'assets/s7.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Fundamentals of Electrical Engineering',
-        'description': 'Introduction to basic principles in electrical engineering...',
-        'image': 'assets/s7.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics',
-        'description': 'Fundamentals of engineering drawing and graphics...',
-        'image': 'assets/s7.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices',
-        'description': 'Introduction to various manufacturing processes...',
-        'image': 'assets/s7.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga',
-        'description': 'Physical education and well-being through sports and yoga...',
-        'image': 'assets/s7.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Introduction to Chemical Engineering',
-        'description': 'Basic concepts in chemical engineering...',
-        'image': 'assets/s7.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Basics of Electronics Engineering',
-        'description': 'Introduction to fundamental concepts in electronics engineering...',
-        'image': 'assets/s7.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-    ],
-    'PYQs': [
-      {
-        'name': 'Calculus and Linear Algebra PYQs',
-        'description': 'Previous Year Questions for Calculus and Linear Algebra...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry PYQs',
-        'description': 'Previous Year Questions for Engineering Chemistry...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Fundamentals of Electrical Engineering PYQs',
-        'description': 'Previous Year Questions for Fundamentals of Electrical Engineering...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics PYQs',
-        'description': 'Previous Year Questions for Engineering Graphics...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices PYQs',
-        'description': 'Previous Year Questions for Manufacturing Practices...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga PYQs',
-        'description': 'Previous Year Questions for Sports and Yoga...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Introduction to Chemical Engineering PYQs',
-        'description': 'Previous Year Questions for Introduction to Chemical Engineering...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Basics of Electronics Engineering PYQs',
-        'description': 'Previous Year Questions for Basics of Electronics Engineering...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-    ],
+  {
+    'name': 'COMPUTER AIDED PROCESS DESIGN',
+    'description': 'Study of computer-aided design techniques in process engineering...',
+    'image': 'assets/s5.png',
+    'page': () => Capd(fullName: widget.fullName),
+  },
+  {
+    'name': 'BIOLOGY & BIOCHEMICAL ENGINEERING',
+    'description': 'Introduction to biology and biochemical engineering principles...',
+    'image': 'assets/s5.png',
+    'page': () => Bbe(fullName: widget.fullName),
+  },
+  
+],
+'PYQs': [
+  {
+    'name': 'COMPUTER AIDED PROCESS DESIGN PYQs',
+    'description': 'Previous Year Questions for Computer Aided Process Design...',
+    'image': 'assets/s2.png',
+    'page': () => Capd(fullName: widget.fullName),
+  },
+  {
+    'name': 'BIOLOGY & BIOCHEMICAL ENGINEERING PYQs',
+    'description': 'Previous Year Questions for Biology & Biochemical Engineering...',
+    'image': 'assets/s2.png',
+    'page': () =>  Bbe(fullName: widget.fullName),
+  },
+ 
+],
+
   };
 }
 

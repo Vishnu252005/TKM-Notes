@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/CSE/sem7/CC/cc.dart';
+import 'package:flutter_application_2/CSE/sem7/CD/cd.dart';
 import 'package:flutter_application_2/CSE/sem7/units.dart';  // Import the correct file for units
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
@@ -33,33 +35,31 @@ class _CSESem7ScreenState extends State<CSESem7Screen> {
     _subjects = {
       'Notes & Books': [
         {
-          'name': 'Data Management System',
-          'description': 'DBMS is a software system used to store, retrieve, and...',
-          'image': 'assets/s7.png',
-          'page': () => ComputerNetworksPage(fullName: widget.fullName),
-        },
-        {
-          'name': 'Design Thinking',
-          'description': 'Design thinking is a process for solving problems by pr...',
-          'image': 'assets/s2.png',
-          'page': () => ComputerNetworksPage(fullName: widget.fullName),
-        },
-        // Add more subjects as needed
+    'name': 'Compiler Design',
+    'description': 'Study of compiler design principles and practices...',
+    'image': 'assets/s5.png',
+    'page': () => Cd(fullName: widget.fullName),
+  },
+  {
+    'name': 'Cloud Computing',
+    'description': 'Introduction to cloud computing and its applications...',
+    'image': 'assets/s5.png',
+    'page': () => Cc(fullName: widget.fullName),
+  },
       ],
       'PYQs': [
         {
-          'name': 'Data Management System PYQs',
-          'description': 'Previous Year Questions for DBMS...',
-          'image': 'assets/s7.png',
-          'page': () => ComputerNetworksPage(fullName: widget.fullName),
-        },
-        {
-          'name': 'Design Thinking PYQs',
-          'description': 'Previous Year Questions for Design Thinking...',
-          'image': 'assets/s2.png',
-          'page': () => ComputerNetworksPage(fullName: widget.fullName),
-        },
-        // Add more subjects as needed
+    'name': 'Compiler Design PYQs',
+    'description': 'Previous Year Questions for Compiler Design...',
+    'image': 'assets/s5.png',
+    'page': () => Cd(fullName: widget.fullName),
+  },
+  {
+    'name': 'Cloud Computing PYQs',
+    'description': 'Previous Year Questions for Cloud Computing...',
+    'image': 'assets/s5.png',
+    'page': () => Cc(fullName: widget.fullName),
+  },
       ],
     };
   }

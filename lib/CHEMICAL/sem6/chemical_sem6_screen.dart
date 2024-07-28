@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/CHEMICAL/sem6/AICE/aice.dart';
+import 'package:flutter_application_2/CHEMICAL/sem6/HCRD/hcrd.dart';
+import 'package:flutter_application_2/CHEMICAL/sem6/IPC/ipc.dart';
+import 'package:flutter_application_2/CHEMICAL/sem6/MTO2/mto2.dart';
 import 'package:flutter_application_2/CHEMICAL/sem6/units.dart';  // Import the correct file for units
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
@@ -32,105 +36,60 @@ class _CHEMICALSem6ScreenState extends State<CHEMICALSem6Screen> {
 
   _subjects = {
     'Notes & Books': [
-      {
-        'name': 'Calculus and Linear Algebra',
-        'description': 'Study of calculus and linear algebra including...',
-        'image': 'assets/s6.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry',
-        'description': 'Exploration of fundamental concepts in chemistry...',
-        'image': 'assets/s6.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Fundamentals of Electrical Engineering',
-        'description': 'Introduction to basic principles in electrical engineering...',
-        'image': 'assets/s6.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics',
-        'description': 'Fundamentals of engineering drawing and graphics...',
-        'image': 'assets/s6.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices',
-        'description': 'Introduction to various manufacturing processes...',
-        'image': 'assets/s6.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga',
-        'description': 'Physical education and well-being through sports and yoga...',
-        'image': 'assets/s6.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Introduction to Chemical Engineering',
-        'description': 'Basic concepts in chemical engineering...',
-        'image': 'assets/s6.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Basics of Electronics Engineering',
-        'description': 'Introduction to fundamental concepts in electronics engineering...',
-        'image': 'assets/s6.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-    ],
-    'PYQs': [
-      {
-        'name': 'Calculus and Linear Algebra PYQs',
-        'description': 'Previous Year Questions for Calculus and Linear Algebra...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry PYQs',
-        'description': 'Previous Year Questions for Engineering Chemistry...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Fundamentals of Electrical Engineering PYQs',
-        'description': 'Previous Year Questions for Fundamentals of Electrical Engineering...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics PYQs',
-        'description': 'Previous Year Questions for Engineering Graphics...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices PYQs',
-        'description': 'Previous Year Questions for Manufacturing Practices...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga PYQs',
-        'description': 'Previous Year Questions for Sports and Yoga...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Introduction to Chemical Engineering PYQs',
-        'description': 'Previous Year Questions for Introduction to Chemical Engineering...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Basics of Electronics Engineering PYQs',
-        'description': 'Previous Year Questions for Basics of Electronics Engineering...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-    ],
+  {
+    'name': 'HETEROGENEOUS CATALYSIS AND REACTOR DESIGN',
+    'description': 'Study of heterogeneous catalysis and reactor design principles...',
+    'image': 'assets/s5.png',
+    'page': () => Hcrd(fullName: widget.fullName),
+  },
+  {
+    'name': 'INSTRUMENTATION & PROCESS CONTROL',
+    'description': 'Exploration of instrumentation and process control in chemical engineering...',
+    'image': 'assets/s5.png',
+    'page': () => Ipc(fullName: widget.fullName),
+  },
+  {
+    'name': 'Mass Transfer Operations - II',
+    'description': 'Advanced study of mass transfer operations in chemical engineering...',
+    'image': 'assets/s5.png',
+    'page': () => Mto2(fullName: widget.fullName),
+  },
+  {
+    'name': 'ARTIFICIAL INTELLIGENCE IN CHEMICAL ENGINEERING',
+    'description': 'Application of artificial intelligence in chemical engineering...',
+    'image': 'assets/s5.png',
+    'page': () => Aice(fullName: widget.fullName),
+  },
+ 
+],
+'PYQs': [
+  {
+    'name': 'HETEROGENEOUS CATALYSIS AND REACTOR DESIGN PYQs',
+    'description': 'Previous Year Questions for Heterogeneous Catalysis and Reactor Design...',
+    'image': 'assets/s2.png',
+    'page': () => Hcrd(fullName: widget.fullName),
+  },
+  {
+    'name': 'INSTRUMENTATION & PROCESS CONTROL PYQs',
+    'description': 'Previous Year Questions for Instrumentation & Process Control...',
+    'image': 'assets/s2.png',
+    'page': () => Ipc(fullName: widget.fullName),
+  },
+  {
+    'name': 'Mass Transfer Operations - II PYQs',
+    'description': 'Previous Year Questions for Mass Transfer Operations - II...',
+    'image': 'assets/s2.png',
+    'page': () => Mto2(fullName: widget.fullName),
+  },
+  {
+    'name': 'ARTIFICIAL INTELLIGENCE IN CHEMICAL ENGINEERING PYQs',
+    'description': 'Previous Year Questions for Artificial Intelligence in Chemical Engineering...',
+    'image': 'assets/s2.png',
+    'page': () => Aice(fullName: widget.fullName),
+  },
+  
+],
+
   };
 }
 

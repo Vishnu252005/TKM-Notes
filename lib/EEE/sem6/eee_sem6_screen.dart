@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/EEE/sem6/DSP/dsp.dart';
+import 'package:flutter_application_2/EEE/sem6/EVT/evt.dart';
+import 'package:flutter_application_2/EEE/sem6/PSD/psd.dart';
 import 'package:flutter_application_2/EEE/sem6/units.dart';  // Import the correct file for units
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
@@ -33,91 +36,43 @@ class _EEESem6ScreenState extends State<EEESem6Screen> {
   _subjects = {
     'Notes & Books': [
       {
-        'name': 'Ordinary Differential Equations and Transforms',
-        'description': 'Study of differential equations and various transforms...',
-        'image': 'assets/s1.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry',
-        'description': 'Exploration of fundamental concepts in chemistry...',
-        'image': 'assets/s1.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Problem Solving and Programming',
-        'description': 'Basics of programming and problem-solving techniques...',
-        'image': 'assets/s1.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics',
-        'description': 'Fundamentals of engineering drawing and graphics...',
-        'image': 'assets/s1.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices',
-        'description': 'Introduction to various manufacturing processes...',
-        'image': 'assets/s1.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga',
-        'description': 'Physical education and well-being through sports and yoga...',
-        'image': 'assets/s1.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Universal Human Values-II',
-        'description': 'Exploration of universal human values...',
-        'image': 'assets/s1.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
+    'name': 'Electric Vehicle Technology',
+    'description': 'Study of technologies related to electric vehicles...',
+    'image': 'assets/s5.png',
+    'page': () => Evt(fullName: widget.fullName),
+  },
+  {
+    'name': 'Power Semiconductor Drives',
+    'description': 'Introduction to power semiconductor drives and their applications...',
+    'image': 'assets/s5.png',
+    'page': () => Psd(fullName: widget.fullName),
+  },
+  {
+    'name': 'Digital Signal Processing',
+    'description': 'Study of digital signal processing techniques and applications...',
+    'image': 'assets/s5.png',
+    'page': () => Dsp(fullName: widget.fullName),
+  },
     ],
     'PYQs': [
       {
-        'name': 'Ordinary Differential Equations and Transforms PYQs',
-        'description': 'Previous Year Questions for Ordinary Differential Equations and Transforms...',
-        'image': 'assets/s6.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry PYQs',
-        'description': 'Previous Year Questions for Engineering Chemistry...',
-        'image': 'assets/s6.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Problem Solving and Programming PYQs',
-        'description': 'Previous Year Questions for Problem Solving and Programming...',
-        'image': 'assets/s6.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics PYQs',
-        'description': 'Previous Year Questions for Engineering Graphics...',
-        'image': 'assets/s6.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices PYQs',
-        'description': 'Previous Year Questions for Manufacturing Practices...',
-        'image': 'assets/s6.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga PYQs',
-        'description': 'Previous Year Questions for Sports and Yoga...',
-        'image': 'assets/s6.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Universal Human Values-II PYQs',
-        'description': 'Previous Year Questions for Universal Human Values-II...',
-        'image': 'assets/s6.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
+    'name': 'Electric Vehicle Technology PYQs',
+    'description': 'Previous Year Questions for Electric Vehicle Technology...',
+    'image': 'assets/s5.png',
+    'page': () => Evt(fullName: widget.fullName),
+  },
+  {
+    'name': 'Power Semiconductor Drives PYQs',
+    'description': 'Previous Year Questions for Power Semiconductor Drives...',
+    'image': 'assets/s5.png',
+    'page': () => Psd(fullName: widget.fullName),
+  },
+  {
+    'name': 'Digital Signal Processing PYQs',
+    'description': 'Previous Year Questions for Digital Signal Processing...',
+    'image': 'assets/s5.png',
+    'page': () => Dsp(fullName: widget.fullName),
+  },
     ],
   };
 }

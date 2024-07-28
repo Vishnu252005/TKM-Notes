@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/CHEMICAL/sem5/COI/coi.dart';
+import 'package:flutter_application_2/MECH/sem5/IMEP/imep.dart';
+import 'package:flutter_application_2/MECH/sem5/KDM/kdm.dart';
+import 'package:flutter_application_2/MECH/sem5/MESD/mesd.dart';
+import 'package:flutter_application_2/MECH/sem5/MRC/mrc.dart';
+import 'package:flutter_application_2/MECH/sem5/OR/or.dart';
+import 'package:flutter_application_2/MECH/sem5/POM/pom.dart';
 import 'package:flutter_application_2/MECH/sem5/units.dart';  // Import the correct file for units
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
@@ -31,106 +38,95 @@ class _MECHSem5ScreenState extends State<MECHSem5Screen> {
   super.initState();
 
   _subjects = {
-    'Notes & Books': [
-      {
-        'name': 'Calculus and Linear Algebra',
-        'description': 'Study of calculus and linear algebra including...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+    'Notes & Books': [ 
+{
+        'name': 'Production & Operations Management',
+        'description': 'Study of production and operations management principles...',
+        'image': 'assets/s7.png',
+        'page': () => Pom(fullName: widget.fullName),
       },
       {
-        'name': 'Engineering Chemistry',
-        'description': 'Exploration of fundamental concepts in chemistry...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'name': 'Machine Element & System Design',
+        'description': 'Design of machine elements and systems...',
+        'image': 'assets/s7.png',
+        'page': () => Mesd(fullName: widget.fullName),
       },
       {
-        'name': 'Fundamentals of Electronics Engineering',
-        'description': 'Basics of electronics and electrical engineering...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'name': 'Kinematics & Dynamics of Machines',
+        'description': 'Study of kinematics and dynamics in mechanical systems...',
+        'image': 'assets/s7.png',
+        'page': () => Kdm(fullName: widget.fullName),
       },
       {
-        'name': 'Engineering Graphics',
-        'description': 'Fundamentals of engineering drawing and graphics...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'name': 'Mechatronics, Robotics & Control',
+        'description': 'Integration of mechatronics, robotics, and control systems...',
+        'image': 'assets/s7.png',
+        'page': () => Mrc(fullName: widget.fullName),
       },
       {
-        'name': 'Manufacturing Practices',
-        'description': 'Introduction to various manufacturing processes...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'name': 'Humanities – II Operations Research',
+        'description': 'Operations research in humanities...',
+        'image': 'assets/s7.png',
+        'page': () => Or(fullName: widget.fullName),
       },
       {
-        'name': 'Sports and Yoga',
-        'description': 'Physical education and well-being through sports and yoga...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'name': 'Constitution of India',
+        'description': 'Study of the Constitution of India...',
+        'image': 'assets/s7.png',
+        'page': () => Coi(fullName: widget.fullName),
       },
       {
-        'name': 'Basics of Electrical Engineering',
-        'description': 'Introduction to electrical engineering principles...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Computer Aided Drafting and Modelling',
-        'description': 'Basics of computer-aided drafting and modelling...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'name': 'Introduction to MEP',
+        'description': 'Basics of Mechanical, Electrical, and Plumbing systems...',
+        'image': 'assets/s7.png',
+        'page': () => Imep(fullName: widget.fullName),
       },
     ],
     'PYQs': [
       {
-        'name': 'Calculus and Linear Algebra PYQs',
-        'description': 'Previous Year Questions for Calculus and Linear Algebra...',
+        'name': 'Production & Operations Management PYQs',
+        'description': 'Previous Year Questions for Production & Operations Management...',
         'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'page': () => Pom(fullName: widget.fullName),
       },
       {
-        'name': 'Engineering Chemistry PYQs',
-        'description': 'Previous Year Questions for Engineering Chemistry...',
+        'name': 'Machine Element & System Design PYQs',
+        'description': 'Previous Year Questions for Machine Element & System Design...',
         'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'page': () => Mesd(fullName: widget.fullName),
       },
       {
-        'name': 'Fundamentals of Electronics Engineering PYQs',
-        'description': 'Previous Year Questions for Fundamentals of Electronics Engineering...',
+        'name': 'Kinematics & Dynamics of Machines PYQs',
+        'description': 'Previous Year Questions for Kinematics & Dynamics of Machines...',
         'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'page': () => Kdm(fullName: widget.fullName),
       },
       {
-        'name': 'Engineering Graphics PYQs',
-        'description': 'Previous Year Questions for Engineering Graphics...',
+        'name': 'Mechatronics, Robotics & Control PYQs',
+        'description': 'Previous Year Questions for Mechatronics, Robotics & Control...',
         'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'page': () => Mrc(fullName: widget.fullName),
       },
       {
-        'name': 'Manufacturing Practices PYQs',
-        'description': 'Previous Year Questions for Manufacturing Practices...',
+        'name': 'Humanities – II Operations Research PYQs',
+        'description': 'Previous Year Questions for Humanities – II Operations Research...',
         'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'page': () => Or(fullName: widget.fullName),
       },
       {
-        'name': 'Sports and Yoga PYQs',
-        'description': 'Previous Year Questions for Sports and Yoga...',
+        'name': 'Constitution of India PYQs',
+        'description': 'Previous Year Questions for Constitution of India...',
         'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'page': () => Coi(fullName: widget.fullName),
       },
       {
-        'name': 'Basics of Electrical Engineering PYQs',
-        'description': 'Previous Year Questions for Basics of Electrical Engineering...',
+        'name': 'Introduction to MEP PYQs',
+        'description': 'Previous Year Questions for Introduction to MEP...',
         'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Computer Aided Drafting and Modelling PYQs',
-        'description': 'Previous Year Questions for Computer Aided Drafting and Modelling...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        'page': () => Imep(fullName: widget.fullName),
       },
     ],
+
   };
 }
 

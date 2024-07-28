@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/CHEMICAL/sem5/COI/coi.dart';
+import 'package:flutter_application_2/CHEMICAL/sem5/EEA/eea.dart';
+import 'package:flutter_application_2/CHEMICAL/sem5/EMCI/emci.dart';
+import 'package:flutter_application_2/CHEMICAL/sem5/KRD/krd.dart';
+import 'package:flutter_application_2/CHEMICAL/sem5/MTO1/mto1.dart';
+import 'package:flutter_application_2/CHEMICAL/sem5/PT/pt.dart';
+import 'package:flutter_application_2/CHEMICAL/sem5/TP/tp.dart';
 import 'package:flutter_application_2/CHEMICAL/sem5/units.dart';  // Import the correct file for units
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
@@ -32,105 +39,93 @@ class _CHEMICALSem5ScreenState extends State<CHEMICALSem5Screen> {
 
   _subjects = {
     'Notes & Books': [
-      {
-        'name': 'Calculus and Linear Algebra',
-        'description': 'Study of calculus and linear algebra including...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry',
-        'description': 'Exploration of fundamental concepts in chemistry...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Fundamentals of Electrical Engineering',
-        'description': 'Introduction to basic principles in electrical engineering...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics',
-        'description': 'Fundamentals of engineering drawing and graphics...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices',
-        'description': 'Introduction to various manufacturing processes...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga',
-        'description': 'Physical education and well-being through sports and yoga...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Introduction to Chemical Engineering',
-        'description': 'Basic concepts in chemical engineering...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Basics of Electronics Engineering',
-        'description': 'Introduction to fundamental concepts in electronics engineering...',
-        'image': 'assets/s5.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-    ],
-    'PYQs': [
-      {
-        'name': 'Calculus and Linear Algebra PYQs',
-        'description': 'Previous Year Questions for Calculus and Linear Algebra...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry PYQs',
-        'description': 'Previous Year Questions for Engineering Chemistry...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Fundamentals of Electrical Engineering PYQs',
-        'description': 'Previous Year Questions for Fundamentals of Electrical Engineering...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics PYQs',
-        'description': 'Previous Year Questions for Engineering Graphics...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices PYQs',
-        'description': 'Previous Year Questions for Manufacturing Practices...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga PYQs',
-        'description': 'Previous Year Questions for Sports and Yoga...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Introduction to Chemical Engineering PYQs',
-        'description': 'Previous Year Questions for Introduction to Chemical Engineering...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Basics of Electronics Engineering PYQs',
-        'description': 'Previous Year Questions for Basics of Electronics Engineering...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-    ],
+  {
+    'name': 'Mass Transfer Operations - I',
+    'description': 'Study of mass transfer operations in chemical engineering...',
+    'image': 'assets/s5.png',
+    'page': () => Mto1(fullName: widget.fullName),
+  },
+  {
+    'name': 'KINETICS AND REACTOR DESIGN',
+    'description': 'Exploration of chemical kinetics and reactor design principles...',
+    'image': 'assets/s5.png',
+    'page': () => Krd(fullName: widget.fullName),
+  },
+  {
+    'name': 'TRANSPORT PHENOMENA',
+    'description': 'Introduction to the principles of transport phenomena...',
+    'image': 'assets/s5.png',
+    'page': () => Tp(fullName: widget.fullName),
+  },
+  {
+    'name': 'Particle Technology',
+    'description': 'Fundamentals of particle technology in chemical engineering...',
+    'image': 'assets/s5.png',
+    'page': () => Pt(fullName: widget.fullName),
+  },
+  {
+    'name': 'ECONOMICS AND MANAGEMENT FOR CHEMICAL INDUSTRIES',
+    'description': 'Introduction to economics and management in chemical industries...',
+    'image': 'assets/s5.png',
+    'page': () => Emci(fullName: widget.fullName),
+  },
+  {
+    'name': 'CONSTITUTION OF INDIA',
+    'description': 'Study of the Constitution of India and its significance...',
+    'image': 'assets/s5.png',
+    'page': () => Coi(fullName: widget.fullName),
+  },
+  {
+    'name': 'ENERGY & ENVIRONMENTAL AUDIT',
+    'description': 'Basic concepts in energy and environmental auditing...',
+    'image': 'assets/s5.png',
+    'page': () => Eea(fullName: widget.fullName),
+  },
+],
+'PYQs': [
+  {
+    'name': 'Mass Transfer Operations - I PYQs',
+    'description': 'Previous Year Questions for Mass Transfer Operations - I...',
+    'image': 'assets/s2.png',
+    'page': () => Mto1(fullName: widget.fullName),
+  },
+  {
+    'name': 'KINETICS AND REACTOR DESIGN PYQs',
+    'description': 'Previous Year Questions for Kinetics and Reactor Design...',
+    'image': 'assets/s2.png',
+    'page': () => Krd(fullName: widget.fullName),
+  },
+  {
+    'name': 'TRANSPORT PHENOMENA PYQs',
+    'description': 'Previous Year Questions for Transport Phenomena...',
+    'image': 'assets/s2.png',
+    'page': () => Tp(fullName: widget.fullName),
+  },
+  {
+    'name': 'Particle Technology PYQs',
+    'description': 'Previous Year Questions for Particle Technology...',
+    'image': 'assets/s2.png',
+    'page': () => Pt(fullName: widget.fullName),
+  },
+  {
+    'name': 'ECONOMICS AND MANAGEMENT FOR CHEMICAL INDUSTRIES PYQs',
+    'description': 'Previous Year Questions for Economics and Management for Chemical Industries...',
+    'image': 'assets/s2.png',
+    'page': () => Emci(fullName: widget.fullName),
+  },
+  {
+    'name': 'CONSTITUTION OF INDIA PYQs',
+    'description': 'Previous Year Questions for Constitution of India...',
+    'image': 'assets/s2.png',
+    'page': () => Coi(fullName: widget.fullName),
+  },
+  {
+    'name': 'ENERGY & ENVIRONMENTAL AUDIT PYQs',
+    'description': 'Previous Year Questions for Energy & Environmental Audit...',
+    'image': 'assets/s2.png',
+    'page': () => Eea(fullName: widget.fullName),
+  },
+],
   };
 }
 
