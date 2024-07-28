@@ -116,31 +116,39 @@ class _ECSem5ScreenState extends State<ECSem5Screen> {
   };
 }
 
-  @override
+ @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isPortrait = screenSize.height > screenSize.width;
+
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 3, 53, 548),
+      backgroundColor: const Color.fromARGB(755, 7, 17, 148),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(25.0),
+              padding: EdgeInsets.all(isPortrait ? 24.0 : 16.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Hey ${widget.fullName}',
-                        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
-                      ),
-                      const Text(
-                        'Select Subject',
-                        style: TextStyle(fontSize: 56, color: Colors.white70),
-                      ),
-                    ],
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Hey ${widget.fullName}',
+                          style: TextStyle(
+                              fontSize: isPortrait ? 24 : 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                        const Text(
+                          'Select Subject',
+                          style: TextStyle(fontSize: 16, color: Colors.white70),
+                        ),
+                      ],
+                    ),
                   ),
                   GestureDetector(
                     onTap: () {
@@ -158,36 +166,40 @@ class _ECSem5ScreenState extends State<ECSem5Screen> {
                     },
                     child: CircleAvatar(
                       backgroundColor: Colors.red[600],
-                      radius: 30,
+                      radius: isPortrait ? 30 : 20,
                       child: Text(
                         widget.fullName[0].toUpperCase(),
-                        style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: isPortrait ? 30 : 20,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 56),
+            const SizedBox(height: 16),
             Expanded(
               child: Container(
                 width: double.infinity,
                 decoration: const BoxDecoration(
                   color: Colors.black,
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25),
-                    topRight: Radius.circular(25),
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
                   ),
                 ),
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 56.0, vertical: 22),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 24),
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 58, 58, 58),
-                          borderRadius: BorderRadius.circular(25),
+                          color: const Color.fromARGB(755, 58, 58, 58),
+                          borderRadius: BorderRadius.circular(24),
                         ),
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
@@ -195,14 +207,16 @@ class _ECSem5ScreenState extends State<ECSem5Screen> {
                             _tabs.length,
                             (index) => Expanded(
                               child: GestureDetector(
-                                onTap: () => setState(() => _selectedIndex = index),
+                                onTap: () =>
+                                    setState(() => _selectedIndex = index),
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(vertical: 52),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
                                   decoration: BoxDecoration(
                                     color: _selectedIndex == index
                                         ? Colors.black
-                                        : const Color.fromARGB(255, 58, 58, 58),
-                                    borderRadius: BorderRadius.circular(25),
+                                        : const Color.fromARGB(755, 58, 58, 58),
+                                    borderRadius: BorderRadius.circular(24),
                                   ),
                                   child: Text(
                                     _tabs[index],
@@ -216,23 +230,31 @@ class _ECSem5ScreenState extends State<ECSem5Screen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 5),
+                    const SizedBox(height: 16),
                     Expanded(
                       child: ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 56),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         itemCount: _subjects[_tabs[_selectedIndex]]!.length,
                         itemBuilder: (context, index) {
-                          var subject = _subjects[_tabs[_selectedIndex]]![index];
+                          var subject =
+                              _subjects[_tabs[_selectedIndex]]![index];
                           return Card(
-                            color: const Color.fromARGB(255, 58, 58, 58),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(52)),
+                            color: const Color.fromARGB(755, 58, 58, 58),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16)),
                             child: ListTile(
                               contentPadding: const EdgeInsets.all(8),
                               leading: subject['image'] != null
-                                  ? Image.asset(subject['image'], width: 80, height: 80)
+                                  ? Image.asset(subject['image'],
+                                      width: 50, height: 50)
                                   : null,
-                              title: Text(subject['name'], style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                              subtitle: Text(subject['description'], style: const TextStyle(color: Colors.white70)),
+                              title: Text(subject['name'],
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold)),
+                              subtitle: Text(subject['description'],
+                                  style:
+                                      const TextStyle(color: Colors.white70)),
                               onTap: () {
                                 Navigator.push(
                                   context,
