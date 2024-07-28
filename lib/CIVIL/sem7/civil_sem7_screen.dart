@@ -38,13 +38,13 @@ class _CIVILSem7ScreenState extends State<CIVILSem7Screen> {
           'name': 'CONSTRUCTION PROJECT MANAGEMENT',
           'description':
               'Study of construction project management including...',
-          'image': 'assets/s7.png',
+          'image': 'assets/s1.png',
           'page': () => Cpm(fullName: widget.fullName),
         },
         {
           'name': 'FINANCE AND ACCOUNTING FOR ENGINEERS',
           'description': 'Exploration of fundamental concepts in finance....',
-          'image': 'assets/s7.png',
+          'image': 'assets/s1.png',
           'page': () => Fae(fullName: widget.fullName),
         },
       ],

@@ -37,13 +37,13 @@ class _ECSem7ScreenState extends State<ECSem7Screen> {
       {
         'name': 'Computer Vision',
         'description': 'Study of computer vision and its applications...',
-        'image': 'assets/s7.png',
+        'image': 'assets/s1.png',
         'page': () => Cv(fullName: widget.fullName),
       },
       {
         'name': 'Energy Systems',
         'description': 'Study of energy systems and their management...',
-        'image': 'assets/s7.png',
+        'image': 'assets/s1.png',
         'page': () => Es(fullName: widget.fullName),
       },
     ],

@@ -39,25 +39,25 @@ class _CHEMICALSem6ScreenState extends State<CHEMICALSem6Screen> {
   {
     'name': 'HETEROGENEOUS CATALYSIS AND REACTOR DESIGN',
     'description': 'Study of heterogeneous catalysis and reactor design principles...',
-    'image': 'assets/s5.png',
+    'image': 'assets/s1.png',
     'page': () => Hcrd(fullName: widget.fullName),
   },
   {
     'name': 'INSTRUMENTATION & PROCESS CONTROL',
     'description': 'Exploration of instrumentation and process control in chemical engineering...',
-    'image': 'assets/s5.png',
+    'image': 'assets/s1.png',
     'page': () => Ipc(fullName: widget.fullName),
   },
   {
     'name': 'Mass Transfer Operations - II',
     'description': 'Advanced study of mass transfer operations in chemical engineering...',
-    'image': 'assets/s5.png',
+    'image': 'assets/s1.png',
     'page': () => Mto2(fullName: widget.fullName),
   },
   {
     'name': 'ARTIFICIAL INTELLIGENCE IN CHEMICAL ENGINEERING',
     'description': 'Application of artificial intelligence in chemical engineering...',
-    'image': 'assets/s5.png',
+    'image': 'assets/s1.png',
     'page': () => Aice(fullName: widget.fullName),
   },
  

@@ -38,20 +38,20 @@ class _CIVILSem6ScreenState extends State<CIVILSem6Screen> {
         {
           'name': 'QUANTITY SURVEYING AND VALUATION',
           'description': 'Study of quantity surveying including...',
-          'image': 'assets/s6.png',
+          'image': 'assets/s1.png',
           'page': () => Qsv(fullName: widget.fullName),
         },
         {
           'name': 'Design of structures II',
           'description': 'Exploration of design of structures...',
-          'image': 'assets/s6.png',
+          'image': 'assets/s1.png',
           'page': () => Ds2(fullName: widget.fullName),
         },
         {
           'name': 'COMPUTER BASED NUMERICAL TECHNIQUES',
           'description':
               'Introduction to computer based numerical techniques...',
-          'image': 'assets/s6.png',
+          'image': 'assets/s1.png',
           'page': () => Cbnt(fullName: widget.fullName),
         },
       ],

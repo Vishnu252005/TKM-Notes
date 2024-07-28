@@ -37,13 +37,13 @@ class _ERSem7ScreenState extends State<ERSem7Screen> {
      {
         'name': 'Microwave and Antennas',
         'description': 'Study of microwave engineering and antenna design...',
-        'image': 'assets/s7.png',
+        'image': 'assets/s1.png',
         'page': () => Ma(fullName: widget.fullName),
       },
       {
         'name': 'Computer Networks and Security',
         'description': 'Study of computer networks and cybersecurity principles...',
-        'image': 'assets/s7.png',
+        'image': 'assets/s1.png',
         'page': () => Cns(fullName: widget.fullName),
       },
     ],

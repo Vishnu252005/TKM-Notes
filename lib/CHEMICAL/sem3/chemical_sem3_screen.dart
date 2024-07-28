@@ -42,42 +42,42 @@ class _CHEMICALSem3ScreenState extends State<CHEMICALSem3Screen> {
           'name': 'Probability Distributions and Complex Analysis',
           'description':
               'Overview of probability distributions and complex analysis...',
-          'image': 'assets/s3.png',
+          'image': 'assets/s1.png',
           'page': () => Pbca(fullName: widget.fullName),
         },
         {
           'name': 'Overview of Chemical Industries',
           'description':
               'Sustainable development and pollution control in chemical industries...',
-          'image': 'assets/s3.png',
+          'image': 'assets/s1.png',
           'page': () => Oci(fullName: widget.fullName),
         },
         {
           'name': 'Chemistry for Process Engineers',
           'description':
               'Fundamental chemistry concepts relevant to process engineering...',
-          'image': 'assets/s3.png',
+          'image': 'assets/s1.png',
           'page': () => Cpe(fullName: widget.fullName),
         },
         {
           'name': 'Material & Energy Balance Computations',
           'description':
               'Techniques for performing material and energy balance calculations...',
-          'image': 'assets/s3.png',
+          'image': 'assets/s1.png',
           'page': () => Mebc(fullName: widget.fullName),
         },
         {
           'name': 'Life Skills and Professional Ethics',
           'description':
               'Development of life skills and understanding professional ethics...',
-          'image': 'assets/s3.png',
+          'image': 'assets/s1.png',
           'page': () => lspe(fullName: widget.fullName),
         },
         {
           'name': 'Process Safety',
           'description':
               'Principles and practices of ensuring safety in process industries...',
-          'image': 'assets/s3.png',
+          'image': 'assets/s1.png',
           'page': () => Ps(fullName: widget.fullName),
         },
       ],

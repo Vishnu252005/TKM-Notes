@@ -43,48 +43,48 @@ class _MECHSem4ScreenState extends State<MECHSem4Screen> {
           'name': 'Mechanics of Deformable Solids',
           'description':
               'Study of mechanics related to deformable solid materials...',
-          'image': 'assets/s4.png',
+          'image': 'assets/s2.png',
           'page': () => Mds(fullName: widget.fullName),
         },
         {
           'name': 'Measurements & Metrology',
           'description':
               'Exploration of measurement techniques and metrology...',
-          'image': 'assets/s4.png',
+          'image': 'assets/s2.png',
           'page': () => Mm(fullName: widget.fullName),
         },
         {
           'name': 'Manufacturing Processes',
           'description': 'Introduction to various manufacturing processes...',
-          'image': 'assets/s4.png',
+          'image': 'assets/s2.png',
           'page': () => Mp(fullName: widget.fullName),
         },
         {
           'name': 'Heat Transfer & Thermal Machines',
           'description':
               'Fundamentals of heat transfer and thermal machinery...',
-          'image': 'assets/s4.png',
+          'image': 'assets/s2.png',
           'page': () => Httm(fullName: widget.fullName),
         },
         {
           'name': 'Management – I (Finance and Accounting)',
           'description':
               'Principles of finance and accounting in management...',
-          'image': 'assets/s4.png',
+          'image': 'assets/s2.png',
           'page': () => Fa(fullName: widget.fullName),
         },
         {
           'name': 'Environmental Sciences',
           'description':
               'Study of environmental science principles and applications...',
-          'image': 'assets/s4.png',
+          'image': 'assets/s2.png',
           'page': () => Es(fullName: widget.fullName),
         },
         {
           'name': 'Biology for Engineers',
           'description':
               'Introduction to biological concepts relevant to engineering...',
-          'image': 'assets/s4.png',
+          'image': 'assets/s2.png',
           'page': () => Be(fullName: widget.fullName),
         },
       ],

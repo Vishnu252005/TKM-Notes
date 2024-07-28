@@ -20,7 +20,7 @@
             </connections>
         </customObject>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
-        <menu title="Main Menu" systemMenu="main" id="AYu-sK-qS6">
+        <menu title="Main Menu" systemMenu="main" id="AYu-sK-qs1">
             <items>
                 <menuItem title="APP_NAME" id="1Xt-HY-uBw">
                     <modifierMask key="keyEquivalentModifierMask"/>

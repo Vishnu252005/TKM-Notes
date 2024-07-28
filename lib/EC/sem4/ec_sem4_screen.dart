@@ -42,45 +42,45 @@ class _ECSem4ScreenState extends State<ECSem4Screen> {
         {
           'name': 'Computer Organization and Architecture',
           'description': 'Study of computer organization and architecture...',
-          'image': 'assets/s4.png',
+          'image': 'assets/s2.png',
           'page': () => Coa(fullName: widget.fullName),
         },
         {
           'name': 'Signals & Systems',
           'description':
               'Exploration of fundamental concepts in signals and systems...',
-          'image': 'assets/s4.png',
+          'image': 'assets/s2.png',
           'page': () => Ss(fullName: widget.fullName),
         },
         {
           'name': 'Electrical Technology',
           'description': 'Basics of electrical technology and principles...',
-          'image': 'assets/s4.png',
+          'image': 'assets/s2.png',
           'page': () => Et(fullName: widget.fullName),
         },
         {
           'name': 'Solid State Electronic Devices and Circuits',
           'description':
               'Fundamentals of solid-state electronic devices and circuits...',
-          'image': 'assets/s4.png',
+          'image': 'assets/s2.png',
           'page': () => Ssedc(fullName: widget.fullName),
         },
         {
           'name': 'Engineering Economics',
           'description': 'Introduction to engineering economics...',
-          'image': 'assets/s4.png',
+          'image': 'assets/s2.png',
           'page': () => Ee(fullName: widget.fullName),
         },
         {
           'name': 'Environmental Sciences',
           'description': 'Study of environmental sciences and issues...',
-          'image': 'assets/s4.png',
+          'image': 'assets/s2.png',
           'page': () => Es(fullName: widget.fullName),
         },
         {
           'name': 'OOPS with JAVA',
           'description': 'Object-oriented programming with JAVA...',
-          'image': 'assets/s4.png',
+          'image': 'assets/s2.png',
           'page': () => Oopj(fullName: widget.fullName),
         },
       ],

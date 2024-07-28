@@ -89,49 +89,49 @@ class _EEESem4ScreenState extends State<EEESem4Screen> {
         {
           'name': 'Signals and Systems PYQs',
           'description': 'Previous Year Questions for Signals and Systems...',
-          'image': 'assets/s4.png',
+          'image': 'assets/s2.png',
           'page': () => Ss(fullName: widget.fullName),
         },
         {
           'name': 'Electromagnetic Theory PYQs',
           'description':
               'Previous Year Questions for Electromagnetic Theory...',
-          'image': 'assets/s4.png',
+          'image': 'assets/s2.png',
           'page': () => Et(fullName: widget.fullName),
         },
         {
           'name': 'DC Machines and Transformers PYQs',
           'description':
               'Previous Year Questions for DC Machines and Transformers...',
-          'image': 'assets/s4.png',
+          'image': 'assets/s2.png',
           'page': () => Dc(fullName: widget.fullName),
         },
         {
           'name': 'Solid State Electronic Devices and Circuits PYQs',
           'description':
               'Previous Year Questions for Solid State Electronic Devices and Circuits...',
-          'image': 'assets/s4.png',
+          'image': 'assets/s2.png',
           'page': () => Ssedc(fullName: widget.fullName),
         },
         {
           'name': 'Finance and Accounting PYQs',
           'description':
               'Previous Year Questions for Finance and Accounting...',
-          'image': 'assets/s4.png',
+          'image': 'assets/s2.png',
           'page': () => Fa(fullName: widget.fullName),
         },
         {
           'name': 'Environmental Sciences PYQs',
           'description':
               'Previous Year Questions for Environmental Sciences...',
-          'image': 'assets/s4.png',
+          'image': 'assets/s2.png',
           'page': () => Es(fullName: widget.fullName),
         },
         {
           'name': 'Probability Distributions and Numerical Techniques PYQs',
           'description':
               'Previous Year Questions for Probability Distributions and Numerical Techniques...',
-          'image': 'assets/s4.png',
+          'image': 'assets/s2.png',
           'page': () => Pdnt(fullName: widget.fullName),
         },
       ],
@@ -140,32 +140,37 @@ class _EEESem4ScreenState extends State<EEESem4Screen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isPortrait = screenSize.height > screenSize.width;
+
     return Scaffold(
-      backgroundColor: const Color.fromARGB(455, 4, 14, 148),
+      backgroundColor: const Color.fromARGB(755, 7, 17, 148),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(45.0),
+              padding: EdgeInsets.all(isPortrait ? 24.0 : 16.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Hey ${widget.fullName}',
-                        style: const TextStyle(
-                            fontSize: 44,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ),
-                      const Text(
-                        'Select Subject',
-                        style: TextStyle(fontSize: 16, color: Colors.white70),
-                      ),
-                    ],
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Hey ${widget.fullName}',
+                          style: TextStyle(
+                              fontSize: isPortrait ? 24 : 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                        const Text(
+                          'Select Subject',
+                          style: TextStyle(fontSize: 16, color: Colors.white70),
+                        ),
+                      ],
+                    ),
                   ),
                   GestureDetector(
                     onTap: () {
@@ -183,12 +188,12 @@ class _EEESem4ScreenState extends State<EEESem4Screen> {
                     },
                     child: CircleAvatar(
                       backgroundColor: Colors.red[600],
-                      radius: 40,
+                      radius: isPortrait ? 30 : 20,
                       child: Text(
                         widget.fullName[0].toUpperCase(),
-                        style: const TextStyle(
+                        style: TextStyle(
                             color: Colors.white,
-                            fontSize: 44,
+                            fontSize: isPortrait ? 30 : 20,
                             fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -203,20 +208,20 @@ class _EEESem4ScreenState extends State<EEESem4Screen> {
                 decoration: const BoxDecoration(
                   color: Colors.black,
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(45),
-                    topRight: Radius.circular(45),
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
                   ),
                 ),
                 child: Column(
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 44),
+                          horizontal: 16.0, vertical: 24),
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: const Color.fromARGB(455, 58, 58, 58),
-                          borderRadius: BorderRadius.circular(45),
+                          color: const Color.fromARGB(755, 58, 58, 58),
+                          borderRadius: BorderRadius.circular(24),
                         ),
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
@@ -228,12 +233,12 @@ class _EEESem4ScreenState extends State<EEESem4Screen> {
                                     setState(() => _selectedIndex = index),
                                 child: Container(
                                   padding:
-                                      const EdgeInsets.symmetric(vertical: 14),
+                                      const EdgeInsets.symmetric(vertical: 16),
                                   decoration: BoxDecoration(
                                     color: _selectedIndex == index
                                         ? Colors.black
-                                        : const Color.fromARGB(455, 58, 58, 58),
-                                    borderRadius: BorderRadius.circular(45),
+                                        : const Color.fromARGB(755, 58, 58, 58),
+                                    borderRadius: BorderRadius.circular(24),
                                   ),
                                   child: Text(
                                     _tabs[index],
@@ -247,7 +252,7 @@ class _EEESem4ScreenState extends State<EEESem4Screen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 1),
+                    const SizedBox(height: 16),
                     Expanded(
                       child: ListView.builder(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -256,14 +261,14 @@ class _EEESem4ScreenState extends State<EEESem4Screen> {
                           var subject =
                               _subjects[_tabs[_selectedIndex]]![index];
                           return Card(
-                            color: const Color.fromARGB(455, 58, 58, 58),
+                            color: const Color.fromARGB(755, 58, 58, 58),
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(14)),
+                                borderRadius: BorderRadius.circular(16)),
                             child: ListTile(
                               contentPadding: const EdgeInsets.all(8),
                               leading: subject['image'] != null
                                   ? Image.asset(subject['image'],
-                                      width: 80, height: 80)
+                                      width: 50, height: 50)
                                   : null,
                               title: Text(subject['name'],
                                   style: const TextStyle(

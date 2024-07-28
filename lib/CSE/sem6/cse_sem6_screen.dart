@@ -37,13 +37,13 @@ class _CSESem6ScreenState extends State<CSESem6Screen> {
     {
     'name': 'Theory of Computation',
     'description': 'Study of the fundamental concepts in the theory of computation...',
-    'image': 'assets/s5.png',
+    'image': 'assets/s1.png',
     'page': () => Tc(fullName: widget.fullName),
      },
      {
     'name': 'Introductory Cyber Security',
     'description': 'Introduction to the basics of cyber security...',
-    'image': 'assets/s5.png',
+    'image': 'assets/s1.png',
     'page': () => Ics(fullName: widget.fullName),
     },
       ],
@@ -51,13 +51,13 @@ class _CSESem6ScreenState extends State<CSESem6Screen> {
         {
     'name': 'Theory of Computation PYQs',
     'description': 'Previous Year Questions for Theory of Computation...',
-    'image': 'assets/s5.png',
+    'image': 'assets/s1.png',
     'page': () => Tc(fullName: widget.fullName),
        },
         {
     'name': 'Introductory Cyber Security PYQs',
     'description': 'Previous Year Questions for Introductory Cyber Security...',
-    'image': 'assets/s5.png',
+    'image': 'assets/s1.png',
     'page': () => Ics(fullName: widget.fullName),
         },
       ],

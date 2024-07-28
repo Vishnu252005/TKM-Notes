@@ -88,48 +88,48 @@ class _EEESem3ScreenState extends State<EEESem3Screen> {
         {
           'name': 'Mathematics III PYQs',
           'description': 'Previous Year Questions for Mathematics III...',
-          'image': 'assets/s3.png',
+          'image': 'assets/s2.png',
           'page': () => maths3(fullName: widget.fullName),
         },
         {
           'name': 'Basic Engineering Mechanics PYQs',
           'description':
               'Previous Year Questions for Basic Engineering Mechanics...',
-          'image': 'assets/s3.png',
+          'image': 'assets/s2.png',
           'page': () => Bem(fullName: widget.fullName),
         },
         {
           'name': 'Digital Electronics and Logic Design PYQs',
           'description':
               'Previous Year Questions for Digital Electronics and Logic Design...',
-          'image': 'assets/s3.png',
+          'image': 'assets/s2.png',
           'page': () => Deld(fullName: widget.fullName),
         },
         {
           'name': 'Measurements & Instrumentation PYQs',
           'description':
               'Previous Year Questions for Measurements & Instrumentation...',
-          'image': 'assets/s3.png',
+          'image': 'assets/s2.png',
           'page': () => mi(fullName: widget.fullName),
         },
         {
           'name': 'Circuit Theory PYQs',
           'description': 'Previous Year Questions for Circuit Theory...',
-          'image': 'assets/s3.png',
+          'image': 'assets/s2.png',
           'page': () => ct(fullName: widget.fullName),
         },
         {
           'name': 'Life Skills and Professional Ethics PYQs',
           'description':
               'Previous Year Questions for Life Skills and Professional Ethics...',
-          'image': 'assets/s3.png',
+          'image': 'assets/s2.png',
           'page': () => Lspe(fullName: widget.fullName),
         },
         {
           'name': 'Fundamentals of Electrical Power Systems PYQs',
           'description':
               'Previous Year Questions for Fundamentals of Electrical Power Systems...',
-          'image': 'assets/s3.png',
+          'image': 'assets/s2.png',
           'page': () => Feps(fullName: widget.fullName),
         },
       ],
@@ -138,32 +138,37 @@ class _EEESem3ScreenState extends State<EEESem3Screen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isPortrait = screenSize.height > screenSize.width;
+
     return Scaffold(
-      backgroundColor: const Color.fromARGB(355, 3, 13, 148),
+      backgroundColor: const Color.fromARGB(755, 7, 17, 148),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(35.0),
+              padding: EdgeInsets.all(isPortrait ? 24.0 : 16.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Hey ${widget.fullName}',
-                        style: const TextStyle(
-                            fontSize: 34,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ),
-                      const Text(
-                        'Select Subject',
-                        style: TextStyle(fontSize: 16, color: Colors.white70),
-                      ),
-                    ],
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Hey ${widget.fullName}',
+                          style: TextStyle(
+                              fontSize: isPortrait ? 24 : 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                        const Text(
+                          'Select Subject',
+                          style: TextStyle(fontSize: 16, color: Colors.white70),
+                        ),
+                      ],
+                    ),
                   ),
                   GestureDetector(
                     onTap: () {
@@ -181,12 +186,12 @@ class _EEESem3ScreenState extends State<EEESem3Screen> {
                     },
                     child: CircleAvatar(
                       backgroundColor: Colors.red[600],
-                      radius: 30,
+                      radius: isPortrait ? 30 : 20,
                       child: Text(
                         widget.fullName[0].toUpperCase(),
-                        style: const TextStyle(
+                        style: TextStyle(
                             color: Colors.white,
-                            fontSize: 34,
+                            fontSize: isPortrait ? 30 : 20,
                             fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -201,20 +206,20 @@ class _EEESem3ScreenState extends State<EEESem3Screen> {
                 decoration: const BoxDecoration(
                   color: Colors.black,
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(35),
-                    topRight: Radius.circular(35),
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
                   ),
                 ),
                 child: Column(
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 33),
+                          horizontal: 16.0, vertical: 24),
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: const Color.fromARGB(355, 58, 58, 58),
-                          borderRadius: BorderRadius.circular(35),
+                          color: const Color.fromARGB(755, 58, 58, 58),
+                          borderRadius: BorderRadius.circular(24),
                         ),
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
@@ -226,12 +231,12 @@ class _EEESem3ScreenState extends State<EEESem3Screen> {
                                     setState(() => _selectedIndex = index),
                                 child: Container(
                                   padding:
-                                      const EdgeInsets.symmetric(vertical: 13),
+                                      const EdgeInsets.symmetric(vertical: 16),
                                   decoration: BoxDecoration(
                                     color: _selectedIndex == index
                                         ? Colors.black
-                                        : const Color.fromARGB(355, 58, 58, 58),
-                                    borderRadius: BorderRadius.circular(35),
+                                        : const Color.fromARGB(755, 58, 58, 58),
+                                    borderRadius: BorderRadius.circular(24),
                                   ),
                                   child: Text(
                                     _tabs[index],
@@ -245,7 +250,7 @@ class _EEESem3ScreenState extends State<EEESem3Screen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 1),
+                    const SizedBox(height: 16),
                     Expanded(
                       child: ListView.builder(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -254,14 +259,14 @@ class _EEESem3ScreenState extends State<EEESem3Screen> {
                           var subject =
                               _subjects[_tabs[_selectedIndex]]![index];
                           return Card(
-                            color: const Color.fromARGB(355, 58, 58, 58),
+                            color: const Color.fromARGB(755, 58, 58, 58),
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(13)),
+                                borderRadius: BorderRadius.circular(16)),
                             child: ListTile(
                               contentPadding: const EdgeInsets.all(8),
                               leading: subject['image'] != null
                                   ? Image.asset(subject['image'],
-                                      width: 80, height: 80)
+                                      width: 50, height: 50)
                                   : null,
                               title: Text(subject['name'],
                                   style: const TextStyle(

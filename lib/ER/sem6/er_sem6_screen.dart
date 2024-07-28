@@ -38,19 +38,19 @@ class _ERSem6ScreenState extends State<ERSem6Screen> {
       {
     'name': 'Applied Electromagnetic Theory',
     'description': 'Study of electromagnetic theory and its applications...',
-    'image': 'assets/s5.png',
+    'image': 'assets/s1.png',
     'page': () => Aet(fullName: widget.fullName),
   },
   {
     'name': 'VLSI Design',
     'description': 'Introduction to Very-Large-Scale Integration (VLSI) design principles...',
-    'image': 'assets/s5.png',
+    'image': 'assets/s1.png',
     'page': () => Vlsid(fullName: widget.fullName),
   },
   {
     'name': 'Instrumentation and Industrial Automation',
     'description': 'Study of instrumentation and automation in industrial settings...',
-    'image': 'assets/s5.png',
+    'image': 'assets/s1.png',
     'page': () => Iia(fullName: widget.fullName),
   },
     ],
