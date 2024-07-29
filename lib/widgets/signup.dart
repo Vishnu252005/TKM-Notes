@@ -130,8 +130,6 @@ import '../MECH/sem8/mech_sem8_screen.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
 
