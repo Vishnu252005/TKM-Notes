@@ -128,8 +128,10 @@ import '../MECH/sem7/mech_sem7_screen.dart';
 import '../MECH/sem8/mech_sem8_screen.dart';
 
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key});
+  const SignUpScreen({Key? key}) : super(key: key);
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -138,7 +140,7 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   String? _fullName, _branch, _year, _semester;
-  List<String> _branchOptions = ['CSE',  'MECH', 'EEE', 'CIVIL', 'CHEMICAL', 'EC' , 'ER'];
+  List<String> _branchOptions = ['CSE', 'MECH', 'EEE', 'CIVIL', 'CHEMICAL', 'EC', 'ER'];
   List<String> _yearOptions = ['FE', 'SE', 'TE', 'BE'];
   Map<String, List<String>> _semesterOptions = {
     'FE': ['Sem1', 'Sem2'],
@@ -147,13 +149,51 @@ class _SignUpScreenState extends State<SignUpScreen> {
     'BE': ['Sem7', 'Sem8'],
   };
 
-    void _saveProfile() {
+  @override
+  void initState() {
+    super.initState();
+    _loadProfile();
+  }
+
+  void _loadProfile() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _fullName = prefs.getString('fullName');
+      _branch = prefs.getString('branch');
+      _year = prefs.getString('year');
+      _semester = prefs.getString('semester');
+    });
+
+    // Navigate to the respective route if the user has already signed up
+    if (_fullName != null && _branch != null && _year != null && _semester != null) {
+      String routeName = '${_branch!}${_semester!}';
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacementNamed(
+          context,
+          routeName,
+          arguments: {
+            'fullName': _fullName!,
+            'branch': _branch!,
+            'year': _year!,
+            'semester': _semester!,
+          },
+        );
+      });
+    }
+  }
+
+  void _saveProfile() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
       if (_fullName != null && _branch != null && _year != null && _semester != null) {
-        String routeName = '${_branch!}${_semester!}';
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('fullName', _fullName!);
+        await prefs.setString('branch', _branch!);
+        await prefs.setString('year', _year!);
+        await prefs.setString('semester', _semester!);
 
+        String routeName = '${_branch!}${_semester!}';
         Navigator.pushNamed(
           context,
           routeName,
@@ -168,169 +208,182 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+    double padding = screenWidth * 0.05;
+
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 3, 13, 148),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(height: 20),
-              Text(
-                'Sign Up',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                SizedBox(height: screenHeight * 0.05),
+                Text(
+                  'Sign Up',
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 40),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                margin: EdgeInsets.symmetric(horizontal: 0 , vertical: 0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text('Full Name', style: TextStyle(color: Colors.white)),
+                SizedBox(height: screenHeight * 0.05),
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(padding),
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(16),
+                        topRight: Radius.circular(16),
                       ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          hintText: 'Full Name',
-                          fillColor: Color.fromARGB(255, 58, 58, 58),
-                          filled: true,
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                        ),
-                        style: TextStyle(color: Colors.white),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your full name';
-                          }
-                          return null;
-                        },
-                        onSaved: (value) => _fullName = value,
-                      ),
-                      SizedBox(height: 16),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text('Branch', style: TextStyle(color: Colors.white)),
-                      ),
-                      DropdownButtonFormField(
-                        items: _branchOptions.map((String branch) {
-                          return DropdownMenuItem(value: branch, child: Text(branch));
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            _branch = newValue;
-                          });
-                        },
-                        decoration: InputDecoration(
-                          hintText: ' Select Branch',
-                          fillColor: Colors.grey[800],
-                          filled: true,
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                        ),
-                        style: TextStyle(color: Colors.white),
-                        dropdownColor: Colors.grey[800],
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please select your branch';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 16),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text('Year', style: TextStyle(color: Colors.white)),
-                      ),
-                      DropdownButtonFormField(
-                        items: _yearOptions.map((String year) {
-                          return DropdownMenuItem(value: year, child: Text(year));
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            _year = newValue;
-                            _semester = null;
-                          });
-                        },
-                        decoration: InputDecoration(
-                          fillColor: Colors.grey[800],
-                          filled: true,
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                        ),
-                        style: TextStyle(color: Colors.white),
-                        dropdownColor: Colors.grey[800],
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please select your year';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 16),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text('Semester', style: TextStyle(color: Colors.white)),
-                      ),
-                      if (_year != null)
-                        Row(
-                          children: _semesterOptions[_year]!.map((String sem) {
-                            return Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 4),
-                                child: ElevatedButton(
-                                  child: Text(sem, style: TextStyle(fontSize: 16, color: Color.fromARGB(255, 249, 246, 246))),
-                                  onPressed: () {
-                                    setState(() {
-                                      _semester = sem;
-                                    });
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: _semester == sem ? Colors.deepPurple : Colors.grey[800],
-                                  ),
-                                ),
-                                  
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      SizedBox(height: 235 ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                          child: Text('Save Profile', style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 249, 246, 246))),
-                          onPressed: _saveProfile,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(255, 3, 13, 148),
-                            padding: EdgeInsets.symmetric(vertical: 16 ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Form(
+                      key: _formKey,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text('Full Name', style: TextStyle(color: Colors.white)),
                             ),
-                            elevation: 0,
-                            shadowColor: Colors.transparent,
-                            minimumSize: Size.fromHeight(10),
-                          ),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                hintText: 'Full Name',
+                                fillColor: Color.fromARGB(255, 58, 58, 58),
+                                filled: true,
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                              ),
+                              style: TextStyle(color: Colors.white),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your full name';
+                                }
+                                return null;
+                              },
+                              onSaved: (value) => _fullName = value,
+                            ),
+                            SizedBox(height: 16),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text('Branch', style: TextStyle(color: Colors.white)),
+                            ),
+                            DropdownButtonFormField(
+                              items: _branchOptions.map((String branch) {
+                                return DropdownMenuItem(value: branch, child: Text(branch));
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  _branch = newValue;
+                                });
+                              },
+                              decoration: InputDecoration(
+                                hintText: ' Select Branch',
+                                fillColor: Colors.grey[800],
+                                filled: true,
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                              ),
+                              style: TextStyle(color: Colors.white),
+                              dropdownColor: Colors.grey[800],
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please select your branch';
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(height: 16),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text('Year', style: TextStyle(color: Colors.white)),
+                            ),
+                            DropdownButtonFormField(
+                              items: _yearOptions.map((String year) {
+                                return DropdownMenuItem(value: year, child: Text(year));
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  _year = newValue;
+                                  _semester = null;
+                                });
+                              },
+                              decoration: InputDecoration(
+                                fillColor: Colors.grey[800],
+                                filled: true,
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                              ),
+                              style: TextStyle(color: Colors.white),
+                              dropdownColor: Colors.grey[800],
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please select your year';
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(height: 16),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text('Semester', style: TextStyle(color: Colors.white)),
+                            ),
+                            if (_year != null)
+                              Row(
+                                children: _semesterOptions[_year]!.map((String sem) {
+                                  return Expanded(
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 4),
+                                      child: ElevatedButton(
+                                        child: Text(sem, style: TextStyle(fontSize: 16, color: Color.fromARGB(255, 249, 246, 246))),
+                                        onPressed: () {
+                                          setState(() {
+                                            _semester = sem;
+                                          });
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: _semester == sem ? Colors.deepPurple : Colors.grey[800],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                          ],
                         ),
                       ),
-                    ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  child: Text('Save Profile', style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 249, 246, 246))),
+                  onPressed: _saveProfile,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 3, 13, 148),
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    elevation: 0,
+                    shadowColor: Colors.transparent,
+                    minimumSize: Size.fromHeight(10),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

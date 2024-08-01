@@ -133,7 +133,10 @@ class _PDFViewerPageState extends State<PDFViewerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(
+          widget.title,
+          style: const TextStyle(color: Colors.white), // Set text color to white
+        ),
         backgroundColor: Color.fromARGB(255, 3, 13, 148),
       ),
       body: Stack(
