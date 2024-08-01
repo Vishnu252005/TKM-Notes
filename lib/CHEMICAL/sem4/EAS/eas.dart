@@ -66,7 +66,7 @@ class Eas extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Entrepreneurship and Startups',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

@@ -14,7 +14,7 @@ import 'package:flutter_application_2/CSE/sem1/IDEALAB/idealab.dart';
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
 class CSESem1Screen extends StatefulWidget {
-  final String fullName;
+  final String fullName;//T
   final String branch;
   final String year;
   final String semester;

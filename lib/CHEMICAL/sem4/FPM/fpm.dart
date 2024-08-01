@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
 
-class Nmce extends StatelessWidget {
+class Fpm extends StatelessWidget {
   final String fullName; // Full name received as a parameter
   final List<UnitItem> units = [
     UnitItem(
@@ -34,7 +34,7 @@ class Nmce extends StatelessWidget {
     ),
   ];
 
-  Nmce({required this.fullName}); // Constructor accepting fullName
+  Fpm({required this.fullName}); // Constructor accepting fullName
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,7 @@ class Nmce extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Fluid & Particle Mechanics',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

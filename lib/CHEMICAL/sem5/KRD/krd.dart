@@ -66,7 +66,7 @@ class Krd extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'KINETICS AND REACTOR DESIGN',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

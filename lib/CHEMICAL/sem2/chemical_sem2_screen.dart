@@ -16,7 +16,7 @@ import 'package:flutter_application_2/widgets/profile.dart'; // Import the profi
 class CHEMICALSem2Screen extends StatefulWidget {
   final String fullName;
   final String branch;
-  final String year;
+  final String year;//t
   final String semester;
 
   const CHEMICALSem2Screen({

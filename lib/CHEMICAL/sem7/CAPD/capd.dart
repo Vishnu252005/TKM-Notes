@@ -46,7 +46,7 @@ class Capd extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'COMPUTER AIDED PROCESS DESIGN',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

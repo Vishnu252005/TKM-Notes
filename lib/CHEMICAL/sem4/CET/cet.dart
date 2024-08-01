@@ -67,7 +67,7 @@ class Cet extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Chemical Engineering Thermodynamics',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

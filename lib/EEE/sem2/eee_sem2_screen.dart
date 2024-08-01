@@ -21,7 +21,7 @@ class EEESem2Screen extends StatefulWidget {
   final String year;
   final String semester;
 
-  const EEESem2Screen({
+  const EEESem2Screen({//t
     Key? key,
     required this.fullName,
     required this.branch,

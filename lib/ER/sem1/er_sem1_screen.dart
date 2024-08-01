@@ -23,7 +23,7 @@ class ERSem1Screen extends StatefulWidget {
 
   const ERSem1Screen({
     Key? key,
-    required this.fullName,
+    required this.fullName,//t
     required this.branch,
     required this.year,
     required this.semester,

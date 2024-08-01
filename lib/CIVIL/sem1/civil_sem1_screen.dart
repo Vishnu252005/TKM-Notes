@@ -19,7 +19,7 @@ class CIVILSem1Screen extends StatefulWidget {
   final String fullName;
   final String branch;
   final String year;
-  final String semester;
+  final String semester;//t
 
   const CIVILSem1Screen({
     Key? key,

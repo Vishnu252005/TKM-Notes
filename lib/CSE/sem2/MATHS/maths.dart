@@ -67,7 +67,7 @@ class Maths extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Calculus and Linear Algebra',
+                            'Maths',
                             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
                           ),
                           Text(

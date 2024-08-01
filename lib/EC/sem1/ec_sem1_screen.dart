@@ -17,7 +17,7 @@ class ECSem1Screen extends StatefulWidget {
   final String fullName;
   final String branch;
   final String year;
-  final String semester;
+  final String semester;//t
 
   const ECSem1Screen({
     Key? key,

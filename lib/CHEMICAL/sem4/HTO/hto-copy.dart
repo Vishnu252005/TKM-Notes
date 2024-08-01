@@ -65,7 +65,7 @@ class Hto1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Heat Transfer Operations',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

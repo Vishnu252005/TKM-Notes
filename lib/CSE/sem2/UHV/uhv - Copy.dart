@@ -26,7 +26,7 @@ class Uhv1 extends StatelessWidget {
     pdfUrl: 'url_to_pdf_4',
   ),
   UnitItem(
-    title: 'MODULE V: Implications of the Holistic Understanding – a Look at Professional Ethics',
+    title: 'MODULE V: Implications of the Holistic Understanding - a Look at Professional Ethics',
     isAvailable: true,
     pdfUrl: 'url_to_pdf_5',
   ),
@@ -67,7 +67,7 @@ class Uhv1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Calculus and Linear Algebra',
+                            'Universal Human Values-II ',
                             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
                           ),
                           Text(

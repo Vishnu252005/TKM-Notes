@@ -26,7 +26,7 @@ class MECHSem1Screen extends StatefulWidget {
     required this.fullName,
     required this.branch,
     required this.year,
-    required this.semester,
+    required this.semester, //t
   }) : super(key: key);
 
   @override
@@ -41,113 +41,118 @@ class _MECHSem1ScreenState extends State<MECHSem1Screen> {
 
   @override
   void initState() {
-  super.initState();
+    super.initState();
 
-  _subjects = {
-    'Notes & Books': [
-      {
-        'name': 'Calculus and Linear Algebra',
-        'description': 'Study of calculus and linear algebra including...',
-        'image': 'assets/s1.png',
-        'page': () => Maths(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry',
-        'description': 'Exploration of fundamental concepts in chemistry...',
-        'image': 'assets/s1.png',
-        'page': () => Chemistry(fullName: widget.fullName),
-      },
-      {
-        'name': 'Fundamentals of Electronics Engineering',
-        'description': 'Basics of electronics and electrical engineering...',
-        'image': 'assets/s1.png',
-        'page': () => Fee(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics',
-        'description': 'Fundamentals of engineering drawing and graphics...',
-        'image': 'assets/s1.png',
-        'page': () => Graphics(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices',
-        'description': 'Introduction to various manufacturing processes...',
-        'image': 'assets/s1.png',
-        'page': () => Manufact(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga',
-        'description': 'Physical education and well-being through sports and yoga...',
-        'image': 'assets/s1.png',
-        'page': () => Sports(fullName: widget.fullName),
-      },
-      {
-        'name': 'Basics of Electrical Engineering',
-        'description': 'Introduction to electrical engineering principles...',
-        'image': 'assets/s1.png',
-        'page': () => bee(fullName: widget.fullName),
-      },
-      // {
-      //   'name': 'Computer Aided Drafting and Modelling',
-      //   'description': 'Basics of computer-aided drafting and modelling...',
-      //   'image': 'assets/s1.png',
-      //   'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      // },
-    ],
-    'PYQs': [
-      {
-        'name': 'Calculus and Linear Algebra PYQs',
-        'description': 'Previous Year Questions for Calculus and Linear Algebra...',
-        'image': 'assets/s2.png',
-        'page': () => Maths1(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry PYQs',
-        'description': 'Previous Year Questions for Engineering Chemistry...',
-        'image': 'assets/s2.png',
-        'page': () => Chemistry1(fullName: widget.fullName),
-      },
-      {
-        'name': 'Fundamentals of Electronics Engineering PYQs',
-        'description': 'Previous Year Questions for Fundamentals of Electronics Engineering...',
-        'image': 'assets/s2.png',
-        'page': () => Fee1(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics PYQs',
-        'description': 'Previous Year Questions for Engineering Graphics...',
-        'image': 'assets/s2.png',
-        'page': () => Graphics1(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices PYQs',
-        'description': 'Previous Year Questions for Manufacturing Practices...',
-        'image': 'assets/s2.png',
-        'page': () => Manufact1(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga PYQs',
-        'description': 'Previous Year Questions for Sports and Yoga...',
-        'image': 'assets/s2.png',
-        'page': () => Sports1(fullName: widget.fullName),
-      },
-      {
-        'name': 'Basics of Electrical Engineering PYQs',
-        'description': 'Previous Year Questions for Basics of Electrical Engineering...',
-        'image': 'assets/s2.png',
-        'page': () =>  bee1(fullName: widget.fullName),
-      },
-      // {
-      //   'name': 'Computer Aided Drafting and Modelling PYQs',
-      //   'description': 'Previous Year Questions for Computer Aided Drafting and Modelling...',
-      //   'image': 'assets/s2.png',
-      //   'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      // },
-    ],
-  };
-}
+    _subjects = {
+      'Notes & Books': [
+        {
+          'name': 'Calculus and Linear Algebra',
+          'description': 'Study of calculus and linear algebra including...',
+          'image': 'assets/s1.png',
+          'page': () => Maths(fullName: widget.fullName),
+        },
+        {
+          'name': 'Engineering Chemistry',
+          'description': 'Exploration of fundamental concepts in chemistry...',
+          'image': 'assets/s1.png',
+          'page': () => Chemistry(fullName: widget.fullName),
+        },
+        {
+          'name': 'Fundamentals of Electronics Engineering',
+          'description': 'Basics of electronics and electrical engineering...',
+          'image': 'assets/s1.png',
+          'page': () => Fee(fullName: widget.fullName),
+        },
+        {
+          'name': 'Engineering Graphics',
+          'description': 'Fundamentals of engineering drawing and graphics...',
+          'image': 'assets/s1.png',
+          'page': () => Graphics(fullName: widget.fullName),
+        },
+        {
+          'name': 'Manufacturing Practices',
+          'description': 'Introduction to various manufacturing processes...',
+          'image': 'assets/s1.png',
+          'page': () => Manufact(fullName: widget.fullName),
+        },
+        {
+          'name': 'Sports and Yoga',
+          'description':
+              'Physical education and well-being through sports and yoga...',
+          'image': 'assets/s1.png',
+          'page': () => Sports(fullName: widget.fullName),
+        },
+        {
+          'name': 'Basics of Electrical Engineering',
+          'description': 'Introduction to electrical engineering principles...',
+          'image': 'assets/s1.png',
+          'page': () => bee(fullName: widget.fullName),
+        },
+        // {
+        //   'name': 'Computer Aided Drafting and Modelling',
+        //   'description': 'Basics of computer-aided drafting and modelling...',
+        //   'image': 'assets/s1.png',
+        //   'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        // },
+      ],
+      'PYQs': [
+        {
+          'name': 'Calculus and Linear Algebra PYQs',
+          'description':
+              'Previous Year Questions for Calculus and Linear Algebra...',
+          'image': 'assets/s2.png',
+          'page': () => Maths1(fullName: widget.fullName),
+        },
+        {
+          'name': 'Engineering Chemistry PYQs',
+          'description': 'Previous Year Questions for Engineering Chemistry...',
+          'image': 'assets/s2.png',
+          'page': () => Chemistry1(fullName: widget.fullName),
+        },
+        {
+          'name': 'Fundamentals of Electronics Engineering PYQs',
+          'description':
+              'Previous Year Questions for Fundamentals of Electronics Engineering...',
+          'image': 'assets/s2.png',
+          'page': () => Fee1(fullName: widget.fullName),
+        },
+        {
+          'name': 'Engineering Graphics PYQs',
+          'description': 'Previous Year Questions for Engineering Graphics...',
+          'image': 'assets/s2.png',
+          'page': () => Graphics1(fullName: widget.fullName),
+        },
+        {
+          'name': 'Manufacturing Practices PYQs',
+          'description':
+              'Previous Year Questions for Manufacturing Practices...',
+          'image': 'assets/s2.png',
+          'page': () => Manufact1(fullName: widget.fullName),
+        },
+        {
+          'name': 'Sports and Yoga PYQs',
+          'description': 'Previous Year Questions for Sports and Yoga...',
+          'image': 'assets/s2.png',
+          'page': () => Sports1(fullName: widget.fullName),
+        },
+        {
+          'name': 'Basics of Electrical Engineering PYQs',
+          'description':
+              'Previous Year Questions for Basics of Electrical Engineering...',
+          'image': 'assets/s2.png',
+          'page': () => bee1(fullName: widget.fullName),
+        },
+        // {
+        //   'name': 'Computer Aided Drafting and Modelling PYQs',
+        //   'description': 'Previous Year Questions for Computer Aided Drafting and Modelling...',
+        //   'image': 'assets/s2.png',
+        //   'page': () => ComputerNetworksPage(fullName: widget.fullName),
+        // },
+      ],
+    };
+  }
 
- @override
+  @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final isPortrait = screenSize.height > screenSize.width;
