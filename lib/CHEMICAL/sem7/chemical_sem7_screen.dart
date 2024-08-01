@@ -5,7 +5,7 @@ import 'package:flutter_application_2/CHEMICAL/sem7/units.dart';  // Import the 
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
 class CHEMICALSem7Screen extends StatefulWidget {
-  final String fullName;
+  final String fullName;//t
   final String branch;
   final String year;
   final String semester;

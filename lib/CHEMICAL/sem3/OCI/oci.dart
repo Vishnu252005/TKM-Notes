@@ -65,7 +65,7 @@ class Oci extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Overview of Chemical Industries',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

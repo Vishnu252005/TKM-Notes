@@ -14,7 +14,7 @@ class CHEMICALSem6Screen extends StatefulWidget {
 
   const CHEMICALSem6Screen({
     Key? key,
-    required this.fullName,
+    required this.fullName,//t
     required this.branch,
     required this.year,
     required this.semester,

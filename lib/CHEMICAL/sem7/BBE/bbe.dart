@@ -66,7 +66,7 @@ class Bbe extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'BIOLOGY & BIOCHEMICAL ENGINEERING',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

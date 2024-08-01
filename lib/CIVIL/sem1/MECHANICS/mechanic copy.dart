@@ -66,7 +66,7 @@ class Mechanic extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Calculus and Linear Algebra',
+                            'Engineering Mechanics',
                             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
                           ),
                           Text(

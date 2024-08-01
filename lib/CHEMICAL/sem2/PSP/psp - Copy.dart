@@ -67,7 +67,7 @@ class Psp1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Calculus and Linear Algebra',
+                            'Problem Solving and Programming',
                             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
                           ),
                           Text(

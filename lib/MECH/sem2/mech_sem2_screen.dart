@@ -23,7 +23,7 @@ class MECHSem2Screen extends StatefulWidget {
     Key? key,
     required this.fullName,
     required this.branch,
-    required this.year,
+    required this.year,//t
     required this.semester,
   }) : super(key: key);
 

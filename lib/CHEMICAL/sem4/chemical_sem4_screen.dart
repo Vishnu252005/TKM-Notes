@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/CHEMICAL/sem4/CET/cet.dart';
+import 'package:flutter_application_2/CHEMICAL/sem4/EAS/eas.dart';
+import 'package:flutter_application_2/CHEMICAL/sem4/ES/es.dart';
+import 'package:flutter_application_2/CHEMICAL/sem4/FPM/fpm.dart';
+import 'package:flutter_application_2/CHEMICAL/sem4/HTO/hto.dart';
+import 'package:flutter_application_2/CHEMICAL/sem4/NMCE/nmce.dart';
+import 'package:flutter_application_2/CHEMICAL/sem4/PIF/pif.dart';
 import 'package:flutter_application_2/CHEMICAL/sem4/units.dart';  // Import the correct file for units
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
@@ -32,105 +39,94 @@ class _CHEMICALSem4ScreenState extends State<CHEMICALSem4Screen> {
 
   _subjects = {
     'Notes & Books': [
-      {
-        'name': 'Calculus and Linear Algebra',
-        'description': 'Study of calculus and linear algebra including...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry',
-        'description': 'Exploration of fundamental concepts in chemistry...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Fundamentals of Electrical Engineering',
-        'description': 'Introduction to basic principles in electrical engineering...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics',
-        'description': 'Fundamentals of engineering drawing and graphics...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices',
-        'description': 'Introduction to various manufacturing processes...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga',
-        'description': 'Physical education and well-being through sports and yoga...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Introduction to Chemical Engineering',
-        'description': 'Basic concepts in chemical engineering...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Basics of Electronics Engineering',
-        'description': 'Introduction to fundamental concepts in electronics engineering...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-    ],
-    'PYQs': [
-      {
-        'name': 'Calculus and Linear Algebra PYQs',
-        'description': 'Previous Year Questions for Calculus and Linear Algebra...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry PYQs',
-        'description': 'Previous Year Questions for Engineering Chemistry...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Fundamentals of Electrical Engineering PYQs',
-        'description': 'Previous Year Questions for Fundamentals of Electrical Engineering...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics PYQs',
-        'description': 'Previous Year Questions for Engineering Graphics...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices PYQs',
-        'description': 'Previous Year Questions for Manufacturing Practices...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga PYQs',
-        'description': 'Previous Year Questions for Sports and Yoga...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Introduction to Chemical Engineering PYQs',
-        'description': 'Previous Year Questions for Introduction to Chemical Engineering...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-      {
-        'name': 'Basics of Electronics Engineering PYQs',
-        'description': 'Previous Year Questions for Basics of Electronics Engineering...',
-        'image': 'assets/s2.png',
-        'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      },
-    ],
+  {
+    'name': 'Chemical Engineering Thermodynamics',
+    'description': 'Study of thermodynamic principles applied to chemical engineering...',
+    'image': 'assets/s5.png',
+    'page': () => Cet(fullName: widget.fullName),
+  },
+  {
+    'name': 'Numerical Methods for Chemical Engineers',
+    'description': 'Introduction to numerical methods and their applications in chemical engineering...',
+    'image': 'assets/s5.png',
+    'page': () => Nmce(fullName: widget.fullName),
+  },
+  {
+    'name': 'Fluid & Particle Mechanics',
+    'description': 'Study of fluid mechanics and particle technology in chemical engineering...',
+    'image': 'assets/s5.png',
+    'page': () => Fpm(fullName: widget.fullName),
+  },
+  {
+    'name': 'Heat Transfer Operations',
+    'description': 'Principles and applications of heat transfer in chemical engineering...',
+    'image': 'assets/s5.png',
+    'page': () => Hto(fullName: widget.fullName),
+  },
+  {
+    'name': 'Entrepreneurship and Startups',
+    'description': 'Principles and practices of entrepreneurship and startup development...',
+    'image': 'assets/s5.png',
+    'page': () => Eas(fullName: widget.fullName),
+  },
+  {
+    'name': 'Environmental Sciences',
+    'description': 'Study of environmental science principles and their applications...',
+    'image': 'assets/s5.png',
+    'page': () => Es(fullName: widget.fullName),
+  },
+  {
+    'name': 'Piping and Instrumentation Fundamentals',
+    'description': 'Introduction to piping and instrumentation in chemical engineering...',
+    'image': 'assets/s5.png',
+    'page': () => Pif(fullName: widget.fullName),
+  },
+],
+'PYQs': [
+  {
+    'name': 'Chemical Engineering Thermodynamics PYQs',
+    'description': 'Previous Year Questions for Chemical Engineering Thermodynamics...',
+    'image': 'assets/s2.png',
+    'page': () =>   Cet(fullName: widget.fullName),
+  },
+  {
+    'name': 'Numerical Methods for Chemical Engineers PYQs',
+    'description': 'Previous Year Questions for Numerical Methods for Chemical Engineers...',
+    'image': 'assets/s2.png',
+    'page': () =>   Nmce(fullName: widget.fullName),
+  },
+  {
+    'name': 'Fluid & Particle Mechanics PYQs',
+    'description': 'Previous Year Questions for Fluid & Particle Mechanics...',
+    'image': 'assets/s2.png',
+    'page': () =>   Fpm(fullName: widget.fullName),
+  },
+  {
+    'name': 'Heat Transfer Operations PYQs',
+    'description': 'Previous Year Questions for Heat Transfer Operations...',
+    'image': 'assets/s2.png',
+    'page': () => Hto(fullName: widget.fullName),
+  },
+  {
+    'name': 'Entrepreneurship and Startups PYQs',
+    'description': 'Previous Year Questions for Entrepreneurship and Startups...',
+    'image': 'assets/s2.png',
+    'page': () => Eas(fullName: widget.fullName),
+  },
+  {
+    'name': 'Environmental Sciences PYQs',
+    'description': 'Previous Year Questions for Environmental Sciences...',
+    'image': 'assets/s2.png',
+    'page': () => Es(fullName: widget.fullName),
+  },
+  {
+    'name': 'Piping and Instrumentation Fundamentals PYQs',
+    'description': 'Previous Year Questions for Piping and Instrumentation Fundamentals...',
+    'image': 'assets/s2.png',
+    'page': () => Pif(fullName: widget.fullName),
+  },
+],
+
   };
 }
 

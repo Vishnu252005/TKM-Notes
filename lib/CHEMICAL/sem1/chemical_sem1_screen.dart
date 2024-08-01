@@ -58,7 +58,7 @@ class _CHEMICALSem1ScreenState extends State<CHEMICALSem1Screen> {
         'page': () => Chemistry(fullName: widget.fullName),
       },
       {
-        'name': 'Engineering Mechanics',
+        'name': 'Engineering Mechanics',//t
         'description': 'Introduction to engineering mechanics principles...',
         'image': 'assets/s1.png',
         'page': () => bee(fullName: widget.fullName),

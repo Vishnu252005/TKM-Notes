@@ -65,7 +65,7 @@ class Mebc extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Material & Energy Balance Computations',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

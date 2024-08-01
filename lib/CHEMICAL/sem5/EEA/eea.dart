@@ -66,7 +66,7 @@ class Eea extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'ENERGY & ENVIRONMENTAL AUDIT',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

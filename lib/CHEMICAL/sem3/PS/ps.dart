@@ -66,7 +66,7 @@ class Ps extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Process Safety',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

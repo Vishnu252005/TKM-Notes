@@ -66,7 +66,7 @@ class Mto2 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Mass Transfer Operations - II',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
