@@ -77,6 +77,10 @@ import '../MECH/sem8/mech_sem8_screen.dart';
 
 
 
+
+
+// Import your other screen files here
+
 class PDFViewerPage extends StatefulWidget {
   final String pdfUrl;
   final String title;
@@ -90,6 +94,7 @@ class PDFViewerPage extends StatefulWidget {
 class _PDFViewerPageState extends State<PDFViewerPage> {
   String? localFilePath;
   bool _isLoading = true;
+  bool _isDarkMode = true;
 
   @override
   void initState() {
@@ -120,53 +125,73 @@ class _PDFViewerPageState extends State<PDFViewerPage> {
     }
   }
 
+  void _toggleDarkMode() {
+    setState(() {
+      _isDarkMode = !_isDarkMode;
+    });
+  }
+
   void _openChatBot(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ChatBotPage(pdfUrl: widget.pdfUrl),
+        builder: (context) => ChatBotPage(pdfUrl: widget.pdfUrl, isDarkMode: _isDarkMode),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.title,
-          style: const TextStyle(color: Colors.white), // Set text color to white
-        ),
-        backgroundColor: Color.fromARGB(255, 3, 13, 148),
-      ),
-      body: Stack(
-        children: [
-          _isLoading
-              ? Center(child: CircularProgressIndicator())
-              : localFilePath == null
-                  ? Center(child: Text('Error loading PDF'))
-                  : PDFView(
-                      filePath: localFilePath!,
-                      enableSwipe: true,
-                      swipeHorizontal: false,
-                      autoSpacing: false,
-                      pageFling: false,
-                      onError: (error) {
-                        print('Error loading PDF: $error');
-                      },
-                      onPageError: (page, error) {
-                        print('Page $page error: $error');
-                      },
-                    ),
-          Positioned(
-            bottom: 16.0,
-            right: 16.0,
-            child: FloatingActionButton(
-              onPressed: () => _openChatBot(context),
-              child: Icon(Icons.chat),
-            ),
+    final ThemeData theme = _isDarkMode ? ThemeData.dark() : ThemeData.light();
+    return MaterialApp(
+      theme: theme,
+      home: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
           ),
-        ],
+          title: Text(
+            widget.title,
+            style: TextStyle(color: Colors.white, fontSize: 22), // Increased font size for readability
+          ),
+          backgroundColor: _isDarkMode ? Colors.black : Color.fromARGB(255, 3, 13, 148),
+          actions: [
+            IconButton(
+              icon: Icon(_isDarkMode ? Icons.dark_mode : Icons.light_mode, color: Colors.white),
+              onPressed: _toggleDarkMode,
+            ),
+          ],
+        ),
+        body: Stack(
+          children: [
+            _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : localFilePath == null
+                    ? Center(child: Text('Error loading PDF'))
+                    : PDFView(
+                        filePath: localFilePath!,
+                        enableSwipe: true,
+                        swipeHorizontal: false,
+                        autoSpacing: false,
+                        pageFling: false,
+                        onError: (error) {
+                          print('Error loading PDF: $error');
+                        },
+                        onPageError: (page, error) {
+                          print('Page $page error: $error');
+                        },
+                      ),
+            Positioned(
+              bottom: 16.0,
+              right: 16.0,
+              child: FloatingActionButton(
+                onPressed: () => _openChatBot(context),
+                child: Icon(Icons.chat),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -174,8 +199,9 @@ class _PDFViewerPageState extends State<PDFViewerPage> {
 
 class ChatBotPage extends StatefulWidget {
   final String pdfUrl;
+  final bool isDarkMode;
 
-  const ChatBotPage({required this.pdfUrl});
+  const ChatBotPage({required this.pdfUrl, required this.isDarkMode});
 
   @override
   _ChatBotPageState createState() => _ChatBotPageState();
@@ -225,61 +251,68 @@ class _ChatBotPageState extends State<ChatBotPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('AI Chatbot'),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16.0),
-              itemCount: _messages.length,
-              itemBuilder: (context, index) {
-                var message = _messages[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Align(
-                    alignment: message['sender'] == 'user' ? Alignment.centerRight : Alignment.centerLeft,
-                    child: Container(
-                      padding: const EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                        color: message['sender'] == 'user' ? Colors.blue[100] : Colors.grey[300],
-                        borderRadius: BorderRadius.circular(8.0),
+    final ThemeData theme = widget.isDarkMode ? ThemeData.dark() : ThemeData.light();
+    return MaterialApp(
+      theme: theme,
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('AI Chatbot'),
+          backgroundColor: widget.isDarkMode ? Colors.black : Color.fromARGB(255, 3, 13, 148),
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.all(16.0),
+                itemCount: _messages.length,
+                itemBuilder: (context, index) {
+                  var message = _messages[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Align(
+                      alignment: message['sender'] == 'user' ? Alignment.centerRight : Alignment.centerLeft,
+                      child: Container(
+                        padding: const EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          color: message['sender'] == 'user'
+                              ? (widget.isDarkMode ? Colors.blue[700] : Colors.blue[100])
+                              : (widget.isDarkMode ? Colors.grey[800] : Colors.grey[300]),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Text(message['text'] ?? ''),
                       ),
-                      child: Text(message['text'] ?? ''),
+                    ),
+                  );
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _controller,
+                      decoration: InputDecoration(
+                        hintText: 'Ask a question...',
+                        border: OutlineInputBorder(),
+                      ),
                     ),
                   ),
-                );
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    decoration: InputDecoration(
-                      hintText: 'Ask a question...',
-                      border: OutlineInputBorder(),
-                    ),
+                  SizedBox(width: 8.0),
+                  IconButton(
+                    icon: Icon(Icons.send),
+                    onPressed: () {
+                      if (_controller.text.trim().isNotEmpty) {
+                        _sendMessage(_controller.text.trim());
+                      }
+                    },
                   ),
-                ),
-                SizedBox(width: 8.0),
-                IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: () {
-                    if (_controller.text.trim().isNotEmpty) {
-                      _sendMessage(_controller.text.trim());
-                    }
-                  },
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

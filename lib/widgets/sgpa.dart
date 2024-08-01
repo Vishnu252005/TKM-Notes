@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SGPAConverterPage extends StatefulWidget {
   @override
@@ -9,6 +10,20 @@ class _SGPAConverterPageState extends State<SGPAConverterPage> {
   double sgpa = 0.0;
   double percentage = 0.0;
   double cgpa = 0.0;
+  bool _isDarkMode = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadThemePreference();
+  }
+
+  Future<void> _loadThemePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = prefs.getBool('isDarkMode') ?? true;
+    });
+  }
 
   void calculateValues(double inputSGPA) {
     setState(() {
@@ -21,11 +36,15 @@ class _SGPAConverterPageState extends State<SGPAConverterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 3, 13, 148),
+      backgroundColor: _isDarkMode ? Color(0xFF121212) : Colors.white,
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 3, 13, 148),
+        backgroundColor: _isDarkMode ? Color(0xFF1F1F1F) : Color.fromARGB(255, 3, 13, 148),
         title: Text('SGPA Converter', style: TextStyle(color: Colors.white)),
         centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -34,17 +53,17 @@ class _SGPAConverterPageState extends State<SGPAConverterPage> {
           children: [
             Text(
               'Enter SGPA',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: _isDarkMode ? Colors.white : Color(0xFF333333)),
             ),
             SizedBox(height: 16),
             TextField(
               keyboardType: TextInputType.numberWithOptions(decimal: true),
-              style: TextStyle(color: Colors.white),
-              cursorColor: Colors.white,
+              style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black),
+              cursorColor: _isDarkMode ? Colors.white : Colors.black,
               decoration: InputDecoration(
                 hintText: 'Enter SGPA',
-                hintStyle: TextStyle(color: Colors.white70),
-                fillColor: Colors.grey[900],
+                hintStyle: TextStyle(color: _isDarkMode ? Colors.white70 : Colors.grey[600]),
+                fillColor: _isDarkMode ? Color(0xFF1E1E1E) : Colors.grey[200],
                 filled: true,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -68,9 +87,9 @@ class _SGPAConverterPageState extends State<SGPAConverterPage> {
             SizedBox(height: 24),
             Text(
               'Results',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: _isDarkMode ? Colors.white : Color(0xFF333333)),
             ),
-            SizedBox(height: 8),
+            SizedBox(height: 16),
             _buildResultCard('Percentage', '${percentage.toStringAsFixed(2)}%'),
             SizedBox(height: 8),
             _buildResultCard('CGPA', cgpa.toStringAsFixed(2)),
@@ -84,19 +103,26 @@ class _SGPAConverterPageState extends State<SGPAConverterPage> {
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.grey[900],
+        color: _isDarkMode ? Color(0xFF1E1E1E) : Colors.grey[100],
         borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: _isDarkMode ? Colors.black26 : Colors.grey.withOpacity(0.2),
+            blurRadius: 8,
+            spreadRadius: 2,
+          ),
+        ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             title,
-            style: TextStyle(color: Colors.white, fontSize: 16),
+            style: TextStyle(color: _isDarkMode ? Colors.white70 : Color(0xFF333333), fontSize: 16),
           ),
           Text(
             value,
-            style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+            style: TextStyle(color: _isDarkMode ? Colors.white : Color(0xFF333333), fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ],
       ),

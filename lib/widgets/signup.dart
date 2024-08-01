@@ -215,7 +215,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     double padding = screenWidth * 0.05;
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 3, 13, 148),
+      backgroundColor: Color(0xFF4C4DDC),
       body: SafeArea(
         child: Stack(
           children: [
@@ -237,7 +237,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     width: double.infinity,
                     padding: EdgeInsets.all(padding),
                     decoration: BoxDecoration(
-                      color: Colors.black,
+                      color: Color( 0xFF101010),
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(16),
                         topRight: Radius.circular(16),
@@ -371,7 +371,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: Text('Save Profile', style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 249, 246, 246))),
                   onPressed: _saveProfile,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 3, 13, 148),
+                    backgroundColor: Color(0xFF4C4DDC),
                     padding: EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
