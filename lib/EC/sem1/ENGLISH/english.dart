@@ -8,27 +8,27 @@ class english extends StatelessWidget {
   UnitItem(
     title: 'MODULE I: Use of Language in Communication',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_1',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1f3fz47wmT_B1_Tv8-0_28KLGdg9aAR8c',
   ),
   UnitItem(
     title: 'MODULE II: Oral Presentation',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_2',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1u33bUFFxURd9-GFAH8tuwdhUa9v4ouGW',
   ),
   UnitItem(
     title: 'MODULE III: Interview Skills',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_3',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1MrBd4d-DXCvaudhwGdTEopjGAHxKHR55',
   ),
   UnitItem(
     title: 'MODULE IV: Formal Writing',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_4',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1hUei539RG376Q5ZeONKyF9P4zc6C5K_x',
   ),
   UnitItem(
     title: 'MODULE V: Reading Comprehension and Listening Skills',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_5',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1zrRkvNupDUlJZHWUTy1pybHJJy-zVj_D',
   ),
 ];
 

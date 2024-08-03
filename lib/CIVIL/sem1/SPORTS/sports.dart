@@ -8,17 +8,17 @@ class Sports extends StatelessWidget {
   UnitItem(
     title: 'MODULE I: Physical fitness, wellness and exercise programmes',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_1',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=17WV7VLVhk5xfd5JtlMaGX7GgyfPdd4fI',
   ),
   UnitItem(
     title: 'MODULE II: First aid',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_2',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=183PM5yJn019D5ekKsuY9SVb-HhGDmAFw',
   ),
   UnitItem(
     title: 'MODULE III: Fundamentals of Anatomy and physiology in physical education, Postures and nutrition',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_3',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1_eqlXbDPG2s4R1XGJHPKJ-E5BeAY0eLK',
   ),
   UnitItem(
     title: 'MODULE IV: Sports and games',

@@ -8,27 +8,27 @@ class maths extends StatelessWidget {
   UnitItem(
     title: 'Module I: Multivariable Calculus and Applications',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_1',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1VnguVo_nFIxfBGLPg_asjMTb2k9xch2R',
   ),
   UnitItem(
     title: 'Module II: Multiple Integrals and Applications',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_2',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1hhHsiUv-XUQc6n9SR5gRb5rGT1bHUku5',
   ),
   UnitItem(
     title: 'Module III: Vector Differentiation',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_3',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1IqUm0K-Zpz0TEQEut2s8CcVh5YJSoDGk',
   ),
   UnitItem(
     title: 'Module IV: Vector Integration',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_4',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1ru1Hhfx0bpHNoN1JXx3sQqdzlVxLytJr',
   ),
   UnitItem(
     title: 'Module V: Linear Algebra',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_5',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1uv2dxXLwmBzWl2z0yQO8dWd3Mo4s57al',
   ),
 ];
 

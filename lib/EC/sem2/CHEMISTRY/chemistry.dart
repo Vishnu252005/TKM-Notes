@@ -8,17 +8,17 @@ class Chemistry extends StatelessWidget {
   UnitItem(
     title: 'MODULE I: Atomic and Molecular Structure',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_1',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1LdCzXvUl74_uOqHlpRqj_nSJzq5HNbQn',
   ),
   UnitItem(
     title: 'MODULE II: Spectroscopic Techniques and Applications',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_2',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1hBjZ3qZIa48PHA1CesazeYnxOpM_Vx2I',
   ),
   UnitItem(
     title: 'MODULE III: Electrochemistry and Corrosion',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_3',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1rRP8X-aSKR639MJ45b8v7BqFTfAOENwr',
   ),
   UnitItem(
     title: 'MODULE IV: Molecular Electronics',
