@@ -13,7 +13,12 @@ import 'package:flutter_application_2/EEE/sem1/PHYSICS/physics%20-%20Copy.dart';
 import 'package:flutter_application_2/EEE/sem1/PHYSICS/physics.dart';
 import 'package:flutter_application_2/EEE/sem1/ENGLISH/english.dart';
 import 'package:flutter_application_2/EEE/sem1/IDEALAB/idealab.dart';
-import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
+
+// import 'package:flutter_application_2/widgets/profile.dart';
+import 'package:flutter_application_2/widgets/profiledark.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+///  for testing the profiledark is used to implement fully we need to do that in every code na
 
 class EEESem1Screen extends StatefulWidget {
   final String fullName;
@@ -36,14 +41,25 @@ class EEESem1Screen extends StatefulWidget {
 class _EEESem1ScreenState extends State<EEESem1Screen> {
   int _selectedIndex = 0;
   final List<String> _tabs = ['Notes & Books', 'PYQs'];
-
+  bool _isDarkMode = true;
   late Map<String, List<Map<String, dynamic>>> _subjects;
 
   @override
-void initState() {
-  super.initState();
+  void initState() {
+    super.initState();
+    _loadThemePreference();
+    _initializeSubjects();
+  }
 
-  _subjects = {
+  Future<void> _loadThemePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = prefs.getBool('isDarkMode') ?? true;
+    });
+  }
+
+  void _initializeSubjects() {
+     _subjects = {
     'Notes & Books': [
       {
         'name': 'Calculus and Linear Algebra',
@@ -147,14 +163,13 @@ void initState() {
   };
 }
 
-
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final isPortrait = screenSize.height > screenSize.width;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(755, 7, 17, 148),
+      backgroundColor: _isDarkMode ? const Color.fromARGB(755, 7, 17, 148) : Colors.white,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,11 +188,11 @@ void initState() {
                           style: TextStyle(
                               fontSize: isPortrait ? 24 : 20,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                              color: _isDarkMode ? Colors.white : Colors.black),
                         ),
-                        const Text(
+                        Text(
                           'Select Subject',
-                          style: TextStyle(fontSize: 16, color: Colors.white70),
+                          style: TextStyle(fontSize: 16, color: _isDarkMode ? Colors.white70 : Colors.black54),
                         ),
                       ],
                     ),
@@ -192,6 +207,12 @@ void initState() {
                             branch: widget.branch,
                             year: widget.year,
                             semester: widget.semester,
+                            isDarkMode: _isDarkMode,
+                            onThemeChanged: (bool newTheme) {
+                              setState(() {
+                                _isDarkMode = newTheme;
+                              });
+                            },
                           ),
                         ),
                       );
@@ -215,9 +236,9 @@ void initState() {
             Expanded(
               child: Container(
                 width: double.infinity,
-                decoration: const BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.only(
+                decoration: BoxDecoration(
+                  color: _isDarkMode ? Colors.black : Colors.white,
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(24),
                     topRight: Radius.circular(24),
                   ),
@@ -225,12 +246,11 @@ void initState() {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 24),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24),
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: const Color.fromARGB(755, 58, 58, 58),
+                          color: _isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.grey[200],
                           borderRadius: BorderRadius.circular(24),
                         ),
                         padding: const EdgeInsets.all(8.0),
@@ -239,21 +259,19 @@ void initState() {
                             _tabs.length,
                             (index) => Expanded(
                               child: GestureDetector(
-                                onTap: () =>
-                                    setState(() => _selectedIndex = index),
+                                onTap: () => setState(() => _selectedIndex = index),
                                 child: Container(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 16),
+                                  padding: const EdgeInsets.symmetric(vertical: 16),
                                   decoration: BoxDecoration(
                                     color: _selectedIndex == index
-                                        ? Colors.black
-                                        : const Color.fromARGB(755, 58, 58, 58),
+                                        ? (_isDarkMode ? Colors.black : Colors.white)
+                                        : (_isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.grey[200]),
                                     borderRadius: BorderRadius.circular(24),
                                   ),
                                   child: Text(
                                     _tabs[index],
                                     textAlign: TextAlign.center,
-                                    style: const TextStyle(color: Colors.white),
+                                    style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black),
                                   ),
                                 ),
                               ),
@@ -268,25 +286,21 @@ void initState() {
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         itemCount: _subjects[_tabs[_selectedIndex]]!.length,
                         itemBuilder: (context, index) {
-                          var subject =
-                              _subjects[_tabs[_selectedIndex]]![index];
+                          var subject = _subjects[_tabs[_selectedIndex]]![index];
                           return Card(
-                            color: const Color.fromARGB(755, 58, 58, 58),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16)),
+                            color: _isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.grey[200],
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                             child: ListTile(
                               contentPadding: const EdgeInsets.all(8),
                               leading: subject['image'] != null
-                                  ? Image.asset(subject['image'],
-                                      width: 50, height: 50)
+                                  ? Image.asset(subject['image'], width: 50, height: 50)
                                   : null,
                               title: Text(subject['name'],
-                                  style: const TextStyle(
-                                      color: Colors.white,
+                                  style: TextStyle(
+                                      color: _isDarkMode ? Colors.white : Colors.black,
                                       fontWeight: FontWeight.bold)),
                               subtitle: Text(subject['description'],
-                                  style:
-                                      const TextStyle(color: Colors.white70)),
+                                  style: TextStyle(color: _isDarkMode ? Colors.white70 : Colors.black54)),
                               onTap: () {
                                 Navigator.push(
                                   context,

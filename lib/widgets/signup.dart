@@ -141,12 +141,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   String? _fullName, _branch, _year, _semester;
   List<String> _branchOptions = ['CSE', 'MECH', 'EEE', 'CIVIL', 'CHEMICAL', 'EC', 'ER'];
-  List<String> _yearOptions = ['FE', 'SE', 'TE', 'BE'];
+  List<String> _yearOptions = ['First Year', 'Second Year', 'Third Year', 'Fourth Year'];
   Map<String, List<String>> _semesterOptions = {
-    'FE': ['Sem1', 'Sem2'],
-    'SE': ['Sem3', 'Sem4'],
-    'TE': ['Sem5', 'Sem6'],
-    'BE': ['Sem7', 'Sem8'],
+    'First Year': ['Sem1', 'Sem2'],
+    'Second Year': ['Sem3', 'Sem4'],
+    'Third Year': ['Sem5', 'Sem6'],
+    'Fourth Year': ['Sem7', 'Sem8'],
   };
 
   @override
