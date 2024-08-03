@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/widgets/sgpa.dart';
 import 'package:flutter_application_2/widgets/signup.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatelessWidget {
   final String fullName;
@@ -16,6 +17,16 @@ class ProfilePage extends StatelessWidget {
     required this.year,
     required this.semester,
   });
+
+  Future<void> _logout(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => SignUpScreen()),
+      (Route<dynamic> route) => false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,18 +61,7 @@ class ProfilePage extends StatelessWidget {
                           SizedBox(height: 2),
                           Text('$semester', style: TextStyle(color: Colors.grey)),
                           SizedBox(height: 8),
-                          GestureDetector(
-                            onTap: () {
-                              // Add functionality for edit action
-                            },
-                            child: Text(
-                              'Edit',
-                              style: TextStyle(
-                                color: Colors.blue,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
+                          
                         ],
                       ),
                     ),
@@ -174,12 +174,7 @@ class ProfilePage extends StatelessWidget {
                     minimumSize: Size(double.infinity, 50),
                   ),
                   onPressed: () {
-                    Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SignUpScreen(),
-                          ),
-                        );
+                    _logout(context);
                   },
                 ),
               ),
