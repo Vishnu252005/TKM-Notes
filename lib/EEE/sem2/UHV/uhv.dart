@@ -8,27 +8,27 @@ class Uhv extends StatelessWidget {
   UnitItem(
     title: 'MODULE I: Introduction to Value Education',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_1',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1KxmDDyYEi4aR-FCh50FuyuLVFuryew0F',
   ),
   UnitItem(
     title: 'MODULE II: Harmony in the Human Being',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_2',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1_4hiEhdWrJrDPJHGlMl42J2uL9RA95NO',
   ),
   UnitItem(
     title: 'MODULE III: Harmony in the Family and Society',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_3',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1c9SWhMVB5Oe0Xs1w85khkumZbkklVT_2',
   ),
   UnitItem(
     title: 'MODULE IV: Harmony in the Nature/Existence',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_4',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1drnFkkEzQAjQKBhDZ96oB0UEB3PLyC02',
   ),
   UnitItem(
     title: 'MODULE V: Implications of the Holistic Understanding – a Look at Professional Ethics',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_5',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1ok4F1xf0D9xb5kusTLK0X6VfJW4sd3oC',
   ),
 ];
 

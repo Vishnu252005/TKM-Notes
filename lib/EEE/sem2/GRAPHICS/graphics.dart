@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
 
-class Graphics extends StatelessWidget {
+class Graphics extends StatelessWidget {//no
   final String fullName; // Full name received as a parameter
   final List<UnitItem> units = [
   UnitItem(

@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
-
+//h
 class Sports extends StatelessWidget {
   final String fullName; // Full name received as a parameter
   final List<UnitItem> units = [
   UnitItem(
     title: 'MODULE I: Physical fitness, wellness and exercise programmes',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_1',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=11xbal8G0Gcs_SoCcp7Le2PuRF6RCN-Ra',
   ),
   UnitItem(
     title: 'MODULE II: First aid',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_2',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=11skd-eBIySyszuqsp0I8bl2T1J4X0Cj9',
   ),
   UnitItem(
     title: 'MODULE III: Fundamentals of Anatomy and physiology in physical education, Postures and nutrition',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_3',
-  ),
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1VWUJNv-vr5P2s9rSiFS87KwL47-vNziE',
+  ), 
   UnitItem(
     title: 'MODULE IV: Sports and games',
     isAvailable: true,

@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
-
+//h
 class bee extends StatelessWidget {
   final String fullName; // Full name received as a parameter
   final List<UnitItem> units = [
-  UnitItem(
+ UnitItem(
     title: 'MODULE I: D.C. Circuits and Magnetic Circuits',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_1',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1x3TdUneyj1VrouuUdHhpJgP9VQmlrutd',
   ),
   UnitItem(
     title: 'MODULE II: Single Phase Systems',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_2',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1j63qBJ_Lw6keLHc0Sbf3LdM8ZkPCIjGY',
   ),
   UnitItem(
     title: 'MODULE III: Three Phase Systems and Power Transmission',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_3',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=16TvGs60KYBzAuo3yd3SsVKvbehb1Vo7V',
   ),
   UnitItem(
     title: 'MODULE IV: DC Machines and Transformers',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_4',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1GpaZ6pk8_EccG2q3UlwnqnjvBTGxWA91',
   ),
   UnitItem(
     title: 'MODULE V: AC Machines',

@@ -8,27 +8,27 @@ class fec extends StatelessWidget {
   UnitItem(
     title: 'MODULE I: Electronic Components & Devices',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_1',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1BAYUDzCaYSgZcEAaWHutyANcD0P0rUK-',
   ),
   UnitItem(
     title: 'MODULE II: Electronic Circuits',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_2',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1BSfew3z7Xiir6tneBPDy0se1Ee045_6O',
   ),
   UnitItem(
     title: 'MODULE III: Integrated Circuits',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_3',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1BSU0XwbyzYCJFIeZmwEnPwV_9Cjpdory',
   ),
   UnitItem(
     title: 'MODULE IV: Electronic Instrumentation',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_4',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1BS45MBMXvsVZTlOLwmmuJ8_ESO6LD3w4',
   ),
   UnitItem(
     title: 'MODULE V: Communication Systems',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_5',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1BOskampAzE7ggEnrn94lYidVvSSMxGed',
   ),
 ];
 
