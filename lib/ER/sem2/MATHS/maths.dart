@@ -5,30 +5,30 @@ import 'package:flutter_application_2/widgets/pdfviewer.dart';
 class Maths extends StatelessWidget {
   final String fullName; // Full name received as a parameter
   final List<UnitItem> units = [
-  UnitItem(
+ UnitItem(
     title: 'MODULE I: Ordinary Differential Equations',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_1',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=19VcJjEQ43bu9gV4lS4t-mV-Aj_jo7GjP',
   ),
   UnitItem(
     title: 'MODULE II: Laplace Transforms',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_2',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=18EOvSqPm8uQaXmXa9VUk5zptCIPYnn70',
   ),
   UnitItem(
     title: 'MODULE III: Fourier Series',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_3',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1tB69ek240pMI_7jJTnOSt13EcXevvqHX',
   ),
   UnitItem(
     title: 'MODULE IV: Fourier Transforms',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_4',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1x85MVc8ldigtGbehPtkxlXbsF6JnbKJJ',
   ),
   UnitItem(
     title: 'MODULE V: Z-Transforms',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_5',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1IBxeg9vTeIYekGv6RN3Scht1GBom8vtl',
   ),
 ];
 

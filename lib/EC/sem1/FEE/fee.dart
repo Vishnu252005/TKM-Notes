@@ -8,27 +8,27 @@ class fee extends StatelessWidget {
   UnitItem(
     title: 'MODULE I: Electronic Components & Devices',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_1',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1AxJ8y7hdGK5Y2NKPz2vg1478X_2QSHWy',
   ),
   UnitItem(
     title: 'MODULE II: Electronic Circuits',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_2',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1Axlyk87z66yVm1T9L0_KjD2mGOXa6Elt',
   ),
   UnitItem(
     title: 'MODULE III: Integrated Circuits',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_3',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1B1DlRkq6ZTL6YHCYAE-eG7nfMUUsZxKO',
   ),
   UnitItem(
     title: 'MODULE IV: Electronic Instrumentation',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_4',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1B1c0jxhQXRDoA1YBHoPzhleMMCA0DOne',
   ),
   UnitItem(
     title: 'MODULE V: Communication Systems',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_5',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1B71moLF4Fk0uoYpqUlA0N-4p_H4thXot',
   ),
 ];
 

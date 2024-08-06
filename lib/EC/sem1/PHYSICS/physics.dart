@@ -8,27 +8,27 @@ class physics extends StatelessWidget {
   UnitItem(
     title: 'MODULE I: Oscillations and Wave Motion',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_1',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1YzR0v7HgOunonMNplBZ_-ty24uNl-50L',
   ),
   UnitItem(
     title: 'MODULE II: Wave Optics',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_2',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1AWq5xB3zIpoFW92k4FWVjHJPm_tUDZQ_',
   ),
   UnitItem(
     title: 'MODULE III: Quantum Mechanics for Engineers',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_3',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1LtXKocSFsIzKbdQEFC-NZl-ih4c43qPQ',
   ),
   UnitItem(
     title: 'MODULE IV: Introduction to Electromagnetic Theory',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_4',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1FqOnXeKjza_Nl5vWuwlDP4f0a1j6_iX2',
   ),
   UnitItem(
     title: 'MODULE V: Introduction to Solids',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_5',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=18MFNPYw-1n6gNZsyR2qmkOe4P4PIIz-w',
   ),
 ];
 

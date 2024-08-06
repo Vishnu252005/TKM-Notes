@@ -1,34 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
-
+//h
 class Chemistry extends StatelessWidget {
   final String fullName; // Full name received as a parameter
   final List<UnitItem> units = [
   UnitItem(
     title: 'MODULE I: Atomic and Molecular Structure',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_1',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1AMSnNePD8fHLY7G4ZXvUmqRde_J486kK',
   ),
   UnitItem(
     title: 'MODULE II: Spectroscopic Techniques and Applications',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_2',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1NNm0vNlvq5cwgULRfmMgbDc_6IDm2yaN',
   ),
   UnitItem(
     title: 'MODULE III: Electrochemistry and Corrosion',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_3',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1vLhm5fPEo4nbMx21k30ZQtK1rOqXTjqo',
   ),
   UnitItem(
     title: 'MODULE IV: Stereochemistry and Organic Reactions',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_4',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1F5zkekijQ5UH2WbeeLFusjUE7vmODPzZ',
   ),
   UnitItem(
     title: 'MODULE V: Water Chemistry',
     isAvailable: true,
-    pdfUrl: 'url_to_pdf_5',
+    pdfUrl: 'https://drive.google.com/uc?export=download&id=1FZuwIiPVbM4yNU-0kGub4ZpC6Nm2VtYJ',
   ),
 ];
 
