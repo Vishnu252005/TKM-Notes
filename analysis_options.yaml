@@ -7,9 +7,15 @@
 
 # The following line activates a set of recommended lints for Flutter apps,
 # packages, and plugins designed to encourage good coding practices.
+include: package:flutter_lints/flutter.yaml
+
+# Additional information about this file can be found at
+# https://dart.dev/guides/language/analysis-options
+
 analyzer:
   errors:
     avoid_print: ignore
+    invalid_annotation_target: ignore
     camel_case_types: ignore
     library_private_types_in_public_api: ignore
     prefer_const_constructors: ignore  
@@ -20,7 +26,6 @@ analyzer:
     unused_import: ignore
     use_key_in_widget_constructors: ignore 
     use_super_parameters: ignore
-include: package:flutter_lints/flutter.yaml
 
 linter:
   # The lint rules applied to this project can be customized in the

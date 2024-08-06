@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/widgets/sgpa.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
@@ -79,7 +80,8 @@ import '../MECH/sem8/mech_sem8_screen.dart';
 
 
 
-// Import your other screen files here
+// Add this import at the top
+// Replace with actual path
 
 class PDFViewerPage extends StatefulWidget {
   final String pdfUrl;
@@ -135,7 +137,7 @@ class _PDFViewerPageState extends State<PDFViewerPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ChatBotPage(pdfUrl: widget.pdfUrl, isDarkMode: _isDarkMode),
+        builder: (context) =>  SGPAConverterPage(), // Change to your AI screen
       ),
     );
   }
@@ -188,127 +190,6 @@ class _PDFViewerPageState extends State<PDFViewerPage> {
               child: FloatingActionButton(
                 onPressed: () => _openChatBot(context),
                 child: Icon(Icons.chat),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ChatBotPage extends StatefulWidget {
-  final String pdfUrl;
-  final bool isDarkMode;
-
-  const ChatBotPage({required this.pdfUrl, required this.isDarkMode});
-
-  @override
-  _ChatBotPageState createState() => _ChatBotPageState();
-}
-
-class _ChatBotPageState extends State<ChatBotPage> {
-  final TextEditingController _controller = TextEditingController();
-  final List<Map<String, String>> _messages = [
-    {'sender': 'bot', 'text': 'How can I assist you?'},
-    {'sender': 'bot', 'text': '1. Summarize the PDF'},
-    {'sender': 'bot', 'text': '2. Important questions'},
-    {'sender': 'bot', 'text': '3. Explain the main topic'},
-  ];
-
-  void _sendMessage(String message) {
-    setState(() {
-      _messages.add({'sender': 'user', 'text': message});
-    });
-    _controller.clear();
-    _fetchResponse(message);
-  }
-
-  void _fetchResponse(String message) async {
-    // Replace this with your backend call
-    final response = await http.post(
-      Uri.parse('http://your_backend_url/ask'),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'pdfUrl': widget.pdfUrl,
-        'question': message,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      final responseData = jsonDecode(response.body);
-      setState(() {
-        _messages.add({'sender': 'bot', 'text': responseData['answer']});
-      });
-    } else {
-      setState(() {
-        _messages.add({'sender': 'bot', 'text': 'Failed to get response from AI'});
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = widget.isDarkMode ? ThemeData.dark() : ThemeData.light();
-    return MaterialApp(
-      theme: theme,
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('AI Chatbot'),
-          backgroundColor: widget.isDarkMode ? Colors.black : Color.fromARGB(255, 3, 13, 148),
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.all(16.0),
-                itemCount: _messages.length,
-                itemBuilder: (context, index) {
-                  var message = _messages[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Align(
-                      alignment: message['sender'] == 'user' ? Alignment.centerRight : Alignment.centerLeft,
-                      child: Container(
-                        padding: const EdgeInsets.all(16.0),
-                        decoration: BoxDecoration(
-                          color: message['sender'] == 'user'
-                              ? (widget.isDarkMode ? Colors.blue[700] : Colors.blue[100])
-                              : (widget.isDarkMode ? Colors.grey[800] : Colors.grey[300]),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: Text(message['text'] ?? ''),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _controller,
-                      decoration: InputDecoration(
-                        hintText: 'Ask a question...',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 8.0),
-                  IconButton(
-                    icon: Icon(Icons.send),
-                    onPressed: () {
-                      if (_controller.text.trim().isNotEmpty) {
-                        _sendMessage(_controller.text.trim());
-                      }
-                    },
-                  ),
-                ],
               ),
             ),
           ],

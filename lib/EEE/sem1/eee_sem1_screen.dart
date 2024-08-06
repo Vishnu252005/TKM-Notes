@@ -6,19 +6,15 @@ import 'package:flutter_application_2/EEE/sem1/FEC/fec%20-%20Copy.dart';
 import 'package:flutter_application_2/EEE/sem1/FEC/fec.dart';
 import 'package:flutter_application_2/EEE/sem1/IDEALAB/idealab%20-%20Copy.dart';
 import 'package:flutter_application_2/EEE/sem1/MATHS/maths%20-%20Copy.dart';
-import 'package:flutter_application_2/EEE/sem1/MATHS/maths.dart';  // Import the correct file for 
+import 'package:flutter_application_2/EEE/sem1/MATHS/maths.dart';
 import 'package:flutter_application_2/EEE/sem1/BEE/bee.dart';
 import 'package:flutter_application_2/EEE/sem1/BME/bme.dart';
 import 'package:flutter_application_2/EEE/sem1/PHYSICS/physics%20-%20Copy.dart';
 import 'package:flutter_application_2/EEE/sem1/PHYSICS/physics.dart';
 import 'package:flutter_application_2/EEE/sem1/ENGLISH/english.dart';
 import 'package:flutter_application_2/EEE/sem1/IDEALAB/idealab.dart';
-
-// import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/profiledark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-///  for testing the profiledark is used to implement fully we need to do that in every code na
 
 class EEESem1Screen extends StatefulWidget {
   final String fullName;
@@ -59,109 +55,97 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
   }
 
   void _initializeSubjects() {
-     _subjects = {
-    'Notes & Books': [
-      {
-        'name': 'Calculus and Linear Algebra',
-        'description': 'Study of calculus and linear algebra including...',
-        'image': 'assets/s1.png',
-        'page': () =>  maths(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Physics',
-        'description': 'Exploration of fundamental concepts in physics...',
-        'image': 'assets/s1.png',
-        'page': () =>  physics(fullName: widget.fullName),
-      },
-      {
-        'name': 'Fundamentals of Electronics Engineering',
-        'description': 'Basics of electronics and electrical engineering...',
-        'image': 'assets/s1.png',
-        'page': () =>  fec(fullName: widget.fullName),
-      },
-      {
-        'name': 'Technical English for Engineers',
-        'description': 'Improving technical communication skills...',
-        'image': 'assets/s1.png',
-        'page': () =>  english(fullName: widget.fullName),
-      },
-      {
-        'name': 'IDEA Lab Workshop',
-        'description': 'Hands-on workshop focusing on innovative design...',
-        'image': 'assets/s1.png',
-        'page': () =>  idea(fullName: widget.fullName),
-      },
-      // {
-      //   'name': 'Design Thinking',
-      //   'description': 'Process for creative problem-solving and innovation...',
-      //   'image': 'assets/s1.png',
-      //   'page': () =>  dt(fullName: widget.fullName),
-      // },
-      {
-        'name': 'Basics of Electrical Engineering',
-        'description': 'Introduction to electrical engineering principles...',
-        'image': 'assets/s1.png',
-        'page': () =>  bee(fullName: widget.fullName),
-      },
-      {
-        'name': 'Basic Mechanical Engineering',
-        'description': 'Fundamental concepts in mechanical engineering...',
-        'image': 'assets/s1.png',
-        'page': () =>  bme(fullName: widget.fullName),
-      },
-    ],
-    'PYQs': [
-      {
-        'name': 'Calculus and Linear Algebra PYQs',
-        'description': 'Previous Year Questions for Calculus and Linear Algebra...',
-        'image': 'assets/s2.png',
-        'page': () =>  maths1(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Physics PYQs',
-        'description': 'Previous Year Questions for Engineering Physics...',
-        'image': 'assets/s2.png',
-        'page': () =>  physics1(fullName: widget.fullName),
-      },
-      {
-        'name': 'Fundamentals of Electronics Engineering PYQs',
-        'description': 'Previous Year Questions for Electronics Engineering...',
-        'image': 'assets/s2.png',
-        'page': () =>  fec1(fullName: widget.fullName),
-      },
-      {
-        'name': 'Technical English for Engineers PYQs',
-        'description': 'Previous Year Questions for Technical English...',
-        'image': 'assets/s2.png',
-        'page': () =>  english1(fullName: widget.fullName),
-      },
-      {
-        'name': 'IDEA Lab Workshop PYQs',
-        'description': 'Previous Year Questions for IDEA Lab Workshop...',
-        'image': 'assets/s2.png',
-        'page': () =>  idea1(fullName: widget.fullName),
-      },
-      // {
-      //   'name': 'Design Thinking PYQs',
-      //   'description': 'Previous Year Questions for Design Thinking...',
-      //   'image': 'assets/s2.png',
-      //   'page': () =>  dt(fullName: widget.fullName),
-      // },
-      {
-        'name': 'Basics of Electrical Engineering PYQs',
-        'description': 'Previous Year Questions for Electrical Engineering...',
-        'image': 'assets/s2.png',
-        'page': () =>  bee1(fullName: widget.fullName),
-      },
-      {
-        'name': 'Basic Mechanical Engineering PYQs',
-        'description': 'Previous Year Questions for Mechanical Engineering...',
-        'image': 'assets/s2.png',
-        'page': () =>  bme1(fullName: widget.fullName),
-      },
-    ],
-  };
-}
+    _subjects = {
+      'Notes & Books': [
+        {
+          'name': 'Calculus and Linear Algebra',
+          'description': 'Study of calculus and linear algebra including...',
+          'image': 'assets/s1.png',
+          'page': () => maths(fullName: widget.fullName),
+        },
+        {
+          'name': 'Engineering Physics',
+          'description': 'Exploration of fundamental concepts in physics...',
+          'image': 'assets/s1.png',
+          'page': () => physics(fullName: widget.fullName),
+        },
+        {
+          'name': 'Fundamentals of Electronics Engineering',
+          'description': 'Basics of electronics and electrical engineering...',
+          'image': 'assets/s1.png',
+          'page': () => fec(fullName: widget.fullName),
+        },
+        {
+          'name': 'Technical English for Engineers',
+          'description': 'Improving technical communication skills...',
+          'image': 'assets/s1.png',
+          'page': () => english(fullName: widget.fullName),
+        },
+        {
+          'name': 'IDEA Lab Workshop',
+          'description': 'Hands-on workshop focusing on innovative design...',
+          'image': 'assets/s1.png',
+          'page': () => idea(fullName: widget.fullName),
+        },
+        {
+          'name': 'Basics of Electrical Engineering',
+          'description': 'Introduction to electrical engineering principles...',
+          'image': 'assets/s1.png',
+          'page': () => bee(fullName: widget.fullName),
+        },
+        {
+          'name': 'Basic Mechanical Engineering',
+          'description': 'Fundamental concepts in mechanical engineering...',
+          'image': 'assets/s1.png',
+          'page': () => bme(fullName: widget.fullName),
+        },
+      ],
+      'PYQs': [
+        {
+          'name': 'Calculus and Linear Algebra PYQs',
+          'description': 'Previous Year Questions for Calculus and Linear Algebra...',
+          'image': 'assets/s2.png',
+          'page': () => maths1(fullName: widget.fullName),
+        },
+        {
+          'name': 'Engineering Physics PYQs',
+          'description': 'Previous Year Questions for Engineering Physics...',
+          'image': 'assets/s2.png',
+          'page': () => physics1(fullName: widget.fullName),
+        },
+        {
+          'name': 'Fundamentals of Electronics Engineering PYQs',
+          'description': 'Previous Year Questions for Electronics Engineering...',
+          'image': 'assets/s2.png',
+          'page': () => fec1(fullName: widget.fullName),
+        },
+        {
+          'name': 'Technical English for Engineers PYQs',
+          'description': 'Previous Year Questions for Technical English...',
+          'image': 'assets/s2.png',
+          'page': () => english1(fullName: widget.fullName),
+        },
+        {
+          'name': 'IDEA Lab Workshop PYQs',
+          'description': 'Previous Year Questions for IDEA Lab Workshop...',
+          'image': 'assets/s2.png',
+          'page': () => idea1(fullName: widget.fullName),
+        },
+        {
+          'name': 'Basics of Electrical Engineering PYQs',
+          'description': 'Previous Year Questions for Electrical Engineering...',
+          'image': 'assets/s2.png',
+          'page': () => bee1(fullName: widget.fullName),
+        },
+        {
+          'name': 'Basic Mechanical Engineering PYQs',
+          'description': 'Previous Year Questions for Mechanical Engineering...',
+          'image': 'assets/s2.png',
+          'page': () => bme1(fullName: widget.fullName),
+        },
+      ],
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +153,7 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
     final isPortrait = screenSize.height > screenSize.width;
 
     return Scaffold(
-      backgroundColor: _isDarkMode ? const Color.fromARGB(755, 7, 17, 148) : Colors.white,
+      backgroundColor: _isDarkMode ? const Color.fromARGB(755, 7, 17, 148) : Colors.blue[50],
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,11 +172,11 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
                           style: TextStyle(
                               fontSize: isPortrait ? 24 : 20,
                               fontWeight: FontWeight.bold,
-                              color: _isDarkMode ? Colors.white : Colors.black),
+                              color: _isDarkMode ? Colors.white : Colors.blue[800]),
                         ),
                         Text(
                           'Select Subject',
-                          style: TextStyle(fontSize: 16, color: _isDarkMode ? Colors.white70 : Colors.black54),
+                          style: TextStyle(fontSize: 16, color: _isDarkMode ? Colors.white70 : Colors.blue[600]),
                         ),
                       ],
                     ),
@@ -218,7 +202,7 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
                       );
                     },
                     child: CircleAvatar(
-                      backgroundColor: Colors.red[600],
+                      backgroundColor: _isDarkMode ? Colors.red[600] : Colors.blue[700],
                       radius: isPortrait ? 30 : 20,
                       child: Text(
                         widget.fullName[0].toUpperCase(),
@@ -242,6 +226,13 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
                     topLeft: Radius.circular(24),
                     topRight: Radius.circular(24),
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: _isDarkMode ? Colors.black12 : Colors.blue.withOpacity(0.1),
+                      blurRadius: 10,
+                      spreadRadius: 5,
+                    ),
+                  ],
                 ),
                 child: Column(
                   children: [
@@ -250,7 +241,7 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: _isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.grey[200],
+                          color: _isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.blue[50],
                           borderRadius: BorderRadius.circular(24),
                         ),
                         padding: const EdgeInsets.all(8.0),
@@ -265,13 +256,27 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
                                   decoration: BoxDecoration(
                                     color: _selectedIndex == index
                                         ? (_isDarkMode ? Colors.black : Colors.white)
-                                        : (_isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.grey[200]),
+                                        : (_isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.blue[50]),
                                     borderRadius: BorderRadius.circular(24),
+                                    boxShadow: _selectedIndex == index && !_isDarkMode
+                                        ? [
+                                            BoxShadow(
+                                              color: Colors.blue.withOpacity(0.3),
+                                              blurRadius: 8,
+                                              spreadRadius: 2,
+                                            ),
+                                          ]
+                                        : null,
                                   ),
                                   child: Text(
                                     _tabs[index],
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black),
+                                    style: TextStyle(
+                                      color: _isDarkMode
+                                          ? Colors.white
+                                          : (_selectedIndex == index ? Colors.blue[800] : Colors.blue[600]),
+                                      fontWeight: _selectedIndex == index ? FontWeight.bold : FontWeight.normal,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -288,19 +293,25 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
                         itemBuilder: (context, index) {
                           var subject = _subjects[_tabs[_selectedIndex]]![index];
                           return Card(
-                            color: _isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.grey[200],
+                            color: _isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.white,
+                            elevation: _isDarkMode ? 0 : 2,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                             child: ListTile(
-                              contentPadding: const EdgeInsets.all(8),
+                              contentPadding: const EdgeInsets.all(16),
                               leading: subject['image'] != null
                                   ? Image.asset(subject['image'], width: 50, height: 50)
                                   : null,
-                              title: Text(subject['name'],
-                                  style: TextStyle(
-                                      color: _isDarkMode ? Colors.white : Colors.black,
-                                      fontWeight: FontWeight.bold)),
-                              subtitle: Text(subject['description'],
-                                  style: TextStyle(color: _isDarkMode ? Colors.white70 : Colors.black54)),
+                              title: Text(
+                                subject['name'],
+                                style: TextStyle(
+                                  color: _isDarkMode ? Colors.white : Colors.blue[800],
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              subtitle: Text(
+                                subject['description'],
+                                style: TextStyle(color: _isDarkMode ? Colors.white70 : Colors.blue[600]),
+                              ),
                               onTap: () {
                                 Navigator.push(
                                   context,
