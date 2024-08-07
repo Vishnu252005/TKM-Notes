@@ -91,7 +91,7 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
           'name': 'Basics of Electrical Engineering',
           'description': 'Introduction to electrical engineering principles...',
           'image': 'assets/s1.png',
-          'page': () => bee(fullName: widget.fullName),
+          'page': () => Bee(fullName: widget.fullName),
         },
         {
           'name': 'Basic Mechanical Engineering',
@@ -153,7 +153,7 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
     final isPortrait = screenSize.height > screenSize.width;
 
     return Scaffold(
-      backgroundColor: _isDarkMode ? const Color.fromARGB(755, 7, 17, 148) : Colors.blue[50],
+      backgroundColor: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[50],
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
