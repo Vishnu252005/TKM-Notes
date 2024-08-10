@@ -108,7 +108,7 @@ class _idea1State extends State<idea1> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'idea1',
+                            'IDEA Lab',
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,

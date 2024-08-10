@@ -82,7 +82,7 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
           'page': () => english(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
         },
         {
-          'name': 'IDEA Lab Workshop',
+          'name': 'IDEA Lab ',
           'description': 'Hands-on workshop focusing on innovative design...',
           'image': 'assets/s1.png',
           'page': () => idea(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
@@ -126,7 +126,7 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
           'page': () => english1(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
         },
         {
-          'name': 'IDEA Lab Workshop PYQs',
+          'name': 'IDEA Lab  PYQs',
           'description': 'Previous Year Questions for IDEA Lab Workshop...',
           'image': 'assets/s2.png',
           'page': () => idea1(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
