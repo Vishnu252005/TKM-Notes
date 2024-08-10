@@ -83,6 +83,8 @@ import '../MECH/sem8/mech_sem8_screen.dart';
 // Add this import at the top
 // Replace with actual path
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class PDFViewerPage extends StatefulWidget {
   final String pdfUrl;
   final String title;
@@ -101,7 +103,15 @@ class _PDFViewerPageState extends State<PDFViewerPage> {
   @override
   void initState() {
     super.initState();
+    _loadThemePreference();
     _downloadFile(widget.pdfUrl);
+  }
+
+  Future<void> _loadThemePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = prefs.getBool('isDarkMode') ?? true; // Load theme preference
+    });
   }
 
   Future<void> _downloadFile(String url) async {
@@ -127,17 +137,19 @@ class _PDFViewerPageState extends State<PDFViewerPage> {
     }
   }
 
-  void _toggleDarkMode() {
+  Future<void> _toggleDarkMode() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _isDarkMode = !_isDarkMode;
     });
+    await prefs.setBool('isDarkMode', _isDarkMode); // Save theme preference
   }
 
   void _openChatBot(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>  SGPAConverterPage(), // Change to your AI screen
+        builder: (context) => SGPAConverterPage(), // Change to your AI screen
       ),
     );
   }
@@ -157,7 +169,7 @@ class _PDFViewerPageState extends State<PDFViewerPage> {
             widget.title,
             style: TextStyle(color: Colors.white, fontSize: 22), // Increased font size for readability
           ),
-          backgroundColor: _isDarkMode ? Colors.black : Color.fromARGB(255, 3, 13, 148),
+          backgroundColor: _isDarkMode ? Colors.black : Colors.blue[700],
           actions: [
             IconButton(
               icon: Icon(_isDarkMode ? Icons.dark_mode : Icons.light_mode, color: Colors.white),

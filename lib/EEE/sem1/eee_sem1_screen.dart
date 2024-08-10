@@ -202,7 +202,7 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
                       );
                     },
                     child: CircleAvatar(
-                      backgroundColor: _isDarkMode ? Colors.red[600] : Colors.blue[700],
+                      backgroundColor: Colors.blue,
                       radius: isPortrait ? 30 : 20,
                       child: Text(
                         widget.fullName[0].toUpperCase(),

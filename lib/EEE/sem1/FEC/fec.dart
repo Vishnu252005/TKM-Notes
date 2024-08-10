@@ -181,7 +181,7 @@ class _fecState extends State<fec> {
                 padding: const EdgeInsets.all(16.0),
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundColor: _isDarkMode ? Colors.red[600] : Colors.blue[700],
+                  backgroundColor:  Colors.blue[700],
                   child: Text(
                     widget.fullName[0].toUpperCase(),
                     style: const TextStyle(color: Colors.white, fontSize: 24),

@@ -90,7 +90,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     CircleAvatar(
                       radius: 30,
-                      backgroundColor: Colors.red[600],
+                      backgroundColor: Colors.blue,  // Adjust this color to your preference
                       child: Text(
                         widget.fullName[0].toUpperCase(),
                         style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
@@ -189,7 +189,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   icon: Icon(Icons.logout, color: Colors.white),
                   label: Text('Logout', style: TextStyle(fontSize: 20, color: Colors.white)),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
+                    backgroundColor: Colors.blue,  // Set this to the color you prefer
                     minimumSize: Size(double.infinity, 50),
                   ),
                   onPressed: () {

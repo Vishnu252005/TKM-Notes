@@ -21,27 +21,27 @@ class _ideaState extends State<idea> {
   final List<UnitItem> units = [
     UnitItem(
       title: 'MODULE I: Introduction and Basic Grammar',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_1',
     ),
     UnitItem(
       title: 'MODULE II: Presentation Skills and Public Speaking',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_2',
     ),
     UnitItem(
       title: 'MODULE III: Interview Preparation',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_3',
     ),
     UnitItem(
       title: 'MODULE IV: Formal Writing and Documentation',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_4',
     ),
     UnitItem(
       title: 'MODULE V: Reading and Listening Skills',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_5',
     ),
   ];
@@ -55,7 +55,7 @@ class _ideaState extends State<idea> {
   Future<void> _loadThemePreference() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _isDarkMode = prefs.getBool('isDarkMode') ?? true;
+      _isDarkMode = prefs.getBool('isDarkMode') ?? false;
     });
   }
 
@@ -181,7 +181,7 @@ class _ideaState extends State<idea> {
                 padding: const EdgeInsets.all(16.0),
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundColor: _isDarkMode ? Colors.red[600] : Colors.blue[700],
+                  backgroundColor:  Colors.blue[700],
                   child: Text(
                     widget.fullName[0].toUpperCase(),
                     style: const TextStyle(color: Colors.white, fontSize: 24),

@@ -21,27 +21,27 @@ class _bmeState extends State<bme> {
   final List<UnitItem> units = [
     UnitItem(
       title: 'MODULE I: Thermodynamics and Heat Transfer',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_1',
     ),
     UnitItem(
       title: 'MODULE II: Thermal Power Generation Systems',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_2',
     ),
     UnitItem(
       title: 'MODULE III: Fluid Machines',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_3',
     ),
     UnitItem(
       title: 'MODULE IV: Refrigeration and Air Conditioning',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_4',
     ),
     UnitItem(
       title: 'MODULE V: Manufacturing Process',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_5',
     ),
   ];
@@ -55,7 +55,7 @@ class _bmeState extends State<bme> {
   Future<void> _loadThemePreference() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _isDarkMode = prefs.getBool('isDarkMode') ?? true;
+      _isDarkMode = prefs.getBool('isDarkMode') ?? false;
     });
   }
 
@@ -179,7 +179,7 @@ class _bmeState extends State<bme> {
                 padding: const EdgeInsets.all(16.0),
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundColor: _isDarkMode ? Colors.red[600] : Colors.blue[700], // Updated color
+                  backgroundColor:  Colors.blue[700], // Updated color
                   child: Text(
                     widget.fullName[0].toUpperCase(),
                     style: const TextStyle(

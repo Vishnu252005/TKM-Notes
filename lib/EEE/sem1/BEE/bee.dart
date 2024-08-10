@@ -31,22 +31,22 @@ class _BeeState extends State<Bee> {
     ),
     UnitItem(
       title: 'MODULE II: Single Phase Systems',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_2',
     ),
     UnitItem(
       title: 'MODULE III: Three Phase Systems and Power Transmission',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_3',
     ),
     UnitItem(
       title: 'MODULE IV: DC Machines and Transformers',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_4',
     ),
     UnitItem(
       title: 'MODULE V: AC Machines',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_5',
     ),
   ];
@@ -60,7 +60,7 @@ class _BeeState extends State<Bee> {
   Future<void> _loadThemePreference() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _isDarkMode = prefs.getBool('isDarkMode') ?? true;
+      _isDarkMode = prefs.getBool('isDarkMode') ?? false;
     });
   }
 
@@ -182,7 +182,7 @@ class _BeeState extends State<Bee> {
                 padding: const EdgeInsets.all(16.0),
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundColor: _isDarkMode ? Colors.red[600] : Colors.blue[700], // Updated color
+                  backgroundColor:  Colors.blue[700], // Updated color
                   child: Text(
                     widget.fullName[0].toUpperCase(),
                     style: TextStyle(
