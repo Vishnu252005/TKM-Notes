@@ -4,6 +4,9 @@ import 'package:flutter_application_2/widgets/pdfviewer.dart';
 
 class english extends StatelessWidget {
   final String fullName; // Full name received as a parameter
+  final String branch; // Branch received as a parameter
+  final String year; // Year received as a parameter
+  final String semester;
   final List<UnitItem> units = [
   UnitItem(
     title: 'MODULE I: Use of Language in Communication',
@@ -34,7 +37,7 @@ class english extends StatelessWidget {
 
 
 
-  english({required this.fullName}); // Constructor accepting fullName
+  english({required this.fullName, required this.branch, required this.year, required this.semester}); // Constructor accepting fullName
 
   @override
   Widget build(BuildContext context) {

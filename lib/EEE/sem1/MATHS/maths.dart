@@ -4,6 +4,10 @@ import 'package:flutter_application_2/widgets/pdfviewer.dart';
 
 class maths extends StatelessWidget {
   final String fullName; // Full name received as a parameter
+  final String branch; // Branch received as a parameter
+  final String year; // Year received as a parameter
+  final String semester; // Semester received as a parameter
+
   final List<UnitItem> units = [
   UnitItem(
     title: 'Module I: Multivariable Calculus and Applications',
@@ -33,7 +37,7 @@ class maths extends StatelessWidget {
 ];
 
 
-  maths({required this.fullName}); // Constructor accepting fullName
+  maths({required this.fullName, required this.branch, required this.year, required this.semester}); // Constructor accepting fullName
 
   @override
   Widget build(BuildContext context) {
@@ -111,9 +115,9 @@ class maths extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => ProfilePage(
                       fullName: fullName,
-                      branch: 'Computer Science', // Example branch
-                      year: 'Third Year', // Example year
-                      semester: 'Fifth Semester', // Example semester
+                      branch: branch, // Example branch
+                      year: year, // Example year
+                      semester: semester, // Example semester
                     ), // Redirects to ProfilePage
                   ),
                 );

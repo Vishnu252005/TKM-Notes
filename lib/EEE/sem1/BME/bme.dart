@@ -4,6 +4,9 @@ import 'package:flutter_application_2/widgets/pdfviewer.dart';
 
 class bme extends StatelessWidget {//no
   final String fullName; // Full name received as a parameter
+  final String branch; // Branch received as a parameter
+  final String year; // Year received as a parameter
+  final String semester;
   final List<UnitItem> units = [
   UnitItem(
     title: 'MODULE I: Thermodynamics and Heat Transfer',
@@ -34,7 +37,7 @@ class bme extends StatelessWidget {//no
 
 
 
-  bme({required this.fullName}); // Constructor accepting fullName
+  bme({required this.fullName, required this.branch, required this.year, required this.semester}); // Constructor accepting fullName
 
   @override
   Widget build(BuildContext context) {

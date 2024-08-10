@@ -5,8 +5,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Bee extends StatefulWidget {
   final String fullName;
+  final String branch; // Branch received as a parameter
+  final String year; // Year received as a parameter
+  final String semester; 
 
-  Bee({required this.fullName});
+  Bee({required this.fullName, required this.branch, required this.year, required this.semester});
 
   @override
   _BeeState createState() => _BeeState();
@@ -160,9 +163,9 @@ class _BeeState extends State<Bee> {
                   MaterialPageRoute(
                     builder: (context) => ProfilePage(
                       fullName: widget.fullName,
-                      branch: 'Computer Science',
-                      year: 'Third Year',
-                      semester: 'Fifth Semester',
+                      branch: widget.branch,
+                      year: widget.year,
+                      semester: widget.semester,
                     ),
                   ),
                 );
