@@ -1,56 +1,95 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class physics extends StatelessWidget {
-  final String fullName; // Full name received as a parameter
-  final String branch; // Branch received as a parameter
-  final String year; // Year received as a parameter
+class physics extends StatefulWidget {
+  final String fullName;
+  final String branch;
+  final String year;
   final String semester;
+
+  physics({required this.fullName, required this.branch, required this.year, required this.semester});
+
+  @override
+  _physicsState createState() => _physicsState();
+}
+
+class _physicsState extends State<physics> {
+  bool _isDarkMode = true;
+
   final List<UnitItem> units = [
-  UnitItem(
-    title: 'MODULE I: Oscillations and Wave Motion',
-    isAvailable: true,
-    pdfUrl: 'https://drive.google.com/uc?export=download&id=1jemEDttZ3EUynjKynINuoxeZpKe5Iwkj',
-  ),
-  UnitItem(
-    title: 'MODULE II: Wave Optics',
-    isAvailable: true,
-    pdfUrl: 'https://drive.google.com/uc?export=download&id=1J_jUq-z9LfsGWN9zS21MbKrDml4iGOq2',
-  ),
-  UnitItem(
-    title: 'MODULE III: Quantum Mechanics for Engineers',
-    isAvailable: true,
-    pdfUrl: 'https://drive.google.com/uc?export=download&id=1RevW5URdibj1YaHkcK6H2o5hzzlJAOSX',
-  ),
-  UnitItem(
-    title: 'MODULE IV: Introduction to Electromagnetic Theory',
-    isAvailable: true,
-    pdfUrl: 'https://drive.google.com/uc?export=download&id=1RevW5URdibj1YaHkcK6H2o5hzzlJAOSX',
-  ),
-  UnitItem(
-    title: 'MODULE V: Introduction to Solids',
-    isAvailable: true,
-    pdfUrl: 'https://drive.google.com/uc?export=download&id=1HzoZrtzq5Ocx4AW2ro2Y9WQ6XYc9S-cb',
-  ),
-];
+    UnitItem(
+      title: 'MODULE I: Oscillations and Wave Motion',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1jemEDttZ3EUynjKynINuoxeZpKe5Iwkj',
+    ),
+    UnitItem(
+      title: 'MODULE II: Wave Optics',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1J_jUq-z9LfsGWN9zS21MbKrDml4iGOq2',
+    ),
+    UnitItem(
+      title: 'MODULE III: Quantum Mechanics for Engineers',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1RevW5URdibj1YaHkcK6H2o5hzzlJAOSX',
+    ),
+    UnitItem(
+      title: 'MODULE IV: Introduction to Electromagnetic Theory',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1RevW5URdibj1YaHkcK6H2o5hzzlJAOSX',
+    ),
+    UnitItem(
+      title: 'MODULE V: Introduction to Solids',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1HzoZrtzq5Ocx4AW2ro2Y9WQ6XYc9S-cb',
+    ),
+  ];
 
+  @override
+  void initState() {
+    super.initState();
+    _loadThemePreference();
+  }
 
-  physics({required this.fullName, required this.branch, required this.year, required this.semester}); // Constructor accepting fullName
+  Future<void> _loadThemePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = prefs.getBool('isDarkMode') ?? true;
+    });
+  }
+
+  Future<void> _toggleTheme() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = !_isDarkMode;
+      prefs.setBool('isDarkMode', _isDarkMode);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 3, 13, 148),
+      backgroundColor: _isDarkMode ? Colors.blue[900] : Colors.blue[50],
       appBar: AppBar(
-        backgroundColor: Colors.transparent, // Transparent app bar
-        elevation: 0, // No shadow
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back),
+          color: _isDarkMode ? Colors.white : Colors.blue[900], // Updated color
           onPressed: () {
-            Navigator.pop(context); // Navigate back when pressed
+            Navigator.pop(context);
           },
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              _isDarkMode ? Icons.wb_sunny : Icons.nightlight_round,
+              color: Colors.white,
+            ),
+            onPressed: _toggleTheme,
+          ),
+        ],
       ),
       body: Stack(
         children: [
@@ -67,14 +106,21 @@ class physics extends StatelessWidget {
                       offset: Offset(value, 0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text(
-                            'Engineering Physics',
-                            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                            'Engineering physics',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: _isDarkMode ? Colors.white : Colors.blue[900],
+                            ),
                           ),
                           Text(
                             'Select Chapter',
-                            style: TextStyle(fontSize: 18, color: Colors.white70),
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: _isDarkMode ? Colors.white70 : Colors.blue[700],
+                            ),
                           ),
                         ],
                       ),
@@ -84,12 +130,22 @@ class physics extends StatelessWidget {
               ),
               Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.only(
+                  decoration: BoxDecoration(
+                    color: _isDarkMode ? Colors.black : Colors.white,
+                    borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(30),
                       topRight: Radius.circular(30),
                     ),
+                    boxShadow: !_isDarkMode
+                        ? [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: const Offset(0, 3),
+                            ),
+                          ]
+                        : [],
                   ),
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
@@ -113,11 +169,11 @@ class physics extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ProfilePage(
-                      fullName: fullName,
-                      branch: 'Computer Science', // Example branch
-                      year: 'Third Year', // Example year
-                      semester: 'Fifth Semester', // Example semester
-                    ), // Redirects to ProfilePage
+                      fullName: widget.fullName,
+                      branch: widget.branch,
+                      year: widget.year,
+                      semester: widget.semester,
+                    ),
                   ),
                 );
               },
@@ -125,10 +181,10 @@ class physics extends StatelessWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundColor: Colors.red[600],
+                  backgroundColor: _isDarkMode ? Colors.red[600] : Colors.blue[700],
                   child: Text(
-                    fullName[0].toUpperCase(),
-                    style: const TextStyle(color: Colors.white, fontSize: 24), // Increase font size here
+                    widget.fullName[0].toUpperCase(),
+                    style: const TextStyle(color: Colors.white, fontSize: 24),
                   ),
                 ),
               ),
@@ -143,13 +199,23 @@ class physics extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(
-        color: Colors.grey[900],
+        color: _isDarkMode ? Colors.grey[900] : Colors.white,
         borderRadius: BorderRadius.circular(8),
+        boxShadow: !_isDarkMode
+            ? [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: const Offset(0, 3),
+                ),
+              ]
+            : [],
       ),
       child: ListTile(
         title: Text(
           title,
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[900]),
         ),
         trailing: const Icon(Icons.chevron_right, color: Colors.white),
         onTap: () {

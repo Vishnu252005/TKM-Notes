@@ -5,11 +5,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Bee extends StatefulWidget {
   final String fullName;
-  final String branch; // Branch received as a parameter
-  final String year; // Year received as a parameter
-  final String semester; 
+  final String branch;
+  final String year;
+  final String semester;
 
-  Bee({required this.fullName, required this.branch, required this.year, required this.semester});
+  Bee({
+    required this.fullName,
+    required this.branch,
+    required this.year,
+    required this.semester,
+  });
 
   @override
   _BeeState createState() => _BeeState();
@@ -75,14 +80,18 @@ class _BeeState extends State<Bee> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back),
+          color: _isDarkMode ? Colors.white : Colors.blue[900], // Updated color
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         actions: [
           IconButton(
-            icon: Icon(_isDarkMode ? Icons.wb_sunny : Icons.nightlight_round, color: Colors.white),
+            icon: Icon(
+              _isDarkMode ? Icons.wb_sunny : Icons.nightlight_round,
+              color: Colors.white,
+            ),
             onPressed: _toggleTheme,
           ),
         ],
@@ -105,15 +114,14 @@ class _BeeState extends State<Bee> {
                         children: [
                           Text(
                             'Basics of Electrical Engineering',
-                            style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: _isDarkMode ? Colors.white : Colors.blue[900]),
+                            style: _textStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           Text(
                             'Select Chapter',
-                            style: TextStyle(
-                                fontSize: 18, color: _isDarkMode ? Colors.white70 : Colors.blue[700]),
+                            style: _textStyle(fontSize: 18),
                           ),
                         ],
                       ),
@@ -174,10 +182,13 @@ class _BeeState extends State<Bee> {
                 padding: const EdgeInsets.all(16.0),
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundColor: Colors.red[600],
+                  backgroundColor: _isDarkMode ? Colors.red[600] : Colors.blue[700], // Updated color
                   child: Text(
                     widget.fullName[0].toUpperCase(),
-                    style: const TextStyle(color: Colors.white, fontSize: 24),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
                   ),
                 ),
               ),
@@ -185,6 +196,14 @@ class _BeeState extends State<Bee> {
           ),
         ],
       ),
+    );
+  }
+
+  TextStyle _textStyle({required double fontSize, FontWeight fontWeight = FontWeight.normal}) {
+    return TextStyle(
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      color: _isDarkMode ? Colors.white : Colors.blue[900],
     );
   }
 
