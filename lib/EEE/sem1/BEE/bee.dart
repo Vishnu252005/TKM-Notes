@@ -126,6 +126,16 @@ class _BeeState extends State<Bee> {
                       topLeft: Radius.circular(30),
                       topRight: Radius.circular(30),
                     ),
+                    boxShadow: !_isDarkMode
+                        ? [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: const Offset(0, 3), // changes position of shadow
+                            ),
+                          ]
+                        : [],
                   ),
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
@@ -181,6 +191,16 @@ class _BeeState extends State<Bee> {
       decoration: BoxDecoration(
         color: _isDarkMode ? Colors.grey[900] : Colors.white,
         borderRadius: BorderRadius.circular(8),
+        boxShadow: !_isDarkMode
+            ? [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: const Offset(0, 3),
+                ),
+              ]
+            : [],
       ),
       child: ListTile(
         title: Text(
