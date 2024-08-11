@@ -74,13 +74,19 @@ class _ChemistryState extends State<Chemistry> {
 
   @override
   Widget build(BuildContext context) {
+    final Color backgroundColor = _isDarkMode ? const Color(0xFF4C4DDC) : Colors.blue[50]!;
+    final Color appBarIconColor = _isDarkMode ? Colors.white : Colors.blue[900]!;
+    final Color listTileColor = _isDarkMode ? Colors.grey[900]! : Colors.white;
+    final Color titleColor = _isDarkMode ? Colors.white : Colors.blue[900]!;
+    final Color subtitleColor = _isDarkMode ? Colors.white70 : Colors.blue[700]!;
+
     return Scaffold(
-      backgroundColor: _isDarkMode ? const Color(0xFF3C3C3C) : Colors.blue[50],
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: _isDarkMode ? Colors.white : Colors.blue[900]),
+          icon: Icon(Icons.arrow_back, color: appBarIconColor),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -89,7 +95,7 @@ class _ChemistryState extends State<Chemistry> {
           IconButton(
             icon: Icon(
               _isDarkMode ? Icons.wb_sunny : Icons.nightlight_round,
-              color: _isDarkMode ? Colors.white : Colors.blue[900],
+              color: appBarIconColor,
             ),
             onPressed: _toggleTheme,
           ),
@@ -112,18 +118,18 @@ class _ChemistryState extends State<Chemistry> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Chemistry',
+                            'Engineering Chemistry',
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
-                              color: _isDarkMode ? Colors.white : Colors.blue[900],
+                              color: titleColor,
                             ),
                           ),
                           Text(
                             'Select Chapter',
                             style: TextStyle(
                               fontSize: 18,
-                              color: _isDarkMode ? Colors.white70 : Colors.blue[700],
+                              color: subtitleColor,
                             ),
                           ),
                         ],
@@ -203,7 +209,7 @@ class _ChemistryState extends State<Chemistry> {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(
-        color: _isDarkMode ? Colors.grey[900] : Colors.white,
+        color: _isDarkMode ? Colors.grey[900]! : Colors.white,
         borderRadius: BorderRadius.circular(8),
         boxShadow: !_isDarkMode
             ? [

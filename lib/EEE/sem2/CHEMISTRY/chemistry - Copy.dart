@@ -112,7 +112,7 @@ class _Chemistry1State extends State<Chemistry1> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Chemistry1',
+                            'Engineering Chemistry',
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,

@@ -112,7 +112,7 @@ class _GraphicsState extends State<Graphics> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Graphics',
+                            'Engineering Graphics',
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
