@@ -1,39 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/MECH/sem3/MM/mm.dart';
 import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
 
-class Coi extends StatelessWidget {
+class Dc1 extends StatelessWidget {
   final String fullName; // Full name received as a parameter
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: Introduction of the Indian Constitution',
+      title: 'MODULE I: Fundamentals of dc machines',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_1',
     ),
     UnitItem(
-      title: 'MODULE II: Fundamental Rights and Duties',
+      title: 'MODULE II: DC genrators',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_2',
     ),
     UnitItem(
-      title: 'MODULE III: Union executive and Parliament',
+      title: 'MODULE III: DC motors',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_3',
     ),
     UnitItem(
-      title: 'MODULE IV: State Executive and State legislature',
+      title: 'MODULE IV: Single phase transformer',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_4',
     ),
     UnitItem(
-      title: 'MODULE V: Governance and Constitution',
+      title: 'MODULE V: Three phase transformer',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_5',
     ),
   ];
 
- Coi({required this.fullName}); // Constructor accepting fullName
+  Dc1({required this.fullName}); // Constructor accepting fullName
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +65,7 @@ class Coi extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'DC Machines and Transformers',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

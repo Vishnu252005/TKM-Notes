@@ -66,7 +66,7 @@ class Mm extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Calculus and Linear Algebra',
+                            'Mechanics of Materials',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

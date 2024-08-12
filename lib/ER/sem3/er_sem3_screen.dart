@@ -11,7 +11,7 @@ import 'package:flutter_application_2/ER/sem3/SD/sd.dart';
 import 'package:flutter_application_2/ER/sem3/units.dart';  // Import the correct file for units
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
-class ERSem3Screen extends StatefulWidget {
+class ERSem3Screen extends StatefulWidget {//T
   final String fullName;
   final String branch;
   final String year;

@@ -1,38 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/MECH/sem3/MM/mm.dart';
 import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
 
-class Dc1 extends StatelessWidget {
+class Se1 extends StatelessWidget {
   final String fullName; // Full name received as a parameter
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: Fundamentals of dc machines',
+      title: 'MODULE I: Introduction to Software Engineering',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_1',
     ),
     UnitItem(
-      title: 'MODULE II: DC genrators',
+      title: 'MODULE II: Requirement analysis, Planning and Design',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_2',
     ),
     UnitItem(
-      title: 'MODULE III: DC motors',
+      title: 'MODULE III: Implementation and Testing',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_3',
     ),
     UnitItem(
-      title: 'MODULE IV: Single phase transformer',
+      title: 'MODULE IV: Maintenance and Project Scheduling',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_4',
     ),
     UnitItem(
-      title: 'MODULE V: Three phase transformer',
+      title: 'MODULE V: Software Quality, Process Improvement and Technology trend',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_5',
     ),
   ];
 
-  Dc1({required this.fullName}); // Constructor accepting fullName
+ Se1({required this.fullName}); // Constructor accepting fullName
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +66,7 @@ class Dc1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Software Engineering',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

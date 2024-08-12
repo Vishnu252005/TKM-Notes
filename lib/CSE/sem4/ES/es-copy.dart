@@ -66,7 +66,7 @@ class Es1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Calculus and Linear Algebra',
+                            'Environmental Science',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

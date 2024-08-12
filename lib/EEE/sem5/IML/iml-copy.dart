@@ -66,7 +66,7 @@ class Iml1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Introduction to Machine Learning',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

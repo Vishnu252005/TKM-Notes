@@ -65,7 +65,7 @@ class Cd extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Calculus and Linear Algebra',
+                            'Compiler Design',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

@@ -66,7 +66,7 @@ class Httm1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Heat Transfer & Thermal Machines',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

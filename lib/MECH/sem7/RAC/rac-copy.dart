@@ -66,7 +66,7 @@ class Rac1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Refrigeration and Air Conditioning',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

@@ -65,7 +65,7 @@ class sa extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Calculus and Linear Algebra',
+                            'Structural Analysis',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

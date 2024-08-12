@@ -4,7 +4,7 @@ import 'package:flutter_application_2/EC/sem7/CV/cv.dart';
 import 'package:flutter_application_2/EC/sem7/units.dart';  // Import the correct file for units
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
-class ECSem7Screen extends StatefulWidget {
+class ECSem7Screen extends StatefulWidget {//N
   final String fullName;
   final String branch;
   final String year;

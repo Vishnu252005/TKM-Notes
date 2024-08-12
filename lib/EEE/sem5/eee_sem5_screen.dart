@@ -9,7 +9,7 @@ import 'package:flutter_application_2/EEE/sem5/PE/pe.dart';
 import 'package:flutter_application_2/EEE/sem5/units.dart'; // Import the correct file for units
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
-class EEESem5Screen extends StatefulWidget {
+class EEESem5Screen extends StatefulWidget {//n
   final String fullName;
   final String branch;
   final String year;

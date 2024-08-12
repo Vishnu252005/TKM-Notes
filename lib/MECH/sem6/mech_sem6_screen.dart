@@ -5,7 +5,7 @@ import 'package:flutter_application_2/MECH/sem6/IS/is.dart';
 import 'package:flutter_application_2/MECH/sem6/units.dart';  // Import the correct file for units
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
-class MECHSem6Screen extends StatefulWidget {
+class MECHSem6Screen extends StatefulWidget {//t
   final String fullName;
   final String branch;
   final String year;

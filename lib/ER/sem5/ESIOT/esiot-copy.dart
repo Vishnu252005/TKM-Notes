@@ -67,7 +67,7 @@ class Esiot1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Calculus and Linear Algebra',
+                            'Embedded Systems and IoT',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

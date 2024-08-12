@@ -66,7 +66,7 @@ class Nt1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Calculus and Linear Algebra',
+                            'NETWORK THEORY',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

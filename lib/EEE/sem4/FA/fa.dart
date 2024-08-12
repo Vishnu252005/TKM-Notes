@@ -65,7 +65,7 @@ class Fa extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'FFinance and Accounting',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

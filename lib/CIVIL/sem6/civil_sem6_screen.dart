@@ -5,7 +5,7 @@ import 'package:flutter_application_2/CIVIL/sem6/QSV/qsv.dart';
 import 'package:flutter_application_2/CIVIL/sem6/units.dart'; // Import the correct file for units
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
-class CIVILSem6Screen extends StatefulWidget {
+class CIVILSem6Screen extends StatefulWidget {//t
   final String fullName;
   final String branch;
   final String year;

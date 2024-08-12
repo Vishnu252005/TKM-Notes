@@ -34,7 +34,7 @@ class _ECSem3ScreenState extends State<ECSem3Screen> {
 
   @override
   void initState() {
-    super.initState();
+    super.initState();//n
 
     _subjects = {
       'Notes & Books': [
