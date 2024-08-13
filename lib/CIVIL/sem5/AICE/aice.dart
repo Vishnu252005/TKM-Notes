@@ -67,7 +67,7 @@ class Aice extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Calculus and Linear Algebra',
+                            'Artificial Intelligence for Civil Engineers',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

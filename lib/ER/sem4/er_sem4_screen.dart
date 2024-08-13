@@ -9,7 +9,7 @@ import 'package:flutter_application_2/ER/sem4/units.dart';  // Import the correc
 import 'package:flutter_application_2/MECH/sem3/MM/mm.dart';
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
-class ERSem4Screen extends StatefulWidget {
+class ERSem4Screen extends StatefulWidget {//t
   final String fullName;
   final String branch;
   final String year;

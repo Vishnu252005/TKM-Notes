@@ -40,7 +40,7 @@ class _ECSem4ScreenState extends State<ECSem4Screen> {
     _subjects = {
       'Notes & Books': [
         {
-          'name': 'Computer Organization and Architecture',
+          'name': 'Computer Organization and Architecture',//n
           'description': 'Study of computer organization and architecture...',
           'image': 'assets/s2.png',
           'page': () => Coa(fullName: widget.fullName),

@@ -34,7 +34,7 @@ class _EEESem6ScreenState extends State<EEESem6Screen> {
   super.initState();
 
   _subjects = {
-    'Notes & Books': [
+    'Notes & Books': [//n
       {
     'name': 'Electric Vehicle Technology',
     'description': 'Study of technologies related to electric vehicles...',

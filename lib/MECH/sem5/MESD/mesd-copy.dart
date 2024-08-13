@@ -66,7 +66,7 @@ class Mesd1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Machine Element & System Design',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

@@ -65,7 +65,7 @@ class mi1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Measurements & Instrumentation',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

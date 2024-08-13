@@ -66,7 +66,7 @@ class Ee1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Calculus and Linear Algebra',
+                            'Engineering Economics',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

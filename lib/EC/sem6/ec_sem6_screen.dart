@@ -35,7 +35,7 @@ class _ECSem6ScreenState extends State<ECSem6Screen> {
 
   _subjects = {
     'Notes & Books': [
-      {
+      {//N
         'name': 'Computer Networks',
         'description': 'Study of computer networks and their applications...',
         'image': 'assets/s1.png',

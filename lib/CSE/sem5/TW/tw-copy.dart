@@ -65,7 +65,7 @@ Tw1({required this.fullName}); // Constructor accepting fullName
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Calculus and Linear Algebra',
+                            'Technical Writing',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

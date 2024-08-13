@@ -65,7 +65,7 @@ class DM1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Calculus and Linear Algebra',
+                            'Discrete Mathematics',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

@@ -66,7 +66,7 @@ class Lspe1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Life Skills and Professional Ethics',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

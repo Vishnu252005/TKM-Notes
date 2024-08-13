@@ -66,7 +66,7 @@ class Or1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Humanities – II Operations Research',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

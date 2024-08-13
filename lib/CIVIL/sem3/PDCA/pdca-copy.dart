@@ -65,7 +65,7 @@ class pdca1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Calculus and Linear Algebra',
+                            'Probability Distributions and Complex Analysis',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

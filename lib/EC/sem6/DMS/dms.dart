@@ -66,7 +66,7 @@ class Dms extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Database Management Systems',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

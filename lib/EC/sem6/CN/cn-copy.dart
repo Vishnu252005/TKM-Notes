@@ -66,7 +66,7 @@ class Cn1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Computer Networks',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

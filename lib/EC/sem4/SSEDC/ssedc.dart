@@ -67,7 +67,7 @@ class Ssedc extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Calculus and Linear Algebra',
+                            'Solid State Electronic Devices and Circuits',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

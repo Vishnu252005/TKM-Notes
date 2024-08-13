@@ -65,7 +65,7 @@ class Pde extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Calculus and Linear Algebra',
+                            'Advanced Linear Algebra, Complex Analysis and Partial Differential Equations',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

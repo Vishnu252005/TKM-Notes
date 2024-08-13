@@ -67,7 +67,7 @@ class Fe1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Calculus and Linear Algebra',
+                            'Foundation Engineering',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
