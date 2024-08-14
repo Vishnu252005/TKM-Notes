@@ -1,55 +1,92 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class bee1 extends StatelessWidget {
-  final String fullName; // Full name received as a parameter
+class Bee1 extends StatefulWidget {
+  final String fullName;
+  final String branch; // Branch received as a parameter
+  final String year; // Year received as a parameter
+  final String semester; 
+
+  Bee1({required this.fullName, required this.branch, required this.year, required this.semester});
+
+  @override
+  _BeeState createState() => _BeeState();
+}
+
+class _BeeState extends State<Bee1> {
+  bool _isDarkMode = true;
+
   final List<UnitItem> units = [
-  UnitItem(
-    title: 'MODULE I: D.C. Circuits and Magnetic Circuits',
-    isAvailable: true,
-    pdfUrl: 'url_to_pdf_1',
-  ),
-  UnitItem(
-    title: 'MODULE II: Single Phase Systems',
-    isAvailable: true,
-    pdfUrl: 'url_to_pdf_2',
-  ),
-  UnitItem(
-    title: 'MODULE III: Three Phase Systems and Power Transmission',
-    isAvailable: true,
-    pdfUrl: 'url_to_pdf_3',
-  ),
-  UnitItem(
-    title: 'MODULE IV: DC Machines and Transformers',
-    isAvailable: true,
-    pdfUrl: 'url_to_pdf_4',
-  ),
-  UnitItem(
-    title: 'MODULE V: AC Machines',
-    isAvailable: true,
-    pdfUrl: 'url_to_pdf_5',
-  ),
-];
+    UnitItem(
+      title: 'MODULE I: D.C. Circuits and Magnetic Circuits',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/drive/folders/13KHyg323bWWWHIEkWDA2loFlZfyej4Fh',
+    ),
+    UnitItem(
+      title: 'MODULE II: Single Phase Systems',
+      isAvailable: true,
+      pdfUrl: 'url_to_pdf_2',
+    ),
+    UnitItem(
+      title: 'MODULE III: Three Phase Systems and Power Transmission',
+      isAvailable: true,
+      pdfUrl: 'url_to_pdf_3',
+    ),
+    UnitItem(
+      title: 'MODULE IV: DC Machines and Transformers',
+      isAvailable: true,
+      pdfUrl: 'url_to_pdf_4',
+    ),
+    UnitItem(
+      title: 'MODULE V: AC Machines',
+      isAvailable: true,
+      pdfUrl: 'url_to_pdf_5',
+    ),
+  ];
 
+  @override
+  void initState() {
+    super.initState();
+    _loadThemePreference();
+  }
 
+  Future<void> _loadThemePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = prefs.getBool('isDarkMode') ?? true;
+    });
+  }
 
-
-  bee1({required this.fullName}); // Constructor accepting fullName
+  Future<void> _toggleTheme() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = !_isDarkMode;
+      prefs.setBool('isDarkMode', _isDarkMode);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 3, 13, 148),
+      backgroundColor: _isDarkMode ? Colors.blue[900] : Colors.blue[50],
       appBar: AppBar(
-        backgroundColor: Colors.transparent, // Transparent app bar
-        elevation: 0, // No shadow
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back),
+          color: _isDarkMode ? Colors.white : Colors.blue[900], // Updated color
           onPressed: () {
-            Navigator.pop(context); // Navigate back when pressed
+            Navigator.pop(context);
           },
         ),
+        actions: [
+          IconButton(
+            icon: Icon(_isDarkMode ? Icons.wb_sunny : Icons.nightlight_round, color: Colors.white),
+            onPressed: _toggleTheme,
+          ),
+        ],
       ),
       body: Stack(
         children: [
@@ -66,14 +103,18 @@ class bee1 extends StatelessWidget {
                       offset: Offset(value, 0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text(
-                            'Engineering Mechanics',
-                            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                            'Basics of Electrical Engineering',
+                            style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: _isDarkMode ? Colors.white : Colors.blue[900]),
                           ),
                           Text(
                             'Select Chapter',
-                            style: TextStyle(fontSize: 18, color: Colors.white70),
+                            style: TextStyle(
+                                fontSize: 18, color: _isDarkMode ? Colors.white70 : Colors.blue[700]),
                           ),
                         ],
                       ),
@@ -83,12 +124,22 @@ class bee1 extends StatelessWidget {
               ),
               Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.only(
+                  decoration: BoxDecoration(
+                    color: _isDarkMode ? Colors.black : Colors.white,
+                    borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(30),
                       topRight: Radius.circular(30),
                     ),
+                    boxShadow: !_isDarkMode
+                        ? [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: const Offset(0, 3), // changes position of shadow
+                            ),
+                          ]
+                        : [],
                   ),
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
@@ -112,11 +163,11 @@ class bee1 extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ProfilePage(
-                      fullName: fullName,
-                      branch: 'Computer Science', // Example branch
-                      year: 'Third Year', // Example year
-                      semester: 'Fifth Semester', // Example semester
-                    ), // Redirects to ProfilePage
+                      fullName: widget.fullName,
+                      branch: widget.branch,
+                      year: widget.year,
+                      semester: widget.semester,
+                    ),
                   ),
                 );
               },
@@ -126,8 +177,8 @@ class bee1 extends StatelessWidget {
                   radius: 30,
                   backgroundColor: Colors.red[600],
                   child: Text(
-                    fullName[0].toUpperCase(),
-                    style: const TextStyle(color: Colors.white, fontSize: 24), // Increase font size here
+                    widget.fullName[0].toUpperCase(),
+                    style: const TextStyle(color: Colors.white, fontSize: 24),
                   ),
                 ),
               ),
@@ -142,13 +193,23 @@ class bee1 extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(
-        color: Colors.grey[900],
+        color: _isDarkMode ? Colors.grey[900] : Colors.white,
         borderRadius: BorderRadius.circular(8),
+        boxShadow: !_isDarkMode
+            ? [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: const Offset(0, 3),
+                ),
+              ]
+            : [],
       ),
       child: ListTile(
         title: Text(
           title,
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[900]),
         ),
         trailing: const Icon(Icons.chevron_right, color: Colors.white),
         onTap: () {
