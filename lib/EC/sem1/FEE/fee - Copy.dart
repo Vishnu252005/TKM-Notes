@@ -1,46 +1,54 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CHEMICAL/sem1/FEE/fee%20-%20Copy.dart';
 import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Fee1 extends StatefulWidget {
   final String fullName;
+  final String branch;
+  final String year;
+  final String semester;
 
-  Fee1({required this.fullName});
+  const Fee1({
+    Key? key,
+    required this.fullName,
+    required this.branch,
+    required this.year,
+    required this.semester,
+  }) : super(key: key);
 
   @override
-  _FeeState createState() => _FeeState();
+  _Fee1State createState() => _Fee1State();
 }
 
-class _FeeState extends State<Fee1> {
+class _Fee1State extends State<Fee1> {
   bool _isDarkMode = true;
 
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: Electronic Components & Devices',
-      isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1AxJ8y7hdGK5Y2NKPz2vg1478X_2QSHWy',
+      title: 'MODULE I: Introduction and Basic Grammar',
+      isAvailable: false,
+      pdfUrl: 'url_to_pdf_1',
     ),
     UnitItem(
-      title: 'MODULE II: Electronic Circuits',
-      isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1Axlyk87z66yVm1T9L0_KjD2mGOXa6Elt',
+      title: 'MODULE II: Presentation Skills and Public Speaking',
+      isAvailable: false,
+      pdfUrl: 'url_to_pdf_2',
     ),
     UnitItem(
-      title: 'MODULE III: Integrated Circuits',
-      isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1B1DlRkq6ZTL6YHCYAE-eG7nfMUUsZxKO',
+      title: 'MODULE III: Interview Preparation',
+      isAvailable: false,
+      pdfUrl: 'url_to_pdf_3',
     ),
     UnitItem(
-      title: 'MODULE IV: Electronic Instrumentation',
-      isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1B1c0jxhQXRDoA1YBHoPzhleMMCA0DOne',
+      title: 'MODULE IV: Formal Writing and Documentation',
+      isAvailable: false,
+      pdfUrl: 'url_to_pdf_4',
     ),
     UnitItem(
-      title: 'MODULE V: Communication Systems',
-      isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1B71moLF4Fk0uoYpqUlA0N-4p_H4thXot',
+      title: 'MODULE V: Reading and Listening Skills',
+      isAvailable: false,
+      pdfUrl: 'url_to_pdf_5',
     ),
   ];
 
@@ -51,14 +59,14 @@ class _FeeState extends State<Fee1> {
   }
 
   Future<void> _loadThemePreference() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _isDarkMode = prefs.getBool('isDarkMode') ?? true;
     });
   }
 
   Future<void> _toggleTheme() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _isDarkMode = !_isDarkMode;
       prefs.setBool('isDarkMode', _isDarkMode);
@@ -67,22 +75,27 @@ class _FeeState extends State<Fee1> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDarkMode = _isDarkMode;
+    final Color backgroundColor = isDarkMode ? Colors.blue[900]! : Colors.blue[50]!;
+    final Color appBarIconColor = isDarkMode ? Colors.white : Colors.blue[900]!;
+    final Color cardColor = isDarkMode ? Colors.black : Colors.white;
+    final Color textColor = isDarkMode ? Colors.white : Colors.blue[900]!;
+    final Color subtitleColor = isDarkMode ? Colors.white70 : Colors.blue[700]!;
+
     return Scaffold(
-      backgroundColor: _isDarkMode ? const Color.fromARGB(255, 3, 13, 148) : Colors.blue[50],
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: _isDarkMode ? Colors.white : Colors.blue[900]),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          icon: Icon(Icons.arrow_back, color: appBarIconColor),
+          onPressed: () => Navigator.pop(context),
         ),
         actions: [
           IconButton(
             icon: Icon(
-              _isDarkMode ? Icons.wb_sunny : Icons.nightlight_round,
-              color: _isDarkMode ? Colors.white : Colors.blue[900],
+              isDarkMode ? Icons.wb_sunny : Icons.nightlight_round,
+              color: appBarIconColor,
             ),
             onPressed: _toggleTheme,
           ),
@@ -105,18 +118,18 @@ class _FeeState extends State<Fee1> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'IDEA Lab',
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
-                              color: _isDarkMode ? Colors.white : Colors.blue[900],
+                              color: textColor,
                             ),
                           ),
                           Text(
                             'Select Chapter',
                             style: TextStyle(
                               fontSize: 18,
-                              color: _isDarkMode ? Colors.white70 : Colors.blue[700],
+                              color: subtitleColor,
                             ),
                           ),
                         ],
@@ -128,12 +141,12 @@ class _FeeState extends State<Fee1> {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: _isDarkMode ? Colors.black : Colors.white,
+                    color: cardColor,
                     borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(30),
                       topRight: Radius.circular(30),
                     ),
-                    boxShadow: !_isDarkMode
+                    boxShadow: !isDarkMode
                         ? [
                             BoxShadow(
                               color: Colors.grey.withOpacity(0.5),
@@ -167,9 +180,9 @@ class _FeeState extends State<Fee1> {
                   MaterialPageRoute(
                     builder: (context) => ProfilePage(
                       fullName: widget.fullName,
-                      branch: 'Computer Science', // Example branch
-                      year: 'Third Year', // Example year
-                      semester: 'Fifth Semester', // Example semester
+                      branch: widget.branch,
+                      year: widget.year,
+                      semester: widget.semester,
                     ),
                   ),
                 );
@@ -178,7 +191,7 @@ class _FeeState extends State<Fee1> {
                 padding: const EdgeInsets.all(16.0),
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundColor: _isDarkMode ? Colors.red[600] : Colors.red[300],
+                  backgroundColor: Colors.blue[700],
                   child: Text(
                     widget.fullName[0].toUpperCase(),
                     style: const TextStyle(color: Colors.white, fontSize: 24),
@@ -214,7 +227,7 @@ class _FeeState extends State<Fee1> {
           title,
           style: TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[900]),
         ),
-        trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.blue[900]),
+        trailing: const Icon(Icons.chevron_right, color: Colors.white),
         onTap: () {
           if (isAvailable && pdfUrl != null) {
             Navigator.push(
@@ -247,5 +260,9 @@ class UnitItem {
   final bool isAvailable;
   final String pdfUrl;
 
-  UnitItem({required this.title, required this.isAvailable, required this.pdfUrl});
+  const UnitItem({
+    required this.title,
+    required this.isAvailable,
+    required this.pdfUrl,
+  });
 }

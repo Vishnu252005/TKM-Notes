@@ -14,7 +14,7 @@ import 'package:flutter_application_2/CSE/sem1/IDEALAB/idealab.dart';
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
 class CSESem1Screen extends StatefulWidget {
-  final String fullName;//T
+  final String fullName;
   final String branch;
   final String year;
   final String semester;
@@ -33,45 +33,56 @@ class CSESem1Screen extends StatefulWidget {
 
 class _CSESem1ScreenState extends State<CSESem1Screen> {
   int _selectedIndex = 0;
+  bool isDarkMode = true;
   final List<String> _tabs = ['Notes & Books', 'PYQs'];
 
   late Map<String, List<Map<String, dynamic>>> _subjects;
 
   @override
-void initState() {
-  super.initState();
+  void initState() {
+    super.initState();
 
-  _subjects = {
+    _subjects = {
     'Notes & Books': [
       {
         'name': 'Calculus and Linear Algebra',
         'description': 'Study of calculus and linear algebra including...',
         'image': 'assets/s1.png',
-        'page': () =>  maths(fullName: widget.fullName),
+        'page': () =>  maths(fullName: widget.fullName,branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester),
       },
       {
         'name': 'Engineering Physics',
         'description': 'Exploration of fundamental concepts in physics...',
         'image': 'assets/s1.png',
-        'page': () =>  physics(fullName: widget.fullName),
+        'page': () =>  physics(fullName: widget.fullName,branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester),
       },
       {
         'name': 'Fundamentals of Electronics Engineering',
         'description': 'Basics of electronics and electrical engineering...',
         'image': 'assets/s1.png',
-        'page': () =>  fee(fullName: widget.fullName),
+        'page': () =>  fee(fullName: widget.fullName,branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester),
       },
       {
         'name': 'Technical English for Engineers',
         'description': 'Improving technical communication skills...',
         'image': 'assets/s1.png',
-        'page': () =>  english(fullName: widget.fullName),
+        'page': () =>  english(fullName: widget.fullName,branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester),
       },
       {
         'name': 'IDEA Lab Workshop',
         'description': 'Hands-on workshop focusing on innovative design...',
         'image': 'assets/s1.png',
-        'page': () =>  idea(fullName: widget.fullName),
+        'page': () =>  idea(fullName: widget.fullName,branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester),
       },
       // {
       //   'name': 'Design Thinking',
@@ -83,7 +94,9 @@ void initState() {
         'name': 'Basics of Electrical Engineering',
         'description': 'Introduction to electrical engineering principles...',
         'image': 'assets/s1.png',
-        'page': () =>  LSD(fullName: widget.fullName),
+        'page': () =>  LSD(fullName: widget.fullName,branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester),
       },
       
     ],
@@ -92,31 +105,41 @@ void initState() {
         'name': 'Calculus and Linear Algebra PYQs',
         'description': 'Previous Year Questions for Calculus and Linear Algebra...',
         'image': 'assets/s2.png',
-        'page': () =>  maths1(fullName: widget.fullName),
+        'page': () =>  maths1(fullName: widget.fullName,branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester),
       },
       {
         'name': 'Engineering Physics PYQs',
         'description': 'Previous Year Questions for Engineering Physics...',
         'image': 'assets/s2.png',
-        'page': () =>  physics1(fullName: widget.fullName),
+        'page': () =>  physics1(fullName: widget.fullName,branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester),
       },
       {
         'name': 'Fundamentals of Electronics Engineering PYQs',
         'description': 'Previous Year Questions for Electronics Engineering...',
         'image': 'assets/s2.png',
-        'page': () =>  fee1(fullName: widget.fullName),
+        'page': () =>  fee1(fullName: widget.fullName,branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester),
       },
       {
         'name': 'Technical English for Engineers PYQs',
         'description': 'Previous Year Questions for Technical English...',
         'image': 'assets/s2.png',
-        'page': () =>  english1(fullName: widget.fullName),
+        'page': () =>  english1(fullName: widget.fullName,branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester),
       },
       {
         'name': 'IDEA Lab Workshop PYQs',
         'description': 'Previous Year Questions for IDEA Lab Workshop...',
         'image': 'assets/s2.png',
-        'page': () =>  idea1(fullName: widget.fullName),
+        'page': () =>  idea1(fullName: widget.fullName,branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester),
       },
       // {
       //   'name': 'Design Thinking PYQs',
@@ -128,7 +151,9 @@ void initState() {
         'name': 'Basics of Electrical Engineering PYQs',
         'description': 'Previous Year Questions for Electrical Engineering...',
         'image': 'assets/s2.png',
-        'page': () =>  LSD1(fullName: widget.fullName),
+        'page': () =>  LSD1(fullName: widget.fullName,branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester),
       },
       
     ],
@@ -140,9 +165,11 @@ void initState() {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final isPortrait = screenSize.height > screenSize.width;
+    final themeData = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(755, 7, 17, 148),
+      backgroundColor:
+          isDarkMode ? const Color.fromARGB(255, 7, 17, 148) : Colors.white,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,7 +188,7 @@ void initState() {
                           style: TextStyle(
                               fontSize: isPortrait ? 24 : 20,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                              color: isDarkMode ? Colors.white : Colors.black),
                         ),
                         const Text(
                           'Select Subject',
@@ -185,7 +212,8 @@ void initState() {
                       );
                     },
                     child: CircleAvatar(
-                      backgroundColor: Colors.red[600],
+                      backgroundColor:
+                          isDarkMode ? Colors.red[600] : Colors.blue[600],
                       radius: isPortrait ? 30 : 20,
                       child: Text(
                         widget.fullName[0].toUpperCase(),
@@ -196,6 +224,17 @@ void initState() {
                       ),
                     ),
                   ),
+                  IconButton(
+                    icon: Icon(
+                      isDarkMode ? Icons.dark_mode : Icons.light_mode,
+                      color: isDarkMode ? Colors.white : Colors.black,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        isDarkMode = !isDarkMode;
+                      });
+                    },
+                  ),
                 ],
               ),
             ),
@@ -203,9 +242,9 @@ void initState() {
             Expanded(
               child: Container(
                 width: double.infinity,
-                decoration: const BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.only(
+                decoration: BoxDecoration(
+                  color: isDarkMode ? Colors.black : Colors.grey[200],
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(24),
                     topRight: Radius.circular(24),
                   ),
@@ -218,7 +257,9 @@ void initState() {
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: const Color.fromARGB(755, 58, 58, 58),
+                          color: isDarkMode
+                              ? const Color.fromARGB(255, 58, 58, 58)
+                              : Colors.grey[300],
                           borderRadius: BorderRadius.circular(24),
                         ),
                         padding: const EdgeInsets.all(8.0),
@@ -234,14 +275,22 @@ void initState() {
                                       const EdgeInsets.symmetric(vertical: 16),
                                   decoration: BoxDecoration(
                                     color: _selectedIndex == index
-                                        ? Colors.black
-                                        : const Color.fromARGB(755, 58, 58, 58),
+                                        ? (isDarkMode
+                                            ? Colors.black
+                                            : Colors.white)
+                                        : (isDarkMode
+                                            ? const Color.fromARGB(
+                                                255, 58, 58, 58)
+                                            : Colors.grey[300]),
                                     borderRadius: BorderRadius.circular(24),
                                   ),
                                   child: Text(
                                     _tabs[index],
                                     textAlign: TextAlign.center,
-                                    style: const TextStyle(color: Colors.white),
+                                    style: TextStyle(
+                                        color: isDarkMode
+                                            ? Colors.white
+                                            : Colors.black),
                                   ),
                                 ),
                               ),
@@ -259,7 +308,9 @@ void initState() {
                           var subject =
                               _subjects[_tabs[_selectedIndex]]![index];
                           return Card(
-                            color: const Color.fromARGB(755, 58, 58, 58),
+                            color: isDarkMode
+                                ? const Color.fromARGB(255, 58, 58, 58)
+                                : Colors.white,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16)),
                             child: ListTile(
@@ -269,12 +320,16 @@ void initState() {
                                       width: 50, height: 50)
                                   : null,
                               title: Text(subject['name'],
-                                  style: const TextStyle(
-                                      color: Colors.white,
+                                  style: TextStyle(
+                                      color: isDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
                                       fontWeight: FontWeight.bold)),
                               subtitle: Text(subject['description'],
-                                  style:
-                                      const TextStyle(color: Colors.white70)),
+                                  style: TextStyle(
+                                      color: isDarkMode
+                                          ? Colors.white70
+                                          : Colors.black54)),
                               onTap: () {
                                 Navigator.push(
                                   context,

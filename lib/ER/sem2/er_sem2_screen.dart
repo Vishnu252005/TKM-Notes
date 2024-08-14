@@ -13,7 +13,7 @@ import 'package:flutter_application_2/ER/sem2/SPORTS/sports%20-%20Copy.dart';
 import 'package:flutter_application_2/ER/sem2/SPORTS/sports.dart';
 import 'package:flutter_application_2/ER/sem2/UHV/uhv%20-%20Copy.dart';
 import 'package:flutter_application_2/ER/sem2/UHV/uhv.dart'; // Import the correct file for units
-import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
+import 'package:flutter_application_2/widgets/profile.dart'; 
 
 class ERSem2Screen extends StatefulWidget {
   final String fullName;
@@ -21,7 +21,7 @@ class ERSem2Screen extends StatefulWidget {
   final String year;
   final String semester;
 
-  const ERSem2Screen({//t
+  const ERSem2Screen({
     Key? key,
     required this.fullName,
     required this.branch,
@@ -40,108 +40,185 @@ class _ERSem2ScreenState extends State<ERSem2Screen> {
   late Map<String, List<Map<String, dynamic>>> _subjects;
 
   @override
- void initState() {
-  super.initState();
+  void initState() {
+    super.initState();
 
-  _subjects = {
-    'Notes & Books': [
-      {
-        'name': 'Ordinary Differential Equations and Transforms',
-        'description': 'Study of differential equations and various transforms...',
-        'image': 'assets/s1.png',
-        'page': () => Maths(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry',
-        'description': 'Exploration of fundamental concepts in chemistry...',
-        'image': 'assets/s1.png',
-        'page': () => Chemistry(fullName: widget.fullName),
-      },
-      {
-        'name': 'Problem Solving and Programming',
-        'description': 'Basics of programming and problem-solving techniques...',
-        'image': 'assets/s1.png',
-        'page': () => Psp(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics',
-        'description': 'Fundamentals of engineering drawing and graphics...',
-        'image': 'assets/s1.png',
-        'page': () => Graphics(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices',
-        'description': 'Introduction to various manufacturing processes...',
-        'image': 'assets/s1.png',
-        'page': () => Manufact(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga',
-        'description': 'Physical education and well-being through sports and yoga...',
-        'image': 'assets/s1.png',
-        'page': () => Sports(fullName: widget.fullName),
-      },
-      {
-        'name': 'Universal Human Values-II',
-        'description': 'Exploration of universal human values...',
-        'image': 'assets/s1.png',
-        'page': () => Uhv(fullName: widget.fullName),
-      },
-    ],
-    'PYQs': [
-      {
-        'name': 'Ordinary Differential Equations and Transforms PYQs',
-        'description': 'Previous Year Questions for Ordinary Differential Equations and Transforms...',
-        'image': 'assets/s2.png',
-        'page': () => Maths1(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Chemistry PYQs',
-        'description': 'Previous Year Questions for Engineering Chemistry...',
-        'image': 'assets/s2.png',
-        'page': () => Chemistry1(fullName: widget.fullName),
-      },
-      {
-        'name': 'Problem Solving and Programming PYQs',
-        'description': 'Previous Year Questions for Problem Solving and Programming...',
-        'image': 'assets/s2.png',
-        'page': () => Psp1(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Graphics PYQs',
-        'description': 'Previous Year Questions for Engineering Graphics...',
-        'image': 'assets/s2.png',
-        'page': () => Graphics1(fullName: widget.fullName),
-      },
-      {
-        'name': 'Manufacturing Practices PYQs',
-        'description': 'Previous Year Questions for Manufacturing Practices...',
-        'image': 'assets/s2.png',
-        'page': () => Manufact1(fullName: widget.fullName),
-      },
-      {
-        'name': 'Sports and Yoga PYQs',
-        'description': 'Previous Year Questions for Sports and Yoga...',
-        'image': 'assets/s2.png',
-        'page': () => Sports1(fullName: widget.fullName),
-      },
-      {
-        'name': 'Universal Human Values-II PYQs',
-        'description': 'Previous Year Questions for Universal Human Values-II...',
-        'image': 'assets/s2.png',
-        'page': () => Uhv1(fullName: widget.fullName),
-      },
-    ],
-  };
-}
+    _subjects = {
+      'Notes & Books': [
+        {
+          'name': 'Ordinary Differential Equations and Transforms',
+          'description': 'Study of differential equations and various transforms...',
+          'image': 'assets/s1.png',
+          'page': () => Maths(
+            fullName: widget.fullName,
+            branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester,
+          ),
+        },
+        {
+          'name': 'Engineering Chemistry',
+          'description': 'Exploration of fundamental concepts in chemistry...',
+          'image': 'assets/s1.png',
+          'page': () => Chemistry(
+            fullName: widget.fullName,
+            branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester,
+          ),
+        },
+        {
+          'name': 'Problem Solving and Programming',
+          'description': 'Basics of programming and problem-solving techniques...',
+          'image': 'assets/s1.png',
+          'page': () => Psp(
+            fullName: widget.fullName,
+            branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester,
+          ),
+        },
+        {
+          'name': 'Engineering Graphics',
+          'description': 'Fundamentals of engineering drawing and graphics...',
+          'image': 'assets/s1.png',
+          'page': () => Graphics(
+            fullName: widget.fullName,
+            branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester,
+          ),
+        },
+        {
+          'name': 'Manufacturing Practices',
+          'description': 'Introduction to various manufacturing processes...',
+          'image': 'assets/s1.png',
+          'page': () => Manufact(
+            fullName: widget.fullName,
+            branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester,
+          ),
+        },
+        {
+          'name': 'Sports and Yoga',
+          'description': 'Physical education and well-being through sports and yoga...',
+          'image': 'assets/s1.png',
+          'page': () => Sports(
+            fullName: widget.fullName,
+            branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester,
+          ),
+        },
+        {
+          'name': 'Universal Human Values-II',
+          'description': 'Exploration of universal human values...',
+          'image': 'assets/s1.png',
+          'page': () => Uhv(
+            fullName: widget.fullName,
+            branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester,
+          ),
+        },
+      ],
+      'PYQs': [
+        {
+          'name': 'Ordinary Differential Equations and Transforms PYQs',
+          'description': 'Previous Year Questions for Ordinary Differential Equations and Transforms...',
+          'image': 'assets/s2.png',
+          'page': () => Maths1(
+            fullName: widget.fullName,
+            branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester,
+          ),
+        },
+        {
+          'name': 'Engineering Chemistry PYQs',
+          'description': 'Previous Year Questions for Engineering Chemistry...',
+          'image': 'assets/s2.png',
+          'page': () => Chemistry1(
+            fullName: widget.fullName,
+            branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester,
+          ),
+        },
+        {
+          'name': 'Problem Solving and Programming PYQs',
+          'description': 'Previous Year Questions for Problem Solving and Programming...',
+          'image': 'assets/s2.png',
+          'page': () => Psp1(
+            fullName: widget.fullName,
+            branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester,
+          ),
+        },
+        {
+          'name': 'Engineering Graphics PYQs',
+          'description': 'Previous Year Questions for Engineering Graphics...',
+          'image': 'assets/s2.png',
+          'page': () => Graphics1(
+            fullName: widget.fullName,
+            branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester,
+          ),
+        },
+        {
+          'name': 'Manufacturing Practices PYQs',
+          'description': 'Previous Year Questions for Manufacturing Practices...',
+          'image': 'assets/s2.png',
+          'page': () => Manufact1(
+            fullName: widget.fullName,
+            branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester,
+          ),
+        },
+        {
+          'name': 'Sports and Yoga PYQs',
+          'description': 'Previous Year Questions for Sports and Yoga...',
+          'image': 'assets/s2.png',
+          'page': () => Sports1(
+            fullName: widget.fullName,
+            branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester,
+          ),
+        },
+        {
+          'name': 'Universal Human Values-II PYQs',
+          'description': 'Previous Year Questions for Universal Human Values-II...',
+          'image': 'assets/s2.png',
+          'page': () => Uhv1(
+            fullName: widget.fullName,
+            branch: widget.branch,
+            year: widget.year,
+            semester: widget.semester,
+          ),
+        },
+      ],
+    };
+  }
 
-@override
+  @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final isPortrait = screenSize.height > screenSize.width;
+    final brightness = MediaQuery.of(context).platformBrightness;
+    final isDarkMode = brightness == Brightness.dark;
+
+    final backgroundColor = isDarkMode ? Colors.grey[900] : const Color.fromARGB(255, 7, 17, 148);
+    final cardColor = isDarkMode ? Colors.grey[800] : const Color.fromARGB(255, 58, 58, 58);
+    final textColor = isDarkMode ? Colors.white : Colors.black;
+    final subtitleColor = isDarkMode ? Colors.white70 : Colors.black54;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(755, 7, 17, 148),
+      backgroundColor: backgroundColor,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,9 +235,10 @@ class _ERSem2ScreenState extends State<ERSem2Screen> {
                         Text(
                           'Hey ${widget.fullName}',
                           style: TextStyle(
-                              fontSize: isPortrait ? 24 : 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                            fontSize: isPortrait ? 24 : 20,
+                            fontWeight: FontWeight.bold,
+                            color: textColor,
+                          ),
                         ),
                         const Text(
                           'Select Subject',
@@ -189,9 +267,10 @@ class _ERSem2ScreenState extends State<ERSem2Screen> {
                       child: Text(
                         widget.fullName[0].toUpperCase(),
                         style: TextStyle(
-                            color: Colors.white,
-                            fontSize: isPortrait ? 30 : 20,
-                            fontWeight: FontWeight.bold),
+                          color: Colors.white,
+                          fontSize: isPortrait ? 30 : 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
@@ -202,9 +281,9 @@ class _ERSem2ScreenState extends State<ERSem2Screen> {
             Expanded(
               child: Container(
                 width: double.infinity,
-                decoration: const BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.only(
+                decoration: BoxDecoration(
+                  color: cardColor,
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(24),
                     topRight: Radius.circular(24),
                   ),
@@ -212,12 +291,11 @@ class _ERSem2ScreenState extends State<ERSem2Screen> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 24),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24),
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: const Color.fromARGB(755, 58, 58, 58),
+                          color: cardColor,
                           borderRadius: BorderRadius.circular(24),
                         ),
                         padding: const EdgeInsets.all(8.0),
@@ -226,21 +304,17 @@ class _ERSem2ScreenState extends State<ERSem2Screen> {
                             _tabs.length,
                             (index) => Expanded(
                               child: GestureDetector(
-                                onTap: () =>
-                                    setState(() => _selectedIndex = index),
+                                onTap: () => setState(() => _selectedIndex = index),
                                 child: Container(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 16),
+                                  padding: const EdgeInsets.symmetric(vertical: 16),
                                   decoration: BoxDecoration(
-                                    color: _selectedIndex == index
-                                        ? Colors.black
-                                        : const Color.fromARGB(755, 58, 58, 58),
+                                    color: _selectedIndex == index ? Colors.black : cardColor,
                                     borderRadius: BorderRadius.circular(24),
                                   ),
                                   child: Text(
                                     _tabs[index],
                                     textAlign: TextAlign.center,
-                                    style: const TextStyle(color: Colors.white),
+                                    style: TextStyle(color: textColor),
                                   ),
                                 ),
                               ),
@@ -255,25 +329,25 @@ class _ERSem2ScreenState extends State<ERSem2Screen> {
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         itemCount: _subjects[_tabs[_selectedIndex]]!.length,
                         itemBuilder: (context, index) {
-                          var subject =
-                              _subjects[_tabs[_selectedIndex]]![index];
+                          var subject = _subjects[_tabs[_selectedIndex]]![index];
                           return Card(
-                            color: const Color.fromARGB(755, 58, 58, 58),
+                            color: cardColor,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16)),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
                             child: ListTile(
                               contentPadding: const EdgeInsets.all(8),
                               leading: subject['image'] != null
-                                  ? Image.asset(subject['image'],
-                                      width: 50, height: 50)
+                                  ? Image.asset(subject['image'], width: 50, height: 50)
                                   : null,
-                              title: Text(subject['name'],
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold)),
-                              subtitle: Text(subject['description'],
-                                  style:
-                                      const TextStyle(color: Colors.white70)),
+                              title: Text(
+                                subject['name'],
+                                style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
+                              ),
+                              subtitle: Text(
+                                subject['description'],
+                                style: TextStyle(color: subtitleColor),
+                              ),
                               onTap: () {
                                 Navigator.push(
                                   context,

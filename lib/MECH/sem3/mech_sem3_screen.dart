@@ -5,6 +5,7 @@ import 'package:flutter_application_2/CIVIL/sem5/EE/ee.dart';
 import 'package:flutter_application_2/EEE/sem3/BEM/bem.dart';
 import 'package:flutter_application_2/EEE/sem5/IEM/iem.dart';
 import 'package:flutter_application_2/MECH/sem3/AT/at.dart';
+import 'package:flutter_application_2/MECH/sem3/BEM/bem-copy.dart';
 import 'package:flutter_application_2/MECH/sem3/EMA/ema.dart';
 import 'package:flutter_application_2/MECH/sem3/FMHM/fmhm.dart';
 import 'package:flutter_application_2/MECH/sem3/FMM/fmm.dart';
@@ -165,7 +166,7 @@ class _MECHSem3ScreenState extends State<MECHSem3Screen> {
           'description':
               'Previous Year Questions for Basic Engineering Mechanics...',
           'image': 'assets/s2.png',
-          'page': () => bee(fullName: widget.fullName),
+          'page': () => Bem1(fullName: widget.fullName),
         },
         {
           'name': 'Fluid Mechanics & Machinery PYQs',

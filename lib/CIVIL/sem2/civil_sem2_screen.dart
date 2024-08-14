@@ -19,7 +19,7 @@ class CIVILSem2Screen extends StatefulWidget {
   final String year;
   final String semester;
 
-  const CIVILSem2Screen({//t
+  const CIVILSem2Screen({
     Key? key,
     required this.fullName,
     required this.branch,
@@ -33,113 +33,186 @@ class CIVILSem2Screen extends StatefulWidget {
 
 class _CIVILSem2ScreenState extends State<CIVILSem2Screen> {
   int _selectedIndex = 0;
+  bool isDarkMode = true;
   final List<String> _tabs = ['Notes & Books', 'PYQs'];
 
   late Map<String, List<Map<String, dynamic>>> _subjects;
 
   @override
   void initState() {
-  super.initState();
+    super.initState();
 
-  _subjects = {
-    'Notes & Books': [
-      {
-        'name': 'Differential Equations and Transforms',
-        'description': 'Study of differential equations and various transforms...',
-        'image': 'assets/s1.png',
-        'page': () => maths(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Physics',
-        'description': 'Exploration of fundamental concepts in physics...',
-        'image': 'assets/s1.png',
-        'page': () => physics(fullName: widget.fullName),
-      },
-      {
-        'name': 'Problem Solving and Programming',
-        'description': 'Basics of programming and problem-solving techniques...',
-        'image': 'assets/s1.png',
-        'page': () => Psp(fullName: widget.fullName),
-      },
-      {
-        'name': 'Technical English for Engineers',
-        'description': 'Improving technical English communication skills...',
-        'image': 'assets/s1.png',
-        'page': () => english(fullName: widget.fullName),
-      },
-      {
-        'name': 'IDEA Lab Workshop',
-        'description': 'Hands-on workshop for innovation and design...',
-        'image': 'assets/s1.png',
-        'page': () => idea(fullName: widget.fullName),
-      },
-      // {
-      //   'name': 'Design Thinking',
-      //   'description': 'Problem-solving approach using design thinking principles...',
-      //   'image': 'assets/s1.png',
-      //   'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      // },
-      {
-        'name': 'Universal Human Values-II',
-        'description': 'Exploration of universal human values...',
-        'image': 'assets/s1.png',
-        'page': () => Uhv(fullName: widget.fullName),
-      },
-    ],
-    'PYQs': [
-      {
-        'name': 'Differential Equations and Transforms PYQs',
-        'description': 'Previous Year Questions for Differential Equations and Transforms...',
-        'image': 'assets/s2.png',
-        'page': () => maths1(fullName: widget.fullName),
-      },
-      {
-        'name': 'Engineering Physics PYQs',
-        'description': 'Previous Year Questions for Engineering Physics...',
-        'image': 'assets/s2.png',
-        'page': () => physics1(fullName: widget.fullName),
-      },
-      {
-        'name': 'Problem Solving and Programming PYQs',
-        'description': 'Previous Year Questions for Problem Solving and Programming...',
-        'image': 'assets/s2.png',
-        'page': () =>Psp1(fullName: widget.fullName),
-      },
-      {
-        'name': 'Technical English for Engineers PYQs',
-        'description': 'Previous Year Questions for Technical English for Engineers...',
-        'image': 'assets/s2.png',
-        'page': () => english1(fullName: widget.fullName),
-      },
-      {
-        'name': 'IDEA Lab Workshop PYQs',
-        'description': 'Previous Year Questions for IDEA Lab Workshop...',
-        'image': 'assets/s2.png',
-        'page': () => idea1(fullName: widget.fullName),
-      },
-      // {
-      //   'name': 'Design Thinking PYQs',
-      //   'description': 'Previous Year Questions for Design Thinking...',
-      //   'image': 'assets/s2.png',
-      //   'page': () => ComputerNetworksPage(fullName: widget.fullName),
-      // },
-      {
-        'name': 'Universal Human Values-II PYQs',
-        'description': 'Previous Year Questions for Universal Human Values-II...',
-        'image': 'assets/s2.png',
-        'page': () => Uhv1(fullName: widget.fullName),
-      },
-    ],
-  };
+    _subjects = {
+  'Notes & Books': [
+    {
+      'name': 'Differential Equations and Transforms',
+      'description': 'Study of differential equations and various transforms...',
+      'image': 'assets/s1.png',
+      'page': () => maths(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester
+      ),
+    },
+    {
+      'name': 'Engineering Physics',
+      'description': 'Exploration of fundamental concepts in physics...',
+      'image': 'assets/s1.png',
+      'page': () => physics(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester
+      ),
+    },
+    {
+      'name': 'Problem Solving and Programming',
+      'description': 'Basics of programming and problem-solving techniques...',
+      'image': 'assets/s1.png',
+      'page': () => Psp(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester
+      ),
+    },
+    {
+      'name': 'Technical English for Engineers',
+      'description': 'Improving technical English communication skills...',
+      'image': 'assets/s1.png',
+      'page': () => english(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester
+      ),
+    },
+    {
+      'name': 'IDEA Lab Workshop',
+      'description': 'Hands-on workshop for innovation and design...',
+      'image': 'assets/s1.png',
+      'page': () => idea(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester
+      ),
+    },
+    // {
+    //   'name': 'Design Thinking',
+    //   'description': 'Problem-solving approach using design thinking principles...',
+    //   'image': 'assets/s1.png',
+    //   'page': () => ComputerNetworksPage(
+    //     fullName: widget.fullName,
+    //     branch: widget.branch,
+    //     year: widget.year,
+    //     semester: widget.semester
+    //   ),
+    // },
+    {
+      'name': 'Universal Human Values-II',
+      'description': 'Exploration of universal human values...',
+      'image': 'assets/s1.png',
+      'page': () => Uhv(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester
+      ),
+    },
+  ],
+  'PYQs': [
+    {
+      'name': 'Differential Equations and Transforms PYQs',
+      'description': 'Previous Year Questions for Differential Equations and Transforms...',
+      'image': 'assets/s2.png',
+      'page': () => maths1(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester
+      ),
+    },
+    {
+      'name': 'Engineering Physics PYQs',
+      'description': 'Previous Year Questions for Engineering Physics...',
+      'image': 'assets/s2.png',
+      'page': () => physics1(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester
+      ),
+    },
+    {
+      'name': 'Problem Solving and Programming PYQs',
+      'description': 'Previous Year Questions for Problem Solving and Programming...',
+      'image': 'assets/s2.png',
+      'page': () => Psp1(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester
+      ),
+    },
+    {
+      'name': 'Technical English for Engineers PYQs',
+      'description': 'Previous Year Questions for Technical English for Engineers...',
+      'image': 'assets/s2.png',
+      'page': () => english1(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester
+      ),
+    },
+    {
+      'name': 'IDEA Lab Workshop PYQs',
+      'description': 'Previous Year Questions for IDEA Lab Workshop...',
+      'image': 'assets/s2.png',
+      'page': () => idea1(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester
+      ),
+    },
+    // {
+    //   'name': 'Design Thinking PYQs',
+    //   'description': 'Previous Year Questions for Design Thinking...',
+    //   'image': 'assets/s2.png',
+    //   'page': () => ComputerNetworksPage(
+    //     fullName: widget.fullName,
+    //     branch: widget.branch,
+    //     year: widget.year,
+    //     semester: widget.semester
+    //   ),
+    // },
+    {
+      'name': 'Universal Human Values-II PYQs',
+      'description': 'Previous Year Questions for Universal Human Values-II...',
+      'image': 'assets/s2.png',
+      'page': () => Uhv1(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester
+      ),
+    },
+  ],
+};
 }
 
- @override
+  @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final isPortrait = screenSize.height > screenSize.width;
+    final themeData = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(755, 7, 17, 148),
+      backgroundColor:
+          isDarkMode ? const Color.fromARGB(255, 7, 17, 148) : Colors.white,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,7 +231,7 @@ class _CIVILSem2ScreenState extends State<CIVILSem2Screen> {
                           style: TextStyle(
                               fontSize: isPortrait ? 24 : 20,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                              color: isDarkMode ? Colors.white : Colors.black),
                         ),
                         const Text(
                           'Select Subject',
@@ -182,7 +255,8 @@ class _CIVILSem2ScreenState extends State<CIVILSem2Screen> {
                       );
                     },
                     child: CircleAvatar(
-                      backgroundColor: Colors.red[600],
+                      backgroundColor:
+                          isDarkMode ? Colors.red[600] : Colors.blue[600],
                       radius: isPortrait ? 30 : 20,
                       child: Text(
                         widget.fullName[0].toUpperCase(),
@@ -193,6 +267,17 @@ class _CIVILSem2ScreenState extends State<CIVILSem2Screen> {
                       ),
                     ),
                   ),
+                  IconButton(
+                    icon: Icon(
+                      isDarkMode ? Icons.dark_mode : Icons.light_mode,
+                      color: isDarkMode ? Colors.white : Colors.black,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        isDarkMode = !isDarkMode;
+                      });
+                    },
+                  ),
                 ],
               ),
             ),
@@ -200,9 +285,9 @@ class _CIVILSem2ScreenState extends State<CIVILSem2Screen> {
             Expanded(
               child: Container(
                 width: double.infinity,
-                decoration: const BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.only(
+                decoration: BoxDecoration(
+                  color: isDarkMode ? Colors.black : Colors.grey[200],
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(24),
                     topRight: Radius.circular(24),
                   ),
@@ -215,7 +300,9 @@ class _CIVILSem2ScreenState extends State<CIVILSem2Screen> {
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: const Color.fromARGB(755, 58, 58, 58),
+                          color: isDarkMode
+                              ? const Color.fromARGB(255, 58, 58, 58)
+                              : Colors.grey[300],
                           borderRadius: BorderRadius.circular(24),
                         ),
                         padding: const EdgeInsets.all(8.0),
@@ -231,14 +318,22 @@ class _CIVILSem2ScreenState extends State<CIVILSem2Screen> {
                                       const EdgeInsets.symmetric(vertical: 16),
                                   decoration: BoxDecoration(
                                     color: _selectedIndex == index
-                                        ? Colors.black
-                                        : const Color.fromARGB(755, 58, 58, 58),
+                                        ? (isDarkMode
+                                            ? Colors.black
+                                            : Colors.white)
+                                        : (isDarkMode
+                                            ? const Color.fromARGB(
+                                                255, 58, 58, 58)
+                                            : Colors.grey[300]),
                                     borderRadius: BorderRadius.circular(24),
                                   ),
                                   child: Text(
                                     _tabs[index],
                                     textAlign: TextAlign.center,
-                                    style: const TextStyle(color: Colors.white),
+                                    style: TextStyle(
+                                        color: isDarkMode
+                                            ? Colors.white
+                                            : Colors.black),
                                   ),
                                 ),
                               ),
@@ -256,7 +351,9 @@ class _CIVILSem2ScreenState extends State<CIVILSem2Screen> {
                           var subject =
                               _subjects[_tabs[_selectedIndex]]![index];
                           return Card(
-                            color: const Color.fromARGB(755, 58, 58, 58),
+                            color: isDarkMode
+                                ? const Color.fromARGB(255, 58, 58, 58)
+                                : Colors.white,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16)),
                             child: ListTile(
@@ -266,12 +363,16 @@ class _CIVILSem2ScreenState extends State<CIVILSem2Screen> {
                                       width: 50, height: 50)
                                   : null,
                               title: Text(subject['name'],
-                                  style: const TextStyle(
-                                      color: Colors.white,
+                                  style: TextStyle(
+                                      color: isDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
                                       fontWeight: FontWeight.bold)),
                               subtitle: Text(subject['description'],
-                                  style:
-                                      const TextStyle(color: Colors.white70)),
+                                  style: TextStyle(
+                                      color: isDarkMode
+                                          ? Colors.white70
+                                          : Colors.black54)),
                               onTap: () {
                                 Navigator.push(
                                   context,
