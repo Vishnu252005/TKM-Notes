@@ -1,54 +1,105 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class Uhv extends StatelessWidget {//no
-  final String fullName; // Full name received as a parameter
+class Uhv extends StatefulWidget {
+  final String fullName;
+  final String branch; // Add branch information
+  final String year; // Add year information
+  final String semester; // Add semester information
+
+  Uhv({
+    required this.fullName,
+    required this.branch,
+    required this.year,
+    required this.semester,
+  });
+
+  @override
+  _UhvState createState() => _UhvState();
+}
+
+class _UhvState extends State<Uhv> {
+  bool _isDarkMode = true;
+
   final List<UnitItem> units = [
-  UnitItem(
-    title: 'MODULE I: Introduction to Value Education',
-    isAvailable: true,
-    pdfUrl: 'url_to_pdf_1',
-  ),
-  UnitItem(
-    title: 'MODULE II: Harmony in the Human Being',
-    isAvailable: true,
-    pdfUrl: 'url_to_pdf_2',
-  ),
-  UnitItem(
-    title: 'MODULE III: Harmony in the Family and Society',
-    isAvailable: true,
-    pdfUrl: 'url_to_pdf_3',
-  ),
-  UnitItem(
-    title: 'MODULE IV: Harmony in the Nature/Existence',
-    isAvailable: true,
-    pdfUrl: 'url_to_pdf_4',
-  ),
-  UnitItem(
-    title: 'MODULE V: Implications of the Holistic Understanding – a Look at Professional Ethics',
-    isAvailable: true,
-    pdfUrl: 'url_to_pdf_5',
-  ),
-];
+    UnitItem(
+      title: 'MODULE I: Introduction to Value Education',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1KxmDDyYEi4aR-FCh50FuyuLVFuryew0F',
+    ),
+    UnitItem(
+      title: 'MODULE II: Harmony in the Human Being',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1_4hiEhdWrJrDPJHGlMl42J2uL9RA95NO',
+    ),
+    UnitItem(
+      title: 'MODULE III: Harmony in the Family and Society',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1c9SWhMVB5Oe0Xs1w85khkumZbkklVT_2',
+    ),
+    UnitItem(
+      title: 'MODULE IV: Harmony in the Nature/Existence',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1drnFkkEzQAjQKBhDZ96oB0UEB3PLyC02',
+    ),
+    UnitItem(
+      title: 'MODULE V: Implications of the Holistic Understanding – a Look at Professional Ethics',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1ok4F1xf0D9xb5kusTLK0X6VfJW4sd3oC',
+    ),
+  ];
 
+  @override
+  void initState() {
+    super.initState();
+    _loadThemePreference();
+  }
 
+  Future<void> _loadThemePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = prefs.getBool('isDarkMode') ?? true;
+    });
+  }
 
-  Uhv({required this.fullName}); // Constructor accepting fullName
+  Future<void> _toggleTheme() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = !_isDarkMode;
+      prefs.setBool('isDarkMode', _isDarkMode);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final Color backgroundColor = _isDarkMode ? const Color(0xFF4C4DDC) : Colors.blue[50]!;
+    final Color appBarIconColor = _isDarkMode ? Colors.white : Colors.blue[900]!;
+    final Color listTileColor = _isDarkMode ? Colors.grey[900]! : Colors.white;
+    final Color titleColor = _isDarkMode ? Colors.white : Colors.blue[900]!;
+    final Color subtitleColor = _isDarkMode ? Colors.white70 : Colors.blue[700]!;
+
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 3, 13, 148),
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.transparent, // Transparent app bar
-        elevation: 0, // No shadow
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: appBarIconColor),
           onPressed: () {
-            Navigator.pop(context); // Navigate back when pressed
+            Navigator.pop(context);
           },
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              _isDarkMode ? Icons.wb_sunny : Icons.nightlight_round,
+              color: appBarIconColor,
+            ),
+            onPressed: _toggleTheme,
+          ),
+        ],
       ),
       body: Stack(
         children: [
@@ -65,14 +116,21 @@ class Uhv extends StatelessWidget {//no
                       offset: Offset(value, 0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text(
-                            'Universal Human Values-II ',
-                            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                            'Universal Human Values-II',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: titleColor,
+                            ),
                           ),
                           Text(
                             'Select Chapter',
-                            style: TextStyle(fontSize: 18, color: Colors.white70),
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: subtitleColor,
+                            ),
                           ),
                         ],
                       ),
@@ -82,12 +140,22 @@ class Uhv extends StatelessWidget {//no
               ),
               Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.only(
+                  decoration: BoxDecoration(
+                    color: _isDarkMode ? Colors.black : Colors.white,
+                    borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(30),
                       topRight: Radius.circular(30),
                     ),
+                    boxShadow: !_isDarkMode
+                        ? [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: const Offset(0, 3),
+                            ),
+                          ]
+                        : [],
                   ),
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
@@ -111,11 +179,11 @@ class Uhv extends StatelessWidget {//no
                   context,
                   MaterialPageRoute(
                     builder: (context) => ProfilePage(
-                      fullName: fullName,
-                      branch: 'Computer Science', // Example branch
-                      year: 'Third Year', // Example year
-                      semester: 'Fifth Semester', // Example semester
-                    ), // Redirects to ProfilePage
+                      fullName: widget.fullName,
+                      branch: widget.branch,
+                      year: widget.year,
+                      semester: widget.semester,
+                    ),
                   ),
                 );
               },
@@ -123,10 +191,10 @@ class Uhv extends StatelessWidget {//no
                 padding: const EdgeInsets.all(16.0),
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundColor: Colors.red[600],
+                  backgroundColor: _isDarkMode ? Colors.blue[700] : Colors.blue[300],
                   child: Text(
-                    fullName[0].toUpperCase(),
-                    style: const TextStyle(color: Colors.white, fontSize: 24), // Increase font size here
+                    widget.fullName[0].toUpperCase(),
+                    style: const TextStyle(color: Colors.white, fontSize: 24),
                   ),
                 ),
               ),
@@ -141,15 +209,25 @@ class Uhv extends StatelessWidget {//no
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(
-        color: Colors.grey[900],
+        color: _isDarkMode ? Colors.grey[900]! : Colors.white,
         borderRadius: BorderRadius.circular(8),
+        boxShadow: !_isDarkMode
+            ? [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: const Offset(0, 3),
+                ),
+              ]
+            : [],
       ),
       child: ListTile(
         title: Text(
           title,
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[900]),
         ),
-        trailing: const Icon(Icons.chevron_right, color: Colors.white),
+        trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.blue[900]),
         onTap: () {
           if (isAvailable && pdfUrl != null) {
             Navigator.push(

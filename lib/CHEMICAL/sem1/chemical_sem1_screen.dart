@@ -61,7 +61,7 @@ class _CHEMICALSem1ScreenState extends State<CHEMICALSem1Screen> {
         'name': 'Engineering Mechanics',//t
         'description': 'Introduction to engineering mechanics principles...',
         'image': 'assets/s1.png',
-        'page': () => bee(fullName: widget.fullName),
+        'page': () => Bee(fullName: widget.fullName),
       },
       {
         'name': 'Engineering Graphics',
@@ -111,7 +111,7 @@ class _CHEMICALSem1ScreenState extends State<CHEMICALSem1Screen> {
         'name': 'Engineering Mechanics PYQs',
         'description': 'Previous Year Questions for Engineering Mechanics...',
         'image': 'assets/s2.png',
-        'page': () => bee1(fullName: widget.fullName),
+        'page': () => Bee1(fullName: widget.fullName),
       },
       {
         'name': 'Engineering Graphics PYQs',
