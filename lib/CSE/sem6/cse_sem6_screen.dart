@@ -33,7 +33,7 @@ class _CSESem6ScreenState extends State<CSESem6Screen> {
     super.initState();
 
     _subjects = {
-      'Notes & Books': [
+      'Notes & Books': [//M
     {
     'name': 'Theory of Computation',
     'description': 'Study of the fundamental concepts in the theory of computation...',

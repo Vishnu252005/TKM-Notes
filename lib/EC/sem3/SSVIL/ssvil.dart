@@ -66,7 +66,7 @@ class Ssvil extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'System Simulation and Virtual Instrumentation Lab',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

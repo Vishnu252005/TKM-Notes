@@ -67,7 +67,7 @@ class Cpm extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Calculus and Linear Algebra',
+                            'CONSTRUCTION PROJECT MANAGEMENT',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

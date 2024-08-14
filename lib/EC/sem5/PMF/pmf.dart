@@ -66,7 +66,7 @@ class Pmf extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Project Management and Finance',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

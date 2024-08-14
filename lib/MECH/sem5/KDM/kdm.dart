@@ -66,7 +66,7 @@ class Kdm extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Kinematics & Dynamics of Machines',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

@@ -65,7 +65,7 @@ class Awt extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Calculus and Linear Algebra',
+                            'Advanced Web Technologies',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

@@ -67,7 +67,7 @@ class Qsv extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Calculus and Linear Algebra',
+                            'QUANTITY SURVEYING AND VALUATION',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

@@ -9,7 +9,7 @@ import 'package:flutter_application_2/EEE/sem4/FA/fa.dart';
 import 'package:flutter_application_2/MECH/sem3/SE/se.dart';
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
-class CSESem5Screen extends StatefulWidget {
+class CSESem5Screen extends StatefulWidget {//M
   final String fullName;
   final String branch;
   final String year;

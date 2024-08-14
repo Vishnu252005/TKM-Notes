@@ -66,7 +66,7 @@ class Piec extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Product Innovation & Entrepreneurship',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

@@ -66,7 +66,7 @@ class Esdiot extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Embedded System Design and IoT',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

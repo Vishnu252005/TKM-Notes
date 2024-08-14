@@ -65,7 +65,7 @@ class Pdnt1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Probability Distributions and Numerical Techniques',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

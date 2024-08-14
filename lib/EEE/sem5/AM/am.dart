@@ -66,7 +66,7 @@ class Am extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'AC Machines',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

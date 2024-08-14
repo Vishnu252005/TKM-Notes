@@ -66,7 +66,7 @@ class Mp extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Manufacturing Processes',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

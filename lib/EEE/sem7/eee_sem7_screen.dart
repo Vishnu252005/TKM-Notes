@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_2/EEE/sem7/units.dart'; // Import the correct file for units
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
-class EEESem7Screen extends StatefulWidget {
+class EEESem7Screen extends StatefulWidget {//n
   final String fullName;
   final String branch;
   final String year;

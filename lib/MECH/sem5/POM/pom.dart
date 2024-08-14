@@ -66,7 +66,7 @@ class Pom extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Production & Operations Management',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

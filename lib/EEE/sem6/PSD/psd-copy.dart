@@ -66,7 +66,7 @@ class Psd1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Power Semiconductor Drives',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

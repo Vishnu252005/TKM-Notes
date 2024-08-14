@@ -67,7 +67,7 @@ class Deld1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Digital Electronics and Logic Design',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

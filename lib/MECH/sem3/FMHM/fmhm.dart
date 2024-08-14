@@ -65,7 +65,7 @@ class Fmhm extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Fluid Mechanics & Hydraulic Machines',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

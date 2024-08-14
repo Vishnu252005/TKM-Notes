@@ -65,7 +65,7 @@ class Aiml1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Calculus and Linear Algebra',
+                            'Artificial Intelligence & Machine Learning',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
