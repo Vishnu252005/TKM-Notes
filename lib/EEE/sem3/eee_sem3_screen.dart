@@ -6,7 +6,6 @@ import 'package:flutter_application_2/EEE/sem3/DELD/deld.dart';
 import 'package:flutter_application_2/EEE/sem3/FEPS/feps.dart';
 import 'package:flutter_application_2/EEE/sem3/MATHS3/maths3.dart';
 import 'package:flutter_application_2/EEE/sem3/MI/mi.dart';
-import 'package:flutter_application_2/EEE/sem3/units.dart'; // Import the correct file for units
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
 
 class EEESem3Screen extends StatefulWidget {
