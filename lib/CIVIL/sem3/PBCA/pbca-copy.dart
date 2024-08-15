@@ -3,46 +3,51 @@ import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class fec extends StatefulWidget { // Capitalized class name
+class Pbca1 extends StatefulWidget {
   final String fullName;
   final String branch;
   final String year;
   final String semester;
 
-  fec({required this.fullName, required this.branch, required this.year, required this.semester});
+  Pbca1({
+    required this.fullName,
+    required this.branch,
+    required this.year,
+    required this.semester,
+  });
 
   @override
-  _fecState createState() => _fecState();
+  _PbcaState createState() => _PbcaState();
 }
 
-class _fecState extends State<fec> {
+class _PbcaState extends State<Pbca1> {
   bool _isDarkMode = true;
 
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: Electronic Components & Devices',
+      title: 'MODULE I: Discrete Probability Distributions',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1BAYUDzCaYSgZcEAaWHutyANcD0P0rUK-',
+      pdfUrl: 'url_to_pdf_1',
     ),
     UnitItem(
-      title: 'MODULE II: Electronic Circuits',
+      title: 'MODULE II: Continuous Probability Distributions',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1BSfew3z7Xiir6tneBPDy0se1Ee045_6O',
+      pdfUrl: 'url_to_pdf_2',
     ),
     UnitItem(
-      title: 'MODULE III: Integrated Circuits',
+      title: 'MODULE III: Test of Hypothesis',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1BSU0XwbyzYCJFIeZmwEnPwV_9Cjpdory',
+      pdfUrl: 'url_to_pdf_3',
     ),
     UnitItem(
-      title: 'MODULE IV: Electronic Instrumentation',
+      title: 'MODULE IV: Complex Differentiation',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1BS45MBMXvsVZTlOLwmmuJ8_ESO6LD3w4',
+      pdfUrl: 'url_to_pdf_4',
     ),
     UnitItem(
-      title: 'MODULE V: Communication Systems',
+      title: 'MODULE V: Complex Integration',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1BOskampAzE7ggEnrn94lYidVvSSMxGed',
+      pdfUrl: 'url_to_pdf_5',
     ),
   ];
 
@@ -70,13 +75,12 @@ class _fecState extends State<fec> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _isDarkMode ? Colors.blue[900] : Colors.blue[50],
+      backgroundColor: _isDarkMode ? const Color.fromARGB(255, 3, 13, 148) : Colors.blue[50],
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          color: _isDarkMode ? Colors.white : Colors.blue[900], // Updated color
+          icon: Icon(Icons.arrow_back, color: _isDarkMode ? Colors.white : Colors.blue[900]),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -85,7 +89,7 @@ class _fecState extends State<fec> {
           IconButton(
             icon: Icon(
               _isDarkMode ? Icons.wb_sunny : Icons.nightlight_round,
-              color: Colors.white,
+              color: _isDarkMode ? Colors.white : Colors.blue[900],
             ),
             onPressed: _toggleTheme,
           ),
@@ -108,7 +112,7 @@ class _fecState extends State<fec> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Fundamentals of Electronics Engineering',
+                            'Probability Distributions and Complex Analysis',
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -181,7 +185,7 @@ class _fecState extends State<fec> {
                 padding: const EdgeInsets.all(16.0),
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundColor:  Colors.blue[700],
+                  backgroundColor: _isDarkMode ? Colors.red[600] : Colors.red[300],
                   child: Text(
                     widget.fullName[0].toUpperCase(),
                     style: const TextStyle(color: Colors.white, fontSize: 24),
@@ -217,7 +221,7 @@ class _fecState extends State<fec> {
           title,
           style: TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[900]),
         ),
-        trailing: const Icon(Icons.chevron_right, color: Colors.white),
+        trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.blue[900]),
         onTap: () {
           if (isAvailable && pdfUrl != null) {
             Navigator.push(

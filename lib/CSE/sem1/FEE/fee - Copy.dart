@@ -3,13 +3,13 @@ import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Oci1 extends StatefulWidget {
+class Fee1 extends StatefulWidget {
   final String fullName;
   final String branch;
   final String year;
   final String semester;
 
-  Oci1({
+  Fee1({
     required this.fullName,
     required this.branch,
     required this.year,
@@ -17,37 +17,39 @@ class Oci1 extends StatefulWidget {
   });
 
   @override
-  _OciState createState() => _OciState();
+  _FeeState createState() => _FeeState();
 }
 
-class _OciState extends State<Oci1> {
+class _FeeState extends State<Fee1> {
   bool _isDarkMode = true;
 
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: Introduction to chemical industries',
+      title: 'MODULE I: Elementary Concepts of DC and AC Electric Circuits',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_1',
+      pdfUrl: 'url_to_module1_pdf',
     ),
     UnitItem(
-      title: 'MODULE II: Fertilizer Industries',
+      title: 'MODULE II: Representation of Sinusoidal Quantities & Analysis',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_2',
+      pdfUrl: 'url_to_module2_pdf',
     ),
     UnitItem(
-      title: 'MODULE III: Natural products industries',
+      title:
+          'MODULE III: Electrical Installation in Buildings and Wiring Design',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_3',
+      pdfUrl: 'url_to_module3_pdf',
     ),
     UnitItem(
-      title: 'MODULE IV: Petroleum refining and petrochemicals',
+      title:
+          'MODULE IV: Introduction to Semiconductor Devices and Basic Electronic Circuits',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_4',
+      pdfUrl: 'url_to_module4_pdf',
     ),
     UnitItem(
-      title: 'MODULE V: Polymerization industries',
+      title: 'MODULE V: Communication Systems and Public Address Systems',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_5',
+      pdfUrl: 'url_to_module5_pdf',
     ),
   ];
 
@@ -75,12 +77,14 @@ class _OciState extends State<Oci1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _isDarkMode ? const Color.fromARGB(255, 3, 13, 148) : Colors.blue[50],
+      backgroundColor:
+          _isDarkMode ? const Color.fromARGB(255, 3, 13, 148) : Colors.blue[50],
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: _isDarkMode ? Colors.white : Colors.blue[900]),
+          icon: Icon(Icons.arrow_back,
+              color: _isDarkMode ? Colors.white : Colors.blue[900]),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -112,18 +116,21 @@ class _OciState extends State<Oci1> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Overview of Chemical Industries',
+                            'Fundamentals of Electronics Engineering',
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
-                              color: _isDarkMode ? Colors.white : Colors.blue[900],
+                              color:
+                                  _isDarkMode ? Colors.white : Colors.blue[900],
                             ),
                           ),
                           Text(
                             'Select Chapter',
                             style: TextStyle(
                               fontSize: 18,
-                              color: _isDarkMode ? Colors.white70 : Colors.blue[700],
+                              color: _isDarkMode
+                                  ? Colors.white70
+                                  : Colors.blue[700],
                             ),
                           ),
                         ],
@@ -156,7 +163,10 @@ class _OciState extends State<Oci1> {
                     child: ListView(
                       children: [
                         _buildListItem(context, 'Textbooks', false, null),
-                        ...units.map((unit) => _buildListItem(context, unit.title, unit.isAvailable, unit.pdfUrl)).toList(),
+                        ...units
+                            .map((unit) => _buildListItem(context, unit.title,
+                                unit.isAvailable, unit.pdfUrl))
+                            .toList(),
                       ],
                     ),
                   ),
@@ -185,7 +195,8 @@ class _OciState extends State<Oci1> {
                 padding: const EdgeInsets.all(16.0),
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundColor: _isDarkMode ? Colors.red[600] : Colors.red[300],
+                  backgroundColor:
+                      _isDarkMode ? Colors.red[600] : Colors.red[300],
                   child: Text(
                     widget.fullName[0].toUpperCase(),
                     style: const TextStyle(color: Colors.white, fontSize: 24),
@@ -199,7 +210,8 @@ class _OciState extends State<Oci1> {
     );
   }
 
-  Widget _buildListItem(BuildContext context, String title, bool isAvailable, String? pdfUrl) {
+  Widget _buildListItem(
+      BuildContext context, String title, bool isAvailable, String? pdfUrl) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(
@@ -219,15 +231,18 @@ class _OciState extends State<Oci1> {
       child: ListTile(
         title: Text(
           title,
-          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[900]),
+          style:
+              TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[900]),
         ),
-        trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.blue[900]),
+        trailing: Icon(Icons.chevron_right,
+            color: _isDarkMode ? Colors.white : Colors.blue[900]),
         onTap: () {
           if (isAvailable && pdfUrl != null) {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PDFViewerPage(pdfUrl: pdfUrl, title: title),
+                builder: (context) =>
+                    PDFViewerPage(pdfUrl: pdfUrl, title: title),
               ),
             );
           } else {
@@ -254,5 +269,6 @@ class UnitItem {
   final bool isAvailable;
   final String pdfUrl;
 
-  UnitItem({required this.title, required this.isAvailable, required this.pdfUrl});
+  UnitItem(
+      {required this.title, required this.isAvailable, required this.pdfUrl});
 }

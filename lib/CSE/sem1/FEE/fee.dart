@@ -3,46 +3,51 @@ import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class fec1 extends StatefulWidget { // Capitalized class name
+class Fee extends StatefulWidget {
   final String fullName;
   final String branch;
   final String year;
   final String semester;
 
-  fec1({required this.fullName, required this.branch, required this.year, required this.semester});
+  Fee({
+    required this.fullName,
+    required this.branch,
+    required this.year,
+    required this.semester,
+  });
 
   @override
-  _fec1State createState() => _fec1State();
+  _FeeState createState() => _FeeState();
 }
 
-class _fec1State extends State<fec1> {
+class _FeeState extends State<Fee> {
   bool _isDarkMode = true;
 
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: Electronic Components & Devices',
+      title: 'MODULE I: Elementary Concepts of DC and AC Electric Circuits',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1BAYUDzCaYSgZcEAaWHutyANcD0P0rUK-',
+      pdfUrl: 'url_to_module1_pdf',
     ),
     UnitItem(
-      title: 'MODULE II: Electronic Circuits',
+      title: 'MODULE II: Representation of Sinusoidal Quantities & Analysis',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1BSfew3z7Xiir6tneBPDy0se1Ee045_6O',
+      pdfUrl: 'url_to_module2_pdf',
     ),
     UnitItem(
-      title: 'MODULE III: Integrated Circuits',
+      title: 'MODULE III: Electrical Installation in Buildings and Wiring Design',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1BSU0XwbyzYCJFIeZmwEnPwV_9Cjpdory',
+      pdfUrl: 'url_to_module3_pdf',
     ),
     UnitItem(
-      title: 'MODULE IV: Electronic Instrumentation',
+      title: 'MODULE IV: Introduction to Semiconductor Devices and Basic Electronic Circuits',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1BS45MBMXvsVZTlOLwmmuJ8_ESO6LD3w4',
+      pdfUrl: 'url_to_module4_pdf',
     ),
     UnitItem(
-      title: 'MODULE V: Communication Systems',
+      title: 'MODULE V: Communication Systems and Public Address Systems',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1BOskampAzE7ggEnrn94lYidVvSSMxGed',
+      pdfUrl: 'url_to_module5_pdf',
     ),
   ];
 
@@ -70,13 +75,12 @@ class _fec1State extends State<fec1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _isDarkMode ? Colors.blue[900] : Colors.blue[50],
+      backgroundColor: _isDarkMode ? const Color.fromARGB(255, 3, 13, 148) : Colors.blue[50],
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          color: _isDarkMode ? Colors.white : Colors.blue[900], // Updated color
+          icon: Icon(Icons.arrow_back, color: _isDarkMode ? Colors.white : Colors.blue[900]),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -85,7 +89,7 @@ class _fec1State extends State<fec1> {
           IconButton(
             icon: Icon(
               _isDarkMode ? Icons.wb_sunny : Icons.nightlight_round,
-              color: Colors.white,
+              color: _isDarkMode ? Colors.white : Colors.blue[900],
             ),
             onPressed: _toggleTheme,
           ),
@@ -181,7 +185,7 @@ class _fec1State extends State<fec1> {
                 padding: const EdgeInsets.all(16.0),
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundColor:  Colors.blue[700],
+                  backgroundColor: _isDarkMode ? Colors.red[600] : Colors.red[300],
                   child: Text(
                     widget.fullName[0].toUpperCase(),
                     style: const TextStyle(color: Colors.white, fontSize: 24),
@@ -217,7 +221,7 @@ class _fec1State extends State<fec1> {
           title,
           style: TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[900]),
         ),
-        trailing: const Icon(Icons.chevron_right, color: Colors.white),
+        trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.blue[900]),
         onTap: () {
           if (isAvailable && pdfUrl != null) {
             Navigator.push(
