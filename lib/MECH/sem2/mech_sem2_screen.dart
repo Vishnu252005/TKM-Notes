@@ -11,8 +11,8 @@ import 'package:flutter_application_2/MECH/sem2/PSP/psp%20-%20Copy.dart';
 import 'package:flutter_application_2/MECH/sem2/PSP/psp.dart';
 import 'package:flutter_application_2/MECH/sem2/UHV/uhv%20-%20Copy.dart';
 import 'package:flutter_application_2/MECH/sem2/UHV/uhv.dart';
-import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
-
+import 'package:flutter_application_2/widgets/profiledark.dart'; // Import the profile.dart file
+import 'package:shared_preferences/shared_preferences.dart';
 class MECHSem2Screen extends StatefulWidget {
   final String fullName;
   final String branch;
@@ -34,14 +34,25 @@ class MECHSem2Screen extends StatefulWidget {
 class _MECHSem2ScreenState extends State<MECHSem2Screen> {
   int _selectedIndex = 0;
   final List<String> _tabs = ['Notes & Books', 'PYQs'];
-
+  bool _isDarkMode = true;
   late Map<String, List<Map<String, dynamic>>> _subjects;
 
   @override
   void initState() {
     super.initState();
+    _loadThemePreference();
+    _initializeSubjects();
+  }
 
-    _subjects = {
+  Future<void> _loadThemePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = prefs.getBool('isDarkMode') ?? true;
+    });
+  }
+
+  void _initializeSubjects() {
+   _subjects = {
       'Notes & Books': [
         {
           'name': 'Differential Equations and Transforms',
@@ -180,21 +191,13 @@ class _MECHSem2ScreenState extends State<MECHSem2Screen> {
       ],
     };
   }
-
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final isPortrait = screenSize.height > screenSize.width;
-    final brightness = MediaQuery.of(context).platformBrightness;
-    final isDarkMode = brightness == Brightness.dark;
-
-    final backgroundColor = isDarkMode ? Colors.black : Colors.white;
-    final cardColor = isDarkMode ? Color.fromARGB(255, 58, 58, 58) : Colors.white;
-    final textColor = isDarkMode ? Colors.white : Colors.black;
-    final subtitleColor = isDarkMode ? Colors.white70 : Colors.black87;
 
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[50],
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,11 +216,11 @@ class _MECHSem2ScreenState extends State<MECHSem2Screen> {
                           style: TextStyle(
                               fontSize: isPortrait ? 24 : 20,
                               fontWeight: FontWeight.bold,
-                              color: textColor),
+                              color: _isDarkMode ? Colors.white : Colors.blue[800]),
                         ),
                         Text(
                           'Select Subject',
-                          style: TextStyle(fontSize: 16, color: subtitleColor),
+                          style: TextStyle(fontSize: 16, color: _isDarkMode ? Colors.white70 : Colors.blue[600]),
                         ),
                       ],
                     ),
@@ -232,12 +235,18 @@ class _MECHSem2ScreenState extends State<MECHSem2Screen> {
                             branch: widget.branch,
                             year: widget.year,
                             semester: widget.semester,
+                            isDarkMode: _isDarkMode,
+                            onThemeChanged: (bool newTheme) {
+                              setState(() {
+                                _isDarkMode = newTheme;
+                              });
+                            },
                           ),
                         ),
                       );
                     },
                     child: CircleAvatar(
-                      backgroundColor: Colors.red[600],
+                      backgroundColor: Colors.blue,
                       radius: isPortrait ? 30 : 20,
                       child: Text(
                         widget.fullName[0].toUpperCase(),
@@ -256,103 +265,105 @@ class _MECHSem2ScreenState extends State<MECHSem2Screen> {
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: isDarkMode ? Colors.grey[900] : Colors.grey[200],
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(32.0),
-                    topRight: Radius.circular(32.0),
+                  color: _isDarkMode ? Colors.black : Colors.white,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: _isDarkMode ? Colors.black12 : Colors.blue.withOpacity(0.1),
+                      blurRadius: 10,
+                      spreadRadius: 5,
+                    ),
+                  ],
                 ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      height: 70,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _tabs.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _selectedIndex = index;
-                              });
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 16.0, horizontal: 24.0),
-                              child: Text(
-                                _tabs[index],
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: _selectedIndex == index
-                                      ? Colors.red[600]
-                                      : subtitleColor,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24),
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: _isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.blue[50],
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: List.generate(
+                            _tabs.length,
+                            (index) => Expanded(
+                              child: GestureDetector(
+                                onTap: () => setState(() => _selectedIndex = index),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                  decoration: BoxDecoration(
+                                    color: _selectedIndex == index
+                                        ? (_isDarkMode ? Colors.black : Colors.white)
+                                        : (_isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.blue[50]),
+                                    borderRadius: BorderRadius.circular(24),
+                                    boxShadow: _selectedIndex == index && !_isDarkMode
+                                        ? [
+                                            BoxShadow(
+                                              color: Colors.blue.withOpacity(0.3),
+                                              blurRadius: 8,
+                                              spreadRadius: 2,
+                                            ),
+                                          ]
+                                        : null,
+                                  ),
+                                  child: Text(
+                                    _tabs[index],
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: _isDarkMode
+                                          ? Colors.white
+                                          : (_selectedIndex == index ? Colors.blue[800] : Colors.blue[600]),
+                                      fontWeight: _selectedIndex == index ? FontWeight.bold : FontWeight.normal,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                          );
-                        },
+                          ),
+                        ),
                       ),
                     ),
+                    const SizedBox(height: 16),
                     Expanded(
-                      child: GridView.builder(
-                        padding: EdgeInsets.all(isPortrait ? 16.0 : 8.0),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: isPortrait ? 2 : 3,
-                          crossAxisSpacing: 16.0,
-                          mainAxisSpacing: 16.0,
-                        ),
+                      child: ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         itemCount: _subjects[_tabs[_selectedIndex]]!.length,
                         itemBuilder: (context, index) {
-                          final subject = _subjects[_tabs[_selectedIndex]]![index];
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => subject['page'](),
-                                ),
-                              );
-                            },
-                            child: Card(
-                              color: cardColor,
-                              elevation: 4,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16.0),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: Center(
-                                        child: Image.asset(subject['image']),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      subject['name'],
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: textColor,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      subject['description'],
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: subtitleColor,
-                                      ),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
+                          var subject = _subjects[_tabs[_selectedIndex]]![index];
+                          return Card(
+                            color: _isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.white,
+                            elevation: _isDarkMode ? 0 : 2,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                            child: ListTile(
+                              contentPadding: const EdgeInsets.all(16),
+                              leading: subject['image'] != null
+                                  ? Image.asset(subject['image'], width: 50, height: 50)
+                                  : null,
+                              title: Text(
+                                subject['name'],
+                                style: TextStyle(
+                                  color: _isDarkMode ? Colors.white : Colors.blue[800],
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
+                              subtitle: Text(
+                                subject['description'],
+                                style: TextStyle(color: _isDarkMode ? Colors.white70 : Colors.blue[600]),
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => subject['page'](),
+                                  ),
+                                );
+                              },
                             ),
                           );
                         },

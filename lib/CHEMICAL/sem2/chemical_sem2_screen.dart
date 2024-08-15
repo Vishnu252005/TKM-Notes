@@ -10,9 +10,9 @@ import 'package:flutter_application_2/CHEMICAL/sem2/PHYSICS/physics.dart';
 import 'package:flutter_application_2/CHEMICAL/sem2/PSP/psp%20-%20Copy.dart';
 import 'package:flutter_application_2/CHEMICAL/sem2/PSP/psp.dart';
 import 'package:flutter_application_2/CHEMICAL/sem2/UHV/uhv%20-%20Copy.dart';
-import 'package:flutter_application_2/CHEMICAL/sem2/UHV/uhv.dart';  // Import the correct file for units
-import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
-
+import 'package:flutter_application_2/CHEMICAL/sem2/UHV/uhv.dart';
+import 'package:flutter_application_2/widgets/profiledark.dart'; // Import the profile.dart file
+import 'package:shared_preferences/shared_preferences.dart';
 class CHEMICALSem2Screen extends StatefulWidget {
   final String fullName;
   final String branch;
@@ -33,16 +33,26 @@ class CHEMICALSem2Screen extends StatefulWidget {
 
 class _CHEMICALSem2ScreenState extends State<CHEMICALSem2Screen> {
   int _selectedIndex = 0;
-  bool isDarkMode = true;
   final List<String> _tabs = ['Notes & Books', 'PYQs'];
-
+  bool _isDarkMode = true;
   late Map<String, List<Map<String, dynamic>>> _subjects;
 
   @override
   void initState() {
     super.initState();
+    _loadThemePreference();
+    _initializeSubjects();
+  }
 
-    _subjects = {
+  Future<void> _loadThemePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = prefs.getBool('isDarkMode') ?? true;
+    });
+  }
+
+  void _initializeSubjects() {
+  _subjects = {
   'Notes & Books': [
     {
       'name': 'Differential Equations and Transforms',
@@ -205,15 +215,16 @@ class _CHEMICALSem2ScreenState extends State<CHEMICALSem2Screen> {
 
 
 
+
+
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final isPortrait = screenSize.height > screenSize.width;
-    final themeData = Theme.of(context);
 
     return Scaffold(
-      backgroundColor:
-          isDarkMode ? const Color.fromARGB(255, 7, 17, 148) : Colors.white,
+      backgroundColor: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[50],
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -232,11 +243,11 @@ class _CHEMICALSem2ScreenState extends State<CHEMICALSem2Screen> {
                           style: TextStyle(
                               fontSize: isPortrait ? 24 : 20,
                               fontWeight: FontWeight.bold,
-                              color: isDarkMode ? Colors.white : Colors.black),
+                              color: _isDarkMode ? Colors.white : Colors.blue[800]),
                         ),
-                        const Text(
+                        Text(
                           'Select Subject',
-                          style: TextStyle(fontSize: 16, color: Colors.white70),
+                          style: TextStyle(fontSize: 16, color: _isDarkMode ? Colors.white70 : Colors.blue[600]),
                         ),
                       ],
                     ),
@@ -251,13 +262,18 @@ class _CHEMICALSem2ScreenState extends State<CHEMICALSem2Screen> {
                             branch: widget.branch,
                             year: widget.year,
                             semester: widget.semester,
+                            isDarkMode: _isDarkMode,
+                            onThemeChanged: (bool newTheme) {
+                              setState(() {
+                                _isDarkMode = newTheme;
+                              });
+                            },
                           ),
                         ),
                       );
                     },
                     child: CircleAvatar(
-                      backgroundColor:
-                          isDarkMode ? Colors.red[600] : Colors.blue[600],
+                      backgroundColor: Colors.blue,
                       radius: isPortrait ? 30 : 20,
                       child: Text(
                         widget.fullName[0].toUpperCase(),
@@ -268,17 +284,6 @@ class _CHEMICALSem2ScreenState extends State<CHEMICALSem2Screen> {
                       ),
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(
-                      isDarkMode ? Icons.dark_mode : Icons.light_mode,
-                      color: isDarkMode ? Colors.white : Colors.black,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        isDarkMode = !isDarkMode;
-                      });
-                    },
-                  ),
                 ],
               ),
             ),
@@ -287,23 +292,27 @@ class _CHEMICALSem2ScreenState extends State<CHEMICALSem2Screen> {
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: isDarkMode ? Colors.black : Colors.grey[200],
+                  color: _isDarkMode ? Colors.black : Colors.white,
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(24),
                     topRight: Radius.circular(24),
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: _isDarkMode ? Colors.black12 : Colors.blue.withOpacity(0.1),
+                      blurRadius: 10,
+                      spreadRadius: 5,
+                    ),
+                  ],
                 ),
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 24),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24),
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: isDarkMode
-                              ? const Color.fromARGB(255, 58, 58, 58)
-                              : Colors.grey[300],
+                          color: _isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.blue[50],
                           borderRadius: BorderRadius.circular(24),
                         ),
                         padding: const EdgeInsets.all(8.0),
@@ -312,29 +321,33 @@ class _CHEMICALSem2ScreenState extends State<CHEMICALSem2Screen> {
                             _tabs.length,
                             (index) => Expanded(
                               child: GestureDetector(
-                                onTap: () =>
-                                    setState(() => _selectedIndex = index),
+                                onTap: () => setState(() => _selectedIndex = index),
                                 child: Container(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 16),
+                                  padding: const EdgeInsets.symmetric(vertical: 16),
                                   decoration: BoxDecoration(
                                     color: _selectedIndex == index
-                                        ? (isDarkMode
-                                            ? Colors.black
-                                            : Colors.white)
-                                        : (isDarkMode
-                                            ? const Color.fromARGB(
-                                                255, 58, 58, 58)
-                                            : Colors.grey[300]),
+                                        ? (_isDarkMode ? Colors.black : Colors.white)
+                                        : (_isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.blue[50]),
                                     borderRadius: BorderRadius.circular(24),
+                                    boxShadow: _selectedIndex == index && !_isDarkMode
+                                        ? [
+                                            BoxShadow(
+                                              color: Colors.blue.withOpacity(0.3),
+                                              blurRadius: 8,
+                                              spreadRadius: 2,
+                                            ),
+                                          ]
+                                        : null,
                                   ),
                                   child: Text(
                                     _tabs[index],
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        color: isDarkMode
-                                            ? Colors.white
-                                            : Colors.black),
+                                      color: _isDarkMode
+                                          ? Colors.white
+                                          : (_selectedIndex == index ? Colors.blue[800] : Colors.blue[600]),
+                                      fontWeight: _selectedIndex == index ? FontWeight.bold : FontWeight.normal,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -349,31 +362,27 @@ class _CHEMICALSem2ScreenState extends State<CHEMICALSem2Screen> {
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         itemCount: _subjects[_tabs[_selectedIndex]]!.length,
                         itemBuilder: (context, index) {
-                          var subject =
-                              _subjects[_tabs[_selectedIndex]]![index];
+                          var subject = _subjects[_tabs[_selectedIndex]]![index];
                           return Card(
-                            color: isDarkMode
-                                ? const Color.fromARGB(255, 58, 58, 58)
-                                : Colors.white,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16)),
+                            color: _isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.white,
+                            elevation: _isDarkMode ? 0 : 2,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                             child: ListTile(
-                              contentPadding: const EdgeInsets.all(8),
+                              contentPadding: const EdgeInsets.all(16),
                               leading: subject['image'] != null
-                                  ? Image.asset(subject['image'],
-                                      width: 50, height: 50)
+                                  ? Image.asset(subject['image'], width: 50, height: 50)
                                   : null,
-                              title: Text(subject['name'],
-                                  style: TextStyle(
-                                      color: isDarkMode
-                                          ? Colors.white
-                                          : Colors.black,
-                                      fontWeight: FontWeight.bold)),
-                              subtitle: Text(subject['description'],
-                                  style: TextStyle(
-                                      color: isDarkMode
-                                          ? Colors.white70
-                                          : Colors.black54)),
+                              title: Text(
+                                subject['name'],
+                                style: TextStyle(
+                                  color: _isDarkMode ? Colors.white : Colors.blue[800],
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              subtitle: Text(
+                                subject['description'],
+                                style: TextStyle(color: _isDarkMode ? Colors.white70 : Colors.blue[600]),
+                              ),
                               onTap: () {
                                 Navigator.push(
                                   context,

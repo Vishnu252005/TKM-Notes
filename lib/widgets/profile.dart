@@ -23,7 +23,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  bool _isDarkMode = true;
+  bool _isDarkMode = false;
 
   @override
   void initState() {
@@ -34,7 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _loadThemePreference() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _isDarkMode = prefs.getBool('isDarkMode') ?? true;
+      _isDarkMode = prefs.getBool('isDarkMode') ?? false;
     });
   }
 

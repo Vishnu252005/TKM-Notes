@@ -4,15 +4,15 @@ import 'package:flutter_application_2/EC/sem1/ENGLISH/english%20-%20Copy.dart';
 import 'package:flutter_application_2/EC/sem1/FEE/FEE%20-%20Copy.dart';
 import 'package:flutter_application_2/EC/sem1/FEE/FEE.dart';
 import 'package:flutter_application_2/EC/sem1/IDEALAB/idealab%20-%20Copy.dart';
+import 'package:flutter_application_2/EC/sem1/IDEALAB/idealab.dart';
 import 'package:flutter_application_2/EC/sem1/MATHS/maths%20-%20Copy.dart';
 import 'package:flutter_application_2/EC/sem1/MATHS/maths.dart';  // Import the correct file for 
 import 'package:flutter_application_2/EC/sem1/BIOLOGY/BIOLOGY.dart';
 import 'package:flutter_application_2/EC/sem1/PHYSICS/physics%20-%20Copy.dart';
 import 'package:flutter_application_2/EC/sem1/PHYSICS/physics.dart';
 import 'package:flutter_application_2/EC/sem1/ENGLISH/english.dart';
-import 'package:flutter_application_2/EC/sem1/IDEALAB/idealab.dart';
-import 'package:flutter_application_2/widgets/profile.dart'; // / Import the profile.dart file
-
+import 'package:flutter_application_2/widgets/profiledark.dart'; // Import the profile.dart file
+import 'package:shared_preferences/shared_preferences.dart';
 class ECSem1Screen extends StatefulWidget {
   final String fullName;
   final String branch;
@@ -34,14 +34,25 @@ class ECSem1Screen extends StatefulWidget {
 class _ECSem1ScreenState extends State<ECSem1Screen> {
   int _selectedIndex = 0;
   final List<String> _tabs = ['Notes & Books', 'PYQs'];
-
+  bool _isDarkMode = true;
   late Map<String, List<Map<String, dynamic>>> _subjects;
 
   @override
   void initState() {
     super.initState();
+    _loadThemePreference();
+    _initializeSubjects();
+  }
 
-    _subjects = {
+  Future<void> _loadThemePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = prefs.getBool('isDarkMode') ?? true;
+    });
+  }
+
+  void _initializeSubjects() {
+  _subjects = {
       'Notes & Books': [
         {
           'name': 'Calculus and Linear Algebra',
@@ -185,16 +196,9 @@ class _ECSem1ScreenState extends State<ECSem1Screen> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final isPortrait = screenSize.height > screenSize.width;
-    final brightness = MediaQuery.of(context).platformBrightness;
-    final isDarkMode = brightness == Brightness.dark;
-
-    final backgroundColor = isDarkMode ? Colors.grey[900] : const Color.fromARGB(255, 7, 17, 148);
-    final cardColor = isDarkMode ? Colors.grey[800] : const Color.fromARGB(255, 58, 58, 58);
-    final textColor = isDarkMode ? Colors.white : Colors.black;
-    final subtitleColor = isDarkMode ? Colors.white70 : Colors.black54;
 
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[50],
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -211,14 +215,13 @@ class _ECSem1ScreenState extends State<ECSem1Screen> {
                         Text(
                           'Hey ${widget.fullName}',
                           style: TextStyle(
-                            fontSize: isPortrait ? 24 : 20,
-                            fontWeight: FontWeight.bold,
-                            color: textColor,
-                          ),
+                              fontSize: isPortrait ? 24 : 20,
+                              fontWeight: FontWeight.bold,
+                              color: _isDarkMode ? Colors.white : Colors.blue[800]),
                         ),
-                        const Text(
+                        Text(
                           'Select Subject',
-                          style: TextStyle(fontSize: 16, color: Colors.white70),
+                          style: TextStyle(fontSize: 16, color: _isDarkMode ? Colors.white70 : Colors.blue[600]),
                         ),
                       ],
                     ),
@@ -233,20 +236,25 @@ class _ECSem1ScreenState extends State<ECSem1Screen> {
                             branch: widget.branch,
                             year: widget.year,
                             semester: widget.semester,
+                            isDarkMode: _isDarkMode,
+                            onThemeChanged: (bool newTheme) {
+                              setState(() {
+                                _isDarkMode = newTheme;
+                              });
+                            },
                           ),
                         ),
                       );
                     },
                     child: CircleAvatar(
-                      backgroundColor: Colors.red[600],
+                      backgroundColor: Colors.blue,
                       radius: isPortrait ? 30 : 20,
                       child: Text(
                         widget.fullName[0].toUpperCase(),
                         style: TextStyle(
-                          color: Colors.white,
-                          fontSize: isPortrait ? 30 : 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+                            color: Colors.white,
+                            fontSize: isPortrait ? 30 : 20,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -258,11 +266,18 @@ class _ECSem1ScreenState extends State<ECSem1Screen> {
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: cardColor,
+                  color: _isDarkMode ? Colors.black : Colors.white,
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(24),
                     topRight: Radius.circular(24),
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: _isDarkMode ? Colors.black12 : Colors.blue.withOpacity(0.1),
+                      blurRadius: 10,
+                      spreadRadius: 5,
+                    ),
+                  ],
                 ),
                 child: Column(
                   children: [
@@ -271,7 +286,7 @@ class _ECSem1ScreenState extends State<ECSem1Screen> {
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: cardColor,
+                          color: _isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.blue[50],
                           borderRadius: BorderRadius.circular(24),
                         ),
                         padding: const EdgeInsets.all(8.0),
@@ -284,13 +299,29 @@ class _ECSem1ScreenState extends State<ECSem1Screen> {
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(vertical: 16),
                                   decoration: BoxDecoration(
-                                    color: _selectedIndex == index ? Colors.black : cardColor,
+                                    color: _selectedIndex == index
+                                        ? (_isDarkMode ? Colors.black : Colors.white)
+                                        : (_isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.blue[50]),
                                     borderRadius: BorderRadius.circular(24),
+                                    boxShadow: _selectedIndex == index && !_isDarkMode
+                                        ? [
+                                            BoxShadow(
+                                              color: Colors.blue.withOpacity(0.3),
+                                              blurRadius: 8,
+                                              spreadRadius: 2,
+                                            ),
+                                          ]
+                                        : null,
                                   ),
                                   child: Text(
                                     _tabs[index],
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(color: textColor),
+                                    style: TextStyle(
+                                      color: _isDarkMode
+                                          ? Colors.white
+                                          : (_selectedIndex == index ? Colors.blue[800] : Colors.blue[600]),
+                                      fontWeight: _selectedIndex == index ? FontWeight.bold : FontWeight.normal,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -307,22 +338,24 @@ class _ECSem1ScreenState extends State<ECSem1Screen> {
                         itemBuilder: (context, index) {
                           var subject = _subjects[_tabs[_selectedIndex]]![index];
                           return Card(
-                            color: cardColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
+                            color: _isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.white,
+                            elevation: _isDarkMode ? 0 : 2,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                             child: ListTile(
-                              contentPadding: const EdgeInsets.all(8),
+                              contentPadding: const EdgeInsets.all(16),
                               leading: subject['image'] != null
                                   ? Image.asset(subject['image'], width: 50, height: 50)
                                   : null,
                               title: Text(
                                 subject['name'],
-                                style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  color: _isDarkMode ? Colors.white : Colors.blue[800],
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               subtitle: Text(
                                 subject['description'],
-                                style: TextStyle(color: subtitleColor),
+                                style: TextStyle(color: _isDarkMode ? Colors.white70 : Colors.blue[600]),
                               ),
                               onTap: () {
                                 Navigator.push(
