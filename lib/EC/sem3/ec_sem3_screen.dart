@@ -3,10 +3,10 @@ import 'package:flutter_application_2/CSE/sem3/DSA/dsa.dart';
 import 'package:flutter_application_2/CSE/sem3/PDE/pde.dart';
 import 'package:flutter_application_2/EC/sem3/NT/nt.dart';
 import 'package:flutter_application_2/EC/sem3/SSC/ssc.dart';
-import 'package:flutter_application_2/EC/sem3/SSVIL/ssvil.dart';
-import 'package:flutter_application_2/EC/sem3/units.dart'; // Import the correct file for units
-import 'package:flutter_application_2/EEE/sem3/DELD/deld.dart';
-import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
+import 'package:flutter_application_2/EC/sem3/SSVIL/ssvil.dart';// Import the correct file for units
+import 'package:flutter_application_2/EC/sem3/DELD/deld.dart';
+import 'package:flutter_application_2/widgets/profiledark.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ECSem3Screen extends StatefulWidget {
   final String fullName;
@@ -29,106 +29,111 @@ class ECSem3Screen extends StatefulWidget {
 class _ECSem3ScreenState extends State<ECSem3Screen> {
   int _selectedIndex = 0;
   final List<String> _tabs = ['Notes & Books', 'PYQs'];
-
+  bool _isDarkMode = true;
   late Map<String, List<Map<String, dynamic>>> _subjects;
 
   @override
   void initState() {
-    super.initState();//n
-
-    _subjects = {
-      'Notes & Books': [
-        {
-          'name':
-              'Advanced Linear Algebra, Complex Analysis and Partial Differential Equations',
-          'description': 'Study of calculus and linear algebra including...',
-          'image': 'assets/s1.png',
-          'page': () => Pde(fullName: widget.fullName),
-        },
-        {
-          'name': 'NETWORK THEORY',
-          'description': 'Exploration of fundamental concepts in chemistry...',
-          'image': 'assets/s1.png',
-          'page': () => Nt(fullName: widget.fullName),
-        },
-        {
-          'name': 'DIGITAL ELECTRONICS AND LOGIC DESIGN',
-          'description': 'Basics of electronics and electrical engineering...',
-          'image': 'assets/s1.png',
-          'page': () => Deld(fullName: widget.fullName),
-        },
-        {
-          'name': 'Data Structures and Algorithms',
-          'description': 'Fundamentals of engineering drawing and graphics...',
-          'image': 'assets/s1.png',
-          'page': () => Dsa(fullName: widget.fullName),
-        },
-        {
-          'name': 'SENSOR & SENSOR CIRCUITS',
-          'description': 'Introduction to various manufacturing processes...',
-          'image': 'assets/s1.png',
-          'page': () => Ssc(fullName: widget.fullName),
-        },
-        {
-          'name': 'System Simulation and Virtual Instrumentation Lab',
-          'description':
-              'Physical education and well-being through sports and yoga...',
-          'image': 'assets/s1.png',
-          'page': () => Ssvil(fullName: widget.fullName),
-        },
-      ],
-      'pyqs': [
-        {
-          'name':
-              'Advanced Linear Algebra, Complex Analysis and Partial Differential Equations PYQs',
-          'description':
-              'Previous Year Questions for Calculus and Linear Algebra...',
-          'image': 'assets/s2.png',
-          'page': () => Pde(fullName: widget.fullName),
-        },
-        {
-          'name': 'NETWORK THEORY PYQs',
-          'description': 'Previous Year Questions for Engineering Chemistry...',
-          'image': 'assets/s2.png',
-          'page': () => Nt(fullName: widget.fullName),
-        },
-        {
-          'name': 'DIGITAL ELECTRONICS AND LOGIC DESIGN PYQs',
-          'description':
-              'Previous Year Questions for Fundamentals of Electronics Engineering...',
-          'image': 'assets/s2.png',
-          'page': () => Deld(fullName: widget.fullName),
-        },
-        {
-          'name': 'Data Structures and Algorithms PYQs',
-          'description': 'Previous Year Questions for Engineering Graphics...',
-          'image': 'assets/s2.png',
-          'page': () => Dsa(fullName: widget.fullName),
-        },
-        {
-          'name': 'SENSOR & SENSOR CIRCUITS PYQs',
-          'description':
-              'Previous Year Questions for Manufacturing Practices...',
-          'image': 'assets/s2.png',
-          'page': () => Ssc(fullName: widget.fullName),
-        },
-        {
-          'name': 'System Simulation and Virtual Instrumentation Lab PYQs',
-          'description': 'Previous Year Questions for Sports and Yoga...',
-          'image': 'assets/s2.png',
-          'page': () => Ssvil(fullName: widget.fullName),
-        },
-      ],
-    };
+    super.initState();
+    _loadThemePreference();
+    _initializeSubjects();
   }
 
-@override
+  Future<void> _loadThemePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = prefs.getBool('isDarkMode') ?? true;
+    });
+  }
+
+  void _initializeSubjects() {
+   _subjects = {
+  'Notes & Books': [
+    {
+      'name': 'Advanced Linear Algebra & PDEs',
+      'description': 'Study of advanced linear algebra, complex analysis, and partial differential equations...',
+      'image': 'assets/s1.png',
+      'page': () => Pde(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+    },
+    {
+      'name': 'Network Theory',
+      'description': 'Exploration of fundamental concepts in network theory, including circuit analysis and theorems...',
+      'image': 'assets/s1.png',
+      'page': () => Nt(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+    },
+    {
+      'name': 'Digital Electronics & Logic Design',
+      'description': 'Basics of digital electronics and logic design, covering combinational and sequential circuits...',
+      'image': 'assets/s1.png',
+      'page': () => Deld(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+    },
+    {
+      'name': 'Data Structures & Algorithms',
+      'description': 'Study of data structures and algorithms including arrays, stacks, queues, and sorting algorithms...',
+      'image': 'assets/s1.png',
+      'page': () => Dsa(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+    },
+    {
+      'name': 'Sensor Circuits',
+      'description': 'Introduction to sensor technologies and circuit design for various applications...',
+      'image': 'assets/s1.png',
+      'page': () => Ssc(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+    },
+    {
+      'name': 'Simulation & Instrumentation Lab',
+      'description': 'Lab course focused on system simulation techniques and virtual instrumentation tools...',
+      'image': 'assets/s1.png',
+      'page': () => Ssvil(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+    },
+  ],
+  'PYQs': [
+    {
+      'name': 'Advanced Linear Algebra & PDEs PYQs',
+      'description': 'Previous Year Questions for advanced linear algebra, complex analysis, and partial differential equations...',
+      'image': 'assets/s2.png',
+      'page': () => Pde(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+    },
+    {
+      'name': 'Network Theory PYQs',
+      'description': 'Previous Year Questions for Network Theory, covering key concepts and problems...',
+      'image': 'assets/s2.png',
+      'page': () => Nt(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+    },
+    {
+      'name': 'Digital Electronics & Logic Design PYQs',
+      'description': 'Previous Year Questions for Digital Electronics and Logic Design, covering combinational and sequential circuits...',
+      'image': 'assets/s2.png',
+      'page': () => Deld(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+    },
+    {
+      'name': 'Data Structures & Algorithms PYQs',
+      'description': 'Previous Year Questions for Data Structures and Algorithms, focusing on data handling and processing...',
+      'image': 'assets/s2.png',
+      'page': () => Dsa(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+    },
+    {
+      'name': 'Sensor Circuits PYQs',
+      'description': 'Previous Year Questions for Sensor Circuits, including various sensor technologies...',
+      'image': 'assets/s2.png',
+      'page': () => Ssc(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+    },
+    {
+      'name': 'Simulation & Instrumentation Lab PYQs',
+      'description': 'Previous Year Questions for Simulation and Instrumentation Lab...',
+      'image': 'assets/s2.png',
+      'page': () => Ssvil(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+    },
+  ],
+};
+}
+
+  @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final isPortrait = screenSize.height > screenSize.width;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(755, 7, 17, 148),
+      backgroundColor: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[50],
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,11 +152,11 @@ class _ECSem3ScreenState extends State<ECSem3Screen> {
                           style: TextStyle(
                               fontSize: isPortrait ? 24 : 20,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                              color: _isDarkMode ? Colors.white : Colors.blue[800]),
                         ),
-                        const Text(
+                        Text(
                           'Select Subject',
-                          style: TextStyle(fontSize: 16, color: Colors.white70),
+                          style: TextStyle(fontSize: 16, color: _isDarkMode ? Colors.white70 : Colors.blue[600]),
                         ),
                       ],
                     ),
@@ -166,12 +171,18 @@ class _ECSem3ScreenState extends State<ECSem3Screen> {
                             branch: widget.branch,
                             year: widget.year,
                             semester: widget.semester,
+                            isDarkMode: _isDarkMode,
+                            onThemeChanged: (bool newTheme) {
+                              setState(() {
+                                _isDarkMode = newTheme;
+                              });
+                            },
                           ),
                         ),
                       );
                     },
                     child: CircleAvatar(
-                      backgroundColor: Colors.red[600],
+                      backgroundColor: Colors.blue,
                       radius: isPortrait ? 30 : 20,
                       child: Text(
                         widget.fullName[0].toUpperCase(),
@@ -189,22 +200,28 @@ class _ECSem3ScreenState extends State<ECSem3Screen> {
             Expanded(
               child: Container(
                 width: double.infinity,
-                decoration: const BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.only(
+                decoration: BoxDecoration(
+                  color: _isDarkMode ? Colors.black : Colors.white,
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(24),
                     topRight: Radius.circular(24),
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: _isDarkMode ? Colors.black12 : Colors.blue.withOpacity(0.1),
+                      blurRadius: 10,
+                      spreadRadius: 5,
+                    ),
+                  ],
                 ),
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 24),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24),
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: const Color.fromARGB(755, 58, 58, 58),
+                          color: _isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.blue[50],
                           borderRadius: BorderRadius.circular(24),
                         ),
                         padding: const EdgeInsets.all(8.0),
@@ -213,21 +230,33 @@ class _ECSem3ScreenState extends State<ECSem3Screen> {
                             _tabs.length,
                             (index) => Expanded(
                               child: GestureDetector(
-                                onTap: () =>
-                                    setState(() => _selectedIndex = index),
+                                onTap: () => setState(() => _selectedIndex = index),
                                 child: Container(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 16),
+                                  padding: const EdgeInsets.symmetric(vertical: 16),
                                   decoration: BoxDecoration(
                                     color: _selectedIndex == index
-                                        ? Colors.black
-                                        : const Color.fromARGB(755, 58, 58, 58),
+                                        ? (_isDarkMode ? Colors.black : Colors.white)
+                                        : (_isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.blue[50]),
                                     borderRadius: BorderRadius.circular(24),
+                                    boxShadow: _selectedIndex == index && !_isDarkMode
+                                        ? [
+                                            BoxShadow(
+                                              color: Colors.blue.withOpacity(0.3),
+                                              blurRadius: 8,
+                                              spreadRadius: 2,
+                                            ),
+                                          ]
+                                        : null,
                                   ),
                                   child: Text(
                                     _tabs[index],
                                     textAlign: TextAlign.center,
-                                    style: const TextStyle(color: Colors.white),
+                                    style: TextStyle(
+                                      color: _isDarkMode
+                                          ? Colors.white
+                                          : (_selectedIndex == index ? Colors.blue[800] : Colors.blue[600]),
+                                      fontWeight: _selectedIndex == index ? FontWeight.bold : FontWeight.normal,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -242,25 +271,27 @@ class _ECSem3ScreenState extends State<ECSem3Screen> {
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         itemCount: _subjects[_tabs[_selectedIndex]]!.length,
                         itemBuilder: (context, index) {
-                          var subject =
-                              _subjects[_tabs[_selectedIndex]]![index];
+                          var subject = _subjects[_tabs[_selectedIndex]]![index];
                           return Card(
-                            color: const Color.fromARGB(755, 58, 58, 58),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16)),
+                            color: _isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.white,
+                            elevation: _isDarkMode ? 0 : 2,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                             child: ListTile(
-                              contentPadding: const EdgeInsets.all(8),
+                              contentPadding: const EdgeInsets.all(16),
                               leading: subject['image'] != null
-                                  ? Image.asset(subject['image'],
-                                      width: 50, height: 50)
+                                  ? Image.asset(subject['image'], width: 50, height: 50)
                                   : null,
-                              title: Text(subject['name'],
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold)),
-                              subtitle: Text(subject['description'],
-                                  style:
-                                      const TextStyle(color: Colors.white70)),
+                              title: Text(
+                                subject['name'],
+                                style: TextStyle(
+                                  color: _isDarkMode ? Colors.white : Colors.blue[800],
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              subtitle: Text(
+                                subject['description'],
+                                style: TextStyle(color: _isDarkMode ? Colors.white70 : Colors.blue[600]),
+                              ),
                               onTap: () {
                                 Navigator.push(
                                   context,

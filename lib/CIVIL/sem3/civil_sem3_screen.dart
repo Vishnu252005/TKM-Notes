@@ -6,8 +6,8 @@ import 'package:flutter_application_2/CIVIL/sem3/MS/ms.dart';
 import 'package:flutter_application_2/CIVIL/sem3/MSE/mse.dart';
 import 'package:flutter_application_2/CIVIL/sem3/PDCA/pdca.dart';
 import 'package:flutter_application_2/CIVIL/sem3/SAG/sag.dart';
-import 'package:flutter_application_2/CIVIL/sem3/units.dart'; // Import the correct file for units
-import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
+import 'package:flutter_application_2/widgets/profiledark.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CIVILSem3Screen extends StatefulWidget {
   final String fullName;
@@ -15,7 +15,7 @@ class CIVILSem3Screen extends StatefulWidget {
   final String year;
   final String semester;
 
-  const CIVILSem3Screen({//n
+  const CIVILSem3Screen({
     Key? key,
     required this.fullName,
     required this.branch,
@@ -30,119 +30,194 @@ class CIVILSem3Screen extends StatefulWidget {
 class _CIVILSem3ScreenState extends State<CIVILSem3Screen> {
   int _selectedIndex = 0;
   final List<String> _tabs = ['Notes & Books', 'PYQs'];
-
+  bool _isDarkMode = true;
   late Map<String, List<Map<String, dynamic>>> _subjects;
 
   @override
   void initState() {
     super.initState();
-
-    _subjects = {
-      'Notes & Books': [
-        {
-          'name': 'Probability Distributions and Complex Analysis',
-          'description':
-              'Study of probability distributions and complex analysis...',
-          'image': 'assets/s1.png',
-          'page': () => pdca(fullName: widget.fullName),
-        },
-        {
-          'name': 'Material Science and Engineering',
-          'description':
-              'Exploration of material science and engineering concepts...',
-          'image': 'assets/s1.png',
-          'page': () => mse(fullName: widget.fullName),
-        },
-        {
-          'name': 'Mechanics of Solids',
-          'description': 'Introduction to mechanics of solids...',
-          'image': 'assets/s1.png',
-          'page': () => ms(fullName: widget.fullName),
-        },
-        {
-          'name': 'Surveying and Geomatics',
-          'description': 'Fundamentals of surveying and geomatics...',
-          'image': 'assets/s1.png',
-          'page': () => sag(fullName: widget.fullName),
-        },
-        {
-          'name': 'Engineering Geology',
-          'description': 'Introduction to engineering geology principles...',
-          'image': 'assets/s1.png',
-          'page': () => eg(fullName: widget.fullName),
-        },
-        {
-          'name': 'Life Skills and Professional Ethics',
-          'description': 'Study of life skills and professional ethics...',
-          'image': 'assets/s1.png',
-          'page': () => lspe(fullName: widget.fullName),
-        },
-        {
-          'name': 'Civil Engineering Drawing',
-          'description': 'Introduction to civil engineering drawing...',
-          'image': 'assets/s1.png',
-          'page': () => ced(fullName: widget.fullName),
-        },
-      ],
-      'PYQs': [
-        {
-          'name': 'Probability Distributions and Complex Analysis PYQs',
-          'description':
-              'Previous Year Questions for Probability Distributions and Complex Analysis...',
-          'image': 'assets/s2.png',
-          'page': () => pdca(fullName: widget.fullName),
-        },
-        {
-          'name': 'Material Science and Engineering PYQs',
-          'description':
-              'Previous Year Questions for Material Science and Engineering...',
-          'image': 'assets/s2.png',
-          'page': () => mse(fullName: widget.fullName),
-        },
-        {
-          'name': 'Mechanics of Solids PYQs',
-          'description': 'Previous Year Questions for Mechanics of Solids...',
-          'image': 'assets/s2.png',
-          'page': () => ms(fullName: widget.fullName),
-        },
-        {
-          'name': 'Surveying and Geomatics PYQs',
-          'description':
-              'Previous Year Questions for Surveying and Geomatics...',
-          'image': 'assets/s2.png',
-          'page': () => sag(fullName: widget.fullName),
-        },
-        {
-          'name': 'Engineering Geology PYQs',
-          'description': 'Previous Year Questions for Engineering Geology...',
-          'image': 'assets/s2.png',
-          'page': () => eg(fullName: widget.fullName),
-        },
-        {
-          'name': 'Life Skills and Professional Ethics PYQs',
-          'description':
-              'Previous Year Questions for Life Skills and Professional Ethics...',
-          'image': 'assets/s2.png',
-          'page': () => lspe(fullName: widget.fullName),
-        },
-        {
-          'name': 'Civil Engineering Drawing PYQs',
-          'description':
-              'Previous Year Questions for Civil Engineering Drawing...',
-          'image': 'assets/s2.png',
-          'page': () => ced(fullName: widget.fullName),
-        },
-      ],
-    };
+    _loadThemePreference();
+    _initializeSubjects();
   }
 
- @override
+  Future<void> _loadThemePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = prefs.getBool('isDarkMode') ?? true;
+    });
+  }
+
+  void _initializeSubjects() {
+  _subjects = {
+  'Notes & Books': [
+    {
+      'name': 'Prob. Distributions & Complex Analysis',
+      'description': 'Study of probability distributions and complex analysis...',
+      'image': 'assets/s1.png',
+      'page': () => pdca(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester,
+      ),
+    },
+    {
+      'name': 'Material Science & Engineering',
+      'description': 'Exploration of material science and engineering concepts...',
+      'image': 'assets/s1.png',
+      'page': () => mse(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester,
+      ),
+    },
+    {
+      'name': 'Mechanics of Solids',
+      'description': 'Introduction to mechanics of solids...',
+      'image': 'assets/s1.png',
+      'page': () => ms(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester,
+      ),
+    },
+    {
+      'name': 'Surveying & Geomatics',
+      'description': 'Fundamentals of surveying and geomatics...',
+      'image': 'assets/s1.png',
+      'page': () => sag(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester,
+      ),
+    },
+    {
+      'name': 'Engineering Geology',
+      'description': 'Introduction to engineering geology principles...',
+      'image': 'assets/s1.png',
+      'page': () => eg(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester,
+      ),
+    },
+    {
+      'name': 'Life Skills & Prof. Ethics',
+      'description': 'Study of life skills and professional ethics...',
+      'image': 'assets/s1.png',
+      'page': () => lspe(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester,
+      ),
+    },
+    {
+      'name': 'Civil Engineering Drawing',
+      'description': 'Introduction to civil engineering drawing...',
+      'image': 'assets/s1.png',
+      'page': () => ced(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester,
+      ),
+    },
+  ],
+  'PYQs': [
+    {
+      'name': 'Prob. Distributions & Complex Analysis PYQs',
+      'description': 'Previous Year Questions for Probability Distributions and Complex Analysis...',
+      'image': 'assets/s2.png',
+      'page': () => pdca(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester,
+      ),
+    },
+    {
+      'name': 'Material Science & Engineering PYQs',
+      'description': 'Previous Year Questions for Material Science and Engineering...',
+      'image': 'assets/s2.png',
+      'page': () => mse(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester,
+      ),
+    },
+    {
+      'name': 'Mechanics of Solids PYQs',
+      'description': 'Previous Year Questions for Mechanics of Solids...',
+      'image': 'assets/s2.png',
+      'page': () => ms(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester,
+      ),
+    },
+    {
+      'name': 'Surveying & Geomatics PYQs',
+      'description': 'Previous Year Questions for Surveying and Geomatics...',
+      'image': 'assets/s2.png',
+      'page': () => sag(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester,
+      ),
+    },
+    {
+      'name': 'Engineering Geology PYQs',
+      'description': 'Previous Year Questions for Engineering Geology...',
+      'image': 'assets/s2.png',
+      'page': () => eg(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester,
+      ),
+    },
+    {
+      'name': 'Life Skills & Prof. Ethics PYQs',
+      'description': 'Previous Year Questions for Life Skills and Professional Ethics...',
+      'image': 'assets/s2.png',
+      'page': () => lspe(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester,
+      ),
+    },
+    {
+      'name': 'Civil Engineering Drawing PYQs',
+      'description': 'Previous Year Questions for Civil Engineering Drawing...',
+      'image': 'assets/s2.png',
+      'page': () => ced(
+        fullName: widget.fullName,
+        branch: widget.branch,
+        year: widget.year,
+        semester: widget.semester,
+      ),
+    },
+  ],
+};
+
+}
+
+  @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final isPortrait = screenSize.height > screenSize.width;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(755, 7, 17, 148),
+      backgroundColor: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[50],
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,11 +236,11 @@ class _CIVILSem3ScreenState extends State<CIVILSem3Screen> {
                           style: TextStyle(
                               fontSize: isPortrait ? 24 : 20,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                              color: _isDarkMode ? Colors.white : Colors.blue[800]),
                         ),
-                        const Text(
+                        Text(
                           'Select Subject',
-                          style: TextStyle(fontSize: 16, color: Colors.white70),
+                          style: TextStyle(fontSize: 16, color: _isDarkMode ? Colors.white70 : Colors.blue[600]),
                         ),
                       ],
                     ),
@@ -180,12 +255,18 @@ class _CIVILSem3ScreenState extends State<CIVILSem3Screen> {
                             branch: widget.branch,
                             year: widget.year,
                             semester: widget.semester,
+                            isDarkMode: _isDarkMode,
+                            onThemeChanged: (bool newTheme) {
+                              setState(() {
+                                _isDarkMode = newTheme;
+                              });
+                            },
                           ),
                         ),
                       );
                     },
                     child: CircleAvatar(
-                      backgroundColor: Colors.red[600],
+                      backgroundColor: Colors.blue,
                       radius: isPortrait ? 30 : 20,
                       child: Text(
                         widget.fullName[0].toUpperCase(),
@@ -203,22 +284,28 @@ class _CIVILSem3ScreenState extends State<CIVILSem3Screen> {
             Expanded(
               child: Container(
                 width: double.infinity,
-                decoration: const BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.only(
+                decoration: BoxDecoration(
+                  color: _isDarkMode ? Colors.black : Colors.white,
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(24),
                     topRight: Radius.circular(24),
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: _isDarkMode ? Colors.black12 : Colors.blue.withOpacity(0.1),
+                      blurRadius: 10,
+                      spreadRadius: 5,
+                    ),
+                  ],
                 ),
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 24),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24),
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: const Color.fromARGB(755, 58, 58, 58),
+                          color: _isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.blue[50],
                           borderRadius: BorderRadius.circular(24),
                         ),
                         padding: const EdgeInsets.all(8.0),
@@ -227,21 +314,33 @@ class _CIVILSem3ScreenState extends State<CIVILSem3Screen> {
                             _tabs.length,
                             (index) => Expanded(
                               child: GestureDetector(
-                                onTap: () =>
-                                    setState(() => _selectedIndex = index),
+                                onTap: () => setState(() => _selectedIndex = index),
                                 child: Container(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 16),
+                                  padding: const EdgeInsets.symmetric(vertical: 16),
                                   decoration: BoxDecoration(
                                     color: _selectedIndex == index
-                                        ? Colors.black
-                                        : const Color.fromARGB(755, 58, 58, 58),
+                                        ? (_isDarkMode ? Colors.black : Colors.white)
+                                        : (_isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.blue[50]),
                                     borderRadius: BorderRadius.circular(24),
+                                    boxShadow: _selectedIndex == index && !_isDarkMode
+                                        ? [
+                                            BoxShadow(
+                                              color: Colors.blue.withOpacity(0.3),
+                                              blurRadius: 8,
+                                              spreadRadius: 2,
+                                            ),
+                                          ]
+                                        : null,
                                   ),
                                   child: Text(
                                     _tabs[index],
                                     textAlign: TextAlign.center,
-                                    style: const TextStyle(color: Colors.white),
+                                    style: TextStyle(
+                                      color: _isDarkMode
+                                          ? Colors.white
+                                          : (_selectedIndex == index ? Colors.blue[800] : Colors.blue[600]),
+                                      fontWeight: _selectedIndex == index ? FontWeight.bold : FontWeight.normal,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -256,25 +355,27 @@ class _CIVILSem3ScreenState extends State<CIVILSem3Screen> {
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         itemCount: _subjects[_tabs[_selectedIndex]]!.length,
                         itemBuilder: (context, index) {
-                          var subject =
-                              _subjects[_tabs[_selectedIndex]]![index];
+                          var subject = _subjects[_tabs[_selectedIndex]]![index];
                           return Card(
-                            color: const Color.fromARGB(755, 58, 58, 58),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16)),
+                            color: _isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.white,
+                            elevation: _isDarkMode ? 0 : 2,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                             child: ListTile(
-                              contentPadding: const EdgeInsets.all(8),
+                              contentPadding: const EdgeInsets.all(16),
                               leading: subject['image'] != null
-                                  ? Image.asset(subject['image'],
-                                      width: 50, height: 50)
+                                  ? Image.asset(subject['image'], width: 50, height: 50)
                                   : null,
-                              title: Text(subject['name'],
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold)),
-                              subtitle: Text(subject['description'],
-                                  style:
-                                      const TextStyle(color: Colors.white70)),
+                              title: Text(
+                                subject['name'],
+                                style: TextStyle(
+                                  color: _isDarkMode ? Colors.white : Colors.blue[800],
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              subtitle: Text(
+                                subject['description'],
+                                style: TextStyle(color: _isDarkMode ? Colors.white70 : Colors.blue[600]),
+                              ),
                               onTap: () {
                                 Navigator.push(
                                   context,
