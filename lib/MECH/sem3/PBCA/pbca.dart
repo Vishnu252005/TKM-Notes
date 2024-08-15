@@ -1,52 +1,99 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class Pbca extends StatelessWidget {
-  final String fullName; // Full name received as a parameter
+class Pbca extends StatefulWidget {
+  final String fullName;
+  final String branch;
+  final String year;
+  final String semester;
+
+  Pbca({
+    required this.fullName,
+    required this.branch,
+    required this.year,
+    required this.semester,
+  });
+
+  @override
+  _PbcaState createState() => _PbcaState();
+}
+
+class _PbcaState extends State<Pbca> {
+  bool _isDarkMode = true;
+
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: (Discrete probability distributions)',
+      title: 'MODULE I: Discrete Probability Distributions',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_1',
     ),
     UnitItem(
-      title: 'MODULE II: (Continuous probability distributions)',
+      title: 'MODULE II: Continuous Probability Distributions',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_2',
     ),
     UnitItem(
-      title: 'MODULE III: (Test of Hypothesis)',
+      title: 'MODULE III: Test of Hypothesis',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_3',
     ),
     UnitItem(
-      title: 'MODULE IV: (Complex differentiation)',
+      title: 'MODULE IV: Complex Differentiation',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_4',
     ),
     UnitItem(
-      title: 'MODULE V: (Complex Integration)',
+      title: 'MODULE V: Complex Integration',
       isAvailable: true,
       pdfUrl: 'url_to_pdf_5',
     ),
   ];
 
-  Pbca({required this.fullName}); // Constructor accepting fullName
+  @override
+  void initState() {
+    super.initState();
+    _loadThemePreference();
+  }
+
+  Future<void> _loadThemePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = prefs.getBool('isDarkMode') ?? true;
+    });
+  }
+
+  Future<void> _toggleTheme() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = !_isDarkMode;
+      prefs.setBool('isDarkMode', _isDarkMode);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 3, 13, 148),
+      backgroundColor: _isDarkMode ? const Color.fromARGB(255, 3, 13, 148) : Colors.blue[50],
       appBar: AppBar(
-        backgroundColor: Colors.transparent, // Transparent app bar
-        elevation: 0, // No shadow
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: _isDarkMode ? Colors.white : Colors.blue[900]),
           onPressed: () {
-            Navigator.pop(context); // Navigate back when pressed
+            Navigator.pop(context);
           },
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              _isDarkMode ? Icons.wb_sunny : Icons.nightlight_round,
+              color: _isDarkMode ? Colors.white : Colors.blue[900],
+            ),
+            onPressed: _toggleTheme,
+          ),
+        ],
       ),
       body: Stack(
         children: [
@@ -63,18 +110,21 @@ class Pbca extends StatelessWidget {
                       offset: Offset(value, 0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text(
                             'Probability Distributions and Complex Analysis',
                             style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: _isDarkMode ? Colors.white : Colors.blue[900],
+                            ),
                           ),
                           Text(
                             'Select Chapter',
-                            style:
-                                TextStyle(fontSize: 18, color: Colors.white70),
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: _isDarkMode ? Colors.white70 : Colors.blue[700],
+                            ),
                           ),
                         ],
                       ),
@@ -84,22 +134,29 @@ class Pbca extends StatelessWidget {
               ),
               Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.only(
+                  decoration: BoxDecoration(
+                    color: _isDarkMode ? Colors.black : Colors.white,
+                    borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(30),
                       topRight: Radius.circular(30),
                     ),
+                    boxShadow: !_isDarkMode
+                        ? [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: const Offset(0, 3),
+                            ),
+                          ]
+                        : [],
                   ),
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                     child: ListView(
                       children: [
                         _buildListItem(context, 'Textbooks', false, null),
-                        ...units
-                            .map((unit) => _buildListItem(context, unit.title,
-                                unit.isAvailable, unit.pdfUrl))
-                            .toList(),
+                        ...units.map((unit) => _buildListItem(context, unit.title, unit.isAvailable, unit.pdfUrl)).toList(),
                       ],
                     ),
                   ),
@@ -116,11 +173,11 @@ class Pbca extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ProfilePage(
-                      fullName: fullName,
-                      branch: 'Computer Science', // Example branch
-                      year: 'Third Year', // Example year
-                      semester: 'Fifth Semester', // Example semester
-                    ), // Redirects to ProfilePage
+                      fullName: widget.fullName,
+                      branch: widget.branch,
+                      year: widget.year,
+                      semester: widget.semester,
+                    ),
                   ),
                 );
               },
@@ -128,12 +185,10 @@ class Pbca extends StatelessWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundColor: Colors.red[600],
+                  backgroundColor: _isDarkMode ? Colors.red[600] : Colors.red[300],
                   child: Text(
-                    fullName[0].toUpperCase(),
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 24), // Increase font size here
+                    widget.fullName[0].toUpperCase(),
+                    style: const TextStyle(color: Colors.white, fontSize: 24),
                   ),
                 ),
               ),
@@ -144,27 +199,35 @@ class Pbca extends StatelessWidget {
     );
   }
 
-  Widget _buildListItem(
-      BuildContext context, String title, bool isAvailable, String? pdfUrl) {
+  Widget _buildListItem(BuildContext context, String title, bool isAvailable, String? pdfUrl) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(
-        color: Colors.grey[900],
+        color: _isDarkMode ? Colors.grey[900] : Colors.white,
         borderRadius: BorderRadius.circular(8),
+        boxShadow: !_isDarkMode
+            ? [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: const Offset(0, 3),
+                ),
+              ]
+            : [],
       ),
       child: ListTile(
         title: Text(
           title,
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[900]),
         ),
-        trailing: const Icon(Icons.chevron_right, color: Colors.white),
+        trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.blue[900]),
         onTap: () {
           if (isAvailable && pdfUrl != null) {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    PDFViewerPage(pdfUrl: pdfUrl, title: title),
+                builder: (context) => PDFViewerPage(pdfUrl: pdfUrl, title: title),
               ),
             );
           } else {
@@ -191,6 +254,5 @@ class UnitItem {
   final bool isAvailable;
   final String pdfUrl;
 
-  UnitItem(
-      {required this.title, required this.isAvailable, required this.pdfUrl});
+  UnitItem({required this.title, required this.isAvailable, required this.pdfUrl});
 }
