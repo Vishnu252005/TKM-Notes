@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/widgets/sgpa.dart';
-import 'package:flutter_application_2/widgets/signup.dart';
+import '../widgets/sgpa.dart';
+import '../widgets/signup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
