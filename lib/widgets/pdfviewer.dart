@@ -11,7 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
 
-import '../CHEMICAL/sem1/ chemical_sem1_screen.dart';
+import '../CHEMICAL/sem1/chemical_sem1_screen.dart';
 import '../CHEMICAL/sem2/chemical_sem2_screen.dart';
 import '../CHEMICAL/sem3/chemical_sem3_screen.dart';
 import '../CHEMICAL/sem4/chemical_sem4_screen.dart';
