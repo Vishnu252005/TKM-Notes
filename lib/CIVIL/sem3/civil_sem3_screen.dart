@@ -65,7 +65,7 @@ class _CIVILSem3ScreenState extends State<CIVILSem3Screen> {
       'name': 'Material Science & Engineering',
       'description': 'Exploration of material science and engineering concepts...',
       'image': 'assets/s1.png',
-      'page': () => mse(
+      'page': () => Mse(
         fullName: widget.fullName,
         branch: widget.branch,
         year: widget.year,
@@ -76,7 +76,7 @@ class _CIVILSem3ScreenState extends State<CIVILSem3Screen> {
       'name': 'Mechanics of Solids',
       'description': 'Introduction to mechanics of solids...',
       'image': 'assets/s1.png',
-      'page': () => ms(
+      'page': () => Ms(
         fullName: widget.fullName,
         branch: widget.branch,
         year: widget.year,
@@ -87,7 +87,7 @@ class _CIVILSem3ScreenState extends State<CIVILSem3Screen> {
       'name': 'Surveying & Geomatics',
       'description': 'Fundamentals of surveying and geomatics...',
       'image': 'assets/s1.png',
-      'page': () => sag(
+      'page': () => Sag(
         fullName: widget.fullName,
         branch: widget.branch,
         year: widget.year,
@@ -98,7 +98,7 @@ class _CIVILSem3ScreenState extends State<CIVILSem3Screen> {
       'name': 'Engineering Geology',
       'description': 'Introduction to engineering geology principles...',
       'image': 'assets/s1.png',
-      'page': () => eg(
+      'page': () => Eg(
         fullName: widget.fullName,
         branch: widget.branch,
         year: widget.year,
@@ -109,7 +109,7 @@ class _CIVILSem3ScreenState extends State<CIVILSem3Screen> {
       'name': 'Life Skills & Prof. Ethics',
       'description': 'Study of life skills and professional ethics...',
       'image': 'assets/s1.png',
-      'page': () => lspe(
+      'page': () => Lspe(
         fullName: widget.fullName,
         branch: widget.branch,
         year: widget.year,
@@ -120,7 +120,7 @@ class _CIVILSem3ScreenState extends State<CIVILSem3Screen> {
       'name': 'Civil Engineering Drawing',
       'description': 'Introduction to civil engineering drawing...',
       'image': 'assets/s1.png',
-      'page': () => ced(
+      'page': () => Ced(
         fullName: widget.fullName,
         branch: widget.branch,
         year: widget.year,
@@ -133,7 +133,7 @@ class _CIVILSem3ScreenState extends State<CIVILSem3Screen> {
       'name': 'Prob. Distributions & Complex Analysis PYQs',
       'description': 'Previous Year Questions for Probability Distributions and Complex Analysis...',
       'image': 'assets/s2.png',
-      'page': () => pdca(
+      'page': () => Pbca(
         fullName: widget.fullName,
         branch: widget.branch,
         year: widget.year,
@@ -144,7 +144,7 @@ class _CIVILSem3ScreenState extends State<CIVILSem3Screen> {
       'name': 'Material Science & Engineering PYQs',
       'description': 'Previous Year Questions for Material Science and Engineering...',
       'image': 'assets/s2.png',
-      'page': () => mse(
+      'page': () => Mse(
         fullName: widget.fullName,
         branch: widget.branch,
         year: widget.year,
@@ -155,7 +155,7 @@ class _CIVILSem3ScreenState extends State<CIVILSem3Screen> {
       'name': 'Mechanics of Solids PYQs',
       'description': 'Previous Year Questions for Mechanics of Solids...',
       'image': 'assets/s2.png',
-      'page': () => ms(
+      'page': () => Ms(
         fullName: widget.fullName,
         branch: widget.branch,
         year: widget.year,
@@ -166,7 +166,7 @@ class _CIVILSem3ScreenState extends State<CIVILSem3Screen> {
       'name': 'Surveying & Geomatics PYQs',
       'description': 'Previous Year Questions for Surveying and Geomatics...',
       'image': 'assets/s2.png',
-      'page': () => sag(
+      'page': () => Sag(
         fullName: widget.fullName,
         branch: widget.branch,
         year: widget.year,
@@ -177,7 +177,7 @@ class _CIVILSem3ScreenState extends State<CIVILSem3Screen> {
       'name': 'Engineering Geology PYQs',
       'description': 'Previous Year Questions for Engineering Geology...',
       'image': 'assets/s2.png',
-      'page': () => eg(
+      'page': () => Eg(
         fullName: widget.fullName,
         branch: widget.branch,
         year: widget.year,
@@ -188,7 +188,7 @@ class _CIVILSem3ScreenState extends State<CIVILSem3Screen> {
       'name': 'Life Skills & Prof. Ethics PYQs',
       'description': 'Previous Year Questions for Life Skills and Professional Ethics...',
       'image': 'assets/s2.png',
-      'page': () => lspe(
+      'page': () => Lspe(
         fullName: widget.fullName,
         branch: widget.branch,
         year: widget.year,
@@ -199,7 +199,7 @@ class _CIVILSem3ScreenState extends State<CIVILSem3Screen> {
       'name': 'Civil Engineering Drawing PYQs',
       'description': 'Previous Year Questions for Civil Engineering Drawing...',
       'image': 'assets/s2.png',
-      'page': () => ced(
+      'page': () => Ced(
         fullName: widget.fullName,
         branch: widget.branch,
         year: widget.year,

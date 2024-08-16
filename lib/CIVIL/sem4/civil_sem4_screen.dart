@@ -55,7 +55,7 @@ class _CIVILSem4ScreenState extends State<CIVILSem4Screen> {
       'name': 'Structural Analysis',
       'description': 'Study of calculus and linear algebra including...',
       'image': 'assets/s2.png',
-      'page': () => sa(
+      'page': () => Sa(
         fullName: widget.fullName,
         branch: widget.branch,
         year: widget.year,
@@ -134,7 +134,7 @@ class _CIVILSem4ScreenState extends State<CIVILSem4Screen> {
       'name': 'Structural Analysis PYQs',
       'description': 'Previous Year Questions for Structural Analysis...',
       'image': 'assets/s2.png',
-      'page': () => sa(
+      'page': () => Sa(
         fullName: widget.fullName,
         branch: widget.branch,
         year: widget.year,
