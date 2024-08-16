@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CSE/sem4/CN/cn.dart';
+import 'package:flutter_application_2/EC/sem6/CN/cn.dart';
 import 'package:flutter_application_2/EC/sem6/DMS/dms.dart';
 import 'package:flutter_application_2/EC/sem6/PED/ped.dart';
 import 'package:flutter_application_2/EC/sem6/units.dart';  // Import the correct file for units

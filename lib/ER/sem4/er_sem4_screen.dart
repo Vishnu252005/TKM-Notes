@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CIVIL/sem4/ES/es.dart';
-import 'package:flutter_application_2/EEE/sem4/SS/ss.dart';
-import 'package:flutter_application_2/EEE/sem5/IEM/iem.dart';
+import 'package:flutter_application_2/ER/sem4/ES/es.dart';
+import 'package:flutter_application_2/ER/sem4/SS/ss.dart';
+import 'package:flutter_application_2/ER/sem4/IEM/iem.dart';
 import 'package:flutter_application_2/ER/sem4/AC/ac.dart';
 import 'package:flutter_application_2/ER/sem4/MI/mi.dart';
 import 'package:flutter_application_2/ER/sem4/PRD/prd.dart'; // Import the correct file for units

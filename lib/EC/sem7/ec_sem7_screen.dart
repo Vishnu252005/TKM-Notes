@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CIVIL/sem4/ES/es.dart';
+import 'package:flutter_application_2/EC/sem4/ES/es.dart';
 import 'package:flutter_application_2/EC/sem7/CV/cv.dart';
 import 'package:flutter_application_2/EC/sem7/units.dart';  // Import the correct file for units
 import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
@@ -44,7 +44,7 @@ class _ECSem7ScreenState extends State<ECSem7Screen> {
         'name': 'Energy Systems',
         'description': 'Study of energy systems and their management...',
         'image': 'assets/s1.png',
-        'page': () => Es(fullName: widget.fullName),
+        'page': () => Es(fullName: widget.fullName ,branch: widget.branch, year: widget.year, semester: widget.semester),
       },
     ],
     'PYQs': [
@@ -58,7 +58,7 @@ class _ECSem7ScreenState extends State<ECSem7Screen> {
         'name': 'Energy Systems PYQs',
         'description': 'Previous Year Questions for Energy Systems...',
         'image': 'assets/s2.png',
-        'page': () => Es(fullName: widget.fullName),
+        'page': () => Es(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
       },
 
     ],

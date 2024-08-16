@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CIVIL/sem3/LSPE/lspe.dart';
-import 'package:flutter_application_2/CSE/sem3/LSPE/lspe.dart';
-import 'package:flutter_application_2/CSE/sem3/PDE/pde.dart';
+import 'package:flutter_application_2/ER/sem3/LSPE/lspe.dart';
+import 'package:flutter_application_2/ER/sem3/LSPE/lspe.dart';
+import 'package:flutter_application_2/ER/sem3/PDE/pde.dart';
 import 'package:flutter_application_2/EC/sem3/NT/nt.dart';
 import 'package:flutter_application_2/ER/sem3/CA/ca.dart';
 import 'package:flutter_application_2/ER/sem3/LCD/lcd.dart';

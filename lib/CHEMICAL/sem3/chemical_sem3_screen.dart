@@ -3,8 +3,7 @@ import 'package:flutter_application_2/CHEMICAL/sem3/CPE/cpe.dart';
 import 'package:flutter_application_2/CHEMICAL/sem3/MEBC/mebc.dart';
 import 'package:flutter_application_2/CHEMICAL/sem3/OCI/oci.dart';
 import 'package:flutter_application_2/CHEMICAL/sem3/PBCA/pbca.dart';
-import 'package:flutter_application_2/CHEMICAL/sem3/PS/ps.dart';
-import 'package:flutter_application_2/CHEMICAL/sem3/units.dart'; // Import the correct file for units
+import 'package:flutter_application_2/CHEMICAL/sem3/PS/ps.dart'; // Import the correct file for units
 import 'package:flutter_application_2/CHEMICAL/sem3/LSPE/lspe.dart';
 import 'package:flutter_application_2/widgets/profiledark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -98,7 +97,7 @@ class _CHEMICALSem3ScreenState extends State<CHEMICALSem3Screen> {
       'name': 'Life Skills & Professional Ethics',
       'description': 'Development of life skills and understanding professional ethics...',
       'image': 'assets/s1.png',
-      'page': () => lspe(
+      'page': () => Lspe(
         fullName: widget.fullName,
         branch: widget.branch,
         year: widget.year,
@@ -166,7 +165,7 @@ class _CHEMICALSem3ScreenState extends State<CHEMICALSem3Screen> {
       'name': 'Life Skills & Professional Ethics PYQs',
       'description': 'Previous Year Questions for Life Skills and Professional Ethics...',
       'image': 'assets/s2.png',
-      'page': () => lspe(
+      'page': () => Lspe(
         fullName: widget.fullName,
         branch: widget.branch,
         year: widget.year,

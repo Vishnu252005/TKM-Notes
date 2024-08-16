@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CIVIL/sem3/LSPE/lspe.dart';
+import 'package:flutter_application_2/CSE/sem3/LSPE/lspe.dart';
 import 'package:flutter_application_2/CSE/sem3/AP/ap.dart';
 import 'package:flutter_application_2/CSE/sem3/COA/coa.dart';
 import 'package:flutter_application_2/CSE/sem3/DSA/dsa.dart';

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CHEMICAL/sem4/ES/es.dart';
-import 'package:flutter_application_2/CHEMICAL/sem5/COI/coi.dart';
-import 'package:flutter_application_2/EEE/sem4/DC/dc.dart';
-import 'package:flutter_application_2/EEE/sem6/DSP/dsp.dart';
+import 'package:flutter_application_2/ER/sem4/ES/es.dart';
+import 'package:flutter_application_2/ER/sem5/COI/coi.dart';
+import 'package:flutter_application_2/ER/sem5/DC/dc.dart';
+import 'package:flutter_application_2/ER/sem5/DSP/dsp.dart';
 import 'package:flutter_application_2/ER/sem5/CS/cs.dart';
 import 'package:flutter_application_2/ER/sem5/ESIOT/esiot.dart';
 import 'package:flutter_application_2/ER/sem5/LIC/lic.dart';
@@ -67,7 +67,7 @@ class _ERSem5ScreenState extends State<ERSem5Screen> {
     'name': 'Entrepreneurship and Startups',
     'description': 'Principles and practices of entrepreneurship and startup development...',
     'image': 'assets/s1.png',
-    'page': () => Es(fullName: widget.fullName),
+    'page': () => Es(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
   },
   {
     'name': 'Constitution of India',
@@ -111,7 +111,7 @@ class _ERSem5ScreenState extends State<ERSem5Screen> {
     'name': 'Entrepreneurship and Startups PYQs',
     'description': 'Previous Year Questions for Entrepreneurship and Startups...',
     'image': 'assets/s2.png',
-    'page': () => Es(fullName: widget.fullName),
+    'page': () => Es(fullName: widget.fullName , branch: widget.branch, year: widget.year, semester: widget.semester),
   },
   {
     'name': 'Constitution of India PYQs',

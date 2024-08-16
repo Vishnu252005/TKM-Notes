@@ -4,7 +4,7 @@ import 'package:flutter_application_2/CIVIL/sem3/EG/eg.dart';
 import 'package:flutter_application_2/CIVIL/sem3/LSPE/lspe.dart';
 import 'package:flutter_application_2/CIVIL/sem3/MS/ms.dart';
 import 'package:flutter_application_2/CIVIL/sem3/MSE/mse.dart';
-import 'package:flutter_application_2/CIVIL/sem3/PDCA/pdca.dart';
+import 'package:flutter_application_2/CIVIL/sem3/PBCA/pbca.dart';
 import 'package:flutter_application_2/CIVIL/sem3/SAG/sag.dart';
 import 'package:flutter_application_2/widgets/profiledark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -54,7 +54,7 @@ class _CIVILSem3ScreenState extends State<CIVILSem3Screen> {
       'name': 'Prob. Distributions & Complex Analysis',
       'description': 'Study of probability distributions and complex analysis...',
       'image': 'assets/s1.png',
-      'page': () => pdca(
+      'page': () => Pbca(
         fullName: widget.fullName,
         branch: widget.branch,
         year: widget.year,

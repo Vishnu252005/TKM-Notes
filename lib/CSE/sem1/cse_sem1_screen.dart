@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/CSE/sem1/LSD/lsd%20-%20Copy.dart';
 import 'package:flutter_application_2/CSE/sem1/ENGLISH/english%20-%20Copy.dart';
-import 'package:flutter_application_2/CSE/sem1/fec/fec%20-%20Copy.dart';
-import 'package:flutter_application_2/CSE/sem1/fec/fec.dart';
+import 'package:flutter_application_2/CSE/sem1/fee/fee%20-%20Copy.dart';
+import 'package:flutter_application_2/CSE/sem1/fee/fee.dart';
 import 'package:flutter_application_2/CSE/sem1/IDEALAB/idealab%20-%20Copy.dart';
 import 'package:flutter_application_2/CSE/sem1/MATHS/maths%20-%20Copy.dart';
 import 'package:flutter_application_2/CSE/sem1/MATHS/maths.dart';  // Import the correct file for 
@@ -74,7 +74,7 @@ class _CSESem1ScreenState extends State<CSESem1Screen> {
         'name': 'Fundamentals of Electronics Engineering',
         'description': 'Basics of electronics and electrical engineering...',
         'image': 'assets/s1.png',
-        'page': () =>  fec(fullName: widget.fullName,branch: widget.branch,
+        'page': () =>  Fee(fullName: widget.fullName,branch: widget.branch,
             year: widget.year,
             semester: widget.semester),
       },
@@ -131,7 +131,7 @@ class _CSESem1ScreenState extends State<CSESem1Screen> {
         'name': 'Fundamentals of Electronics Engineering PYQs',
         'description': 'Previous Year Questions for Electronics Engineering...',
         'image': 'assets/s2.png',
-        'page': () =>  fec1(fullName: widget.fullName,branch: widget.branch,
+        'page': () =>  Fee1(fullName: widget.fullName,branch: widget.branch,
             year: widget.year,
             semester: widget.semester),
       },

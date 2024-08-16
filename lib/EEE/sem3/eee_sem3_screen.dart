@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CSE/sem3/LSPE/lspe.dart';
+import 'package:flutter_application_2/EEE/sem3/LSPE/lspe.dart';
 import 'package:flutter_application_2/EEE/sem3/BEM/bem.dart';
 import 'package:flutter_application_2/EEE/sem3/CT/ct.dart';
 import 'package:flutter_application_2/EEE/sem3/DELD/deld.dart';
@@ -54,7 +54,7 @@ class _EEESem3ScreenState extends State<EEESem3Screen> {
       'name': 'Mathematics III',
       'description': 'Advanced mathematical concepts for engineering...',
       'image': 'assets/s1.png',
-      'page': () => maths3(
+      'page': () => Maths3(
         fullName: widget.fullName,
         branch: widget.branch,
         year: widget.year,
@@ -87,7 +87,7 @@ class _EEESem3ScreenState extends State<EEESem3Screen> {
       'name': 'Measurements & Instrumentation',
       'description': 'Principles and applications of measurements and instrumentation...',
       'image': 'assets/s1.png',
-      'page': () => mi(
+      'page': () => Mi(
         fullName: widget.fullName,
         branch: widget.branch,
         year: widget.year,
@@ -98,7 +98,7 @@ class _EEESem3ScreenState extends State<EEESem3Screen> {
       'name': 'Circuit Theory',
       'description': 'Analysis and understanding of electrical circuits...',
       'image': 'assets/s1.png',
-      'page': () => ct(
+      'page': () => Ct(
         fullName: widget.fullName,
         branch: widget.branch,
         year: widget.year,
@@ -133,7 +133,7 @@ class _EEESem3ScreenState extends State<EEESem3Screen> {
       'name': 'Mathematics III PYQs',
       'description': 'Previous Year Questions for Mathematics III...',
       'image': 'assets/s2.png',
-      'page': () => maths3(
+      'page': () => Maths3(
         fullName: widget.fullName,
         branch: widget.branch,
         year: widget.year,
@@ -166,7 +166,7 @@ class _EEESem3ScreenState extends State<EEESem3Screen> {
       'name': 'Measurements & Instrumentation PYQs',
       'description': 'Previous Year Questions for Measurements & Instrumentation...',
       'image': 'assets/s2.png',
-      'page': () => mi(
+      'page': () => Mi(
         fullName: widget.fullName,
         branch: widget.branch,
         year: widget.year,
@@ -177,7 +177,7 @@ class _EEESem3ScreenState extends State<EEESem3Screen> {
       'name': 'Circuit Theory PYQs',
       'description': 'Previous Year Questions for Circuit Theory...',
       'image': 'assets/s2.png',
-      'page': () => ct(
+      'page': () => Ct(
         fullName: widget.fullName,
         branch: widget.branch,
         year: widget.year,
