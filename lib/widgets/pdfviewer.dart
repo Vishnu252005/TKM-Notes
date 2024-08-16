@@ -3,10 +3,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/widgets/conv.dart';
+import 'package:flutter_application_2/widgets/graph.dart';
 import '../widgets/sgpa.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
+
 
 import 'dart:io';
 
@@ -149,7 +152,7 @@ class _PDFViewerPageState extends State<PDFViewerPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SGPAConverterPage(), // Change to your AI screen
+        builder: (context) => GraphPlotter(), // Change to your AI screen
       ),
     );
   }
