@@ -5,7 +5,7 @@ import 'package:flutter_application_2/widgets/pdfviewer.dart';
 
 class Ma extends StatelessWidget {
   final String fullName; // Full name received as a parameter
-  final List<UnitItem> units = [
+  final List<UnitItem> units = [ 
   UnitItem(
     title: 'MODULE I: Basic Antenna Parameters',
     isAvailable: true,
