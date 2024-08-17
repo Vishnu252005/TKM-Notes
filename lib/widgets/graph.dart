@@ -3,9 +3,10 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GraphPlotter extends StatefulWidget {
   @override
@@ -14,65 +15,69 @@ class GraphPlotter extends StatefulWidget {
 
 class _GraphPlotterState extends State<GraphPlotter> {
   final GlobalKey _globalKey = GlobalKey();
-  List<List<FlSpot>> _spots = List.generate(1, (_) => []);
-  final List<TextEditingController> _controllers = [];
-  List<Color> _lineColors = [Colors.blue];
-  List<String> _graphTitles = ['Graph 1'];
-  int _numberOfGraphs = 1;
-  int _numberOfPoints = 3;
+  List<FlSpot> _spots = [];
+  Color _lineColor = Colors.blue;
+  TextEditingController _pointController = TextEditingController();
   double _xMin = 0;
   double _xMax = 10;
   double _yMin = 0;
   double _yMax = 10;
-  bool _isXYGraph = true;
+  bool _isDarkMode = true;
 
   @override
   void initState() {
     super.initState();
-    _initializeControllers();
+    _loadThemePreference();
   }
 
-  void _initializeControllers() {
-    _controllers.clear();
-    for (int i = 0; i < _numberOfPoints; i++) {
-      _controllers.add(TextEditingController());
-    }
+  Future<void> _loadThemePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = prefs.getBool('isDarkMode') ?? true;
+    });
+  }
+
+  Future<void> _saveThemePreference(bool isDarkMode) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isDarkMode', isDarkMode);
+  }
+
+  void _toggleTheme() {
+    setState(() {
+      _isDarkMode = !_isDarkMode;
+      _saveThemePreference(_isDarkMode);
+    });
   }
 
   void _updateGraph() {
     setState(() {
-      _spots = List.generate(_numberOfGraphs, (index) {
-        return _controllers
-            .where((controller) => controller.text.isNotEmpty)
-            .map((controller) {
-              final values = controller.text.split(',').map(double.tryParse).toList();
-              if (_isXYGraph) {
-                if (values.length == 2) {
-                  return FlSpot(values[0] ?? 0, values[1] ?? 0);
-                }
-              } else {
-                if (values.length == 2) {
-                  return FlSpot(values[0] ?? 0, values[1] ?? 0);
-                }
-              }
-              return null;
-            })
-            .whereType<FlSpot>()
-            .toList();
-      });
+      _spots = _pointController.text
+          .split(';')
+          .map((point) {
+            List<double> values = point
+                .split(',')
+                .map((v) => double.tryParse(v) ?? 0)
+                .toList();
+            return FlSpot(values[0], values[1]);
+          })
+          .toList();
 
-      // Adjust axis ranges based on points
-      List<double> allXValues = _spots.expand((spotList) => spotList.map((spot) => spot.x)).toList();
-      List<double> allYValues = _spots.expand((spotList) => spotList.map((spot) => spot.y)).toList();
-      if (allXValues.isNotEmpty) {
-        _xMin = allXValues.reduce((a, b) => a < b ? a : b);
-        _xMax = allXValues.reduce((a, b) => a > b ? a : b);
-      }
-      if (allYValues.isNotEmpty) {
-        _yMin = allYValues.reduce((a, b) => a < b ? a : b);
-        _yMax = allYValues.reduce((a, b) => a > b ? a : b);
-      }
+      _adjustAxisRanges();
     });
+  }
+
+  void _adjustAxisRanges() {
+    List<double> allXValues = _spots.map((spot) => spot.x).toList();
+    List<double> allYValues = _spots.map((spot) => spot.y).toList();
+
+    if (allXValues.isNotEmpty) {
+      _xMin = allXValues.reduce((a, b) => a < b ? a : b);
+      _xMax = allXValues.reduce((a, b) => a > b ? a : b);
+    }
+    if (allYValues.isNotEmpty) {
+      _yMin = allYValues.reduce((a, b) => a < b ? a : b);
+      _yMax = allYValues.reduce((a, b) => a > b ? a : b);
+    }
   }
 
   Future<void> _capturePng() async {
@@ -87,7 +92,7 @@ class _GraphPlotterState extends State<GraphPlotter> {
       final imagePath = File('${directory!.path}/graph.png');
       await imagePath.writeAsBytes(pngBytes);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Image saved to $imagePath')),
+        SnackBar(content: Text('Image saved to ${imagePath.path}')),
       );
     } catch (e) {
       print(e);
@@ -96,261 +101,167 @@ class _GraphPlotterState extends State<GraphPlotter> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isPortrait = screenSize.height > screenSize.width;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Graph Plotter'),
+        title: Text(
+          'Graph Plotter',
+          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[800]),
+        ),
+        backgroundColor: _isDarkMode ? Colors.black : Colors.white,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: _isDarkMode ? Colors.white : Colors.blue[800]),
+          onPressed: () {
+            Navigator.of(context).pop(); // Go back to the previous screen
+          },
+        ),
         actions: [
           IconButton(
-            icon: Icon(Icons.save_alt),
+            icon: Icon(
+              _isDarkMode ? Icons.wb_sunny : Icons.nightlight_round,
+              color: _isDarkMode ? Colors.white : Colors.blue[800],
+            ),
+            onPressed: _toggleTheme,
+          ),
+          IconButton(
+            icon: Icon(Icons.save_alt, color: _isDarkMode ? Colors.white : Colors.blue[800]),
             onPressed: _capturePng,
           ),
         ],
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          final double screenWidth = constraints.maxWidth;
-
-          return Padding(
-            padding: EdgeInsets.all(screenWidth * 0.02), // Responsive padding
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Graph Type Selector
-                Text(
-                  'Select Graph Type:',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+      backgroundColor: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[50],
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(isPortrait ? 24.0 : 16.0),
+              child: Align(
+                alignment: Alignment.topRight,
+                child: Text(
+                  'X: ($_xMin - $_xMax), Y: ($_yMin - $_yMax)',
+                  style: TextStyle(
+                    color: Colors.deepPurple,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            _isXYGraph = true;
-                            _updateGraph();
-                          });
-                        },
-                        child: Text('XY Graph'),
-                      ),
-                    ),
-                    SizedBox(width: screenWidth * 0.02),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            _isXYGraph = false;
-                            _updateGraph();
-                          });
-                        },
-                        child: Text('Time-based Graph'),
-                      ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: _isDarkMode ? Colors.black : Colors.white,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: _isDarkMode ? Colors.black12 : Colors.blue.withOpacity(0.1),
+                      blurRadius: 10,
+                      spreadRadius: 5,
                     ),
                   ],
                 ),
-                SizedBox(height: screenWidth * 0.02), // Responsive height
-
-                // Graph Plot
-                Expanded(
-                  child: RepaintBoundary(
-                    key: _globalKey,
-                    child: LineChart(
-                      LineChartData(
-                        gridData: FlGridData(show: true),
-                        titlesData: FlTitlesData(
-                          bottomTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              reservedSize: screenWidth * 0.1, // Responsive size
-                              getTitlesWidget: (value, meta) {
-                                return SideTitleWidget(
-                                  axisSide: meta.axisSide,
-                                  child: Text(
-                                    value.toStringAsFixed(1),
-                                    style: TextStyle(color: Colors.blue, fontSize: 14),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          leftTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              reservedSize: screenWidth * 0.1, // Responsive size
-                              getTitlesWidget: (value, meta) {
-                                return SideTitleWidget(
-                                  axisSide: meta.axisSide,
-                                  child: Text(
-                                    value.toStringAsFixed(1),
-                                    style: TextStyle(color: Colors.blue, fontSize: 14),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Input for XY Graph Points
+                      TextField(
+                        controller: _pointController,
+                        decoration: InputDecoration(
+                          labelText: 'Enter Points (x,y) separated by ";"',
+                          border: OutlineInputBorder(),
+                          hintText: 'E.g. 1,2;3,4;5,6',
+                          hintStyle: TextStyle(color: _isDarkMode ? Colors.white54 : Colors.black54),
                         ),
-                        lineBarsData: List.generate(_numberOfGraphs, (index) {
-                          return LineChartBarData(
-                            spots: _spots[index],
-                            isCurved: true,
-                            color: _lineColors[index],
-                            dotData: FlDotData(show: false),
-                            belowBarData: BarAreaData(show: false),
-                            aboveBarData: BarAreaData(
-                              show: true,
-                              color: _lineColors[index].withOpacity(0.2),
-                            ),
-                          );
-                        }),
-                        borderData: FlBorderData(show: true),
-                        minX: _xMin,
-                        maxX: _xMax,
-                        minY: _yMin,
-                        maxY: _yMax,
+                        style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black),
+                        onChanged: (value) => _updateGraph(),
                       ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: screenWidth * 0.02), // Responsive height
+                      SizedBox(height: 16),
 
-                // Dynamic Input Fields
-                Text(
-                  'Enter Points (x,y):',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: screenWidth * 0.02), // Responsive height
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: _numberOfPoints,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                controller: _controllers[index],
-                                decoration: InputDecoration(
-                                  labelText: 'Point ${index + 1} (x,y)',
-                                  border: OutlineInputBorder(),
+                      // Graph Plot
+                      Expanded(
+                        child: RepaintBoundary(
+                          key: _globalKey,
+                          child: Card(
+                            elevation: 5,
+                            shadowColor: Colors.deepPurpleAccent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: LineChart(
+                                LineChartData(
+                                  gridData: FlGridData(show: true),
+                                  titlesData: FlTitlesData(
+                                    bottomTitles: AxisTitles(
+                                      sideTitles: SideTitles(
+                                        showTitles: true,
+                                        getTitlesWidget: (value, meta) {
+                                          return Text(
+                                            value.toStringAsFixed(1),
+                                            style: TextStyle(
+                                              color: Colors.deepPurple,
+                                              fontSize: 12,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    leftTitles: AxisTitles(
+                                      sideTitles: SideTitles(
+                                        showTitles: true,
+                                        getTitlesWidget: (value, meta) {
+                                          return Text(
+                                            value.toStringAsFixed(1),
+                                            style: TextStyle(
+                                              color: Colors.deepPurple,
+                                              fontSize: 12,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  lineBarsData: [
+                                    LineChartBarData(
+                                      spots: _spots,
+                                      isCurved: true,
+                                      color: _lineColor,
+                                      dotData: FlDotData(show: true),
+                                      belowBarData: BarAreaData(show: false),
+                                    ),
+                                  ],
+                                  borderData: FlBorderData(
+                                    show: true,
+                                    border: Border.all(color: Colors.deepPurple, width: 2),
+                                  ),
+                                  minX: _xMin,
+                                  maxX: _xMax,
+                                  minY: _yMin,
+                                  maxY: _yMax,
                                 ),
-                                keyboardType: TextInputType.numberWithOptions(decimal: true),
-                                onChanged: (value) => _updateGraph(),
                               ),
                             ),
-                            SizedBox(width: 8),
-                            if (index == _numberOfPoints - 1) // Show "Add Point" button only for the last point
-                              ElevatedButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _numberOfPoints += 1;
-                                    _controllers.add(TextEditingController());
-                                  });
-                                },
-                                child: Icon(Icons.add),
-                              ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(height: screenWidth * 0.02), // Responsive height
-
-                // Color Selection
-                Text(
-                  'Select Graph Colors:',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: screenWidth * 0.02), // Responsive height
-                Row(
-                  children: List.generate(_numberOfGraphs, (index) {
-                    return Expanded(
-                      child: GestureDetector(
-                        onTap: () async {
-                          final selectedColor = await showDialog(
-                            context: context,
-                            builder: (context) {
-                              return ColorPickerDialog(
-                                initialColor: _lineColors[index],
-                              );
-                            },
-                          );
-                          if (selectedColor != null) {
-                            setState(() {
-                              _lineColors[index] = selectedColor;
-                              _updateGraph();
-                            });
-                          }
-                        },
-                        child: Container(
-                          height: 30,
-                          color: _lineColors[index],
-                          margin: EdgeInsets.symmetric(horizontal: 4),
+                          ),
                         ),
                       ),
-                    );
-                  }),
+                    ],
+                  ),
                 ),
-                SizedBox(height: screenWidth * 0.02), // Responsive height
-
-                // Update Graph Button
-                ElevatedButton(
-                  onPressed: _updateGraph,
-                  child: Text('Update Graph'),
-                ),
-              ],
+              ),
             ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-class ColorPickerDialog extends StatefulWidget {
-  final Color initialColor;
-
-  ColorPickerDialog({required this.initialColor});
-
-  @override
-  _ColorPickerDialogState createState() => _ColorPickerDialogState();
-}
-
-class _ColorPickerDialogState extends State<ColorPickerDialog> {
-  late Color _selectedColor;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedColor = widget.initialColor;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text('Select Color'),
-      content: SingleChildScrollView(
-        child: ColorPicker(
-          pickerColor: _selectedColor,
-          onColorChanged: (color) {
-            setState(() {
-              _selectedColor = color;
-            });
-          },
-          showLabel: false,
-          pickerAreaHeightPercent: 0.8,
+          ],
         ),
       ),
-      actions: [
-        TextButton(
-          child: Text('Cancel'),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        TextButton(
-          child: Text('OK'),
-          onPressed: () => Navigator.of(context).pop(_selectedColor),
-        ),
-      ],
     );
   }
 }
