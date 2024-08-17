@@ -10,7 +10,7 @@ import 'CHEMICAL/sem8/chemical_sem8_screen.dart';
 
 import 'CIVIL/sem1/civil_sem1_screen.dart';
 import 'CIVIL/sem2/civil_sem2_screen.dart';
-import 'CIVIL/sem3/civil_sem3_screen.dart';
+import 'CIVIL/sem3/civil_sem3_screen.dart';// bb
 import 'CIVIL/sem4/civil_sem4_screen.dart';
 import 'CIVIL/sem5/civil_sem5_screen.dart';
 import 'CIVIL/sem6/civil_sem6_screen.dart';
