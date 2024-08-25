@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/ER/sem3/DELD/deld.dart';
+import 'package:flutter_application_2/ER/sem3/DSA/dsa.dart';
 import 'package:flutter_application_2/ER/sem3/LSPE/lspe.dart';
 import 'package:flutter_application_2/ER/sem3/LSPE/lspe.dart';
 import 'package:flutter_application_2/ER/sem3/PDE/pde.dart';
 import 'package:flutter_application_2/EC/sem3/NT/nt.dart';
-import 'package:flutter_application_2/ER/sem3/CA/ca.dart';
-import 'package:flutter_application_2/ER/sem3/LCD/lcd.dart';
-import 'package:flutter_application_2/ER/sem3/SCP/scp.dart';
-import 'package:flutter_application_2/ER/sem3/SD/sd-copy.dart';
-import 'package:flutter_application_2/ER/sem3/SD/sd.dart';
+import 'package:flutter_application_2/EC/sem3/CA/ca.dart';
+import 'package:flutter_application_2/EC/sem3/LCD/lcd.dart';
+import 'package:flutter_application_2/EC/sem3/SCP/scp.dart';
+import 'package:flutter_application_2/EC/sem3/SD/sd-copy.dart';
+import 'package:flutter_application_2/EC/sem3/SD/sd.dart';
+import 'package:flutter_application_2/ER/sem3/SSC/ssc.dart';
+import 'package:flutter_application_2/ER/sem3/SSVIL/ssvil.dart';
 import 'package:flutter_application_2/widgets/profiledark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -50,163 +54,81 @@ class _ERSem3ScreenState extends State<ERSem3Screen> {
   }
 
   void _initializeSubjects() {
-   _subjects = {
+  _subjects = {
   'Notes & Books': [
     {
-      'name': 'Advanced Linear Algebra Complex Analysis and Partial Differential Equations',
+      'name': 'Advanced Linear Algebra & PDEs',
       'description': 'Study of advanced linear algebra, complex analysis, and partial differential equations...',
       'image': 'assets/s1.png',
-      'page': () => Pde(
-        fullName: widget.fullName,
-        branch: widget.branch,
-        year: widget.year,
-        semester: widget.semester,
-      ),
-    },
-    {
-      'name': 'Scientific Computing Using Python',
-      'description': 'Exploration of scientific computing using Python...',
-      'image': 'assets/s1.png',
-      'page': () => Scp(
-        fullName: widget.fullName,
-        branch: widget.branch,
-        year: widget.year,
-        semester: widget.semester,
-      ),
-    },
-    {
-      'name': 'Logic Circuit Design',
-      'description': 'Basics of logic circuit design...',
-      'image': 'assets/s1.png',
-      'page': () => Lcd(
-        fullName: widget.fullName,
-        branch: widget.branch,
-        year: widget.year,
-        semester: widget.semester,
-      ),
-    },
-    {
-      'name': 'Semiconductor Devices',
-      'description': 'Fundamentals of semiconductor devices...',
-      'image': 'assets/s1.png',
-      'page': () => Sd(
-        fullName: widget.fullName,
-        branch: widget.branch,
-        year: widget.year,
-        semester: widget.semester,
-      ),
+      'page': () => Pde(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
     },
     {
       'name': 'Network Theory',
-      'description': 'Introduction to network theory...',
+      'description': 'Exploration of fundamental concepts in network theory, including circuit analysis and theorems...',
       'image': 'assets/s1.png',
-      'page': () => Nt(
-        fullName: widget.fullName,
-        branch: widget.branch,
-        year: widget.year,
-        semester: widget.semester,
-      ),
+      'page': () => Nt(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
     },
     {
-      'name': 'Life Skills and Professional Ethics',
-      'description': 'Physical education and well-being through life skills and professional ethics...',
+      'name': 'Digital Electronics & Logic Design',
+      'description': 'Basics of digital electronics and logic design, covering combinational and sequential circuits...',
       'image': 'assets/s1.png',
-      'page': () => Lspe(
-        fullName: widget.fullName,
-        branch: widget.branch,
-        year: widget.year,
-        semester: widget.semester,
-      ),
+      'page': () => Deld(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
     },
     {
-      'name': 'Computer Architecture',
-      'description': 'Introduction to computer architecture principles...',
+      'name': 'Data Structures & Algorithms',
+      'description': 'Study of data structures and algorithms including arrays, stacks, queues, and sorting algorithms...',
       'image': 'assets/s1.png',
-      'page': () => Ca(
-        fullName: widget.fullName,
-        branch: widget.branch,
-        year: widget.year,
-        semester: widget.semester,
-      ),
+      'page': () => Dsa(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+    },
+    {
+      'name': 'Sensor Circuits',
+      'description': 'Introduction to sensor technologies and circuit design for various applications...',
+      'image': 'assets/s1.png',
+      'page': () => Ssc(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+    },
+    {
+      'name': 'Simulation & Instrumentation Lab',
+      'description': 'Lab course focused on system simulation techniques and virtual instrumentation tools...',
+      'image': 'assets/s1.png',
+      'page': () => Ssvil(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
     },
   ],
   'PYQs': [
     {
-      'name': 'Advanced Linear Algebra Complex Analysis and Partial Differential Equations PYQs',
-      'description': 'Previous Year Questions for Advanced Linear Algebra, Complex Analysis, and Partial Differential Equations...',
+      'name': 'Advanced Linear Algebra & PDEs PYQs',
+      'description': 'Previous Year Questions for advanced linear algebra, complex analysis, and partial differential equations...',
       'image': 'assets/s2.png',
-      'page': () => Pde(
-        fullName: widget.fullName,
-        branch: widget.branch,
-        year: widget.year,
-        semester: widget.semester,
-      ),
-    },
-    {
-      'name': 'Scientific Computing Using Python PYQs',
-      'description': 'Previous Year Questions for Scientific Computing Using Python...',
-      'image': 'assets/s2.png',
-      'page': () => Scp(
-        fullName: widget.fullName,
-        branch: widget.branch,
-        year: widget.year,
-        semester: widget.semester,
-      ),
-    },
-    {
-      'name': 'Logic Circuit Design PYQs',
-      'description': 'Previous Year Questions for Logic Circuit Design...',
-      'image': 'assets/s2.png',
-      'page': () => Lcd(
-        fullName: widget.fullName,
-        branch: widget.branch,
-        year: widget.year,
-        semester: widget.semester,
-      ),
-    },
-    {
-      'name': 'Semiconductor Devices PYQs',
-      'description': 'Previous Year Questions for Semiconductor Devices...',
-      'image': 'assets/s2.png',
-      'page': () => Sd(
-        fullName: widget.fullName,
-        branch: widget.branch,
-        year: widget.year,
-        semester: widget.semester,
-      ),
+      'page': () => Pde(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
     },
     {
       'name': 'Network Theory PYQs',
-      'description': 'Previous Year Questions for Network Theory...',
+      'description': 'Previous Year Questions for Network Theory, covering key concepts and problems...',
       'image': 'assets/s2.png',
-      'page': () => Nt(
-        fullName: widget.fullName,
-        branch: widget.branch,
-        year: widget.year,
-        semester: widget.semester,
-      ),
+      'page': () => Nt(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
     },
     {
-      'name': 'Life Skills and Professional Ethics PYQs',
-      'description': 'Previous Year Questions for Life Skills and Professional Ethics...',
+      'name': 'Digital Electronics & Logic Design PYQs',
+      'description': 'Previous Year Questions for Digital Electronics and Logic Design, covering combinational and sequential circuits...',
       'image': 'assets/s2.png',
-      'page': () => Lspe(
-        fullName: widget.fullName,
-        branch: widget.branch,
-        year: widget.year,
-        semester: widget.semester,
-      ),
+      'page': () => Deld(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
     },
     {
-      'name': 'Computer Architecture PYQs',
-      'description': 'Previous Year Questions for Computer Architecture...',
+      'name': 'Data Structures & Algorithms PYQs',
+      'description': 'Previous Year Questions for Data Structures and Algorithms, focusing on data handling and processing...',
       'image': 'assets/s2.png',
-      'page': () => Ca(
-        fullName: widget.fullName,
-        branch: widget.branch,
-        year: widget.year,
-        semester: widget.semester,
-      ),
+      'page': () => Dsa(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+    },
+    {
+      'name': 'Sensor Circuits PYQs',
+      'description': 'Previous Year Questions for Sensor Circuits, including various sensor technologies...',
+      'image': 'assets/s2.png',
+      'page': () => Ssc(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+    },
+    {
+      'name': 'Simulation & Instrumentation Lab PYQs',
+      'description': 'Previous Year Questions for Simulation and Instrumentation Lab...',
+      'image': 'assets/s2.png',
+      'page': () => Ssvil(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
     },
   ],
 };

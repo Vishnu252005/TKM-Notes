@@ -3,13 +3,13 @@ import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Sd extends StatefulWidget {
+class Dsa extends StatefulWidget {
   final String fullName;
   final String branch;
   final String year;
   final String semester;
 
-  Sd({
+  Dsa({
     required this.fullName,
     required this.branch,
     required this.year,
@@ -17,37 +17,37 @@ class Sd extends StatefulWidget {
   });
 
   @override
-  _SdState createState() => _SdState();
+  _DsaState createState() => _DsaState();
 }
 
-class _SdState extends State<Sd> {
+class _DsaState extends State<Dsa> {
   bool _isDarkMode = true;
 
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: Basic Semiconductor Theory',
+      title: 'MODULE I: Basic Concepts of Data Structures',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_1',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1_UUb6yTXcPFFN6aey7rJ7a-AnxkF5uVE',
     ),
     UnitItem(
-      title: 'MODULE II: Carrier Transport in Semiconductors',
+      title: 'MODULE II: Arrays and Linked List',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_2',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1ZAMlmSctMWFgGdBbOZF8atWv8wTbQjte',
     ),
     UnitItem(
-      title: 'MODULE III: PN Junctions',
-      isAvailable: true,
+      title: 'MODULE III: Trees and Graphs',
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_3',
     ),
     UnitItem(
-      title: 'MODULE IV: MOS Structure',
+      title: 'MODULE IV: Sorting and Searching',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_4',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1AeK8QOX3cjo85GRulu8NibtntJzcWze8',
     ),
     UnitItem(
-      title: 'MODULE V: MOSFET Scaling',
+      title: 'MODULE V: Hashing Table and Tries',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_5',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1czl31fCDVyVH0sP7b8Dyf1i7Tp5OIqUt',
     ),
   ];
 
@@ -112,7 +112,7 @@ class _SdState extends State<Sd> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Semiconductor Devices',
+                            'Data Structures and Algorithms',
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -254,9 +254,5 @@ class UnitItem {
   final bool isAvailable;
   final String pdfUrl;
 
-  UnitItem({
-    required this.title,
-    required this.isAvailable,
-    required this.pdfUrl,
-  });
+  UnitItem({required this.title, required this.isAvailable, required this.pdfUrl});
 }

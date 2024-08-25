@@ -3,13 +3,13 @@ import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Dsa extends StatefulWidget {
+class Sd extends StatefulWidget {
   final String fullName;
   final String branch;
   final String year;
   final String semester;
 
-  Dsa({
+  Sd({
     required this.fullName,
     required this.branch,
     required this.year,
@@ -17,37 +17,37 @@ class Dsa extends StatefulWidget {
   });
 
   @override
-  _DsaState createState() => _DsaState();
+  _SdState createState() => _SdState();
 }
 
-class _DsaState extends State<Dsa> {
+class _SdState extends State<Sd> {
   bool _isDarkMode = true;
 
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: Basic Concepts of Data Structures',
+      title: 'MODULE I: Basic Semiconductor Theory',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_1',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1GScrKqJERXMTRPCkhlR5__YmcdkBDyLb',
     ),
     UnitItem(
-      title: 'MODULE II: Arrays and Linked List',
+      title: 'MODULE II: Carrier Transport in Semiconductors',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_2',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1g7nIgguG7X3RTVIbtUpKqappw4_ZTneY',
     ),
     UnitItem(
-      title: 'MODULE III: Trees and Graphs',
+      title: 'MODULE III: PN Junctions',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_3',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1U51x4ai9-E39HC4gnkwESPiliB6TW99X',
     ),
     UnitItem(
-      title: 'MODULE IV: Sorting and Searching',
+      title: 'MODULE IV: MOS Structure',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_4',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1_ATADt5YRgRiFCd7dj_JYSlVWygBUUfE',
     ),
     UnitItem(
-      title: 'MODULE V: Hashing Table and Tries',
+      title: 'MODULE V: MOSFET Scaling',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_5',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=15DNbfv_GJ-B9rIJreKfyhtB-jYj8dwau',
     ),
   ];
 
@@ -112,7 +112,7 @@ class _DsaState extends State<Dsa> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Data Structures and Algorithms',
+                            'Semiconductor Devices',
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -254,5 +254,9 @@ class UnitItem {
   final bool isAvailable;
   final String pdfUrl;
 
-  UnitItem({required this.title, required this.isAvailable, required this.pdfUrl});
+  UnitItem({
+    required this.title,
+    required this.isAvailable,
+    required this.pdfUrl,
+  });
 }

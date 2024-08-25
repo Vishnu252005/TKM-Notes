@@ -27,27 +27,27 @@ class _DsaState extends State<Dsa> {
     UnitItem(
       title: 'MODULE I: Basic Concepts of Data Structures',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_1',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1_UUb6yTXcPFFN6aey7rJ7a-AnxkF5uVE',
     ),
     UnitItem(
       title: 'MODULE II: Arrays and Linked List',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_2',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1ZAMlmSctMWFgGdBbOZF8atWv8wTbQjte',
     ),
     UnitItem(
       title: 'MODULE III: Trees and Graphs',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_3',
     ),
     UnitItem(
       title: 'MODULE IV: Sorting and Searching',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_4',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1AeK8QOX3cjo85GRulu8NibtntJzcWze8',
     ),
     UnitItem(
       title: 'MODULE V: Hashing Table and Tries',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_5',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1czl31fCDVyVH0sP7b8Dyf1i7Tp5OIqUt',
     ),
   ];
 
