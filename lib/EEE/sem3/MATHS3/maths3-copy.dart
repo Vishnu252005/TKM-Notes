@@ -59,14 +59,15 @@ class _Maths3State extends State<Maths31> {
   Future<void> _loadThemePreference() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _isDarkMode = !_isDarkMode;
-      prefs.setBool('isDarkMode', _isDarkMode);
+      _isDarkMode = prefs.getBool('isDarkMode') ?? true;
     });
   }
 
   Future<void> _toggleTheme() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _isDarkMode = !_isDarkMode;
+      prefs.setBool('isDarkMode', _isDarkMode);
     });
   }
 
@@ -183,7 +184,7 @@ class _Maths3State extends State<Maths31> {
                 padding: const EdgeInsets.all(16.0),
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundColor: _isDarkMode ? Colors.red[600] : Colors.red[300],
+                  backgroundColor: _isDarkMode ? Colors.blue : Colors.blue,
                   child: Text(
                     widget.fullName[0].toUpperCase(),
                     style: const TextStyle(color: Colors.white, fontSize: 24),

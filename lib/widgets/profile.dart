@@ -197,7 +197,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   icon: Icon(Icons.logout, color: Colors.white),
                   label: Text('Logout', style: TextStyle(fontSize: 20, color: Colors.white)),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
+                    backgroundColor: Colors.blue,
                     minimumSize: Size(double.infinity, 50),
                   ),
                   onPressed: () {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Iem extends StatefulWidget {
   final String fullName;
@@ -57,12 +58,17 @@ class _IemState extends State<Iem> {
   }
 
   Future<void> _loadThemePreference() async {
-    // Load theme preference (optional)
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = prefs.getBool('isDarkMode') ?? true;
+    });
   }
 
   Future<void> _toggleTheme() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _isDarkMode = !_isDarkMode;
+      prefs.setBool('isDarkMode', _isDarkMode);
     });
   }
 
@@ -179,7 +185,7 @@ class _IemState extends State<Iem> {
                 padding: const EdgeInsets.all(16.0),
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundColor: _isDarkMode ? Colors.red[600] : Colors.red[300],
+                  backgroundColor: _isDarkMode ? Colors.blue : Colors.blue,
                   child: Text(
                     widget.fullName[0].toUpperCase(),
                     style: const TextStyle(color: Colors.white, fontSize: 24),

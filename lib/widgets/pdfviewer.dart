@@ -168,7 +168,7 @@ class _PDFViewerPageState extends State<PDFViewerPage> with SingleTickerProvider
         _showErrorDialog('Failed to load PDF. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      _showErrorDialog('Error downloading PDF: $e');
+      
     } finally {
       setState(() {
         _isLoading = false;
@@ -256,7 +256,7 @@ class _PDFViewerPageState extends State<PDFViewerPage> with SingleTickerProvider
                        
                       },
                       onPageError: (page, error) {
-                        
+                        _showErrorDialog('Page $page error: $error');
                       },
                     ),
           _buildExpandableFab(),
