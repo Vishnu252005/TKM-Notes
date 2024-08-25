@@ -25,28 +25,30 @@ class _BemState extends State<Bem1> {
 
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: Resultant of Concurrent Force Systems',
-      isAvailable: true,
-      pdfUrl: 'url_to_pdf_1',
+      title: 'MODULE I: Resultant of concurrent force systems',
+      isAvailable: false,
+      pdfUrl: 'https://drive.google.com/drive/folders/1TUj9ZMjKrZo0qSSC73yTDB6QF-c0jWRW?usp=sharing',
     ),
     UnitItem(
-      title: 'MODULE II: Resultant of Non-concurrent Force Systems, Equilibrium of Rigid Bodies',
-      isAvailable: true,
+      title:
+          'MODULE II: Resultant of non-concurrent force systems, equilibrium of rigid bodies',
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_2',
     ),
     UnitItem(
-      title: 'MODULE III: Centroid and Moment of Inertia, Support Reaction of Beams',
-      isAvailable: true,
+      title:
+          'MODULE III: Centroid and moment of inertia, support reaction of beams',
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_3',
     ),
     UnitItem(
-      title: 'MODULE IV: Kinetics of Translation',
-      isAvailable: true,
+      title: 'MODULE IV: Kinetics of translation',
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_4',
     ),
     UnitItem(
-      title: 'MODULE V: Kinematics and Kinetics of Rotation',
-      isAvailable: true,
+      title: 'MODULE V: Kinematics and kinetics of rotation',
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_5',
     ),
   ];

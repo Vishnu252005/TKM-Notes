@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 class Mi extends StatefulWidget {
   final String fullName;
   final String branch;
@@ -25,27 +25,27 @@ class _MiState extends State<Mi> {
   final List<UnitItem> units = [
     UnitItem(
       title: 'MODULE I: Classification and calibrations of meters',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_1',
     ),
     UnitItem(
       title: 'MODULE II: Power and energy measurements',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_2',
     ),
     UnitItem(
       title: 'MODULE III: Resistance and inductance measurement',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_3',
     ),
     UnitItem(
       title: 'MODULE IV: Magnetic measurements and oscilloscope',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_4',
     ),
     UnitItem(
       title: 'MODULE V: Transducers and sensors',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_5',
     ),
   ];
@@ -57,7 +57,11 @@ class _MiState extends State<Mi> {
   }
 
   Future<void> _loadThemePreference() async {
-    // Load theme preference if needed
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = !_isDarkMode;
+      prefs.setBool('isDarkMode', _isDarkMode);
+    });
   }
 
   Future<void> _toggleTheme() async {

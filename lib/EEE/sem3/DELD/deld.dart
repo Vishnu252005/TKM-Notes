@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 class Deld extends StatefulWidget {
   final String fullName;
   final String branch;
@@ -25,27 +25,27 @@ class _DeldState extends State<Deld> {
   final List<UnitItem> units = [
     UnitItem(
       title: 'MODULE I: Number systems and logic gate fundamentals',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_1',
     ),
     UnitItem(
       title: 'MODULE II: Boolean algebra and combinational circuits design',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_2',
     ),
     UnitItem(
       title: 'MODULE III: Digital logic components and verilog programming',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_3',
     ),
     UnitItem(
       title: 'MODULE IV: Flip-flops, Registers and counters: sequential logic design',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_4',
     ),
     UnitItem(
       title: 'MODULE V: State machines, D/A and A/D convertors, programmable logic devices',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_5',
     ),
   ];
@@ -57,7 +57,11 @@ class _DeldState extends State<Deld> {
   }
 
   Future<void> _loadThemePreference() async {
-    // Load theme preference if needed
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = !_isDarkMode;
+      prefs.setBool('isDarkMode', _isDarkMode);
+    });
   }
 
   Future<void> _toggleTheme() async {
@@ -149,7 +153,7 @@ class _DeldState extends State<Deld> {
                     padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                     child: ListView(
                       children: [
-                        _buildListItem(context, 'Textbooks', false, null),
+                        _buildListItem(context, 'Textbooks', true, null),
                         ...units.map((unit) => _buildListItem(context, unit.title, unit.isAvailable, unit.pdfUrl)).toList(),
                       ],
                     ),

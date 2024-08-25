@@ -25,29 +25,29 @@ class _FmmState extends State<Fmm> {
 
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: (Fluid Properties and Fluid Statics)',
+      title: 'MODULE I: Fluid Properties and Fluid Statics',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_1',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1bv60UaZVaM2uf-bb8MHx04woM9rSk7ju',
     ),
     UnitItem(
-      title: 'MODULE II: (Fluid Kinematics and dynamics)',
+      title: 'MODULE II: Fluid Kinematics and dynamics',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_2',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1At03OdMXvCTbn1esYG2cLA53ubQiybZY',
     ),
     UnitItem(
-      title: 'MODULE III: (Flow Through Pipes)',
+      title: 'MODULE III: Flow Through Pipes',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_3',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1NFTl39gkJeISM9-vi1NV-rL7Kww9jULR',
     ),
     UnitItem(
-      title: 'MODULE IV: (Hydraulic Turbines)',
+      title: 'MODULE IV: Hydraulic Turbines',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_4',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1RY_lH_2DGmqSopSYvcH9Gw5juuH6vNAy',
     ),
     UnitItem(
-      title: 'MODULE V: (Hydraulic Pumps)',
+      title: 'MODULE V: Hydraulic Pumps',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_5',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1DkPHY6yPWd89GQVU8XhLH0uEu5n-siS0',
     ),
   ];
 

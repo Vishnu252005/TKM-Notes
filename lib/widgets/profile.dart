@@ -23,7 +23,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  bool _isDarkMode = false;
+  bool _isDarkMode = true;
 
   @override
   void initState() {
@@ -34,7 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _loadThemePreference() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _isDarkMode = prefs.getBool('isDarkMode') ?? false;
+      _isDarkMode = prefs.getBool('isDarkMode') ?? true;
     });
   }
 
@@ -94,7 +94,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     CircleAvatar(
                       radius: 30,
-                      backgroundColor: Colors.red[600],
+                      backgroundColor: Colors.blue,
                       child: Text(
                         widget.fullName[0].toUpperCase(),
                         style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),

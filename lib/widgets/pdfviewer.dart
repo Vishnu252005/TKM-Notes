@@ -150,7 +150,50 @@ class _PDFViewerPageState extends State<PDFViewerPage> with SingleTickerProvider
   }
 
   Future<void> _downloadFile(String url) async {
-    // ... (unchanged)
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final bytes = response.bodyBytes;
+        final dir = await getApplicationDocumentsDirectory();
+        final file = File('${dir.path}/downloaded.pdf');
+        await file.writeAsBytes(bytes);
+        setState(() {
+          localFilePath = file.path;
+        });
+      } else {
+        _showErrorDialog('Failed to load PDF. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      _showErrorDialog('Error downloading PDF: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _toggleFab() {
@@ -194,7 +237,13 @@ class _PDFViewerPageState extends State<PDFViewerPage> with SingleTickerProvider
       body: Stack(
         children: [
           _isLoading
-              ? Center(child: CircularProgressIndicator())
+              ? Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      _isDarkMode ? Colors.blue : Colors.blue,
+                    ),
+                  ),
+                )
               : localFilePath == null
                   ? Center(child: Text('Error loading PDF'))
                   : PDFView(
@@ -204,10 +253,10 @@ class _PDFViewerPageState extends State<PDFViewerPage> with SingleTickerProvider
                       autoSpacing: false,
                       pageFling: false,
                       onError: (error) {
-                        print('Error loading PDF: $error');
+                       
                       },
                       onPageError: (page, error) {
-                        print('Page $page error: $error');
+                        
                       },
                     ),
           _buildExpandableFab(),
@@ -257,7 +306,7 @@ class _PDFViewerPageState extends State<PDFViewerPage> with SingleTickerProvider
               duration: Duration(milliseconds: 300),
               child: Icon(Icons.add),
             ),
-            backgroundColor: Colors.blue ,
+            backgroundColor: Colors.blue,
           ),
         ],
       ),
@@ -273,7 +322,7 @@ class _PDFViewerPageState extends State<PDFViewerPage> with SingleTickerProvider
             width: 56,
             height: 56,
             decoration: BoxDecoration(
-              color:  Colors.blue,
+              color: Colors.blue,
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(

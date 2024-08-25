@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 class Bem extends StatefulWidget {
   final String fullName;
   final String branch;
@@ -26,29 +26,29 @@ class _BemState extends State<Bem> {
     UnitItem(
       title: 'MODULE I: Resultant of concurrent force systems',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_1',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1jA9FFX4auRR7C7Lbw8pKztvAWZ6NqT_5',
     ),
     UnitItem(
       title:
           'MODULE II: Resultant of non-concurrent force systems, equilibrium of rigid bodies',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_2',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=110s6eW2KgDCl-VsspJJXoNVkM-QvupJC',
     ),
     UnitItem(
       title:
           'MODULE III: Centroid and moment of inertia, support reaction of beams',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_3',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1xZMv5sOfSNGiOQPRbjyXmgUu_FY1kMqz',
     ),
     UnitItem(
       title: 'MODULE IV: Kinetics of translation',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_4',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1dSVtCSDlO8IH0jpOrgabhngI4UmdnM90',
     ),
     UnitItem(
       title: 'MODULE V: Kinematics and kinetics of rotation',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_5',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1dSXgPvjXvlLIDAVmARrdiAA1vairXAzq',
     ),
   ];
 
@@ -59,7 +59,11 @@ class _BemState extends State<Bem> {
   }
 
   Future<void> _loadThemePreference() async {
-    // Load theme preference if needed
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = !_isDarkMode;
+      prefs.setBool('isDarkMode', _isDarkMode);
+    });
   }
 
   Future<void> _toggleTheme() async {

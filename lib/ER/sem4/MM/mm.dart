@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 class Mm extends StatefulWidget {
   final String fullName;
   final String branch;
@@ -57,7 +57,11 @@ class _MmState extends State<Mm> {
   }
 
   Future<void> _loadThemePreference() async {
-    // Load theme preference if needed
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = !_isDarkMode;
+      prefs.setBool('isDarkMode', _isDarkMode);
+    });
   }
 
   Future<void> _toggleTheme() async {

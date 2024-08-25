@@ -25,30 +25,31 @@ class _LspeState extends State<Lspe> {
 
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: (FOUNDATION OF LIFE SKILLS)',
+      title: 'MODULE I: FOUNDATION OF LIFE SKILLS',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_1',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1InrX-5eTxEnC_8Z5jYDRE0GDWzhvSGbX',
     ),
     UnitItem(
-      title: 'MODULE II: (21ST CENTURY SKILLS AND PROBLEM-SOLVING TECHNIQUES)',
+      title: 'MODULE II: 21ST CENTURY SKILLS AND PROBLEM-SOLVING TECHNIQUES',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_2',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1U3y9qXJXU4jzHI3TuRRFO6-Etoa7a9X_',
     ),
     UnitItem(
-      title: 'MODULE III: (GROUP DYNAMICS AND LEADERSHIP)',
-      isAvailable: true,
+      title: 'MODULE III: GROUP DYNAMICS AND LEADERSHIP',
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_3',
     ),
     UnitItem(
-      title: 'MODULE IV: (HUMAN VALUES)',
-      isAvailable: true,
+      title: 'MODULE IV: HUMAN VALUES',
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_4',
     ),
     UnitItem(
-      title: 'MODULE V: (RESPONSIBILITIES & RIGHTS)',
-      isAvailable: true,
+      title: 'MODULE V: RESPONSIBILITIES & RIGHTS',
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_5',
     ),
+  
   ];
 
   @override

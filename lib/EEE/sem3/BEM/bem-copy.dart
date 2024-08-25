@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 class Bem1 extends StatefulWidget {
   final String fullName;
   final String branch;
@@ -25,29 +25,29 @@ class _BemState extends State<Bem1> {
   final List<UnitItem> units = [
     UnitItem(
       title: 'MODULE I: Resultant of concurrent force systems',
-      isAvailable: true,
-      pdfUrl: 'url_to_pdf_1',
+      isAvailable: false,
+      pdfUrl: 'https://drive.google.com/drive/folders/1TUj9ZMjKrZo0qSSC73yTDB6QF-c0jWRW?usp=sharing',
     ),
     UnitItem(
       title:
           'MODULE II: Resultant of non-concurrent force systems, equilibrium of rigid bodies',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_2',
     ),
     UnitItem(
       title:
           'MODULE III: Centroid and moment of inertia, support reaction of beams',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_3',
     ),
     UnitItem(
       title: 'MODULE IV: Kinetics of translation',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_4',
     ),
     UnitItem(
       title: 'MODULE V: Kinematics and kinetics of rotation',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_5',
     ),
   ];
@@ -59,7 +59,11 @@ class _BemState extends State<Bem1> {
   }
 
   Future<void> _loadThemePreference() async {
-    // Load theme preference if needed
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = !_isDarkMode;
+      prefs.setBool('isDarkMode', _isDarkMode);
+    });
   }
 
   Future<void> _toggleTheme() async {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 class Mi extends StatefulWidget {
   final String fullName;
   final String branch;
@@ -26,27 +26,27 @@ class _MiState extends State<Mi> {
     UnitItem(
       title: 'MODULE I: Classification and calibrations of meters',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_1',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1ikqwKxRPxFJSBxHjgSe5sIaQQfAbpC55',
     ),
     UnitItem(
       title: 'MODULE II: Power and energy measurements',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_2',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1Uc0-2ILChEl7g-5E5uA0loVi93SfAUeO',
     ),
     UnitItem(
       title: 'MODULE III: Resistance and inductance measurement',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_3',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=16Gvo-44i_KG5XShc3koOv3cB82SKdxM3',
     ),
     UnitItem(
       title: 'MODULE IV: Magnetic measurements and oscilloscope',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_4',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1lCgy9vE2QOQNQabWG3zwhIuXBJRm15I7',
     ),
     UnitItem(
       title: 'MODULE V: Transducers and sensors',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_5',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1KWal46sAmRggqcYl1hUivpD5jqvcVKNy',
     ),
   ];
 
@@ -57,7 +57,11 @@ class _MiState extends State<Mi> {
   }
 
   Future<void> _loadThemePreference() async {
-    // Load theme preference if needed
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = !_isDarkMode;
+      prefs.setBool('isDarkMode', _isDarkMode);
+    });
   }
 
   Future<void> _toggleTheme() async {

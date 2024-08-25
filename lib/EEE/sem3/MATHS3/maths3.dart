@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/widgets/profile.dart';
 import 'package:flutter_application_2/widgets/pdfviewer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Maths3 extends StatefulWidget {
   final String fullName;
@@ -26,26 +27,26 @@ class _Maths3State extends State<Maths3> {
     UnitItem(
       title: 'MODULE I: Vector space',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_1',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1Ij9VhCoonGxJuVA3N--n_owSjVLlmkY8',
     ),
     UnitItem(
       title: 'MODULE II: Inner product',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_2',
     ),
     UnitItem(
       title: 'MODULE III: Complex differentiation',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_3',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=19vpkm99Rm9uvMAaeu8zPjim_A-euG5yU',
     ),
     UnitItem(
       title: 'MODULE IV: Complex integration',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_4',
     ),
     UnitItem(
       title: 'MODULE V: Partial differential equations',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_5',
     ),
   ];
@@ -57,7 +58,11 @@ class _Maths3State extends State<Maths3> {
   }
 
   Future<void> _loadThemePreference() async {
-    // Load theme preference if needed
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = !_isDarkMode;
+      prefs.setBool('isDarkMode', _isDarkMode);
+    });
   }
 
   Future<void> _toggleTheme() async {

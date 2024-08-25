@@ -25,28 +25,28 @@ class _FmmState extends State<Fmm1> {
 
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: (Fluid Properties and Fluid Statics)',
-      isAvailable: true,
+      title: 'MODULE I: Fluid Properties and Fluid Statics',
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_1',
     ),
     UnitItem(
-      title: 'MODULE II: (Fluid Kinematics and dynamics)',
-      isAvailable: true,
+      title: 'MODULE II: Fluid Kinematics and dynamics',
+      isAvailable:false,
       pdfUrl: 'url_to_pdf_2',
     ),
     UnitItem(
-      title: 'MODULE III: (Flow Through Pipes)',
-      isAvailable: true,
+      title: 'MODULE III: Flow Through Pipes',
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_3',
     ),
     UnitItem(
-      title: 'MODULE IV: (Hydraulic Turbines)',
-      isAvailable: true,
+      title: 'MODULE IV: Hydraulic Turbines',
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_4',
     ),
     UnitItem(
-      title: 'MODULE V: (Hydraulic Pumps)',
-      isAvailable: true,
+      title: 'MODULE V: Hydraulic Pumps',
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_5',
     ),
   ];

@@ -27,26 +27,26 @@ class _PbcaState extends State<Pbca1> {
     UnitItem(
       title: 'MODULE I: Discrete Probability Distributions',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_1',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=142B3keNKctg1s23NeRKE8k4Sz89UeleH',
     ),
     UnitItem(
       title: 'MODULE II: Continuous Probability Distributions',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_2',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1v-p5qUkyIuYAsaXonNMtdFPmX-lgBt4T',
     ),
     UnitItem(
       title: 'MODULE III: Test of Hypothesis',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_3',
     ),
     UnitItem(
       title: 'MODULE IV: Complex Differentiation',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_4',
     ),
     UnitItem(
       title: 'MODULE V: Complex Integration',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_5',
     ),
   ];

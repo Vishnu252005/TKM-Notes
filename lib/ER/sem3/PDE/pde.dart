@@ -25,28 +25,28 @@ class _PdeState extends State<Pde> {
 
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: Vector Space',
+      title: 'MODULE I: Vector space',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_1',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1Ij9VhCoonGxJuVA3N--n_owSjVLlmkY8',
     ),
     UnitItem(
-      title: 'MODULE II: Inner Product',
-      isAvailable: true,
+      title: 'MODULE II: Inner product',
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_2',
     ),
     UnitItem(
-      title: 'MODULE III: Complex Differentiation',
+      title: 'MODULE III: Complex differentiation',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_3',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=19vpkm99Rm9uvMAaeu8zPjim_A-euG5yU',
     ),
     UnitItem(
-      title: 'MODULE IV: Complex Integration',
-      isAvailable: true,
+      title: 'MODULE IV: Complex integration',
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_4',
     ),
     UnitItem(
-      title: 'MODULE V: Partial Differential Equations',
-      isAvailable: true,
+      title: 'MODULE V: Partial differential equations',
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_5',
     ),
   ];
