@@ -26,28 +26,28 @@ class _CpeState extends State<Cpe> {
   final List<UnitItem> units = [
     UnitItem(
       title: 'MODULE I: Solid State',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_1',
     ),
     UnitItem(
       title: 'MODULE II: Colligative Properties of Dilute Solutions',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_2',
     ),
     UnitItem(
       title: 'MODULE III: Colloids',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_3',
     ),
     UnitItem(
       title: 'MODULE IV: Surface Chemistry',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_4',
     ),
     UnitItem(
       title: 'MODULE V: Electroanalytical Techniques',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_5',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1jAWLnbA7SzMrkpky4UZ1RTQznVS0P6FO',
     ),
   ];
 

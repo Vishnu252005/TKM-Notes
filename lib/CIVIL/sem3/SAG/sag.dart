@@ -27,27 +27,27 @@ class _SagState extends State<Sag> {
     UnitItem(
       title: 'MODULE I: Introduction to plane surveying',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_1',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1K7XWIXvyjEFzOp8zSeHp6Sn5Ch9YczhQ',
     ),
     UnitItem(
       title: 'MODULE II: Levelling, Computation of area and volume',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_2',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1KRFp5TmBLH5dg_v2JQktyhC2W-YhcUw2',
     ),
     UnitItem(
       title: 'MODULE III: Theodolite survey and curve surveying',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_3',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=14pBiLt_cnykXyW0SrPfJ0yD-3tnWw5kL',
     ),
     UnitItem(
       title: 'MODULE IV: Triangulation and traverse surveying',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_4',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1WGqRltkHaE0Og34Z1KTgzGXBLt-Ni2t4',
     ),
     UnitItem(
       title: 'MODULE V: Advanced surveying techniques',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_5',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1QBWQ-IFaWtnc4wS_tCWy9lTbL9MrrExP',
     ),
   ];
 
