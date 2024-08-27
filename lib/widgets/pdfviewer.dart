@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/widgets/calcu.dart';
 import 'package:flutter_application_2/widgets/conv.dart';
 import 'package:flutter_application_2/widgets/graph.dart';
 import '../widgets/sgpa.dart';
@@ -269,7 +270,7 @@ class _PDFViewerPageState extends State<PDFViewerPage> with SingleTickerProvider
     return AnimatedPositioned(
       duration: Duration(milliseconds: 300),
       right: 16,
-      bottom: _isExpanded ? 216 : 16,
+      bottom: _isExpanded ? 180 : 16,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -294,6 +295,12 @@ class _PDFViewerPageState extends State<PDFViewerPage> with SingleTickerProvider
                   Icons.school,
                   'SGPA\nCalculator',
                   () => _openPage(SGPAConverterPage()),
+                ),
+                SizedBox(height: 16),
+                _buildToolButton(
+                  Icons.school,
+                  'Scientific\nCalculator',
+                  () => _openPage(ScientificCalculator()),
                 ),
                 SizedBox(height: 16),
               ],
