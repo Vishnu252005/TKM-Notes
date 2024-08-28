@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/EC/sem1/BIOLOGY/BIOLOGY%20-%20Copy.dart';
-import 'package:flutter_application_2/EC/sem1/ENGLISH/english%20-%20Copy.dart';
-import 'package:flutter_application_2/EC/sem1/FEE/FEE%20-%20Copy.dart';
-import 'package:flutter_application_2/EC/sem1/FEE/FEE.dart';
-import 'package:flutter_application_2/EC/sem1/IDEALAB/idealab%20-%20Copy.dart';
-import 'package:flutter_application_2/EC/sem1/IDEALAB/idealab.dart';
-import 'package:flutter_application_2/EC/sem1/MATHS/maths%20-%20Copy.dart';
-import 'package:flutter_application_2/EC/sem1/MATHS/maths.dart';  // Import the correct file for 
-import 'package:flutter_application_2/EC/sem1/BIOLOGY/BIOLOGY.dart';
-import 'package:flutter_application_2/EC/sem1/PHYSICS/physics%20-%20Copy.dart';
-import 'package:flutter_application_2/EC/sem1/PHYSICS/physics.dart';
-import 'package:flutter_application_2/EC/sem1/ENGLISH/english.dart';
-import 'package:flutter_application_2/widgets/profiledark.dart'; // Import the profile.dart file
+import 'package:Nexia/EC/sem1/BIOLOGY/BIOLOGY%20-%20Copy.dart';
+import 'package:Nexia/EC/sem1/ENGLISH/english%20-%20Copy.dart';
+import 'package:Nexia/EC/sem1/FEE/FEE%20-%20Copy.dart';
+import 'package:Nexia/EC/sem1/FEE/FEE.dart';
+import 'package:Nexia/EC/sem1/IDEALAB/idealab%20-%20Copy.dart';
+import 'package:Nexia/EC/sem1/IDEALAB/idealab.dart';
+import 'package:Nexia/EC/sem1/MATHS/maths%20-%20Copy.dart';
+import 'package:Nexia/EC/sem1/MATHS/maths.dart';  // Import the correct file for 
+import 'package:Nexia/EC/sem1/BIOLOGY/BIOLOGY.dart';
+import 'package:Nexia/EC/sem1/PHYSICS/physics%20-%20Copy.dart';
+import 'package:Nexia/EC/sem1/PHYSICS/physics.dart';
+import 'package:Nexia/EC/sem1/ENGLISH/english.dart';
+import 'package:Nexia/widgets/profiledark.dart'; // Import the profile.dart file
 import 'package:shared_preferences/shared_preferences.dart';
 class ECSem1Screen extends StatefulWidget {
   final String fullName;

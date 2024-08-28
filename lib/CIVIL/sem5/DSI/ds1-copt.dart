@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CSE/sem4/ES/es-copy.dart';
-import 'package:flutter_application_2/EEE/sem3/CT/ct.dart';
-import 'package:flutter_application_2/widgets/profile.dart';
-import 'package:flutter_application_2/widgets/pdfviewer.dart';
+import 'package:Nexia/CSE/sem4/ES/es-copy.dart';
+import 'package:Nexia/EEE/sem3/CT/ct.dart';
+import 'package:Nexia/widgets/profile.dart';
+import 'package:Nexia/widgets/pdfviewer.dart';
 
 class Ds11 extends StatelessWidget {
   final String fullName; // Full name received as a parameter

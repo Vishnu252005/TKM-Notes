@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CHEMICAL/sem4/ES/es.dart';
-import 'package:flutter_application_2/CSE/sem4/BE/be.dart';
-import 'package:flutter_application_2/EEE/sem4/FA/fa.dart';
-import 'package:flutter_application_2/MECH/sem3/MM/mm.dart';
-import 'package:flutter_application_2/MECH/sem4/HTTM/httm.dart';
-import 'package:flutter_application_2/MECH/sem4/MDS/mds.dart';
-import 'package:flutter_application_2/MECH/sem4/MP/mp.dart';
-import 'package:flutter_application_2/widgets/profiledark.dart';
+import 'package:Nexia/CHEMICAL/sem4/ES/es.dart';
+import 'package:Nexia/CSE/sem4/BE/be.dart';
+import 'package:Nexia/EEE/sem4/FA/fa.dart';
+import 'package:Nexia/MECH/sem3/MM/mm.dart';
+import 'package:Nexia/MECH/sem4/HTTM/httm.dart';
+import 'package:Nexia/MECH/sem4/MDS/mds.dart';
+import 'package:Nexia/MECH/sem4/MP/mp.dart';
+import 'package:Nexia/widgets/profiledark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MECHSem4Screen extends StatefulWidget {

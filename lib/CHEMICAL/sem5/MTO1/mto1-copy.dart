@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CIVIL/sem3/LSPE/lspe.dart';
-import 'package:flutter_application_2/widgets/profile.dart';
-import 'package:flutter_application_2/widgets/pdfviewer.dart';
+import 'package:Nexia/CIVIL/sem3/LSPE/lspe.dart';
+import 'package:Nexia/widgets/profile.dart';
+import 'package:Nexia/widgets/pdfviewer.dart';
 
 class Mto11 extends StatelessWidget {
   final String fullName; // Full name received as a parameter

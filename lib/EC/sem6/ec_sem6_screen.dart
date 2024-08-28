@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/EC/sem6/CN/cn.dart';
-import 'package:flutter_application_2/EC/sem6/DMS/dms.dart';
-import 'package:flutter_application_2/EC/sem6/PED/ped.dart';
-import 'package:flutter_application_2/EC/sem6/units.dart';  // Import the correct file for units
-import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
+import 'package:Nexia/EC/sem6/CN/cn.dart';
+import 'package:Nexia/EC/sem6/DMS/dms.dart';
+import 'package:Nexia/EC/sem6/PED/ped.dart';
+import 'package:Nexia/EC/sem6/units.dart';  // Import the correct file for units
+import 'package:Nexia/widgets/profile.dart'; // Import the profile.dart file
 
 class ECSem6Screen extends StatefulWidget {
   final String fullName;

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CHEMICAL/sem6/AICE/aice.dart';
-import 'package:flutter_application_2/CHEMICAL/sem6/HCRD/hcrd.dart';
-import 'package:flutter_application_2/CHEMICAL/sem6/IPC/ipc.dart';
-import 'package:flutter_application_2/CHEMICAL/sem6/MTO2/mto2.dart';
-import 'package:flutter_application_2/CHEMICAL/sem6/units.dart';  // Import the correct file for units
-import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
+import 'package:Nexia/CHEMICAL/sem6/AICE/aice.dart';
+import 'package:Nexia/CHEMICAL/sem6/HCRD/hcrd.dart';
+import 'package:Nexia/CHEMICAL/sem6/IPC/ipc.dart';
+import 'package:Nexia/CHEMICAL/sem6/MTO2/mto2.dart';
+import 'package:Nexia/CHEMICAL/sem6/units.dart';  // Import the correct file for units
+import 'package:Nexia/widgets/profile.dart'; // Import the profile.dart file
 
 class CHEMICALSem6Screen extends StatefulWidget {
   final String fullName;

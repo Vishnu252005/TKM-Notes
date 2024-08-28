@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/EEE/sem1/BEE/bee%20-%20Copy.dart';
-import 'package:flutter_application_2/EEE/sem1/BME/bme%20-%20Copy.dart';
-import 'package:flutter_application_2/EEE/sem1/ENGLISH/english%20-%20Copy.dart';
-import 'package:flutter_application_2/EEE/sem1/FEC/fec%20-%20Copy.dart';
-import 'package:flutter_application_2/EEE/sem1/FEC/fec.dart';
-import 'package:flutter_application_2/EEE/sem1/IDEALAB/idealab%20-%20Copy.dart';
-import 'package:flutter_application_2/EEE/sem1/MATHS/maths%20-%20Copy.dart';
-import 'package:flutter_application_2/EEE/sem1/MATHS/maths.dart';
-import 'package:flutter_application_2/EEE/sem1/BEE/bee.dart';
-import 'package:flutter_application_2/EEE/sem1/BME/bme.dart';
-import 'package:flutter_application_2/EEE/sem1/PHYSICS/physics%20-%20Copy.dart';
-import 'package:flutter_application_2/EEE/sem1/PHYSICS/physics.dart';
-import 'package:flutter_application_2/EEE/sem1/ENGLISH/english.dart';
-import 'package:flutter_application_2/EEE/sem1/IDEALAB/idealab.dart';
-import 'package:flutter_application_2/widgets/profiledark.dart';
+import 'package:Nexia/EEE/sem1/BEE/bee%20-%20Copy.dart';
+import 'package:Nexia/EEE/sem1/BME/bme%20-%20Copy.dart';
+import 'package:Nexia/EEE/sem1/ENGLISH/english%20-%20Copy.dart';
+import 'package:Nexia/EEE/sem1/FEC/fec%20-%20Copy.dart';
+import 'package:Nexia/EEE/sem1/FEC/fec.dart';
+import 'package:Nexia/EEE/sem1/IDEALAB/idealab%20-%20Copy.dart';
+import 'package:Nexia/EEE/sem1/MATHS/maths%20-%20Copy.dart';
+import 'package:Nexia/EEE/sem1/MATHS/maths.dart';
+import 'package:Nexia/EEE/sem1/BEE/bee.dart';
+import 'package:Nexia/EEE/sem1/BME/bme.dart';
+import 'package:Nexia/EEE/sem1/PHYSICS/physics%20-%20Copy.dart';
+import 'package:Nexia/EEE/sem1/PHYSICS/physics.dart';
+import 'package:Nexia/EEE/sem1/ENGLISH/english.dart';
+import 'package:Nexia/EEE/sem1/IDEALAB/idealab.dart';
+import 'package:Nexia/widgets/profiledark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EEESem1Screen extends StatefulWidget {

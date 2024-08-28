@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CIVIL/sem1/CHEMISTRY/chemistry%20-%20Copy.dart';
-import 'package:flutter_application_2/CIVIL/sem1/CHEMISTRY/chemistry.dart';
-import 'package:flutter_application_2/CIVIL/sem1/FEE/fee%20-%20Copy.dart';
-import 'package:flutter_application_2/CIVIL/sem1/FEE/fee.dart';
-import 'package:flutter_application_2/CIVIL/sem1/GRAPHICS/graphics%20-%20Copy.dart';
-import 'package:flutter_application_2/CIVIL/sem1/GRAPHICS/graphics.dart';
-import 'package:flutter_application_2/CIVIL/sem1/MANUFACT/manufact%20-%20Copy.dart';
-import 'package:flutter_application_2/CIVIL/sem1/MANUFACT/manufact.dart';
-import 'package:flutter_application_2/CIVIL/sem1/MATHS/maths%20-%20Copy.dart';
-import 'package:flutter_application_2/CIVIL/sem1/MATHS/maths.dart';
-import 'package:flutter_application_2/CIVIL/sem1/MECHANICS/mechanic%20copy.dart';
-import 'package:flutter_application_2/CIVIL/sem1/MECHANICS/mechanic.dart';
-import 'package:flutter_application_2/CIVIL/sem1/SPORTS/sports%20-%20Copy.dart';
-import 'package:flutter_application_2/CIVIL/sem1/SPORTS/sports.dart';
-import 'package:flutter_application_2/widgets/profiledark.dart'; // Import the profile.dart file
+import 'package:Nexia/CIVIL/sem1/CHEMISTRY/chemistry%20-%20Copy.dart';
+import 'package:Nexia/CIVIL/sem1/CHEMISTRY/chemistry.dart';
+import 'package:Nexia/CIVIL/sem1/FEE/fee%20-%20Copy.dart';
+import 'package:Nexia/CIVIL/sem1/FEE/fee.dart';
+import 'package:Nexia/CIVIL/sem1/GRAPHICS/graphics%20-%20Copy.dart';
+import 'package:Nexia/CIVIL/sem1/GRAPHICS/graphics.dart';
+import 'package:Nexia/CIVIL/sem1/MANUFACT/manufact%20-%20Copy.dart';
+import 'package:Nexia/CIVIL/sem1/MANUFACT/manufact.dart';
+import 'package:Nexia/CIVIL/sem1/MATHS/maths%20-%20Copy.dart';
+import 'package:Nexia/CIVIL/sem1/MATHS/maths.dart';
+import 'package:Nexia/CIVIL/sem1/MECHANICS/mechanic%20copy.dart';
+import 'package:Nexia/CIVIL/sem1/MECHANICS/mechanic.dart';
+import 'package:Nexia/CIVIL/sem1/SPORTS/sports%20-%20Copy.dart';
+import 'package:Nexia/CIVIL/sem1/SPORTS/sports.dart';
+import 'package:Nexia/widgets/profiledark.dart'; // Import the profile.dart file
 import 'package:shared_preferences/shared_preferences.dart';
 class CIVILSem1Screen extends StatefulWidget {
   final String fullName;

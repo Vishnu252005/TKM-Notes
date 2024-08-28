@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/EEE/sem3/LSPE/lspe.dart';
-import 'package:flutter_application_2/EEE/sem3/BEM/bem.dart';
-import 'package:flutter_application_2/EEE/sem3/CT/ct.dart';
-import 'package:flutter_application_2/EEE/sem3/DELD/deld.dart';
-import 'package:flutter_application_2/EEE/sem3/FEPS/feps.dart';
-import 'package:flutter_application_2/EEE/sem3/MATHS3/maths3.dart';
-import 'package:flutter_application_2/EEE/sem3/MI/mi.dart';
-import 'package:flutter_application_2/widgets/profiledark.dart';
+import 'package:Nexia/EEE/sem3/LSPE/lspe.dart';
+import 'package:Nexia/EEE/sem3/BEM/bem.dart';
+import 'package:Nexia/EEE/sem3/CT/ct.dart';
+import 'package:Nexia/EEE/sem3/DELD/deld.dart';
+import 'package:Nexia/EEE/sem3/FEPS/feps.dart';
+import 'package:Nexia/EEE/sem3/MATHS3/maths3.dart';
+import 'package:Nexia/EEE/sem3/MI/mi.dart';
+import 'package:Nexia/widgets/profiledark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EEESem3Screen extends StatefulWidget {

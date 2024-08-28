@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/ER/sem7/MA/ma.dart';
-import 'package:flutter_application_2/MECH/sem6/CADA/cada.dart';
-import 'package:flutter_application_2/MECH/sem6/IS/is.dart';
-import 'package:flutter_application_2/MECH/sem6/units.dart';  // Import the correct file for units
-import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
+import 'package:Nexia/ER/sem7/MA/ma.dart';
+import 'package:Nexia/MECH/sem6/CADA/cada.dart';
+import 'package:Nexia/MECH/sem6/IS/is.dart';
+import 'package:Nexia/MECH/sem6/units.dart';  // Import the correct file for units
+import 'package:Nexia/widgets/profile.dart'; // Import the profile.dart file
 
 class MECHSem6Screen extends StatefulWidget {//t
   final String fullName;

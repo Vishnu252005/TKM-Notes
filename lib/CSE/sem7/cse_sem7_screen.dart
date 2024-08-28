@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CSE/sem7/CC/cc.dart';
-import 'package:flutter_application_2/CSE/sem7/CD/cd.dart';
-import 'package:flutter_application_2/CSE/sem7/units.dart';  // Import the correct file for units
-import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
+import 'package:Nexia/CSE/sem7/CC/cc.dart';
+import 'package:Nexia/CSE/sem7/CD/cd.dart';
+import 'package:Nexia/CSE/sem7/units.dart';  // Import the correct file for units
+import 'package:Nexia/widgets/profile.dart'; // Import the profile.dart file
 
 class CSESem7Screen extends StatefulWidget {//N
   final String fullName;
