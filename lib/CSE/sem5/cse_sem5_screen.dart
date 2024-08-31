@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CSE/sem5/COI/coi.dart';
-import 'package:flutter_application_2/CSE/sem5/AIML/aiml.dart';
-import 'package:flutter_application_2/CSE/sem5/AWT/awt.dart';
-import 'package:flutter_application_2/CSE/sem5/DAA/daa.dart';
-import 'package:flutter_application_2/CSE/sem5/TW/tw.dart';
-import 'package:flutter_application_2/CSE/sem5/units.dart';  // Import the correct file for units
-import 'package:flutter_application_2/CSE/sem5/FA/fa.dart';
-import 'package:flutter_application_2/CSE/sem5/SE/se.dart';
-import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
+import 'package:Nexia/CSE/sem5/COI/coi.dart';
+import 'package:Nexia/CSE/sem5/AIML/aiml.dart';
+import 'package:Nexia/CSE/sem5/AWT/awt.dart';
+import 'package:Nexia/CSE/sem5/DAA/daa.dart';
+import 'package:Nexia/CSE/sem5/TW/tw.dart';
+import 'package:Nexia/CSE/sem5/units.dart';  // Import the correct file for units
+import 'package:Nexia/CSE/sem5/FA/fa.dart';
+import 'package:Nexia/CSE/sem5/SE/se.dart';
+import 'package:Nexia/widgets/profile.dart'; // Import the profile.dart file
 
 class CSESem5Screen extends StatefulWidget {//M
   final String fullName;

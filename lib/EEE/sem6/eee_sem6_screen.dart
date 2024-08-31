@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/EEE/sem6/DSP/dsp.dart';
-import 'package:flutter_application_2/EEE/sem6/EVT/evt.dart';
-import 'package:flutter_application_2/EEE/sem6/PSD/psd.dart';
-import 'package:flutter_application_2/EEE/sem6/units.dart';  // Import the correct file for units
-import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
+import 'package:Nexia/EEE/sem6/DSP/dsp.dart';
+import 'package:Nexia/EEE/sem6/EVT/evt.dart';
+import 'package:Nexia/EEE/sem6/PSD/psd.dart';
+import 'package:Nexia/EEE/sem6/units.dart';  // Import the correct file for units
+import 'package:Nexia/widgets/profile.dart'; // Import the profile.dart file
 
 class EEESem6Screen extends StatefulWidget {
   final String fullName;

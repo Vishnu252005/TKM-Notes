@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/MECH/sem3/MM/mm.dart';
-import 'package:flutter_application_2/widgets/profile.dart';
-import 'package:flutter_application_2/widgets/pdfviewer.dart';
+import 'package:Nexia/MECH/sem3/MM/mm.dart';
+import 'package:Nexia/widgets/profile.dart';
+import 'package:Nexia/widgets/pdfviewer.dart';
 
 class Ma1 extends StatelessWidget {
   final String fullName; // Full name received as a parameter

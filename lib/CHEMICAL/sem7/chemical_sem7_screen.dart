@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CHEMICAL/sem7/BBE/bbe.dart';
-import 'package:flutter_application_2/CHEMICAL/sem7/CAPD/capd.dart';
-import 'package:flutter_application_2/CHEMICAL/sem7/units.dart';  // Import the correct file for units
-import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
+import 'package:Nexia/CHEMICAL/sem7/BBE/bbe.dart';
+import 'package:Nexia/CHEMICAL/sem7/CAPD/capd.dart';
+import 'package:Nexia/CHEMICAL/sem7/units.dart';  // Import the correct file for units
+import 'package:Nexia/widgets/profile.dart'; // Import the profile.dart file
 
 class CHEMICALSem7Screen extends StatefulWidget {
   final String fullName;//t

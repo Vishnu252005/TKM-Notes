@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/EC/sem5/OS/os.dart';
-import 'package:flutter_application_2/EC/sem5/AI/ai.dart';
-import 'package:flutter_application_2/EC/sem5/ESDIOT/esdiot.dart';
-import 'package:flutter_application_2/EC/sem5/PMF/pmf.dart';
-import 'package:flutter_application_2/EC/sem5/units.dart';  // Import the correct file for units
-import 'package:flutter_application_2/ER/sem5/CS/cs.dart';
-import 'package:flutter_application_2/EC/sem5/SE/se.dart';
-import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
+import 'package:Nexia/EC/sem5/OS/os.dart';
+import 'package:Nexia/EC/sem5/AI/ai.dart';
+import 'package:Nexia/EC/sem5/ESDIOT/esdiot.dart';
+import 'package:Nexia/EC/sem5/PMF/pmf.dart';
+import 'package:Nexia/EC/sem5/units.dart';  // Import the correct file for units
+import 'package:Nexia/ER/sem5/CS/cs.dart';
+import 'package:Nexia/EC/sem5/SE/se.dart';
+import 'package:Nexia/widgets/profile.dart'; // Import the profile.dart file
 
 class ECSem5Screen extends StatefulWidget {//t
   final String fullName;

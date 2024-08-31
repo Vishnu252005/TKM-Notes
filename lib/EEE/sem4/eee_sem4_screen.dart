@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/EEE/sem4/DC/dc.dart';
-import 'package:flutter_application_2/EEE/sem4/ES/es.dart';
-import 'package:flutter_application_2/EEE/sem4/ET/et.dart';
-import 'package:flutter_application_2/EEE/sem4/FA/fa.dart';
-import 'package:flutter_application_2/EEE/sem4/PDNT/pdnt.dart';
-import 'package:flutter_application_2/EEE/sem4/SS/ss.dart';
-import 'package:flutter_application_2/EEE/sem4/SSEDC/ssedc.dart';
-import 'package:flutter_application_2/widgets/profiledark.dart';
+import 'package:Nexia/EEE/sem4/DC/dc.dart';
+import 'package:Nexia/EEE/sem4/ES/es.dart';
+import 'package:Nexia/EEE/sem4/ET/et.dart';
+import 'package:Nexia/EEE/sem4/FA/fa.dart';
+import 'package:Nexia/EEE/sem4/PDNT/pdnt.dart';
+import 'package:Nexia/EEE/sem4/SS/ss.dart';
+import 'package:Nexia/EEE/sem4/SSEDC/ssedc.dart';
+import 'package:Nexia/widgets/profiledark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EEESem4Screen extends StatefulWidget {

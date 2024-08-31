@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CIVIL/sem3/LSPE/lspe.dart';
-import 'package:flutter_application_2/CIVIL/sem5/AICE/aice-copy.dart';
-import 'package:flutter_application_2/widgets/profile.dart';
-import 'package:flutter_application_2/widgets/pdfviewer.dart';
+import 'package:Nexia/CIVIL/sem3/LSPE/lspe.dart';
+import 'package:Nexia/CIVIL/sem5/AICE/aice-copy.dart';
+import 'package:Nexia/widgets/profile.dart';
+import 'package:Nexia/widgets/pdfviewer.dart';
 
 class Aice1 extends StatelessWidget {
   final String fullName; // Full name received as a parameter

@@ -8,7 +8,7 @@
 
 
 // import 'package:flutter/material.dart';
-// import 'package:flutter_application_2/widgets/units.dart';  // Import the correct file for units
+// import 'package:Nexia/widgets/units.dart';  // Import the correct file for units
 // import 'profile.dart';  // Import the profile.dart file
 
 // class SubjectSelectionScreen extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/EEE/sem8/units.dart';  // Import the correct file for units
-import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
+import 'package:Nexia/EEE/sem8/units.dart';  // Import the correct file for units
+import 'package:Nexia/widgets/profile.dart'; // Import the profile.dart file
 
 class EEESem8Screen extends StatefulWidget {
   final String fullName;

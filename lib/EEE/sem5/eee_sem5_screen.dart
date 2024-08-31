@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/EEE/sem5/AM/am.dart';
-import 'package:flutter_application_2/EEE/sem5/CI/ci.dart';
-import 'package:flutter_application_2/EEE/sem5/CSE/cse.dart';
-import 'package:flutter_application_2/EEE/sem5/IEM/iem.dart';
-import 'package:flutter_application_2/EEE/sem5/IML/iml.dart';
-import 'package:flutter_application_2/EEE/sem5/IOT/iot.dart';
-import 'package:flutter_application_2/EEE/sem5/PE/pe.dart';
-import 'package:flutter_application_2/EEE/sem5/units.dart'; // Import the correct file for units
-import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
+import 'package:Nexia/EEE/sem5/AM/am.dart';
+import 'package:Nexia/EEE/sem5/CI/ci.dart';
+import 'package:Nexia/EEE/sem5/CSE/cse.dart';
+import 'package:Nexia/EEE/sem5/IEM/iem.dart';
+import 'package:Nexia/EEE/sem5/IML/iml.dart';
+import 'package:Nexia/EEE/sem5/IOT/iot.dart';
+import 'package:Nexia/EEE/sem5/PE/pe.dart';
+import 'package:Nexia/EEE/sem5/units.dart'; // Import the correct file for units
+import 'package:Nexia/widgets/profile.dart'; // Import the profile.dart file
 
 class EEESem5Screen extends StatefulWidget {//n
   final String fullName;

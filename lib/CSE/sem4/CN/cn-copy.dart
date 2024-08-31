@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/widgets/profile.dart';
-import 'package:flutter_application_2/widgets/pdfviewer.dart';
+import 'package:Nexia/widgets/profile.dart';
+import 'package:Nexia/widgets/pdfviewer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Cn1 extends StatefulWidget {

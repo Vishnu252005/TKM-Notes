@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/EC/sem3/CA/ca.dart';
-import 'package:flutter_application_2/ER/sem3/DSA/dsa.dart';
-import 'package:flutter_application_2/EC/sem3/LCD/lcd.dart';
-import 'package:flutter_application_2/EC/sem3/LSPE/lspe.dart';
-import 'package:flutter_application_2/EC/sem3/PDE/pde.dart';
-import 'package:flutter_application_2/EC/sem3/NT/nt.dart';
-import 'package:flutter_application_2/EC/sem3/SCP/scp.dart';
-import 'package:flutter_application_2/EC/sem3/SD/sd.dart';
-import 'package:flutter_application_2/ER/sem3/SSC/ssc.dart';
-import 'package:flutter_application_2/ER/sem3/SSVIL/ssvil.dart';// Import the correct file for units
-import 'package:flutter_application_2/ER/sem3/DELD/deld.dart';
-import 'package:flutter_application_2/widgets/profiledark.dart';
+import 'package:Nexia/EC/sem3/CA/ca.dart';
+import 'package:Nexia/ER/sem3/DSA/dsa.dart';
+import 'package:Nexia/EC/sem3/LCD/lcd.dart';
+import 'package:Nexia/EC/sem3/LSPE/lspe.dart';
+import 'package:Nexia/EC/sem3/PDE/pde.dart';
+import 'package:Nexia/EC/sem3/NT/nt.dart';
+import 'package:Nexia/EC/sem3/SCP/scp.dart';
+import 'package:Nexia/EC/sem3/SD/sd.dart';
+import 'package:Nexia/ER/sem3/SSC/ssc.dart';
+import 'package:Nexia/ER/sem3/SSVIL/ssvil.dart';// Import the correct file for units
+import 'package:Nexia/ER/sem3/DELD/deld.dart';
+import 'package:Nexia/widgets/profiledark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ECSem3Screen extends StatefulWidget {

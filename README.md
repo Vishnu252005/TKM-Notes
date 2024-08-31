@@ -1,4 +1,4 @@
-# flutter_application_2
+# Nexia
 
 A new Flutter project.
 

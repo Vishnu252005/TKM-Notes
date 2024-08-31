@@ -10,7 +10,7 @@
 
 
 // import 'package:flutter/material.dart';
-// import 'package:flutter_application_2/widgets/pdfviewer.dart'; // Import the PDF viewer
+// import 'package:Nexia/widgets/pdfviewer.dart'; // Import the PDF viewer
 
 // class NotesPage extends StatelessWidget {
 //   final List<NoteItem> notes = [

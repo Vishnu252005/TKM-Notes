@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CHEMICAL/sem5/COI/coi.dart';
-import 'package:flutter_application_2/CHEMICAL/sem5/EEA/eea.dart';
-import 'package:flutter_application_2/CHEMICAL/sem5/EMCI/emci.dart';
-import 'package:flutter_application_2/CHEMICAL/sem5/KRD/krd.dart';
-import 'package:flutter_application_2/CHEMICAL/sem5/MTO1/mto1.dart';
-import 'package:flutter_application_2/CHEMICAL/sem5/PT/pt.dart';
-import 'package:flutter_application_2/CHEMICAL/sem5/TP/tp.dart';
-import 'package:flutter_application_2/CHEMICAL/sem5/units.dart';  // Import the correct file for units
-import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
+import 'package:Nexia/CHEMICAL/sem5/COI/coi.dart';
+import 'package:Nexia/CHEMICAL/sem5/EEA/eea.dart';
+import 'package:Nexia/CHEMICAL/sem5/EMCI/emci.dart';
+import 'package:Nexia/CHEMICAL/sem5/KRD/krd.dart';
+import 'package:Nexia/CHEMICAL/sem5/MTO1/mto1.dart';
+import 'package:Nexia/CHEMICAL/sem5/PT/pt.dart';
+import 'package:Nexia/CHEMICAL/sem5/TP/tp.dart';
+import 'package:Nexia/CHEMICAL/sem5/units.dart';  // Import the correct file for units
+import 'package:Nexia/widgets/profile.dart'; // Import the profile.dart file
 
 class CHEMICALSem5Screen extends StatefulWidget {
   final String fullName;

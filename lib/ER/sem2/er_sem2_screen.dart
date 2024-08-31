@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/ER/sem2/CHEMISTRY/chemistry%20-%20Copy.dart';
-import 'package:flutter_application_2/ER/sem2/CHEMISTRY/chemistry.dart';
-import 'package:flutter_application_2/ER/sem2/GRAPHICS/graphics%20-%20Copy.dart';
-import 'package:flutter_application_2/ER/sem2/GRAPHICS/graphics.dart';
-import 'package:flutter_application_2/ER/sem2/MANUFACT/manufact%20-%20Copy.dart';
-import 'package:flutter_application_2/ER/sem2/MANUFACT/manufact.dart';
-import 'package:flutter_application_2/ER/sem2/MATHS/maths%20-%20Copy.dart';
-import 'package:flutter_application_2/ER/sem2/MATHS/maths.dart';
-import 'package:flutter_application_2/ER/sem2/PSP/psp%20-%20Copy.dart';
-import 'package:flutter_application_2/ER/sem2/PSP/psp.dart';
-import 'package:flutter_application_2/ER/sem2/SPORTS/sports%20-%20Copy.dart';
-import 'package:flutter_application_2/ER/sem2/SPORTS/sports.dart';
-import 'package:flutter_application_2/ER/sem2/UHV/uhv%20-%20Copy.dart';
-import 'package:flutter_application_2/ER/sem2/UHV/uhv.dart';
-import 'package:flutter_application_2/widgets/profiledark.dart';
+import 'package:Nexia/ER/sem2/CHEMISTRY/chemistry%20-%20Copy.dart';
+import 'package:Nexia/ER/sem2/CHEMISTRY/chemistry.dart';
+import 'package:Nexia/ER/sem2/GRAPHICS/graphics%20-%20Copy.dart';
+import 'package:Nexia/ER/sem2/GRAPHICS/graphics.dart';
+import 'package:Nexia/ER/sem2/MANUFACT/manufact%20-%20Copy.dart';
+import 'package:Nexia/ER/sem2/MANUFACT/manufact.dart';
+import 'package:Nexia/ER/sem2/MATHS/maths%20-%20Copy.dart';
+import 'package:Nexia/ER/sem2/MATHS/maths.dart';
+import 'package:Nexia/ER/sem2/PSP/psp%20-%20Copy.dart';
+import 'package:Nexia/ER/sem2/PSP/psp.dart';
+import 'package:Nexia/ER/sem2/SPORTS/sports%20-%20Copy.dart';
+import 'package:Nexia/ER/sem2/SPORTS/sports.dart';
+import 'package:Nexia/ER/sem2/UHV/uhv%20-%20Copy.dart';
+import 'package:Nexia/ER/sem2/UHV/uhv.dart';
+import 'package:Nexia/widgets/profiledark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ERSem2Screen extends StatefulWidget {
