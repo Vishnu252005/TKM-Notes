@@ -9,7 +9,7 @@ class Is1 extends StatelessWidget {
     UnitItem(
       title: 'MODULE I: Industrial safety',
       isAvailable: true,
-      pdfUrl: 'url_to_pdf_1',
+      pdfUrl: 'url',
     ),
     UnitItem(
       title: 'MODULE II: Safety administration',
