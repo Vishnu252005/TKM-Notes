@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CSE/sem4/BE/be.dart';
-import 'package:flutter_application_2/CSE/sem4/CN/cn.dart';
-import 'package:flutter_application_2/CSE/sem4/DM/dm.dart';
-import 'package:flutter_application_2/CSE/sem4/IDS/ids.dart';
-import 'package:flutter_application_2/CSE/sem4/OB/ob.dart';
-import 'package:flutter_application_2/CSE/sem4/OS/os.dart';// Import the correct file for units
-import 'package:flutter_application_2/CSE/sem4/ES/es.dart';
-import 'package:flutter_application_2/widgets/profiledark.dart';
+import 'package:Nexia/CSE/sem4/BE/be.dart';
+import 'package:Nexia/CSE/sem4/CN/cn.dart';
+import 'package:Nexia/CSE/sem4/DM/dm.dart';
+import 'package:Nexia/CSE/sem4/IDS/ids.dart';
+import 'package:Nexia/CSE/sem4/OB/ob.dart';
+import 'package:Nexia/CSE/sem4/OS/os.dart';// Import the correct file for units
+import 'package:Nexia/CSE/sem4/ES/es.dart';
+import 'package:Nexia/widgets/profiledark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CSESem4Screen extends StatefulWidget {

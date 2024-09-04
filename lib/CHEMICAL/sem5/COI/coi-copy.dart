@@ -1,34 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CIVIL/sem3/LSPE/lspe.dart';
-import 'package:flutter_application_2/widgets/profile.dart';
-import 'package:flutter_application_2/widgets/pdfviewer.dart';
+import 'package:Nexia/CIVIL/sem3/LSPE/lspe.dart';
+import 'package:Nexia/widgets/profile.dart';
+import 'package:Nexia/widgets/pdfviewer.dart';
 
 class Coi1 extends StatelessWidget {
   final String fullName; // Full name received as a parameter
   final List<UnitItem> units = [
     UnitItem(
       title: 'MODULE I: Introduction of the Indian Constitution',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_1',
     ),
     UnitItem(
       title: 'MODULE II: Fundamental Rights and Duties',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_2',
     ),
     UnitItem(
       title: 'MODULE III: Union executive and Parliament',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_3',
     ),
     UnitItem(
       title: 'MODULE IV: State Executive and State legislature',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_4',
     ),
     UnitItem(
       title: 'MODULE V: Governance and Constitution',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_5',
     ),
   ];

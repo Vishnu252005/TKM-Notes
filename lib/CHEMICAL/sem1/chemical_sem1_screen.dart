@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CHEMICAL/sem1/BEE/bee%20-%20Copy.dart';
-import 'package:flutter_application_2/CHEMICAL/sem1/CHEMISTRY/chemistry%20-%20Copy.dart';
-import 'package:flutter_application_2/CHEMICAL/sem1/CHEMISTRY/chemistry.dart';
-import 'package:flutter_application_2/CHEMICAL/sem1/FEE/fee%20-%20Copy.dart';
-import 'package:flutter_application_2/CHEMICAL/sem1/FEE/fee.dart';
-import 'package:flutter_application_2/CHEMICAL/sem1/GRAPHICS/graphics%20-%20Copy.dart';
-import 'package:flutter_application_2/CHEMICAL/sem1/GRAPHICS/graphics.dart';
-import 'package:flutter_application_2/CHEMICAL/sem1/MANUFACT/manufact%20-%20Copy.dart';
-import 'package:flutter_application_2/CHEMICAL/sem1/MANUFACT/manufact.dart';
-import 'package:flutter_application_2/CHEMICAL/sem1/MATHS/maths%20-%20Copy.dart';
-import 'package:flutter_application_2/CHEMICAL/sem1/MATHS/maths.dart';
-import 'package:flutter_application_2/CHEMICAL/sem1/SPORTS/sports%20-%20Copy.dart';
-import 'package:flutter_application_2/CHEMICAL/sem1/SPORTS/sports.dart'; // Import the correct file for units
-import 'package:flutter_application_2/CHEMICAL/sem1/BEE/bee.dart';// Import the profile.dart file
-import 'package:flutter_application_2/widgets/profiledark.dart'; // Import the profile.dart file
+import 'package:Nexia/CHEMICAL/sem1/BEE/bee%20-%20Copy.dart';
+import 'package:Nexia/CHEMICAL/sem1/CHEMISTRY/chemistry%20-%20Copy.dart';
+import 'package:Nexia/CHEMICAL/sem1/CHEMISTRY/chemistry.dart';
+import 'package:Nexia/CHEMICAL/sem1/FEE/fee%20-%20Copy.dart';
+import 'package:Nexia/CHEMICAL/sem1/FEE/fee.dart';
+import 'package:Nexia/CHEMICAL/sem1/GRAPHICS/graphics%20-%20Copy.dart';
+import 'package:Nexia/CHEMICAL/sem1/GRAPHICS/graphics.dart';
+import 'package:Nexia/CHEMICAL/sem1/MANUFACT/manufact%20-%20Copy.dart';
+import 'package:Nexia/CHEMICAL/sem1/MANUFACT/manufact.dart';
+import 'package:Nexia/CHEMICAL/sem1/MATHS/maths%20-%20Copy.dart';
+import 'package:Nexia/CHEMICAL/sem1/MATHS/maths.dart';
+import 'package:Nexia/CHEMICAL/sem1/SPORTS/sports%20-%20Copy.dart';
+import 'package:Nexia/CHEMICAL/sem1/SPORTS/sports.dart'; // Import the correct file for units
+import 'package:Nexia/CHEMICAL/sem1/BEE/bee.dart';// Import the profile.dart file
+import 'package:Nexia/widgets/profiledark.dart'; // Import the profile.dart file
 import 'package:shared_preferences/shared_preferences.dart';
 class CHEMICALSem1Screen extends StatefulWidget {
   final String fullName;

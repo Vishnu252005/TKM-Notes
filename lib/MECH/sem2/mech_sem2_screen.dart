@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/MECH/sem2/ENGLISH/english%20-%20Copy.dart';
-import 'package:flutter_application_2/MECH/sem2/ENGLISH/english.dart';
-import 'package:flutter_application_2/MECH/sem2/IDEALAB/idealab%20-%20Copy.dart';
-import 'package:flutter_application_2/MECH/sem2/IDEALAB/idealab.dart';
-import 'package:flutter_application_2/MECH/sem2/MATHS/maths%20-%20Copy.dart';
-import 'package:flutter_application_2/MECH/sem2/MATHS/maths.dart';
-import 'package:flutter_application_2/MECH/sem2/PHYSICS/physics%20-%20Copy.dart';
-import 'package:flutter_application_2/MECH/sem2/PHYSICS/physics.dart';
-import 'package:flutter_application_2/MECH/sem2/PSP/psp%20-%20Copy.dart';
-import 'package:flutter_application_2/MECH/sem2/PSP/psp.dart';
-import 'package:flutter_application_2/MECH/sem2/UHV/uhv%20-%20Copy.dart';
-import 'package:flutter_application_2/MECH/sem2/UHV/uhv.dart';
-import 'package:flutter_application_2/widgets/profiledark.dart'; // Import the profile.dart file
+import 'package:Nexia/MECH/sem2/ENGLISH/english%20-%20Copy.dart';
+import 'package:Nexia/MECH/sem2/ENGLISH/english.dart';
+import 'package:Nexia/MECH/sem2/IDEALAB/idealab%20-%20Copy.dart';
+import 'package:Nexia/MECH/sem2/IDEALAB/idealab.dart';
+import 'package:Nexia/MECH/sem2/MATHS/maths%20-%20Copy.dart';
+import 'package:Nexia/MECH/sem2/MATHS/maths.dart';
+import 'package:Nexia/MECH/sem2/PHYSICS/physics%20-%20Copy.dart';
+import 'package:Nexia/MECH/sem2/PHYSICS/physics.dart';
+import 'package:Nexia/MECH/sem2/PSP/psp%20-%20Copy.dart';
+import 'package:Nexia/MECH/sem2/PSP/psp.dart';
+import 'package:Nexia/MECH/sem2/UHV/uhv%20-%20Copy.dart';
+import 'package:Nexia/MECH/sem2/UHV/uhv.dart';
+import 'package:Nexia/widgets/profiledark.dart'; // Import the profile.dart file
 import 'package:shared_preferences/shared_preferences.dart';
 class MECHSem2Screen extends StatefulWidget {
   final String fullName;

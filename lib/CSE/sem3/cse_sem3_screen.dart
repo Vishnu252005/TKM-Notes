@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CSE/sem3/LSPE/lspe.dart';
-import 'package:flutter_application_2/CSE/sem3/AP/ap.dart';
-import 'package:flutter_application_2/CSE/sem3/COA/coa.dart';
-import 'package:flutter_application_2/CSE/sem3/DSA/dsa.dart';
-import 'package:flutter_application_2/CSE/sem3/LSPE/lspe.dart';
-import 'package:flutter_application_2/CSE/sem3/PDE/pde-copy.dart';
-import 'package:flutter_application_2/CSE/sem3/PDE/pde.dart';
-import 'package:flutter_application_2/CSE/sem3/PSO/pso.dart';
-import 'package:flutter_application_2/widgets/profiledark.dart';
+import 'package:Nexia/CSE/sem3/LSPE/lspe.dart';
+import 'package:Nexia/CSE/sem3/AP/ap.dart';
+import 'package:Nexia/CSE/sem3/COA/coa.dart';
+import 'package:Nexia/CSE/sem3/DSA/dsa.dart';
+import 'package:Nexia/CSE/sem3/LSPE/lspe.dart';
+import 'package:Nexia/CSE/sem3/PDE/pde-copy.dart';
+import 'package:Nexia/CSE/sem3/PDE/pde.dart';
+import 'package:Nexia/CSE/sem3/PSO/pso.dart';
+import 'package:Nexia/widgets/profiledark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CSESem3Screen extends StatefulWidget {
@@ -65,7 +65,7 @@ class _CSESem3ScreenState extends State<CSESem3Screen> {
     {
       'name': 'Prob., Stats. & Optimization',
       'description': 'Probability theory, statistical methods, and optimization techniques...',
-      'image': 'assets/s2.png',
+      'image': 'assets/s1.png',
       'page': () => Pso(
         fullName: widget.fullName,
         branch: widget.branch,

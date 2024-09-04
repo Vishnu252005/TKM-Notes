@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CIVIL/sem4/CT/ct.dart';
-import 'package:flutter_application_2/CIVIL/sem4/DMRI/dmri.dart';
-import 'package:flutter_application_2/CIVIL/sem4/ES/es.dart';
-import 'package:flutter_application_2/CIVIL/sem4/FM/fm.dart';
-import 'package:flutter_application_2/CIVIL/sem4/SA/sa.dart';
-import 'package:flutter_application_2/CIVIL/sem4/SM/sm.dart';
-import 'package:flutter_application_2/CIVIL/sem4/TE/te.dart';
-import 'package:flutter_application_2/widgets/profiledark.dart';
+import 'package:Nexia/CIVIL/sem4/CT/ct.dart';
+import 'package:Nexia/CIVIL/sem4/DMRI/dmri.dart';
+import 'package:Nexia/CIVIL/sem4/ES/es.dart';
+import 'package:Nexia/CIVIL/sem4/FM/fm.dart';
+import 'package:Nexia/CIVIL/sem4/SA/sa.dart';
+import 'package:Nexia/CIVIL/sem4/SM/sm.dart';
+import 'package:Nexia/CIVIL/sem4/TE/te.dart';
+import 'package:Nexia/widgets/profiledark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CIVILSem4Screen extends StatefulWidget {

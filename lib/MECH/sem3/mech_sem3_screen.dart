@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/MECH/sem3/PBCA/pbca.dart';
-import 'package:flutter_application_2/MECH/sem3/EE/ee.dart';
-import 'package:flutter_application_2/MECH/sem3/BEM/bem.dart';
-import 'package:flutter_application_2/MECH/sem3/IEM/iem.dart';
-import 'package:flutter_application_2/MECH/sem3/AT/at.dart';
-import 'package:flutter_application_2/MECH/sem3/BEM/bem-copy.dart';
-import 'package:flutter_application_2/MECH/sem3/EMA/ema.dart';
-import 'package:flutter_application_2/MECH/sem3/FMHM/fmhm.dart';
-import 'package:flutter_application_2/MECH/sem3/FMM/fmm.dart';
-import 'package:flutter_application_2/MECH/sem3/MM/mm.dart';
-import 'package:flutter_application_2/MECH/sem3/MMT/mmt.dart';
-import 'package:flutter_application_2/MECH/sem3/SE/se.dart';
-import 'package:flutter_application_2/widgets/profiledark.dart';
+import 'package:Nexia/MECH/sem3/PBCA/pbca.dart';
+import 'package:Nexia/MECH/sem3/EE/ee.dart';
+import 'package:Nexia/MECH/sem3/BEM/bem.dart';
+import 'package:Nexia/MECH/sem3/IEM/iem.dart';
+import 'package:Nexia/MECH/sem3/AT/at.dart';
+import 'package:Nexia/MECH/sem3/BEM/bem-copy.dart';
+import 'package:Nexia/MECH/sem3/EMA/ema.dart';
+import 'package:Nexia/MECH/sem3/FMHM/fmhm.dart';
+import 'package:Nexia/MECH/sem3/FMM/fmm.dart';
+import 'package:Nexia/MECH/sem3/MM/mm.dart';
+import 'package:Nexia/MECH/sem3/MMT/mmt.dart';
+import 'package:Nexia/MECH/sem3/SE/se.dart';
+import 'package:Nexia/widgets/profiledark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MECHSem3Screen extends StatefulWidget {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CSE/sem6/ICS/ics.dart';
-import 'package:flutter_application_2/CSE/sem6/TC/tc.dart';
-import 'package:flutter_application_2/CSE/sem6/units.dart';  // Import the correct file for units
-import 'package:flutter_application_2/widgets/profile.dart'; // Import the profile.dart file
+import 'package:Nexia/CSE/sem6/ICS/ics.dart';
+import 'package:Nexia/CSE/sem6/TC/tc.dart';
+import 'package:Nexia/CSE/sem6/units.dart';  // Import the correct file for units
+import 'package:Nexia/widgets/profile.dart'; // Import the profile.dart file
 
 class CSESem6Screen extends StatefulWidget {
   final String fullName;

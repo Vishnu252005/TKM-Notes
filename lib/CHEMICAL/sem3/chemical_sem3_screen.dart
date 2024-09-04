@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CHEMICAL/sem3/CPE/cpe.dart';
-import 'package:flutter_application_2/CHEMICAL/sem3/MEBC/mebc.dart';
-import 'package:flutter_application_2/CHEMICAL/sem3/OCI/oci.dart';
-import 'package:flutter_application_2/CHEMICAL/sem3/PBCA/pbca.dart';
-import 'package:flutter_application_2/CHEMICAL/sem3/PS/ps.dart'; // Import the correct file for units
-import 'package:flutter_application_2/CHEMICAL/sem3/LSPE/lspe.dart';
-import 'package:flutter_application_2/widgets/profiledark.dart';
+import 'package:Nexia/CHEMICAL/sem3/CPE/cpe.dart';
+import 'package:Nexia/CHEMICAL/sem3/MEBC/mebc.dart';
+import 'package:Nexia/CHEMICAL/sem3/OCI/oci.dart';
+import 'package:Nexia/CHEMICAL/sem3/PBCA/pbca.dart';
+import 'package:Nexia/CHEMICAL/sem3/PS/ps.dart'; // Import the correct file for units
+import 'package:Nexia/CHEMICAL/sem3/LSPE/lspe.dart';
+import 'package:Nexia/widgets/profiledark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CHEMICALSem3Screen extends StatefulWidget {

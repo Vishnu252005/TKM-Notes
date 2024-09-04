@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/widgets/profile.dart';
-import 'package:flutter_application_2/widgets/pdfviewer.dart';
+import 'package:Nexia/widgets/profile.dart';
+import 'package:Nexia/widgets/pdfviewer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Pdnt1 extends StatefulWidget {
@@ -26,27 +26,27 @@ class _PdntState extends State<Pdnt1> {
   final List<UnitItem> units = [
     UnitItem(
       title: 'MODULE I: DISCRETE RANDOM VARIABLES',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_1',
     ),
     UnitItem(
       title: 'MODULE II: CONTINUOUS RANDOM VARIABLES',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_2',
     ),
     UnitItem(
       title: 'MODULE III: NUMERICAL SOLUTION FOR SYSTEM OF EQUATIONS',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_3',
     ),
     UnitItem(
       title: 'MODULE IV: INTERPOLATION AND NUMERICAL INTEGRATION',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_4',
     ),
     UnitItem(
       title: 'MODULE V: NUMERICAL SOLUTION OF ORDINARY DIFFERENTIAL EQUATIONS',
-      isAvailable: true,
+      isAvailable: false,
       pdfUrl: 'url_to_pdf_5',
     ),
   ];

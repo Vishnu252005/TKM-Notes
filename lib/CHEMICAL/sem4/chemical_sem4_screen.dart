@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/CHEMICAL/sem4/CET/cet.dart';
-import 'package:flutter_application_2/CHEMICAL/sem4/EAS/eas.dart';
-import 'package:flutter_application_2/CHEMICAL/sem4/ES/es.dart';
-import 'package:flutter_application_2/CHEMICAL/sem4/FPM/fpm.dart';
-import 'package:flutter_application_2/CHEMICAL/sem4/HTO/hto.dart';
-import 'package:flutter_application_2/CHEMICAL/sem4/NMCE/nmce.dart';
-import 'package:flutter_application_2/CHEMICAL/sem4/PIF/pif.dart';
-import 'package:flutter_application_2/widgets/profiledark.dart';
+import 'package:Nexia/CHEMICAL/sem4/CET/cet.dart';
+import 'package:Nexia/CHEMICAL/sem4/EAS/eas.dart';
+import 'package:Nexia/CHEMICAL/sem4/ES/es.dart';
+import 'package:Nexia/CHEMICAL/sem4/FPM/fpm.dart';
+import 'package:Nexia/CHEMICAL/sem4/HTO/hto.dart';
+import 'package:Nexia/CHEMICAL/sem4/NMCE/nmce.dart';
+import 'package:Nexia/CHEMICAL/sem4/PIF/pif.dart';
+import 'package:Nexia/widgets/profiledark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CHEMICALSem4Screen extends StatefulWidget {
