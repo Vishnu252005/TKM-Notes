@@ -30,7 +30,7 @@ class Is1 extends StatelessWidget {
       title: 'MODULE V: Fire prevention and protection' ,
       isAvailable: false,
       pdfUrl: 'url_to_pdf_5',
-    ),
+    ),  
   ];
 
   Is1({required this.fullName}); // Constructor accepting fullName
