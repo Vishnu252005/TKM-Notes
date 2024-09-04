@@ -67,6 +67,13 @@ dev_dependencies:
   lottie: ^2.7.0
   flutter_markdown: ^0.6.18+2
   image_picker: ^1.0.5
+  flutter_launcher_icons: ^0.10.0
+  rename: ^2.0.1
+
+flutter_icons:
+  image_path: "assets/app_logo.png"
+  android: true
+  ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

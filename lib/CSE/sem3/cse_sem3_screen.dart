@@ -3,7 +3,6 @@ import 'package:Nexia/CSE/sem3/LSPE/lspe.dart';
 import 'package:Nexia/CSE/sem3/AP/ap.dart';
 import 'package:Nexia/CSE/sem3/COA/coa.dart';
 import 'package:Nexia/CSE/sem3/DSA/dsa.dart';
-import 'package:Nexia/CSE/sem3/LSPE/lspe.dart';
 import 'package:Nexia/CSE/sem3/PDE/pde-copy.dart';
 import 'package:Nexia/CSE/sem3/PDE/pde.dart';
 import 'package:Nexia/CSE/sem3/PSO/pso.dart';
