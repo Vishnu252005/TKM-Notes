@@ -109,6 +109,8 @@ class _PDFViewerPageState extends State<PDFViewerPage> with SingleTickerProvider
   bool _isExpanded = false;
   late AnimationController _controller;
   late Animation<double> _expandAnimation;
+  int _currentPage = 0;
+  int _totalPages = 0;
 
   @override
   void initState() {
@@ -169,7 +171,7 @@ class _PDFViewerPageState extends State<PDFViewerPage> with SingleTickerProvider
         _showErrorDialog('Failed to load PDF. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      
+      _showErrorDialog('Error downloading PDF: $e');
     } finally {
       setState(() {
         _isLoading = false;
@@ -253,14 +255,35 @@ class _PDFViewerPageState extends State<PDFViewerPage> with SingleTickerProvider
                       swipeHorizontal: false,
                       autoSpacing: false,
                       pageFling: false,
+                      onRender: (pages) {
+                        setState(() {
+                          _totalPages = pages!;
+                        });
+                      },
+                      onPageChanged: (int? page, int? total) {
+                        setState(() {
+                          _currentPage = page!;
+                        });
+                      },
                       onError: (error) {
-                       
+                        _showErrorDialog('Error loading PDF: $error');
                       },
                       onPageError: (page, error) {
                         _showErrorDialog('Page $page error: $error');
                       },
                     ),
           _buildExpandableFab(),
+          Positioned(
+            top: 0,
+            right: 0,
+            bottom: 0,
+            child: _buildDragHandle(),
+          ),
+          Positioned(
+            bottom: 16,
+            left: 16,
+            child: _buildPageInfo(),
+          ),
         ],
       ),
     );
@@ -346,12 +369,54 @@ class _PDFViewerPageState extends State<PDFViewerPage> with SingleTickerProvider
             label,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: _isDarkMode ? Colors.black87 : Colors.black87,
+              color: _isDarkMode ? Colors.white : Colors.black87,
               fontSize: 12,
               fontWeight: FontWeight.bold,
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildDragHandle() {
+    return GestureDetector(
+      onHorizontalDragUpdate: (details) {
+        if (details.delta.dx > 0) {
+          _toggleFab();
+        }
+        
+      },
+      child: Container(
+        width: 20,
+        color: Colors.transparent,
+        child: Center(
+          child: Container(
+            width: 4,
+            height: 50,
+            decoration: BoxDecoration(
+              color: _isDarkMode ? Colors.white.withOpacity(0.5) : Colors.black.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPageInfo() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: _isDarkMode ? Colors.black.withOpacity(0.7) : Colors.white.withOpacity(0.7),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Text(
+        'Page ${_currentPage + 1} of $_totalPages',
+        style: TextStyle(
+          color: _isDarkMode ? Colors.white : Colors.black,
+          fontSize: 14,
+        ),
       ),
     );
   }
