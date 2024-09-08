@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import '../widgets/sgpa.dart';
 import '../widgets/signup.dart';
-import'../widgets/calcu.dart';
+import '../widgets/calcu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../widgets/syllabus.dart';
+import 'package:Nexia/widgets/pdfviewer.dart';
 
 class ProfilePage extends StatefulWidget {
   final String fullName;
@@ -27,11 +29,33 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   late bool _isDarkMode;
+  late String _syllabusLink;
+
+  final SyllabusData _syllabusData = SyllabusData();
 
   @override
   void initState() {
     super.initState();
     _isDarkMode = widget.isDarkMode;
+    _setSyllabusLink();
+  }
+
+  void _setSyllabusLink() {
+    setState(() {
+      _syllabusLink = _syllabusData.getSyllabusLink(widget.branch, widget.semester);
+    });
+  }
+
+  Future<void> _launchPDFViewer() async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PDFViewerPage(
+          pdfUrl: _syllabusLink,
+          title: 'Syllabus',
+        ),
+      ),
+    );
   }
 
   Future<void> _toggleTheme(bool isDarkMode) async {
@@ -91,7 +115,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     CircleAvatar(
                       radius: 30,
-                      backgroundColor: Colors.blue,  // Adjust this color to your preference
+                      backgroundColor: Colors.blue,
                       child: Text(
                         widget.fullName[0].toUpperCase(),
                         style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
@@ -113,10 +137,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       leading: Icon(Icons.book, color: _isDarkMode ? Colors.white : Colors.black),
                       title: Text('Syllabus', style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black)),
                       trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.black),
-                      onTap: () {
-                        // Navigate to Syllabus page
-                      },
+                      onTap: _launchPDFViewer,
                     ),
+                    // navigate to syllabus page
                     ListTile(
                       leading: Icon(Icons.calendar_today, color: _isDarkMode ? Colors.white : Colors.black),
                       title: Text('Exam Timetable', style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black)),
@@ -190,7 +213,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   icon: Icon(Icons.logout, color: Colors.white),
                   label: Text('Logout', style: TextStyle(fontSize: 20, color: Colors.white)),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,  // Set this to the color you prefer
+                    backgroundColor: Colors.blue,
                     minimumSize: Size(double.infinity, 50),
                   ),
                   onPressed: () {
@@ -208,7 +231,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
               ),
               SizedBox(height: 8),
-              Text('v1.1.7(2)', style: TextStyle(color: Colors.grey)),
+              Text('v1.1.7', style: TextStyle(color: Colors.grey)),
               SizedBox(height: 16),
             ],
           ),
