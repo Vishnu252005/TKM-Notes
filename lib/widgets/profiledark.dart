@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_declarations
+
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/sgpa.dart';
@@ -6,6 +8,7 @@ import '../widgets/calcu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/syllabus.dart';
 import 'package:Nexia/widgets/pdfviewer.dart';
+
 
 String? _examTimetableLink;
 
@@ -196,16 +199,21 @@ class _ProfilePageState extends State<ProfilePage> {
                   style: TextStyle(color: _isDarkMode ? Colors.white70 : Colors.black87),
                 ),
                 SizedBox(height: 15),
+                
+                
                 ElevatedButton(
                   child: Text(
-                    'Submit Materials', style: TextStyle(  color:  Colors.white ),),
-                  onPressed: () {
-                    _launchURL("https://forms.gle/ze5DsM2hZj98ubWw9");
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    minimumSize: Size(double.infinity, 50),
+                    'Submit Materials',
+                    style: TextStyle(color: Colors.white),
                   ),
+                  onPressed: () async {
+                    final url = "https://forms.gle/ze5DsM2hZj98ubWw9";
+                    if (await canLaunch(url)) {
+                      await launch(url);
+                    } else {
+                      throw 'Could not launch $url';
+                    }
+                  },
                 ),
                 SizedBox(height: 20),
                 Text(
@@ -224,8 +232,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(height: 15),
                 ElevatedButton(
                   child: Text('Rate Us Now' , style: TextStyle(  color:  Colors.white ),),
-                  onPressed: () {
-                    _launchURL("https://forms.gle/WnnFQRTkWjYHxfAv5");
+                  onPressed: () async {
+                    final url = "hhttps://forms.gle/WnnFQRTkWjYHxfAv5";
+                    if (await canLaunch(url)) {
+                      await launch(url);
+                    } else {
+                      throw 'Could not launch $url';
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
@@ -349,8 +362,17 @@ class _ProfilePageState extends State<ProfilePage> {
                 leading: Icon(Icons.language, color: _isDarkMode ? Colors.white : Colors.black),
                 title: Text('Website', style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black)),
                 trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.black),
-                onTap: () => _launchURL('https://nexianotes.vercel.app/'),
-              ),
+                
+                onTap: () async {
+                    final url = "https://forms.gle/ze5DsM2hZj98ubWw9";
+                    if (await canLaunch(url)) {
+                      await launch(url);
+                    } else {
+                      throw 'Could not launch $url';
+                    }
+                  },
+                ),
+             
               ListTile(
                 leading: Icon(Icons.info, color: _isDarkMode ? Colors.white : Colors.black),
                 title: Text('About Us', style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black)),

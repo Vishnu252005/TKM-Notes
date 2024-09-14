@@ -28,6 +28,7 @@ analyzer:
     use_super_parameters: ignore
     unused_local_variable: ignore
     use_build_context_synchronously: ignore
+    deprecated_member_use: ignore ignore
 
 linter:
   # The lint rules applied to this project can be customized in the
