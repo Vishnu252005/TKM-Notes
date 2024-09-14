@@ -27,32 +27,32 @@ class _Manufact1State extends State<Manufact1> {
     UnitItem(
       title: 'MODULE I: Carpentry',
       isAvailable: false,
-      pdfUrl: 'https://example.com/carpentry.pdf',
+      pdfUrl: 'https://vishnumeta.com/carpentry.pdf',
     ),
     UnitItem(
       title: 'MODULE II: Plumbing',
       isAvailable: false,
-      pdfUrl: 'https://example.com/plumbing.pdf',
+      pdfUrl: 'https://vishnumeta.com/plumbing.pdf',
     ),
     UnitItem(
       title: 'MODULE III: Foundry',
       isAvailable: false,
-      pdfUrl: 'https://example.com/foundry.pdf',
+      pdfUrl: 'https://vishnumeta.com/foundry.pdf',
     ),
     UnitItem(
       title: 'MODULE IV: Metal Sheet Work',
       isAvailable: false,
-      pdfUrl: 'https://example.com/metal_sheet.pdf',
+      pdfUrl: 'https://vishnumeta.com/metal_sheet.pdf',
     ),
     UnitItem(
       title: 'MODULE V: Electrical',
       isAvailable: false,
-      pdfUrl: 'https://example.com/electrical.pdf',
+      pdfUrl: 'https://vishnumeta.com/electrical.pdf',
     ),
     UnitItem(
       title: 'MODULE VI: Electronics',
       isAvailable: false,
-      pdfUrl: 'https://example.com/electronics.pdf',
+      pdfUrl: 'https://vishnumeta.com/electronics.pdf',
     ),
   ];
 

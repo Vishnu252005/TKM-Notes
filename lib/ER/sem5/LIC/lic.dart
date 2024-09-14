@@ -114,9 +114,9 @@ class Lic extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => ProfilePage(
                       fullName: fullName,
-                      branch: 'Computer Science', // Example branch
-                      year: 'Third Year', // Example year
-                      semester: 'Fifth Semester', // Example semester
+                      branch: 'Computer Science', // vishnumeta branch
+                      year: 'Third Year', // vishnumeta year
+                      semester: 'Fifth Semester', // vishnumeta semester
                     ), // Redirects to ProfilePage
                   ),
                 );

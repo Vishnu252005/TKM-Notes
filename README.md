@@ -23,8 +23,8 @@ keytool -delete -alias upload -keystore $env:USERPROFILE\upload-keystore.jks
 // to delete the existing keynotes 
 
 keytool -genkey -v -keystore $env:USERPROFILE\upload-keystore.jks `
->>         -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 `
->>         -alias upload
+        -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 `
+         -alias upload
 // to create new one .
 // passwd in android/key.properties
 
