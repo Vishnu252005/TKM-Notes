@@ -27,7 +27,7 @@ class Ma extends StatelessWidget {
       pdfUrl: 'url_to_pdf_4',
     ),
     UnitItem(
-      title: 'MODULE V: vishnumetas and Case Studies' ,
+      title: 'MODULE V: examples and Case Studies' ,
       isAvailable: false,
       pdfUrl: 'url_to_pdf_5',
     ),
@@ -118,9 +118,9 @@ class Ma extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => ProfilePage(
                       fullName: fullName,
-                      branch: 'Computer Science', // vishnumeta branch
-                      year: 'Third Year', // vishnumeta year
-                      semester: 'Fifth Semester', // vishnumeta semester
+                      branch: 'Computer Science', // example branch
+                      year: 'Third Year', // example year
+                      semester: 'Fifth Semester', // example semester
                     ), // Redirects to ProfilePage
                   ),
                 );

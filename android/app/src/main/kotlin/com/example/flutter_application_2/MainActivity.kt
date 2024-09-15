@@ -1,4 +1,4 @@
-package com.vishnumeta.Nexia
+package com.example.Nexia
 
 import io.flutter.embedding.android.FlutterActivity
 

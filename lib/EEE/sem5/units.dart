@@ -111,9 +111,9 @@ class ComputerNetworksPage extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => ProfilePage(
                       fullName: fullName,
-                      branch: 'Computer Science', // vishnumeta branch
-                      year: 'Third Year', // vishnumeta year
-                      semester: 'Fifth Semester', // vishnumeta semester
+                      branch: 'Computer Science', // example branch
+                      year: 'Third Year', // example year
+                      semester: 'Fifth Semester', // example semester
                     ), // Redirects to ProfilePage
                   ),
                 );

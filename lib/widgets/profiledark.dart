@@ -209,11 +209,15 @@ class _ProfilePageState extends State<ProfilePage> {
                   onPressed: () async {
                     final url = "https://forms.gle/ze5DsM2hZj98ubWw9";
                     if (await canLaunch(url)) {
-                      await launch(url);
+                      await launch(url, forceSafariVC: false, universalLinksOnly: false);
                     } else {
                       throw 'Could not launch $url';
                     }
                   },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    minimumSize: Size(double.infinity, 50),
+                  ),
                 ),
                 SizedBox(height: 20),
                 Text(
