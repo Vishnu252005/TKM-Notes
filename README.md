@@ -33,3 +33,24 @@ keytool -list -v -keystore android/app/upload-keystore.jks
 
 //when running on google play console create new relaease or new signing key  then upload the 
 // apk or aab
+
+if having issue or error like this 
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:signReleaseBundle'.
+> A failure occurred while executing com.android.build.gradle.internal.tasks.FinalizeBundleTask$BundleToolRunnable
+   > Failed to read key upload from store "C:\Users\vishn\OneDrive\Desktop\note\project_name\android\app\upload-keystore.jks": Cannot recover key
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 1m 40s
+Running Gradle task 'bundleRelease'...                            101.2s
+Gradle task bundleRelease failed with exit code 1 
+
+
+try to check the key.properties name is correct and password , just change the gradle version to 7.5 and run then a error comes . then change the gradle version to previous version it will work . also check the build gradle well
