@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_declarations
+// ignore_for_file: prefer_const_declarations, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -33,10 +33,15 @@ class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
-void _launchURL(String url) async {
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
+
+Future<void> _launchURL(url) async { //you can also just use "void" or nothing at all - they all seem to work in this case
+  if (!await launchUrl(url)) {
+    throw Exception('Could not launch $url');
+  }
+}
+
+Future<void> launchUrlStart({required String url}) async {
+  if (!await launchUrl(Uri.parse(url),mode: LaunchMode.externalApplication)) {
     throw 'Could not launch $url';
   }
 }
@@ -152,7 +157,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () => _launchURL('https://www.instagram.com/_vishnu._.25/'),
+                  onTap: () => launchUrlStart( url :'https://www.instagram.com/_vishnu._.25/'),
                   child: Text(
                     'Vishnu S',
                     style: TextStyle(color: _isDarkMode ? Colors.blue : Colors.blue),
@@ -206,14 +211,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     'Submit Materials',
                     style: TextStyle(color: Colors.white),
                   ),
-                  onPressed: () async {
-                    final url = "https://forms.gle/ze5DsM2hZj98ubWw9";
-                    if (await canLaunch(url)) {
-                      await launch(url, forceSafariVC: false, universalLinksOnly: false);
-                    } else {
-                      throw 'Could not launch $url';
-                    }
-                  },
+                  onPressed:  () => launchUrlStart( url :'https://forms.gle/ze5DsM2hZj98ubWw9'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
                     minimumSize: Size(double.infinity, 50),
@@ -236,14 +234,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(height: 15),
                 ElevatedButton(
                   child: Text('Rate Us Now' , style: TextStyle(  color:  Colors.white ),),
-                  onPressed: () async {
-                    final url = "hhttps://forms.gle/WnnFQRTkWjYHxfAv5";
-                    if (await canLaunch(url)) {
-                      await launch(url);
-                    } else {
-                      throw 'Could not launch $url';
-                    }
-                  },
+                  onPressed:  () => launchUrlStart( url :'https://forms.gle/WnnFQRTkWjYHxfAv5'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
                     minimumSize: Size(double.infinity, 50),
@@ -366,15 +357,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 leading: Icon(Icons.language, color: _isDarkMode ? Colors.white : Colors.black),
                 title: Text('Website', style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black)),
                 trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.black),
-                
                 onTap: () async {
-                    final url = "https://forms.gle/ze5DsM2hZj98ubWw9";
-                    if (await canLaunch(url)) {
-                      await launch(url);
-                    } else {
-                      throw 'Could not launch $url';
-                    }
-                  },
+                       _launchURL(Uri.https('nexianotes.vercel.app', ''));
+                 },
+                
                 ),
              
               ListTile(
@@ -422,7 +408,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
               ),
               SizedBox(height: 8),
-              Text('v1.1.7', style: TextStyle(color: Colors.grey)),
+              Text('v1.0.0', style: TextStyle(color: Colors.grey)),
               SizedBox(height: 16),
             ],
           ),

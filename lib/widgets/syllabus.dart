@@ -28,7 +28,7 @@ class SyllabusData {
       'EEE': {
         'Sem1': 'https://vishnumeta.com/eee_sem1.pdf',
         'Sem2': 'https://vishnumeta.com/eee_sem2.pdf',
-        'Sem3': 'https://drive.google.com/uc?export=download&id=1d8eGis1Pg92-Hcrey5G1ftEBHnbpa23_',
+        'Sem3': 'https://vishnumeta.com/eee_sem3.pdf',
         'Sem4': 'https://vishnumeta.com/eee_sem4.pdf',
         'Sem5': 'https://vishnumeta.com/eee_sem5.pdf',
         'Sem6': 'https://vishnumeta.com/eee_sem6.pdf',
