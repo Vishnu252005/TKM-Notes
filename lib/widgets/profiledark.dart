@@ -308,7 +308,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       leading: Icon(Icons.book, color: _isDarkMode ? Colors.white : Colors.black),
                       title: Text('Syllabus', style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black)),
                       trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.black),
-                      onTap: _launchPDFViewer,
+                      // onTap: _launchPDFViewer,
                     ),
                     // navigate to syllabus page
                     

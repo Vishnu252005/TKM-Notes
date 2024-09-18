@@ -18,6 +18,7 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
+To update the version change the version of the pubsoec.yaml to +next number 
 
 keytool -delete -alias upload -keystore $env:USERPROFILE\upload-keystore.jks  
 // to delete the existing keynotes 
@@ -30,6 +31,12 @@ keytool -genkey -v -keystore $env:USERPROFILE\upload-keystore.jks `
 
 keytool -list -v -keystore android/app/upload-keystore.jks
 // to check the id of keystore.jks
+
+// if there is an error like this Your Android App Bundle is signed with the wrong key. Ensure that your App Bundle is signed with the correct signing key and try again. Your App Bundle is expected to be signed with the certificate with fingerprint:
+SHA1: 4A:BE:8F:EE:0E:65:B6:47:2A:9A:3E:26:25:C0:91:8D:BC:47:8B:E2
+but the certificate used to sign the App Bundle you uploaded has fingerprint:
+SHA1: A0:6B:1D:A6:3C:04:12:F2:CE:94:AC:62:DF:22:DD:C2:84:F3:0D:E9
+ -- just remove the signingConfig = signingConfigs.release from build.gradle
 
 //when running on google play console create new relaease or new signing key  then upload the 
 // apk or aab
