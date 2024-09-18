@@ -15,7 +15,7 @@ The following table outlines the versions of the Nexia app that are currently su
 To report a vulnerability in the Nexia app, please follow the steps below:
 
 1. **Where to Report:**  
-   Send all vulnerability reports via email to [security@nexiaapp.com] (example email). Include a detailed description of the vulnerability, the app version, and steps to reproduce the issue.
+   Send all vulnerability reports via email to [nexia2025@gmail.com]. Include a detailed description of the vulnerability, the app version, and steps to reproduce the issue.
 
 2. **Response Time:**  
    After submitting a report, you can expect an initial acknowledgment within **2 business days**. A follow-up on the status of the vulnerability will be provided within **10 business days**.
