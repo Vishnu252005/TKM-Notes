@@ -25,8 +25,8 @@ class _FepsState extends State<Feps> {
   final List<UnitItem> units = [
     UnitItem(
       title: 'MODULE I: Power generation and tariff',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_1',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1yR6ES5wkzb1YTMjpJOBs6G7DNuQXS0yU',
     ),
     UnitItem(
       title: 'MODULE II: Power transmission system',
@@ -40,13 +40,13 @@ class _FepsState extends State<Feps> {
     ),
     UnitItem(
       title: 'MODULE IV: Switchgear fundamentals',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_4',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1st799AmLoKCrXDSnFC3j8uyxsMLXeBl9',
     ),
     UnitItem(
       title: 'MODULE V: Distribution systems',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_5',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=13VEg-lxjlN6vowBzRxRPmHx05_HAg3Po',
     ),
   ];
 
