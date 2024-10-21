@@ -25,29 +25,29 @@ class _DeldState extends State<Deld> {
 
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: Number Systems and Logic Gate fundamentals',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_1',
+      title: 'MODULE I: Number systems and logic gate fundamentals',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1HzR5qxu9F-gBS6OVjwMo8AuTHnxvqhVF',
     ),
     UnitItem(
-      title: 'MODULE II: Boolean Algebra and Combinational Circuits Design',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_2',
+      title: 'MODULE II: Boolean algebra and combinational circuits design',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1dJcLzwxoLXXg0HSkTcRWBWGF1E_O5uS4',
     ),
     UnitItem(
-      title: 'MODULE III: Digital Logic Components and Verilog Programming',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_3',
+      title: 'MODULE III: Digital logic components and verilog programming',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=17HZsl2LepyhdBTX_m9mNPsu1sgJO9as-',
     ),
     UnitItem(
-      title: 'MODULE IV: Flip-Flops, Registers, and Counters: Sequential Logic Design',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_4',
+      title: 'MODULE IV: Flip-flops, Registers and counters: sequential logic design',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1oMXZbFZD9LsFCRXRqMP9i-ytWpuiUVlw',
     ),
     UnitItem(
-      title: 'MODULE V: State Machines, D/A and A/D Converters, Programmable Logic Devices',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_5',
+      title: 'MODULE V: State machines, D/A and A/D convertors, programmable logic devices',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1BxnLT5ac4wXIvbUZY6MhFJjNl83gLqhZ',
     ),
   ];
 

@@ -27,27 +27,27 @@ class _CtState extends State<Ct> {
     UnitItem(
       title: 'MODULE I: Steady state analysis using circuit theorems',
       isAvailable: false,
-      pdfUrl: 'url_to_pdf_1',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=12pyZgA-MqLjS3vlQtrEt6kieNhyYwMMl',
     ),
     UnitItem(
       title: 'MODULE II: Transient analysis of circuits in s-domain',
       isAvailable: false,
-      pdfUrl: 'url_to_pdf_2',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1dwHdNoKq1-JRrrPaKPlfAhCydL9D8-ii',
     ),
     UnitItem(
       title: 'MODULE III: Analysis of coupled circuits',
       isAvailable: false,
-      pdfUrl: 'url_to_pdf_3',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1wmqEioL7fgPD_6H0htQxp2jB2esJdbo-',
     ),
     UnitItem(
       title: 'MODULE IV: Resonance and three phase networks',
       isAvailable: false,
-      pdfUrl: 'url_to_pdf_4',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1hBe2x1_fB-2ioGGv_-Ha0JrA6-_Vt4zZ',
     ),
     UnitItem(
       title: 'MODULE V: Two port networks',
       isAvailable: false,
-      pdfUrl: 'url_to_pdf_5',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=19-CbRRq00HQc7_aqB_WHqJxRk9qqDE6H',
     ),
   ];
 

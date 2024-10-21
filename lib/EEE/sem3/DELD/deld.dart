@@ -25,28 +25,28 @@ class _DeldState extends State<Deld> {
   final List<UnitItem> units = [
     UnitItem(
       title: 'MODULE I: Number systems and logic gate fundamentals',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_1',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1HzR5qxu9F-gBS6OVjwMo8AuTHnxvqhVF',
     ),
     UnitItem(
       title: 'MODULE II: Boolean algebra and combinational circuits design',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_2',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1dJcLzwxoLXXg0HSkTcRWBWGF1E_O5uS4',
     ),
     UnitItem(
       title: 'MODULE III: Digital logic components and verilog programming',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_3',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=17HZsl2LepyhdBTX_m9mNPsu1sgJO9as-',
     ),
     UnitItem(
       title: 'MODULE IV: Flip-flops, Registers and counters: sequential logic design',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_4',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1oMXZbFZD9LsFCRXRqMP9i-ytWpuiUVlw',
     ),
     UnitItem(
       title: 'MODULE V: State machines, D/A and A/D convertors, programmable logic devices',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_5',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1BxnLT5ac4wXIvbUZY6MhFJjNl83gLqhZ',
     ),
   ];
 

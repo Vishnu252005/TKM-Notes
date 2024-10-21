@@ -36,20 +36,19 @@ class _LspeState extends State<Lspe1> {
     ),
     UnitItem(
       title: 'MODULE III: GROUP DYNAMICS AND LEADERSHIP',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_3',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1ECvbwoUwcHkd_hg7uQt3CfRiUxY0tbLq',
     ),
     UnitItem(
       title: 'MODULE IV: HUMAN VALUES',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_4',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1oTwHBpddjpqUsJm_dDa5Nl4P-H5AeUj9',
     ),
     UnitItem(
       title: 'MODULE V: RESPONSIBILITIES & RIGHTS',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_5',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1oTwHBpddjpqUsJm_dDa5Nl4P-H5AeUj9',
     ),
-  
   ];
 
   @override
