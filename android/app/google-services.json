@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "156469299548",
+    "project_id": "nexia-notes-35fd3",
+    "storage_bucket": "nexia-notes-35fd3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:156469299548:android:cdfa7f5dded4a646d35999",
+        "android_client_info": {
+          "package_name": "com.vishnumeta.Nexia"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ_bE-KOt4LR9HVeFsh3cCQKc2lAUCSGg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
