@@ -1,4 +1,6 @@
+import 'package:Nexia/widgets/adpage.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'CHEMICAL/sem1/chemical_sem1_screen.dart';
 import 'CHEMICAL/sem2/chemical_sem2_screen.dart';
 import 'CHEMICAL/sem3/chemical_sem3_screen.dart';
@@ -65,6 +67,8 @@ import 'MECH/sem8/mech_sem8_screen.dart';
 import 'widgets/signup.dart'; 
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   runApp(const MyApp());
 }
 
@@ -87,13 +91,15 @@ class MyApp extends StatelessWidget {
           switch (settings.name) {
             case 'EEESem1':
               return MaterialPageRoute(
-                builder: (context) => EEESem1Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
+          builder: (context) => BasePage(   // Wrap the screen with BasePage
+            child: EEESem1Screen(
+              fullName: args['fullName']!,
+              branch: args['branch']!,
+              year: args['year']!,
+              semester: args['semester']!,
+            ),
+          ),
+        );
             case 'EEESem2':
               return MaterialPageRoute(
                 builder: (context) => EEESem2Screen(
@@ -623,6 +629,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+
 class UndefinedRouteScreen extends StatelessWidget {
   final String? name;
 
@@ -634,6 +641,54 @@ class UndefinedRouteScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('Undefined Route')),
       body: Center(
         child: Text('No route defined for ${name ?? 'unknown route'}'),
+      ),
+    );
+  }
+}
+
+
+
+class MyWidget extends StatefulWidget {
+  @override
+  _MyWidgetState createState() => _MyWidgetState();
+}
+
+class _MyWidgetState extends State<MyWidget> {
+  late BannerAd _bannerAd;
+
+  @override
+  void initState() {
+    super.initState();
+    _bannerAd = BannerAd(
+      adUnitId: 'ca-app-pub-1850470420397635~7538113318',
+      size: AdSize.banner,
+      request: AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          print('Ad loaded!');
+        },
+        onAdFailedToLoad: (ad, error) {
+          print('Ad failed to load: $error');
+        },
+        onAdOpened: (_) {
+          print('Ad opened!');
+        },
+        onAdClosed: (_) {
+          print('Ad closed!');
+        },
+      ),
+    );
+    _bannerAd.load();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      bottomNavigationBar: Container(
+        child: AdWidget(
+          ad: _bannerAd..load(),
+          key: UniqueKey(),
+          ),
       ),
     );
   }
