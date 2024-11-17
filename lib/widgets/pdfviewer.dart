@@ -154,7 +154,7 @@ class _PDFViewerPageState extends State<PDFViewerPage> {
   // Load the interstitial ad
   void _loadInterstitialAd() {
     InterstitialAd.load(
-      adUnitId: 'ca-app-pub-3940256099942544/1033173712', // Replace with your Interstitial Ad unit ID
+      adUnitId: 'ca-app-pub-1850470420397635/7479635461', // Replace with your Interstitial Ad unit ID
       request: AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {

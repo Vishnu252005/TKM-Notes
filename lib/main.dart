@@ -89,533 +89,635 @@ class MyApp extends StatelessWidget {
 
         if (args != null) {
           switch (settings.name) {
-            case 'EEESem1':
-              return MaterialPageRoute(
-          builder: (context) => BasePage(   // Wrap the screen with BasePage
-            child: EEESem1Screen(
-              fullName: args['fullName']!,
-              branch: args['branch']!,
-              year: args['year']!,
-              semester: args['semester']!,
-            ),
-          ),
-        );
-            case 'EEESem2':
-              return MaterialPageRoute(
-                builder: (context) => EEESem2Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'EEESem3':
-              return MaterialPageRoute(
-                builder: (context) => EEESem3Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'EEESem4':
-              return MaterialPageRoute(
-                builder: (context) => EEESem4Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'EEESem5':
-              return MaterialPageRoute(
-                builder: (context) => EEESem5Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'EEESem6':
-              return MaterialPageRoute(
-                builder: (context) => EEESem6Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'EEESem7': 
-              return MaterialPageRoute(
-                builder: (context) => EEESem7Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'EEESem8':
-              return MaterialPageRoute(
-                builder: (context) => EEESem8Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            // Add similar cases for other branches and semesters
-
-            // CSE
             
-            case 'CSESem1':
-              return MaterialPageRoute(
-                builder: (context) => CSESem1Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'CSESem2':
-              return MaterialPageRoute(
-                builder: (context) => CSESem2Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'CSESem3':
-              return MaterialPageRoute(
-                builder: (context) => CSESem3Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'CSESem4':
-              return MaterialPageRoute(
-                builder: (context) => CSESem4Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'CSESem5':
-              return MaterialPageRoute(
-                builder: (context) => CSESem5Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'CSESem6':
-              return MaterialPageRoute(
-                builder: (context) => CSESem6Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'CSESem7':
-              return MaterialPageRoute(
-                builder: (context) => CSESem7Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'CSESem8':
-              return MaterialPageRoute(
-                builder: (context) => CSESem8Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
+  // EEE
+  case 'EEESem1':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: EEESem1Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'EEESem2':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: EEESem2Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'EEESem3':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: EEESem3Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'EEESem4':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: EEESem4Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'EEESem5':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: EEESem5Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'EEESem6':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: EEESem6Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'EEESem7':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: EEESem7Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'EEESem8':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: EEESem8Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
 
-            // // MECH
-            case 'MECHSem1':
-              return MaterialPageRoute(
-                builder: (context) => MECHSem1Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'MECHSem2':
-              return MaterialPageRoute(
-                builder: (context) => MECHSem2Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'MECHSem3':
-              return MaterialPageRoute(
-                builder: (context) => MECHSem3Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'MECHSem4':
-              return MaterialPageRoute(
-                builder: (context) => MECHSem4Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'MECHSem5':
-              return MaterialPageRoute(
-                builder: (context) => MECHSem5Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'MECHSem6':
-              return MaterialPageRoute(
-                builder: (context) => MECHSem6Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
+  // CSE
+  case 'CSESem1':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: CSESem1Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'CSESem2':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: CSESem2Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'CSESem3':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: CSESem3Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'CSESem4':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: CSESem4Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'CSESem5':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: CSESem5Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'CSESem6':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: CSESem6Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'CSESem7':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: CSESem7Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'CSESem8':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: CSESem8Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
 
-            case 'MECHSem7':
-              return MaterialPageRoute(
-                builder: (context) => MECHSem7Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
+  // MECH
+  case 'MECHSem1':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: MECHSem1Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'MECHSem2':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: MECHSem2Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'MECHSem3':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: MECHSem3Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'MECHSem4':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: MECHSem4Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'MECHSem5':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: MECHSem5Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'MECHSem6':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: MECHSem6Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'MECHSem7':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: MECHSem7Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'MECHSem8':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: MECHSem8Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
 
-            case 'MECHSem8':
-              return MaterialPageRoute(
-                builder: (context) => MECHSem8Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
+  // CIVIL
+  case 'CIVILSem1':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: CIVILSem1Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'CIVILSem2':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: CIVILSem2Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'CIVILSem3':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: CIVILSem3Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'CIVILSem4':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: CIVILSem4Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'CIVILSem5':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: CIVILSem5Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'CIVILSem6':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: CIVILSem6Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'CIVILSem7':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: CIVILSem7Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'CIVILSem8':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: CIVILSem8Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
 
-            // // CIVIL
-            case 'CIVILSem1':
-              return MaterialPageRoute(
-                builder: (context) => CIVILSem1Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'CIVILSem2':
-              return MaterialPageRoute(
-                builder: (context) => CIVILSem2Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'CIVILSem3':
-              return MaterialPageRoute(
-                builder: (context) => CIVILSem3Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'CIVILSem4':
-              return MaterialPageRoute(
-                builder: (context) => CIVILSem4Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'CIVILSem5':
-              return MaterialPageRoute(
-                builder: (context) => CIVILSem5Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'CIVILSem6':
-              return MaterialPageRoute(
-                builder: (context) => CIVILSem6Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'CIVILSem7':
-              return MaterialPageRoute(
-                builder: (context) => CIVILSem7Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
+  // EC
+  case 'ECSem1':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: ECSem1Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'ECSem2':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: ECSem2Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'ECSem3':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: ECSem3Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'ECSem4':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: ECSem4Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'ECSem5':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: ECSem5Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'ECSem6':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: ECSem6Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'ECSem7':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: ECSem7Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'ECSem8':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: ECSem8Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  // ER
+  case 'ERSem1':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: ERSem1Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'ERSem2':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: ERSem2Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'ERSem3':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: ERSem3Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'ERSem4':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: ERSem4Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'ERSem5':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: ERSem5Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'ERSem6':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: ERSem6Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'ERSem7':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: ERSem7Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'ERSem8':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: ERSem8Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
 
-            case 'CIVILSem8':
-              return MaterialPageRoute(
-                builder: (context) => CIVILSem8Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            // EC
-            case 'ECSem1':
-              return MaterialPageRoute(
-                builder: (context) => ECSem1Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'ECSem2':
-              return MaterialPageRoute(
-                builder: (context) => ECSem2Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'ECSem3':
-              return MaterialPageRoute(
-                builder: (context) => ECSem3Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'ECSem4':
-              return MaterialPageRoute(
-                builder: (context) => ECSem4Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-
-            case 'ECSem5':
-              return MaterialPageRoute(
-                builder: (context) => ECSem5Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-
-            case 'ECSem6':
-              return MaterialPageRoute(
-                builder: (context) => ECSem6Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'ECSem7':
-              return MaterialPageRoute(
-                builder: (context) => ECSem7Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-
-            case 'ECSem8':  
-              return MaterialPageRoute(
-                builder: (context) => ECSem8Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-
-            // ER
-            case 'ERSem1':
-              return MaterialPageRoute(
-                builder: (context) => ERSem1Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'ERSem2':
-              return MaterialPageRoute(
-                builder: (context) => ERSem2Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'ERSem3':
-              return MaterialPageRoute(
-                builder: (context) => ERSem3Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'ERSem4':
-              return MaterialPageRoute(
-                builder: (context) => ERSem4Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'ERSem5':
-              return MaterialPageRoute(
-                builder: (context) => ERSem5Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'ERSem6':
-              return MaterialPageRoute(
-                builder: (context) => ERSem6Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'ERSem7':
-              return MaterialPageRoute(
-                builder: (context) => ERSem7Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-
-            case 'ERSem8':
-              return MaterialPageRoute(
-                builder: (context) => ERSem8Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            // // CHEMICAL
-            case 'CHEMICALSem1':
-              return MaterialPageRoute(
-                builder: (context) => CHEMICALSem1Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'CHEMICALSem2':
-              return MaterialPageRoute(
-                builder: (context) => CHEMICALSem2Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'CHEMICALSem3':
-              return MaterialPageRoute(
-                builder: (context) => CHEMICALSem3Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'CHEMICALSem4':
-              return MaterialPageRoute(
-                builder: (context) => CHEMICALSem4Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'CHEMICALSem5':
-              return MaterialPageRoute(
-                builder: (context) => CHEMICALSem5Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-            case 'CHEMICALSem6':
-              return MaterialPageRoute(
-                builder: (context) => CHEMICALSem6Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-
-            case 'CHEMICALSem7':
-              return MaterialPageRoute(
-                builder: (context) => CHEMICALSem7Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
-
-            case 'CHEMICALSem8':
-              return MaterialPageRoute(
-                builder: (context) => CHEMICALSem8Screen(
-                  fullName: args['fullName']!,
-                  branch: args['branch']!,
-                  year: args['year']!,
-                  semester: args['semester']!,
-                ),
-              );
+  // CHEMICAL
+  case 'CHEMICALSem1':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: CHEMICALSem1Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'CHEMICALSem2':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: CHEMICALSem2Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'CHEMICALSem3':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: CHEMICALSem3Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'CHEMICALSem4':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: CHEMICALSem4Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'CHEMICALSem5':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: CHEMICALSem5Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'CHEMICALSem6':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: CHEMICALSem6Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'CHEMICALSem7':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: CHEMICALSem7Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
+  case 'CHEMICALSem8':
+    return MaterialPageRoute(
+      builder: (context) => BasePage(
+        child: CHEMICALSem8Screen(
+          fullName: args['fullName']!,
+          branch: args['branch']!,
+          year: args['year']!,
+          semester: args['semester']!,
+        ),
+      ),
+    );
             default:
               return null;
           }

@@ -85,7 +85,7 @@ class _SmState extends State<Sm1> {
 
   void _loadBannerAd() {
     _bannerAd = BannerAd(
-      adUnitId: 'ca-app-pub-3940256099942544/6300978111', // Replace with your Ad Unit ID
+      adUnitId: 'ca-app-pub-1850470420397635/3023285635', // Replace with your Ad Unit ID
       size: AdSize.banner,
       request: AdRequest(),
       listener: BannerAdListener(
