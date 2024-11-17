@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:Nexia/widgets/adpage.dart';
 import 'package:flutter/material.dart';
 import 'package:Nexia/widgets/calcu.dart';
 import 'package:Nexia/widgets/conv.dart';
@@ -88,7 +89,12 @@ import '../MECH/sem8/mech_sem8_screen.dart';
 // Replace with actual path
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+
+
+
+// Ensure this is the correct import for BasePage
 
 
 
@@ -102,37 +108,79 @@ class PDFViewerPage extends StatefulWidget {
   _PDFViewerPageState createState() => _PDFViewerPageState();
 }
 
-class _PDFViewerPageState extends State<PDFViewerPage> with SingleTickerProviderStateMixin {
+class _PDFViewerPageState extends State<PDFViewerPage> {
   String? localFilePath;
   bool _isLoading = true;
   bool _isDarkMode = true;
-  bool _isExpanded = false;
-  late AnimationController _controller;
-  late Animation<double> _expandAnimation;
   int _currentPage = 0;
   int _totalPages = 0;
+
+  late BannerAd _bannerAd;
+  bool _isBannerAdLoaded = false;
+
+  late InterstitialAd _interstitialAd;
+  bool _isInterstitialAdReady = false;
 
   @override
   void initState() {
     super.initState();
     _loadThemePreference();
     _downloadFile(widget.pdfUrl);
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-    _expandAnimation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
+    // _loadBannerAd();
+    _loadInterstitialAd();
+  }
+
+  // Load the banner ad
+  // void _loadBannerAd() {
+  //   _bannerAd = BannerAd(
+  //     adUnitId: 'ca-app-pub-3940256099942544/9214589741', // Replace with your Banner Ad unit ID
+  //     size: AdSize.banner,
+  //     request: AdRequest(),
+  //     listener: BannerAdListener(
+  //       onAdLoaded: (_) {
+  //         setState(() {
+  //           _isBannerAdLoaded = true;
+  //         });
+  //       },
+  //       onAdFailedToLoad: (ad, error) {
+  //         print('Banner ad failed to load: $error');
+  //         ad.dispose();
+  //       },
+  //     ),
+  //   );
+  //   _bannerAd.load();
+  // }
+
+  // Load the interstitial ad
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: 'ca-app-pub-3940256099942544/1033173712', // Replace with your Interstitial Ad unit ID
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          setState(() {
+            _interstitialAd = ad;
+            _isInterstitialAdReady = true;
+            _showInterstitialAd(); // Show ad when loaded
+          });
+        },
+        onAdFailedToLoad: (error) {
+          print('Interstitial ad failed to load: $error');
+        },
+      ),
     );
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  // Show the interstitial ad
+  void _showInterstitialAd() {
+    if (_isInterstitialAdReady) {
+      _interstitialAd.show();
+    } else {
+      print("Interstitial ad is not ready.");
+    }
   }
 
+  // Load theme preference from SharedPreferences
   Future<void> _loadThemePreference() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -140,18 +188,7 @@ class _PDFViewerPageState extends State<PDFViewerPage> with SingleTickerProvider
     });
   }
 
-  Future<void> _saveThemePreference(bool isDarkMode) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isDarkMode', isDarkMode);
-  }
-
-  void _toggleTheme() {
-    setState(() {
-      _isDarkMode = !_isDarkMode;
-      _saveThemePreference(_isDarkMode);
-    });
-  }
-
+  // Download the PDF file from the URL
   Future<void> _downloadFile(String url) async {
     setState(() {
       _isLoading = true;
@@ -179,6 +216,16 @@ class _PDFViewerPageState extends State<PDFViewerPage> with SingleTickerProvider
     }
   }
 
+  // Toggle the theme (light/dark mode)
+  void _toggleTheme() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = !_isDarkMode;
+      prefs.setBool('isDarkMode', _isDarkMode);
+    });
+  }
+
+  // Show an error dialog
   void _showErrorDialog(String message) {
     showDialog(
       context: context,
@@ -199,223 +246,87 @@ class _PDFViewerPageState extends State<PDFViewerPage> with SingleTickerProvider
     );
   }
 
-  void _toggleFab() {
-    setState(() {
-      _isExpanded = !_isExpanded;
-      if (_isExpanded) {
-        _controller.forward();
-      } else {
-        _controller.reverse();
-      }
-    });
-  }
-
-  void _openPage(Widget page) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => page),
-    );
+  @override
+  void dispose() {
+    // Dispose of ads to prevent memory leaks
+    if (_isInterstitialAdReady) {
+      _interstitialAd.dispose();
+    }
+    if (_isBannerAdLoaded) {
+      _bannerAd.dispose();
+    }
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          widget.title,
-          style: TextStyle(color: Colors.white, fontSize: 22),
-        ),
-        backgroundColor: _isDarkMode ? Colors.black : Colors.blue[700],
-        actions: [
-          IconButton(
-            icon: Icon(_isDarkMode ? Icons.dark_mode : Icons.light_mode, color: Colors.white),
-            onPressed: _toggleTheme,
+    return BasePage(
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
           ),
-        ],
-      ),
-      body: Stack(
-        children: [
-          _isLoading
-              ? Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      _isDarkMode ? Colors.blue : Colors.blue,
+          title: Text(
+            widget.title,
+            style: TextStyle(color: Colors.white, fontSize: 22),
+          ),
+          backgroundColor: _isDarkMode ? Colors.black : Colors.blue[700],
+          actions: [
+            IconButton(
+              icon: Icon(
+                _isDarkMode ? Icons.dark_mode : Icons.light_mode,
+                color: Colors.white,
+              ),
+              onPressed: _toggleTheme,  // This is where the theme toggle happens
+            ),
+          ],
+        ),
+        body: Stack(
+          children: [
+            _isLoading
+                ? Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        _isDarkMode ? Colors.blue : Colors.blue,
+                      ),
                     ),
-                  ),
-                )
-              : localFilePath == null
-                  ? Center(child: Text('Error loading PDF'))
-                  : PDFView(
-                      filePath: localFilePath!,
-                      enableSwipe: true,
-                      swipeHorizontal: false,
-                      autoSpacing: false,
-                      pageFling: false,
-                      onRender: (pages) {
-                        setState(() {
-                          _totalPages = pages!;
-                        });
-                      },
-                      onPageChanged: (int? page, int? total) {
-                        setState(() {
-                          _currentPage = page!;
-                        });
-                      },
-                      onError: (error) {
-                        _showErrorDialog('Error loading PDF: $error');
-                      },
-                      onPageError: (page, error) {
-                        _showErrorDialog('Page $page error: $error');
-                      },
-                    ),
-          _buildExpandableFab(),
-          Positioned(
-            top: 0,
-            right: 0,
-            bottom: 0,
-            child: _buildDragHandle(),
-          ),
-          Positioned(
-            bottom: 16,
-            left: 16,
-            child: _buildPageInfo(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildExpandableFab() {
-    return AnimatedPositioned(
-      duration: Duration(milliseconds: 300),
-      right: 16,
-      bottom: _isExpanded ? 180 : 16,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          SizeTransition(
-            sizeFactor: _expandAnimation,
-            child: Column(
-              children: [
-                _buildToolButton(
-                  Icons.calculate,
-                  'Number\nConverter',
-                  () => _openPage(NumberConverter()),
+                  )
+                : localFilePath == null
+                    ? Center(child: Text('Error loading PDF'))
+                    : PDFView(
+                        filePath: localFilePath!,
+                        enableSwipe: true,
+                        swipeHorizontal: false,
+                        autoSpacing: false,
+                        pageFling: false,
+                        onRender: (pages) {
+                          setState(() {
+                            _totalPages = pages!;
+                          });
+                        },
+                        onPageChanged: (int? page, int? total) {
+                          setState(() {
+                            _currentPage = page!;
+                          });
+                        },
+                        onError: (error) {
+                          _showErrorDialog('Error loading PDF: $error');
+                        },
+                        onPageError: (page, error) {
+                          _showErrorDialog('Page $page error: $error');
+                        },
+                      ),
+            if (_isBannerAdLoaded)
+              Positioned(
+                bottom: 0,
+                child: Container(
+                  width: _bannerAd.size.width.toDouble(),
+                  height: _bannerAd.size.height.toDouble(),
+                  child: AdWidget(ad: _bannerAd),
                 ),
-                SizedBox(height: 16),
-                _buildToolButton(
-                  Icons.show_chart,
-                  'Graph\nPlotter',
-                  () => _openPage(GraphPlotter()),
-                ),
-                SizedBox(height: 16),
-                _buildToolButton(
-                  Icons.school,
-                  'SGPA\nCalculator',
-                  () => _openPage(SGPAConverterPage()),
-                ),
-                SizedBox(height: 16),
-                _buildToolButton(
-                  Icons.school,
-                  'Scientific\nCalculator',
-                  () => _openPage(ScientificCalculator()),
-                ),
-                SizedBox(height: 16),
-              ],
-            ),
-          ),
-          FloatingActionButton(
-            onPressed: _toggleFab,
-            child: AnimatedRotation(
-              turns: _isExpanded ? 0.125 : 0,
-              duration: Duration(milliseconds: 300),
-              child: Icon(Icons.add),
-            ),
-            backgroundColor: Colors.blue,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildToolButton(IconData icon, String label, VoidCallback onPressed) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Column(
-        children: [
-          Container(
-            width: 56,
-            height: 56,
-            decoration: BoxDecoration(
-              color: Colors.blue,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black26,
-                  offset: Offset(0, 2),
-                  blurRadius: 6.0,
-                ),
-              ],
-            ),
-            child: Icon(icon, color: Colors.white),
-          ),
-          SizedBox(height: 4),
-          Text(
-            label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: _isDarkMode ? Colors.white : Colors.black87,
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDragHandle() {
-    return GestureDetector(
-      onHorizontalDragUpdate: (details) {
-        if (details.delta.dx > 0) {
-          _toggleFab();
-        }
-        
-      },
-      child: Container(
-        width: 20,
-        color: Colors.transparent,
-        child: Center(
-          child: Container(
-            width: 4,
-            height: 50,
-            decoration: BoxDecoration(
-              color: _isDarkMode ? Colors.white.withOpacity(0.5) : Colors.black.withOpacity(0.5),
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPageInfo() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: _isDarkMode ? Colors.black.withOpacity(0.7) : Colors.white.withOpacity(0.7),
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Text(
-        'Page ${_currentPage + 1} of $_totalPages',
-        style: TextStyle(
-          color: _isDarkMode ? Colors.white : Colors.black,
-          fontSize: 14,
+              ),
+          ],
         ),
       ),
     );
