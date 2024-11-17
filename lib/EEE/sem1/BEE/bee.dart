@@ -4,6 +4,7 @@ import 'package:Nexia/widgets/pdfviewer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+
 class Bee extends StatefulWidget {
   final String fullName;
   final String branch;
@@ -71,7 +72,7 @@ class _BeeState extends State<Bee> {
   Future<void> _loadThemePreference() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _isDarkMode = prefs.getBool('isDarkMode') ?? false;
+      _isDarkMode = prefs.getBool('isDarkMode') ?? true;
     });
   }
 
@@ -82,6 +83,7 @@ class _BeeState extends State<Bee> {
       prefs.setBool('isDarkMode', _isDarkMode);
     });
   }
+
 
   void _loadBannerAd() {
     _bannerAd = BannerAd(
@@ -209,6 +211,7 @@ class _BeeState extends State<Bee> {
                   ),
                 );
               },
+              
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: CircleAvatar(
@@ -237,6 +240,8 @@ class _BeeState extends State<Bee> {
           : null,
     );
   }
+
+  
 
   TextStyle _textStyle({required double fontSize, FontWeight fontWeight = FontWeight.normal}) {
     return TextStyle(

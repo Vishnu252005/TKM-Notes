@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:Nexia/widgets/profile.dart';
 import 'package:Nexia/widgets/pdfviewer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+
 
 class Fee1 extends StatefulWidget {
   final String fullName;
@@ -9,13 +11,12 @@ class Fee1 extends StatefulWidget {
   final String year;
   final String semester;
 
-  const Fee1({
-    Key? key,
+  Fee1({
     required this.fullName,
     required this.branch,
     required this.year,
     required this.semester,
-  }) : super(key: key);
+  });
 
   @override
   _Fee1State createState() => _Fee1State();
@@ -23,6 +24,9 @@ class Fee1 extends StatefulWidget {
 
 class _Fee1State extends State<Fee1> {
   bool _isDarkMode = true;
+
+  late BannerAd _bannerAd;
+  bool _isBannerAdLoaded = false;
 
   final List<UnitItem> units = [
     UnitItem(
@@ -56,46 +60,70 @@ class _Fee1State extends State<Fee1> {
   void initState() {
     super.initState();
     _loadThemePreference();
+    _loadBannerAd();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd.dispose();
+    super.dispose();
   }
 
   Future<void> _loadThemePreference() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _isDarkMode = prefs.getBool('isDarkMode') ?? true;
     });
   }
 
   Future<void> _toggleTheme() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _isDarkMode = !_isDarkMode;
       prefs.setBool('isDarkMode', _isDarkMode);
     });
   }
 
+
+  void _loadBannerAd() {
+    _bannerAd = BannerAd(
+      adUnitId: 'ca-app-pub-3940256099942544/6300978111', // Replace with your Ad Unit ID
+      size: AdSize.banner,
+      request: AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          setState(() {
+            _isBannerAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          print('Banner ad failed to load: $error');
+          ad.dispose();
+        },
+      ),
+    );
+    _bannerAd.load();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final bool isDarkMode = _isDarkMode;
-    final Color backgroundColor = isDarkMode ? Colors.blue[900]! : Colors.blue[50]!;
-    final Color appBarIconColor = isDarkMode ? Colors.white : Colors.blue[900]!;
-    final Color cardColor = isDarkMode ? Colors.black : Colors.white;
-    final Color textColor = isDarkMode ? Colors.white : Colors.blue[900]!;
-    final Color subtitleColor = isDarkMode ? Colors.white70 : Colors.blue[700]!;
-
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: _isDarkMode ? Colors.blue[900] : Colors.blue[50],
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: appBarIconColor),
-          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back),
+          color: _isDarkMode ? Colors.white : Colors.blue[900], // Updated color
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         actions: [
           IconButton(
             icon: Icon(
-              isDarkMode ? Icons.wb_sunny : Icons.nightlight_round,
-              color: appBarIconColor,
+              _isDarkMode ? Icons.wb_sunny : Icons.nightlight_round,
+              color: Colors.white,
             ),
             onPressed: _toggleTheme,
           ),
@@ -118,19 +146,15 @@ class _Fee1State extends State<Fee1> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'IDEA Lab',
-                            style: TextStyle(
+                            ' Fundamentals of Electrical Engineering',
+                            style: _textStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
-                              color: textColor,
                             ),
                           ),
                           Text(
                             'Select Chapter',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: subtitleColor,
-                            ),
+                            style: _textStyle(fontSize: 18),
                           ),
                         ],
                       ),
@@ -141,18 +165,18 @@ class _Fee1State extends State<Fee1> {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: cardColor,
+                    color: _isDarkMode ? Colors.black : Colors.white,
                     borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(30),
                       topRight: Radius.circular(30),
                     ),
-                    boxShadow: !isDarkMode
+                    boxShadow: !_isDarkMode
                         ? [
                             BoxShadow(
                               color: Colors.grey.withOpacity(0.5),
                               spreadRadius: 5,
                               blurRadius: 7,
-                              offset: const Offset(0, 3),
+                              offset: const Offset(0, 3), // changes position of shadow
                             ),
                           ]
                         : [],
@@ -191,10 +215,13 @@ class _Fee1State extends State<Fee1> {
                 padding: const EdgeInsets.all(16.0),
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundColor: Colors.blue[700],
+                  backgroundColor: Colors.blue[700], // Updated color
                   child: Text(
                     widget.fullName[0].toUpperCase(),
-                    style: const TextStyle(color: Colors.white, fontSize: 24),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
                   ),
                 ),
               ),
@@ -202,6 +229,24 @@ class _Fee1State extends State<Fee1> {
           ),
         ],
       ),
+      bottomNavigationBar: _isBannerAdLoaded
+          ? Container(
+               width: MediaQuery.of(context).size.width, // Full width of the screen
+               height: _bannerAd.size.height.toDouble(),
+               color: Colors.white, // Set background color to white
+               child: AdWidget(ad: _bannerAd),
+            )
+          : null,
+    );
+  }
+
+  
+
+  TextStyle _textStyle({required double fontSize, FontWeight fontWeight = FontWeight.normal}) {
+    return TextStyle(
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      color: _isDarkMode ? Colors.white : Colors.blue[900],
     );
   }
 
@@ -260,9 +305,5 @@ class UnitItem {
   final bool isAvailable;
   final String pdfUrl;
 
-  const UnitItem({
-    required this.title,
-    required this.isAvailable,
-    required this.pdfUrl,
-  });
+  UnitItem({required this.title, required this.isAvailable, required this.pdfUrl});
 }

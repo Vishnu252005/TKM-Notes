@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:Nexia/widgets/profile.dart';
 import 'package:Nexia/widgets/pdfviewer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 class Bem1 extends StatefulWidget {
   final String fullName;
   final String branch;
@@ -21,6 +22,9 @@ class Bem1 extends StatefulWidget {
 
 class _BemState extends State<Bem1> {
   bool _isDarkMode = true;
+
+  late BannerAd _bannerAd;
+  bool _isBannerAdLoaded = false;
 
   final List<UnitItem> units = [
     UnitItem(
@@ -56,6 +60,13 @@ class _BemState extends State<Bem1> {
   void initState() {
     super.initState();
     _loadThemePreference();
+    _loadBannerAd();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd.dispose();
+    super.dispose();
   }
 
   Future<void> _loadThemePreference() async {
@@ -71,6 +82,26 @@ class _BemState extends State<Bem1> {
       _isDarkMode = !_isDarkMode;
       prefs.setBool('isDarkMode', _isDarkMode);
     });
+  }
+
+  void _loadBannerAd() {
+    _bannerAd = BannerAd(
+      adUnitId: 'ca-app-pub-3940256099942544/6300978111', // Replace with your Ad Unit ID
+      size: AdSize.banner,
+      request: AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          setState(() {
+            _isBannerAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          print('Banner ad failed to load: $error');
+          ad.dispose();
+        },
+      ),
+    );
+    _bannerAd.load();
   }
 
   @override
@@ -186,10 +217,13 @@ class _BemState extends State<Bem1> {
                 padding: const EdgeInsets.all(16.0),
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundColor: _isDarkMode ? Colors.blue : Colors.blue,
+                  backgroundColor: Colors.blue[700], // Updated color
                   child: Text(
                     widget.fullName[0].toUpperCase(),
-                    style: const TextStyle(color: Colors.white, fontSize: 24),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
                   ),
                 ),
               ),
@@ -197,6 +231,22 @@ class _BemState extends State<Bem1> {
           ),
         ],
       ),
+      bottomNavigationBar: _isBannerAdLoaded
+          ? Container(
+               width: MediaQuery.of(context).size.width, // Full width of the screen
+               height: _bannerAd.size.height.toDouble(),
+               color: Colors.white, // Set background color to white
+               child: AdWidget(ad: _bannerAd),
+            )
+          : null,
+    );
+  }
+
+  TextStyle _textStyle({required double fontSize, FontWeight fontWeight = FontWeight.normal}) {
+    return TextStyle(
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      color: _isDarkMode ? Colors.white : Colors.blue[900],
     );
   }
 

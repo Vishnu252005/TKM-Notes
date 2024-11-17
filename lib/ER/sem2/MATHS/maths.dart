@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:Nexia/widgets/profile.dart';
 import 'package:Nexia/widgets/pdfviewer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class Maths extends StatefulWidget {
   final String fullName;
@@ -22,6 +23,9 @@ class Maths extends StatefulWidget {
 
 class _MathsState extends State<Maths> {
   bool _isDarkMode = true;
+
+  late BannerAd _bannerAd;
+  bool _isBannerAdLoaded = false;
 
   final List<UnitItem> units = [
     UnitItem(
@@ -55,6 +59,13 @@ class _MathsState extends State<Maths> {
   void initState() {
     super.initState();
     _loadThemePreference();
+    _loadBannerAd();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd.dispose();
+    super.dispose();
   }
 
   Future<void> _loadThemePreference() async {
@@ -70,6 +81,26 @@ class _MathsState extends State<Maths> {
       _isDarkMode = !_isDarkMode;
       prefs.setBool('isDarkMode', _isDarkMode);
     });
+  }
+
+  void _loadBannerAd() {
+    _bannerAd = BannerAd(
+      adUnitId: 'ca-app-pub-3940256099942544/6300978111', // Replace with your Ad Unit ID
+      size: AdSize.banner,
+      request: AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          setState(() {
+            _isBannerAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          print('Banner ad failed to load: $error');
+          ad.dispose();
+        },
+      ),
+    );
+    _bannerAd.load();
   }
 
   @override
