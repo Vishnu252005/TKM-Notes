@@ -8,6 +8,7 @@ import '../widgets/calcu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/syllabus.dart';
 import 'package:Nexia/widgets/pdfviewer.dart';
+import '/ai/SplashScreen.dart';
 
 
 String? _examTimetableLink;
@@ -329,13 +330,13 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     ListTile(
                       leading: Icon(Icons.calculate, color: _isDarkMode ? Colors.white : Colors.black),
-                      title: Text('SGPA Converter', style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black)),
+                      title: Text('Nexia AI', style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black)),
                       trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.black),
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => SGPAConverterPage(),
+                            builder: (context) => SplashScreen(),
                           ),
                         );
                       },

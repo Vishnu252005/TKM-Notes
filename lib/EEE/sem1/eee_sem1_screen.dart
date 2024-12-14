@@ -1,3 +1,4 @@
+import 'package:Nexia/ai/robocat_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:Nexia/EEE/sem1/BEE/bee%20-%20Copy.dart';
 import 'package:Nexia/EEE/sem1/BME/bme%20-%20Copy.dart';
@@ -14,7 +15,10 @@ import 'package:Nexia/EEE/sem1/PHYSICS/physics.dart';
 import 'package:Nexia/EEE/sem1/ENGLISH/english.dart';
 import 'package:Nexia/EEE/sem1/IDEALAB/idealab.dart';
 import 'package:Nexia/widgets/profiledark.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '/ai/HomePage.dart';
+import '/ai/lottie_button.dart';
 
 class EEESem1Screen extends StatefulWidget {
   final String fullName;
@@ -54,7 +58,7 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
     });
   }
 
-  void _initializeSubjects() {
+    void _initializeSubjects() {
     _subjects = {
       'Notes & Books': [
         {
@@ -155,127 +159,132 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
     return Scaffold(
       backgroundColor: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[50],
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack( // Using Stack to overlay elements
           children: [
-            Padding(
-              padding: EdgeInsets.all(isPortrait ? 24.0 : 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Hey ${widget.fullName}',
-                          style: TextStyle(
-                              fontSize: isPortrait ? 24 : 20,
-                              fontWeight: FontWeight.bold,
-                              color: _isDarkMode ? Colors.white : Colors.blue[800]),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header Section
+                Padding(
+                  padding: EdgeInsets.all(isPortrait ? 24.0 : 16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Hey ${widget.fullName}',
+                              style: TextStyle(
+                                  fontSize: isPortrait ? 24 : 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: _isDarkMode ? Colors.white : Colors.blue[800]),
+                            ),
+                            Text(
+                              'Select Subject',
+                              style: TextStyle(fontSize: 16, color: _isDarkMode ? Colors.white70 : Colors.blue[600]),
+                            ),
+                          ],
                         ),
-                        Text(
-                          'Select Subject',
-                          style: TextStyle(fontSize: 16, color: _isDarkMode ? Colors.white70 : Colors.blue[600]),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProfilePage(
+                                fullName: widget.fullName,
+                                branch: widget.branch,
+                                year: widget.year,
+                                semester: widget.semester,
+                                isDarkMode: _isDarkMode,
+                                onThemeChanged: (bool newTheme) {
+                                  setState(() {
+                                    _isDarkMode = newTheme;
+                                  });
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: Colors.blue,
+                          radius: isPortrait ? 30 : 20,
+                          child: Text(
+                            widget.fullName[0].toUpperCase(),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: isPortrait ? 30 : 20,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: _isDarkMode ? Colors.black : Colors.white,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(24),
+                        topRight: Radius.circular(24),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: _isDarkMode ? Colors.black12 : Colors.blue.withOpacity(0.1),
+                          blurRadius: 10,
+                          spreadRadius: 5,
                         ),
                       ],
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProfilePage(
-                            fullName: widget.fullName,
-                            branch: widget.branch,
-                            year: widget.year,
-                            semester: widget.semester,
-                            isDarkMode: _isDarkMode,
-                            onThemeChanged: (bool newTheme) {
-                              setState(() {
-                                _isDarkMode = newTheme;
-                              });
-                            },
-                          ),
-                        ),
-                      );
-                    },
-                    child: CircleAvatar(
-                      backgroundColor: Colors.blue,
-                      radius: isPortrait ? 30 : 20,
-                      child: Text(
-                        widget.fullName[0].toUpperCase(),
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: isPortrait ? 30 : 20,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: _isDarkMode ? Colors.black : Colors.white,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(24),
-                    topRight: Radius.circular(24),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: _isDarkMode ? Colors.black12 : Colors.blue.withOpacity(0.1),
-                      blurRadius: 10,
-                      spreadRadius: 5,
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24),
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: _isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.blue[50],
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: List.generate(
-                            _tabs.length,
-                            (index) => Expanded(
-                              child: GestureDetector(
-                                onTap: () => setState(() => _selectedIndex = index),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
-                                  decoration: BoxDecoration(
-                                    color: _selectedIndex == index
-                                        ? (_isDarkMode ? Colors.black : Colors.white)
-                                        : (_isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.blue[50]),
-                                    borderRadius: BorderRadius.circular(24),
-                                    boxShadow: _selectedIndex == index && !_isDarkMode
-                                        ? [
-                                            BoxShadow(
-                                              color: Colors.blue.withOpacity(0.3),
-                                              blurRadius: 8,
-                                              spreadRadius: 2,
-                                            ),
-                                          ]
-                                        : null,
-                                  ),
-                                  child: Text(
-                                    _tabs[index],
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: _isDarkMode
-                                          ? Colors.white
-                                          : (_selectedIndex == index ? Colors.blue[800] : Colors.blue[600]),
-                                      fontWeight: _selectedIndex == index ? FontWeight.bold : FontWeight.normal,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24),
+                          child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: _isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.blue[50],
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: List.generate(
+                                _tabs.length,
+                                (index) => Expanded(
+                                  child: GestureDetector(
+                                    onTap: () => setState(() => _selectedIndex = index),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(vertical: 16),
+                                      decoration: BoxDecoration(
+                                        color: _selectedIndex == index
+                                            ? (_isDarkMode ? Colors.black : Colors.white)
+                                            : (_isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.blue[50]),
+                                        borderRadius: BorderRadius.circular(24),
+                                        boxShadow: _selectedIndex == index && !_isDarkMode
+                                            ? [
+                                                BoxShadow(
+                                                  color: Colors.blue.withOpacity(0.3),
+                                                  blurRadius: 8,
+                                                  spreadRadius: 2,
+                                                ),
+                                              ]
+                                            : null,
+                                      ),
+                                      child: Text(
+                                        _tabs[index],
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: _isDarkMode
+                                              ? Colors.white
+                                              : (_selectedIndex == index ? Colors.blue[800] : Colors.blue[600]),
+                                          fontWeight: _selectedIndex == index ? FontWeight.bold : FontWeight.normal,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -283,49 +292,71 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Expanded(
-                      child: ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        itemCount: _subjects[_tabs[_selectedIndex]]!.length,
-                        itemBuilder: (context, index) {
-                          var subject = _subjects[_tabs[_selectedIndex]]![index];
-                          return Card(
-                            color: _isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.white,
-                            elevation: _isDarkMode ? 0 : 2,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                            child: ListTile(
-                              contentPadding: const EdgeInsets.all(16),
-                              leading: subject['image'] != null
-                                  ? Image.asset(subject['image'], width: 50, height: 50)
-                                  : null,
-                              title: Text(
-                                subject['name'],
-                                style: TextStyle(
-                                  color: _isDarkMode ? Colors.white : Colors.blue[800],
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              subtitle: Text(
-                                subject['description'],
-                                style: TextStyle(color: _isDarkMode ? Colors.white70 : Colors.blue[600]),
-                              ),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => subject['page'](),
+                        const SizedBox(height: 16),
+                        Expanded(
+                          child: ListView.builder(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            itemCount: _subjects[_tabs[_selectedIndex]]!.length,
+                            itemBuilder: (context, index) {
+                              var subject = _subjects[_tabs[_selectedIndex]]![index];
+                              return Card(
+                                color: _isDarkMode ? const Color.fromARGB(755, 58, 58, 58) : Colors.white,
+                                elevation: _isDarkMode ? 0 : 2,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                child: ListTile(
+                                  contentPadding: const EdgeInsets.all(16),
+                                  leading: subject['image'] != null
+                                      ? Image.asset(subject['image'], width: 50, height: 50)
+                                      : null,
+                                  title: Text(
+                                    subject['name'],
+                                    style: TextStyle(
+                                      color: _isDarkMode ? Colors.white : Colors.blue[800],
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                );
-                              },
-                            ),
-                          );
-                        },
-                      ),
+                                  subtitle: Text(
+                                    subject['description'],
+                                    style: TextStyle(color: _isDarkMode ? Colors.white70 : Colors.blue[600]),
+                                  ),
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => subject['page'](),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
+                ),
+              ],
+            ),
+            Positioned(
+              right: 16,  // Right margin for the button
+              bottom: 16,  // Bottom margin for the button
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomePage(),
+                    ),
+                  );
+                },
+                child: Container(
+                  height: 170,  // Set your desired size
+                  width: 170,   // Set your desired size
+                  child: Lottie.network(
+                    'https://lottie.host/696fc9e9-491f-42f8-8fd8-70aafe940939/iPo6o8AIgC.json',  // Path to your Lottie animation
+                    width: 220,  // Set the width of the animation
+                    height: 220, // Set the height of the animation
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),

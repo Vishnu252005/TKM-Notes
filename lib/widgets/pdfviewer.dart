@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:Nexia/widgets/calcu.dart';
 import 'package:Nexia/widgets/conv.dart';
 import 'package:Nexia/widgets/graph.dart';
+import 'package:rive/rive.dart';
 import '../widgets/sgpa.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:http/http.dart' as http;
@@ -258,7 +259,7 @@ class _PDFViewerPageState extends State<PDFViewerPage> {
     super.dispose();
   }
 
-  @override
+   @override
   Widget build(BuildContext context) {
     return BasePage(
       child: Scaffold(
@@ -278,7 +279,7 @@ class _PDFViewerPageState extends State<PDFViewerPage> {
                 _isDarkMode ? Icons.dark_mode : Icons.light_mode,
                 color: Colors.white,
               ),
-              onPressed: _toggleTheme,  // This is where the theme toggle happens
+              onPressed: _toggleTheme,
             ),
           ],
         ),
@@ -326,6 +327,35 @@ class _PDFViewerPageState extends State<PDFViewerPage> {
                   child: AdWidget(ad: _bannerAd),
                 ),
               ),
+//             // Add Rive animation at the bottom-right corner
+//             Positioned(
+//   bottom: 16,
+//   right: 16,
+//   child: Container(
+//     width: 100,
+//     height: 100,
+//     child: RiveAnimation.asset(
+//       'assets/robocat.riv',
+//       fit: BoxFit.contain,
+//       stateMachines: ['Facial Expressions'],
+//       onInit: (artboard) {
+//         try {
+//           final controller = StateMachineController.fromArtboard(
+//             artboard,
+//             'Facial Expressions',
+//           );
+//           if (controller != null) {
+//             artboard.addController(controller);
+//             controller.findInput<bool>('Chat')?.value = true;
+//           }
+//         } catch (e) {
+//           print('Error initializing Rive: $e');
+//         }
+//       },
+//     ),
+//   ),
+// )
+
           ],
         ),
       ),

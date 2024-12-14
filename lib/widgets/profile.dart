@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../widgets/sgpa.dart';
 import '../widgets/signup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '/ai/SplashScreen.dart';
 
 class ProfilePage extends StatefulWidget {
   final String fullName;
@@ -137,7 +138,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => SGPAConverterPage(),
+                            builder: (context) => SplashScreen(),
                           ),
                         );
                       },

@@ -65,10 +65,17 @@ import 'MECH/sem7/mech_sem7_screen.dart';
 import 'MECH/sem8/mech_sem8_screen.dart';
 
 import 'widgets/signup.dart'; 
+import 'package:flutter/material.dart';
+import '/ai/SplashScreen.dart';
+import '/ai/const.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
+
+import '/ai/HomePage.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
+  Gemini.init(apiKey: "AIzaSyDqPfAa1C8sn2hDKLFpMTeiavIHg2vf_C8");
   runApp(const MyApp());
 }
 
@@ -78,7 +85,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Sign Up Demo',
+      title: 'Nexia Notes',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 3, 13, 148)),
         useMaterial3: true,
@@ -762,7 +769,7 @@ class _MyWidgetState extends State<MyWidget> {
   void initState() {
     super.initState();
     _bannerAd = BannerAd(
-      adUnitId: 'ca-app-pub-1850470420397635~7538113318',
+      adUnitId: 'ca-app-pub-1850470420397635/2911662464',
       size: AdSize.banner,
       request: AdRequest(),
       listener: BannerAdListener(

@@ -18,7 +18,7 @@ class _BasePageState extends State<BasePage> {
   void initState() {
     super.initState();
     _bannerAd = BannerAd(
-      adUnitId: 'ca-app-pub-1850470420397635/3023285635',  // Replace with your ad unit ID
+      adUnitId: 'ca-app-pub-1850470420397635/2911662464',  // Replace with your ad unit ID
       size: AdSize.banner,
       request: AdRequest(),
       listener: BannerAdListener(
