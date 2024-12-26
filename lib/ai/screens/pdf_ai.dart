@@ -10,11 +10,11 @@ import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 // void main() {
-//   runApp(const MyApp());
+//   runApp(const PdfChat());
 // }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class PdfChat extends StatelessWidget {
+  const PdfChat({super.key});
 
   @override
   Widget build(BuildContext context) {

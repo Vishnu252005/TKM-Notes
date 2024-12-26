@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
-import 'package:Nexia/ai/VoiceChat.dart';
+import 'package:Nexia/ai/screens/VoiceChat.dart';
 import 'package:flutter/services.dart'; 
 import 'package:chat_bubbles/bubbles/bubble_normal.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
@@ -17,7 +17,7 @@ import 'dart:convert'; // Add this import for JSON encoding/decoding
 
 import 'VoiceChat.dart' as nexia;
 // import 'CustomChatMessage.dart'; // Add this import
-import 'Waveform.dart';
+import '../widgets/Waveform.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

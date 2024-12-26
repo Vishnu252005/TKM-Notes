@@ -1,15 +1,15 @@
 // ignore_for_file: prefer_const_declarations, deprecated_member_use
 
-import 'package:Nexia/ai/pdf_ai.dart';
+import 'package:Nexia/ai/screens/pdf_ai.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../ai/main1.dart';
 import '../widgets/sgpa.dart';
 import '../widgets/signup.dart';
 import '../widgets/calcu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/syllabus.dart';
 import 'package:Nexia/widgets/pdfviewer.dart';
-import '/ai/SplashScreen.dart';
 
 
 String? _examTimetableLink;
@@ -337,7 +337,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => SplashScreen(),
+                            builder: (context) => GeminiChat(),
                           ),
                         );
                       },
@@ -385,7 +385,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => MyApp(),
+                            builder: (context) => GeminiChat(),
                           ),
                         );
                       },

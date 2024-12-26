@@ -66,11 +66,10 @@ import 'MECH/sem8/mech_sem8_screen.dart';
 
 import 'widgets/signup.dart'; 
 import 'package:flutter/material.dart';
-import '/ai/SplashScreen.dart';
-import '/ai/const.dart';
+import 'ai/constants/const.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 
-import '/ai/HomePage.dart';
+import 'ai/screens/HomePage.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

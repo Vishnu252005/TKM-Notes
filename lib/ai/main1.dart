@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import '/ai/SplashScreen.dart';
-import '/ai/const.dart';
+import '/ai/screens/SplashScreen.dart';
+import '/ai/constants/const.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 
-import '/ai/HomePage.dart';
+import 'screens/HomePage.dart';
 
 void main(){
   Gemini.init(apiKey: "AIzaSyDqPfAa1C8sn2hDKLFpMTeiavIHg2vf_C8");
-  runApp(MyApp());
+  runApp(GeminiChat());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class GeminiChat extends StatelessWidget {
+  const GeminiChat({super.key});
 
   @override
   Widget build(BuildContext context) {

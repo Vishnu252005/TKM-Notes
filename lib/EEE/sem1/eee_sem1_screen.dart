@@ -1,4 +1,4 @@
-import 'package:Nexia/ai/robocat_animation.dart';
+import 'package:Nexia/ai/widgets/robocat_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:Nexia/EEE/sem1/BEE/bee%20-%20Copy.dart';
 import 'package:Nexia/EEE/sem1/BME/bme%20-%20Copy.dart';
@@ -17,8 +17,8 @@ import 'package:Nexia/EEE/sem1/IDEALAB/idealab.dart';
 import 'package:Nexia/widgets/profiledark.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '/ai/HomePage.dart';
-import '/ai/lottie_button.dart';
+import '../../ai/screens/HomePage.dart';
+import '../../ai/widgets/lottie_button.dart';
 
 class EEESem1Screen extends StatefulWidget {
   final String fullName;
