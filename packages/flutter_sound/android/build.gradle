@@ -1,0 +1,16 @@
+android {
+    namespace 'com.vishnumeta.flutter_sound'
+    
+    // ...existing code...
+    
+    // Example of existing configurations
+    compileSdk = 33
+
+    defaultConfig {
+        minSdk = 21
+        targetSdk = 33
+        // ...other configurations...
+    }
+
+    // ...existing code...
+}

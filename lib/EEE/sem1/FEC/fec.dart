@@ -26,27 +26,28 @@ class _fecState extends State<fec> {
     UnitItem(
       title: 'MODULE I: Electronic Components & Devices',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1BAYUDzCaYSgZcEAaWHutyANcD0P0rUK-',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1Xgr0YAMbPfAB0mRc6-DlFtxlAMLdBsfm',
+      
     ),
     UnitItem(
       title: 'MODULE II: Electronic Circuits',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1BSfew3z7Xiir6tneBPDy0se1Ee045_6O',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1ai44hKJIcbdpyZ2EUTUJR2QPuBJBwgA3',
     ),
     UnitItem(
       title: 'MODULE III: Integrated Circuits',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1BSU0XwbyzYCJFIeZmwEnPwV_9Cjpdory',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=14vnK7RRcSMYST4GmYWF1VAWf9iXIc8hS',
     ),
     UnitItem(
       title: 'MODULE IV: Electronic Instrumentation',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1BS45MBMXvsVZTlOLwmmuJ8_ESO6LD3w4',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1DJdH-mpT8K9BKETyXxF6nB4f1sVUzCmB',
     ),
     UnitItem(
       title: 'MODULE V: Communication Systems',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1BOskampAzE7ggEnrn94lYidVvSSMxGed',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1r1NdveyCEm_iFdBgzEGX4CmTZ4kXwLUq',
     ),
   ];
 

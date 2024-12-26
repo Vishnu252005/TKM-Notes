@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_declarations, deprecated_member_use
 
+import 'package:Nexia/ai/pdf_ai.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/sgpa.dart';
@@ -283,7 +284,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           Text('${widget.semester}', style: TextStyle(color: Colors.grey)),
                           SizedBox(height: 8),
                         ],
-                      ),
+                      ),   
                     ),
                     CircleAvatar(
                       radius: 30,
@@ -381,8 +382,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 title: Text('Share App', style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black)),
                 trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.black),
                 onTap: () {
-                  // Open share dialog
-                },
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MyApp(),
+                          ),
+                        );
+                      },
               ),
               
               Padding(

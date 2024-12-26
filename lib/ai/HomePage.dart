@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
+import 'package:Nexia/ai/VoiceChat.dart';
 import 'package:flutter/services.dart'; 
 import 'package:chat_bubbles/bubbles/bubble_normal.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
@@ -12,8 +13,10 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/animation.dart'; // Required for animations
+import 'dart:convert'; // Add this import for JSON encoding/decoding
 
-import 'VoiceChat.dart';
+import 'VoiceChat.dart' as nexia;
+// import 'CustomChatMessage.dart'; // Add this import
 import 'Waveform.dart';
 
 class HomePage extends StatefulWidget {
@@ -41,6 +44,14 @@ class _HomePageState extends State<HomePage> {
   String _text = '';
   bool isDarkMode = false; // Added dark mode variable
 
+  // Remove predefined suggestions
+  // final List<String> _suggestions = [
+  //   "How are you?",
+  //   "Tell me a joke.",
+  //   "What's the weather today?",
+  // ];
+  List<String> _filteredSuggestions = [];
+
   ChatUser currentUser = ChatUser(id: "0", firstName: "User");
   ChatUser nexiaUser = ChatUser(
     id: "1",
@@ -49,10 +60,17 @@ class _HomePageState extends State<HomePage> {
         "https://seeklogo.com/images/G/google-gemini-logo-A5787B2669-seeklogo.com.png",
   );
 
+  // Add a ScrollController for the suggestions list
+  final ScrollController _suggestionsScrollController = ScrollController();
+
+  // Store the current input for auto-completion
+  String _currentInput = '';
+
   @override
   void initState() {
     super.initState();
     _loadPreferences();
+    _loadMessages(); // Load messages on init
     speechToText = stt.SpeechToText();
     _requestPermission();
     _initSpeech();
@@ -81,11 +99,30 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  // Load messages from SharedPreferences
+  Future<void> _loadMessages() async {
+    final String? storedMessages = prefs.getString('messages');
+    if (storedMessages != null) {
+      List<dynamic> decoded = jsonDecode(storedMessages);
+      setState(() {
+        messages = decoded.map((msg) => ChatMessage.fromJson(msg)).toList();
+      });
+    }
+  }
+
+  // Save messages to SharedPreferences
+  Future<void> _saveMessages() async {
+    List<Map<String, dynamic>> encoded =
+        messages.map((msg) => msg.toJson()).toList();
+    await prefs.setString('messages', jsonEncode(encoded));
+  }
+
   @override
   void dispose() {
     _focusNode.dispose();
     flutterTts.stop();
     controller.dispose();
+    _suggestionsScrollController.dispose(); // Dispose the ScrollController
     super.dispose();
   }
 
@@ -128,6 +165,7 @@ String _cleanResponse(String response) {
     setState(() {
       messages = [chatMessage, ...messages];
     });
+    _saveMessages(); // Save after sending
     try {
       String question = chatMessage.text;
       List<Uint8List>? images;
@@ -148,7 +186,7 @@ String _cleanResponse(String response) {
             "";
 
         ChatMessage? lastMessage = messages.firstOrNull;
-        if (lastMessage != null && lastMessage.user == nexiaUser) {
+        if (lastMessage != null && lastMessage.user.id == nexiaUser.id) {
           lastMessage = messages.removeAt(0);
           lastMessage.text += response;
           setState(() {
@@ -164,6 +202,7 @@ String _cleanResponse(String response) {
             messages = [message, ...messages];
           });
         }
+        _saveMessages(); // Save after receiving
       });
     } catch (e) {
       print(e);
@@ -225,6 +264,40 @@ String _cleanResponse(String response) {
     setState(() {
       _isGenerating = true;
     });
+  }
+
+  // Modify the _fetchSuggestions method to prompt Gemini for query completions
+  Future<void> _fetchSuggestions(String input) async {
+    _currentInput = input;
+    if (input.isEmpty) {
+      setState(() {
+        _filteredSuggestions = [];
+      });
+      return;
+    }
+    try {
+      // Refine the prompt to clearly request query completions
+      String prompt = 'Complete the user\'s query: "$input"';
+      gemini.streamGenerateContent(prompt).listen((event) {
+        String response = event.content?.parts?.fold(
+                "", (previous, current) => "$previous ${current.text}") ??
+            "";
+        // Split responses by newlines and filter for meaningful completions
+        List<String> suggestions = response
+            .split('\n')
+            .map((s) => s.trim().replaceAll('*', '')) // Remove asterisks
+            .where((s) => s.isNotEmpty)
+            .toList();
+        setState(() {
+          _filteredSuggestions = suggestions;
+        });
+      });
+    } catch (e) {
+      print(e);
+      setState(() {
+        _filteredSuggestions = [];
+      });
+    }
   }
 
   @override
@@ -391,91 +464,266 @@ Widget _chatUI() {
   Widget _textFieldUI() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Row(
+      child: Column(
         children: [
-          Expanded(
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 300),
-              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-              decoration: BoxDecoration(
-                color: isDarkMode ? Colors.grey.shade900 : Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(30),
-                boxShadow: _isFocused
-                    ? [
-                        BoxShadow(
-                          color: Colors.blueAccent.withOpacity(0.6),
-                          blurRadius: 8,
-                          offset: Offset(0, 4),
-                        ),
-                      ]
-                    : [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 4,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-              ),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.photo, color: isDarkMode ? Colors.white : Colors.black54),
-                    onPressed: _sendMediaMessage,
-                    tooltip: 'Send Photo',
+          Row(
+            children: [
+              Expanded(
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 300),
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                  decoration: BoxDecoration(
+                    color: isDarkMode ? Colors.grey.shade900 : Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: _isFocused
+                        ? [
+                            BoxShadow(
+                              color: Colors.blueAccent.withOpacity(0.6),
+                              blurRadius: 8,
+                              offset: Offset(0, 4),
+                            ),
+                          ]
+                        : [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 4,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
                   ),
-                  Expanded(
-                    child: TextField(
-                      focusNode: _focusNode,
-                      controller: controller,
-                      cursorColor: isDarkMode ? Colors.white : Colors.black,
-                      style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
-                      textCapitalization: TextCapitalization.sentences,
-                      onChanged: (text) {
-                        setState(() {});
-                      },
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Type a message",
-                        hintStyle: TextStyle(color: isDarkMode ? Colors.white60 : Colors.black54),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.photo, color: isDarkMode ? Colors.white : Colors.black54),
+                        onPressed: _sendMediaMessage,
+                        tooltip: 'Send Photo',
+                      ),
+                      Expanded(
+                        child: TextField(
+                          focusNode: _focusNode,
+                          controller: controller,
+                          cursorColor: isDarkMode ? Colors.white : Colors.black,
+                          style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
+                          textCapitalization: TextCapitalization.sentences,
+                          onChanged: (text) {
+                            _fetchSuggestions(text);
+                          },
+                          onSubmitted: (text) {
+                            if (text.isNotEmpty) {
+                              _sendMessage(ChatMessage(
+                                user: currentUser,
+                                createdAt: DateTime.now(),
+                                text: text,
+                              ));
+                              controller.clear();
+                              FocusScope.of(context).requestFocus(_focusNode); // Refocus the text field
+                              setState(() {});
+                            } else {
+                              _listen();
+                            }
+                          },
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "Type a message",
+                            hintStyle: TextStyle(color: isDarkMode ? Colors.white60 : Colors.black54),
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          _isListening
+                              ? Icons.stop_circle
+                              : (controller.text.isEmpty ? Icons.mic : Icons.send),
+                          color: isDarkMode ? Colors.white : Colors.blueAccent,
+                          size: 28,
+                        ),
+                        onPressed: () {
+                          if (controller.text.isNotEmpty) {
+                            _sendMessage(ChatMessage(
+                              user: currentUser,
+                              createdAt: DateTime.now(),
+                              text: controller.text,
+                            ));
+                            controller.clear();
+                            setState(() {});
+                          } else {
+                            _listen();
+                          }
+                        },
+                        tooltip: controller.text.isEmpty ? 'Start Listening' : 'Send Message',
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(width: 8),
+              IconButton(
+                icon: Icon(Icons.headset, color: isDarkMode ? Colors.white : Colors.black54),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => VoiceChat()),
+                  );
+                },
+                tooltip: 'Voice Chat',
+              ),
+            ],
+          ),
+          if (_filteredSuggestions.isNotEmpty)
+            Container(
+              constraints: BoxConstraints(maxHeight: 150),
+              decoration: BoxDecoration(
+                color: isDarkMode ? Colors.grey.shade800 : Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 4,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: ListView.builder(
+                controller: _suggestionsScrollController,
+                itemCount: _filteredSuggestions.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(
+                      _filteredSuggestions[index],
+                      style: TextStyle(
+                        color: isDarkMode ? Colors.white : Colors.black87,
                       ),
                     ),
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      _isListening
-                          ? Icons.stop_circle
-                          : (controller.text.isEmpty ? Icons.mic : Icons.send),
-                      color: isDarkMode ? Colors.white : Colors.blueAccent,
-                      size: 28,
-                    ),
-                    onPressed: () {
-                      if (controller.text.isNotEmpty) {
-                        _sendMessage(ChatMessage(
-                          user: currentUser,
-                          createdAt: DateTime.now(),
-                          text: controller.text,
-                        ));
-                        controller.clear();
-                        setState(() {});
+                    onTap: () {
+                      // Append the selected suggestion to the existing input
+                      String currentText = controller.text;
+                      String suggestion = _filteredSuggestions[index];
+                      // Ensure there's a space before appending if needed
+                      if (currentText.isNotEmpty && !currentText.endsWith(' ')) {
+                        controller.text = currentText + ' ' + suggestion;
                       } else {
-                        _listen();
+                        controller.text = currentText + suggestion;
                       }
+                      controller.selection = TextSelection.fromPosition(
+                        TextPosition(offset: controller.text.length),
+                      );
+                      setState(() {
+                        _filteredSuggestions = [];
+                      });
                     },
-                    tooltip: controller.text.isEmpty ? 'Start Listening' : 'Send Message',
-                  ),                ],              ),            ),          ),
-          SizedBox(width: 8),
-          IconButton(
-            icon: Icon(Icons.headset, color: isDarkMode ? Colors.white : Colors.black54),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => VoiceChat()),
-              );
-            },
-            tooltip: 'Voice Chat',
-          ),
+                    trailing: Icon(Icons.arrow_forward, color: isDarkMode ? Colors.white54 : Colors.black54),
+                  );
+                },
+              ),
+            ),
         ],
       ),
     );
   }
+}
+
+class ChatUser {
+  final String id;
+  final String firstName;
+  final String? profileImage;
+
+  ChatUser({
+    required this.id,
+    required this.firstName,
+    this.profileImage,
+  });
+
+  // Add toJson method
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'firstName': firstName,
+      'profileImage': profileImage,
+    };
+  }
+
+  // Add fromJson factory
+  factory ChatUser.fromJson(Map<String, dynamic> json) {
+    return ChatUser(
+      id: json['id'],
+      firstName: json['firstName'],
+      profileImage: json['profileImage'],
+    );
+  }
+}
+
+class ChatMessage {
+  final ChatUser user;
+  final DateTime createdAt;
+  String text;
+  List<ChatMedia>? medias;
+
+  ChatMessage({
+    required this.user,
+    required this.createdAt,
+    required this.text,
+    this.medias,
+  });
+
+  // Add toJson method
+  Map<String, dynamic> toJson() {
+    return {
+      'user': user.toJson(),
+      'createdAt': createdAt.toIso8601String(),
+      'text': text,
+      'medias': medias?.map((media) => media.toJson()).toList(),
+    };
+  }
+
+  // Add fromJson factory
+  factory ChatMessage.fromJson(Map<String, dynamic> json) {
+    return ChatMessage(
+      user: ChatUser.fromJson(json['user']),
+      createdAt: DateTime.parse(json['createdAt']),
+      text: json['text'],
+      medias: json['medias'] != null
+          ? (json['medias'] as List)
+              .map((media) => ChatMedia.fromJson(media))
+              .toList()
+          : null,
+    );
+  }
+}
+
+class ChatMedia {
+  final String url;
+  final String fileName;
+  final MediaType type;
+
+  ChatMedia({
+    required this.url,
+    required this.fileName,
+    required this.type,
+  });
+
+  // Add toJson method
+  Map<String, dynamic> toJson() {
+    return {
+      'url': url,
+      'fileName': fileName,
+      'type': type.toString(),
+    };
+  }
+
+  // Add fromJson factory
+  factory ChatMedia.fromJson(Map<String, dynamic> json) {
+    return ChatMedia(
+      url: json['url'],
+      fileName: json['fileName'],
+      type: MediaType.values.firstWhere((e) => e.toString() == json['type']),
+    );
+  }
+}
+
+// Ensure MediaType enum is defined correctly
+enum MediaType {
+  image,
+  video,
+  audio,
+  // Add other types as needed
 }

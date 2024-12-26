@@ -13,6 +13,9 @@ class VoiceChat extends StatefulWidget {
 class _VoiceChatState extends State<VoiceChat>
     with TickerProviderStateMixin {
   late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late AnimationController _buttonController;
+  late Animation<double> _buttonAnimation;
   final Gemini gemini = Gemini.instance;
   FlutterTts flutterTts = FlutterTts();
   List<ChatMessage> messages = [];
@@ -37,6 +40,19 @@ class _VoiceChatState extends State<VoiceChat>
       duration: const Duration(seconds: 2),
       vsync: this,
     )..repeat();
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeIn),
+    );
+
+    _buttonController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    _buttonAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+      CurvedAnimation(parent: _buttonController, curve: Curves.easeInOut),
+    );
 
     speechToText = stt.SpeechToText();
     _initSpeech();
@@ -68,7 +84,7 @@ class _VoiceChatState extends State<VoiceChat>
         String responsePart = event.content?.parts?.fold(
             "", (previous, current) => "$previous ${current.text}") ?? "";
 
-        responseBuffer.write(responsePart);
+        responseBuffer.write(_cleanResponse(responsePart));
 
         setState(() {
           if (messages.isNotEmpty && messages.first.user == geminiUser) {
@@ -92,20 +108,27 @@ class _VoiceChatState extends State<VoiceChat>
         String finalResponse = responseBuffer.toString();
         await flutterTts.speak(finalResponse);
 
-        // setState(() {
-        //   isGenerating = false;
-        // });
-
         flutterTts.setCompletionHandler(() {
-          // setState(() {
-          //   isGenerating = false;
-          // });
           _listen();
         });
       });
     } catch (e) {
       print(e);
     }
+  }
+
+  String _cleanResponse(String response) {
+    // Define a map of words to replace
+    Map<String, String> replacements = {
+      'Gemini': 'Nexia',
+      'Google': 'Vishnu',
+    };
+
+    replacements.forEach((key, value) {
+      response = response.replaceAll(key, value);
+    });
+
+    return response;
   }
 
   void _listen() async {
@@ -182,78 +205,95 @@ class _VoiceChatState extends State<VoiceChat>
   @override
   void dispose() {
     _controller.dispose();
+    _buttonController.dispose();
     flutterTts.stop();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(height: 40),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () {
-                // Handle the back action, e.g., Navigator.pop(context);
-                Navigator.pop(context);
-              },
-              tooltip: 'Back',
-            ),
-          ],
-        ),
-
-        SizedBox(height: 240),
-        Text(
-          _isListening ? 'Listening...' : (isGenerating ? 'Generating...' : ''),
-          style: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-              color: Colors.white,
-              decoration: TextDecoration.none
-          ),
-        ),
-        SizedBox(height: 20),
-
-        SizedBox(
-          width: 250,
-          height: 250,
-          child: Stack(
-            alignment: Alignment.center,
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Box(0.8, 0.8, 4, _controller, Colors.grey.withOpacity(0.2)),
-              Box(0.6, 0.6, 3, _controller, Colors.grey.withOpacity(0.4)),
-              Box(0.4, 0.4, 2, _controller, Colors.grey.withOpacity(0.6)),
-              Box(0.2, 0.2, 1, _controller, Colors.grey.withOpacity(0.8)),
-              Box(0.1, 0.1, 0, _controller, Colors.grey),
-              LogoBox(_controller),
+              IconButton(
+                icon: Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                tooltip: 'Back',
+              ),
             ],
           ),
-        ),
 
-        SizedBox(height: 80),
+          SizedBox(height: 20),
 
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconButton(
-              icon: Icon(Icons.stop, color: Colors.red),
-              onPressed: isGenerating  ? _stopTTS : null,
-              tooltip: 'Stop',
-              iconSize: 28,
+          SizedBox(
+            width: 250,
+            height: 250,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Box(0.8, 0.8, 4, _controller, Colors.grey.withOpacity(0.2)),
+                Box(0.6, 0.6, 3, _controller, Colors.grey.withOpacity(0.4)),
+                Box(0.4, 0.4, 2, _controller, Colors.grey.withOpacity(0.6)),
+                Box(0.2, 0.2, 1, _controller, Colors.grey.withOpacity(0.8)),
+                Box(0.1, 0.1, 0, _controller, Colors.grey),
+                LogoBox(_controller),
+              ],
             ),
-            SizedBox(width: 40),
-            IconButton(
-              icon: Icon(Icons.mic, color: Colors.green),
-              onPressed: !_isListening && !isGenerating ? _listen : null,
-              tooltip: 'Start Listening',
-              iconSize: 28,
+          ),
+
+          SizedBox(height: 20),
+
+          // Move the listening/generating indicator below the animation stack
+          Center(
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: Text(
+                _isListening ? 'Listening...' : (isGenerating ? 'Generating...' : ''),
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  decoration: TextDecoration.none,
+                ),
+              ),
             ),
-          ],
-        )
-      ],
+          ),
+
+          SizedBox(height: 20),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ScaleTransition(
+                scale: _buttonAnimation,
+                child: IconButton(
+                  icon: Icon(Icons.stop, color: Colors.red),
+                  onPressed: isGenerating  ? _stopTTS : null,
+                  tooltip: 'Stop',
+                  iconSize: 28,
+                ),
+              ),
+              SizedBox(width: 40),
+              ScaleTransition(
+                scale: _buttonAnimation,
+                child: IconButton(
+                  icon: Icon(Icons.mic, color: Colors.green),
+                  onPressed: !_isListening && !isGenerating ? _listen : null,
+                  tooltip: 'Start Listening',
+                  iconSize: 28,
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
     );
   }
 }

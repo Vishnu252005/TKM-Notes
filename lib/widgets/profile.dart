@@ -187,8 +187,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 title: Text('Share App', style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black)),
                 trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.black),
                 onTap: () {
-                  // Open share dialog
-                },
+                        
+                      },
               ),
               
               // Logout button

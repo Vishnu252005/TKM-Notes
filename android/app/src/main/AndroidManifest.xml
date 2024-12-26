@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- Add the AD_ID permission -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
 
     <application
         android:label="Nexia"

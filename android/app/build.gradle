@@ -37,7 +37,7 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace = "com.vishnumeta.Nexia"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "25.1.8937393"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -68,6 +68,14 @@ android {
             signingConfig = signingConfigs.release
             
         }
+    }
+
+    packagingOptions {
+        pickFirst 'lib/arm64-v8a/libc++_shared.so'
+        pickFirst 'lib/x86_64/libc++_shared.so'
+        pickFirst 'lib/armeabi-v7a/libc++_shared.so'
+        pickFirst 'lib/x86/libc++_shared.so'
+        // Add other architectures if necessary
     }
 }
 
