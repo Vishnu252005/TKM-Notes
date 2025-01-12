@@ -382,12 +382,12 @@ class _ProfilePageState extends State<ProfilePage> {
                 title: Text('Share App', style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black)),
                 trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.black),
                 onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => GeminiChat(),
-                          ),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => PdfChat(),
+                        //   ),
+                        // );
                       },
               ),
               

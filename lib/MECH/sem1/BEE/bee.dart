@@ -31,17 +31,17 @@ class _BeeState extends State<Bee> {
     UnitItem(
       title: 'MODULE I: D.C. Circuits and Magnetic Circuits',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/drive/folders/13KHyg323bWWWHIEkWDA2loFlZfyej4Fh',
+      pdfUrl: 'https://drive.google.com/uc?id=1HfowrHTQNAbo-MU8m33FaMLLQb6jLVW1&export=download',
     ),
     UnitItem(
       title: 'MODULE II: Single Phase Systems',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_2',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?id=18of05v5k0LTXA4UZb2dV9jjar7OnFEX-&export=download',
     ),
     UnitItem(
       title: 'MODULE III: Three Phase Systems and Power Transmission',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_3',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?id=1fOE2zTU78oFMNNwQIMzDNLlO3wOg4NKi&export=download',
     ),
     UnitItem(
       title: 'MODULE IV: DC Machines and Transformers',

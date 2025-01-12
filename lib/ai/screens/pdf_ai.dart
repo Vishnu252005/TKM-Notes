@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,13 +9,16 @@ import 'package:sizer/sizer.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:Nexia/ai/screens/HomePage.dart'; // Import HomePage
 
 // void main() {
 //   runApp(const PdfChat());
 // }
 
 class PdfChat extends StatelessWidget {
-  const PdfChat({super.key});
+  final Uint8List? fileBytes;
+
+  const PdfChat({super.key, this.fileBytes});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +31,7 @@ class PdfChat extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          home: const PDFParserWidget(),
+          home: PDFParserWidget(fileBytes: fileBytes),
         );
       },
     );
@@ -35,7 +39,9 @@ class PdfChat extends StatelessWidget {
 }
 
 class PDFParserWidget extends StatefulWidget {
-  const PDFParserWidget({super.key});
+  final Uint8List? fileBytes;
+
+  const PDFParserWidget({super.key, this.fileBytes});
 
   @override
   State<PDFParserWidget> createState() => _PDFParserWidgetState();
@@ -58,6 +64,10 @@ class _PDFParserWidgetState extends State<PDFParserWidget> with SingleTickerProv
       duration: const Duration(seconds: 1),
       vsync: this,
     )..repeat(reverse: true);
+
+    if (widget.fileBytes != null) {
+      _processPDF(widget.fileBytes!);
+    }
   }
 
   @override
@@ -71,6 +81,17 @@ class _PDFParserWidgetState extends State<PDFParserWidget> with SingleTickerProv
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+              (Route<dynamic> route) => false,
+            ); // Navigate back to the HomePage
+          },
+          tooltip: 'Back',
+        ),
         title: Text('PDF Parser', style: GoogleFonts.archivo()),
         centerTitle: true,
         actions: [
@@ -81,12 +102,22 @@ class _PDFParserWidgetState extends State<PDFParserWidget> with SingleTickerProv
         ],
       ),
       body: isLoading 
-          ? Center(
-              child: SpinKitFadingCircle(
-                color: Colors.deepPurple,
-                size: 50.0,
-                controller: _controller,
-              ),
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: SpinKitFadingCircle(
+                    color: Colors.deepPurple,
+                    size: 50.0,
+                    controller: _controller,
+                  ),
+                ),
+                SizedBox(height: 20),
+                Text(
+                  "Uploading and processing PDF...",
+                  style: GoogleFonts.archivo(fontSize: 16),
+                ),
+              ],
             )
           : SingleChildScrollView(
               padding: const EdgeInsets.all(16),
@@ -100,12 +131,13 @@ class _PDFParserWidgetState extends State<PDFParserWidget> with SingleTickerProv
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 20),
-                    FrontWidget(
-                      text: "Select PDF",
-                      onPressed: () => pickPDF(),
-                      iconData: Icons.upload_file,
-                    ),
                   ] else ...[
+                    Text(
+                      "Ask questions related to the PDF:",
+                      style: GoogleFonts.archivo(fontSize: 20),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
                     if (queryResponse != null) ...[
                       const SizedBox(height: 20),
                       Text(
@@ -150,6 +182,11 @@ class _PDFParserWidgetState extends State<PDFParserWidget> with SingleTickerProv
                   labelText: "Ask a question",
                   border: OutlineInputBorder(),
                 ),
+                onSubmitted: (text) {
+                  if (text.isNotEmpty) {
+                    getAnswer(text);
+                  }
+                },
               ),
             ),
             IconButton(
@@ -173,28 +210,45 @@ class _PDFParserWidgetState extends State<PDFParserWidget> with SingleTickerProv
         setState(() {
           isLoading = true;
         });
-
-        final bytes = result.files.single.bytes!;
-        final document = PdfDocument(inputBytes: bytes);
-        final extractor = PdfTextExtractor(document);
-        extractedText = extractor.extractText();
-        
-        setState(() {
-          isLoading = false;
-        });
-
-        final response = await gemini.generateFromText('''
-          Generate 5 insightful questions based on this text. Ensure that the questions can be answered using the provided text. Only return the questions, one per line:
-          ${extractedText}
-        ''');
-
-        setState(() {
-          generatedQuestions = response.text
-              .split('\n')
-              .where((line) => line.trim().isNotEmpty)
-              .toList();
-        });
+        _processPDF(result.files.single.bytes!);
       }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+    }
+  }
+
+  Future<void> _processPDF(Uint8List fileBytes) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final document = PdfDocument(inputBytes: fileBytes);
+      final extractor = PdfTextExtractor(document);
+      extractedText = extractor.extractText();
+      
+      setState(() {
+        isLoading = false;
+      });
+
+      final response = await gemini.generateFromText('''
+        Generate 5 insightful questions based on this text. Ensure that the questions can be answered using the provided text. Only return the questions, one per line:
+        ${extractedText}
+      ''');
+
+      setState(() {
+        generatedQuestions = response.text
+            .split('\n')
+            .where((line) => line.trim().isNotEmpty)
+            .toList();
+      });
     } catch (e) {
       setState(() {
         isLoading = false;

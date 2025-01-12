@@ -19,6 +19,7 @@ class _VoiceChatState extends State<VoiceChat>
   final Gemini gemini = Gemini.instance;
   FlutterTts flutterTts = FlutterTts();
   List<ChatMessage> messages = [];
+  bool isDarkMode = false;
 
   late stt.SpeechToText speechToText;
   bool _isListening = false;
@@ -214,85 +215,161 @@ class _VoiceChatState extends State<VoiceChat>
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: isDarkMode ? Colors.white : Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          tooltip: 'Back',
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              setState(() => isDarkMode = !isDarkMode);
+            },
+            icon: Icon(
+              isDarkMode ? Icons.wb_sunny : Icons.nights_stay,
+              color: isDarkMode ? Colors.white : Colors.black,
+            ),
+            tooltip: 'Toggle Theme',
+          ),
+        ],
+      ),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          gradient: isDarkMode
+              ? LinearGradient(
+                  colors: [Colors.black87, Colors.black54],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                )
+              : LinearGradient(
+                  colors: [Colors.white, Colors.blue.shade50],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
             children: [
-              IconButton(
-                icon: Icon(Icons.arrow_back, color: Colors.white),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                tooltip: 'Back',
+              SizedBox(height: 20),
+
+              SizedBox(
+                width: 250,
+                height: 250,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Box(0.8, 0.8, 4, _controller, Colors.grey.withOpacity(0.2)),
+                    Box(0.6, 0.6, 3, _controller, Colors.grey.withOpacity(0.4)),
+                    Box(0.4, 0.4, 2, _controller, Colors.grey.withOpacity(0.6)),
+                    Box(0.2, 0.2, 1, _controller, Colors.grey.withOpacity(0.8)),
+                    Box(0.1, 0.1, 0, _controller, Colors.grey),
+                    LogoBox(_controller),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 20),
+
+              // Move the listening/generating indicator below the animation stack
+              Center(
+                child: FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: Text(
+                    _isListening ? 'Listening...' : (isGenerating ? 'Generating...' : ''),
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: isDarkMode ? Colors.white : Colors.black,
+                      decoration: TextDecoration.none,
+                    ),
+                  ),
+                ),
+              ),
+
+              SizedBox(height: 20),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    children: [
+                      ScaleTransition(
+                        scale: _buttonAnimation,
+                        child: IconButton(
+                          icon: Icon(Icons.stop, color: Colors.red),
+                          onPressed: isGenerating ? _stopTTS : null,
+                          tooltip: 'Stop',
+                          iconSize: 28,
+                        ),
+                      ),
+                      Text(
+                        "Stop",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w600,
+                          color: isDarkMode ? Colors.white : Colors.black,
+                          decoration: TextDecoration.none,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(width: 40),
+                  Column(
+                    children: [
+                      ScaleTransition(
+                        scale: _buttonAnimation,
+                        child: IconButton(
+                          icon: Icon(Icons.mic, color: Colors.green),
+                          onPressed: !_isListening && !isGenerating ? _listen : null,
+                          tooltip: 'Start Listening',
+                          iconSize: 28,
+                        ),
+                      ),
+                      Text(
+                        "Start",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w600,
+                          color: isDarkMode ? Colors.white : Colors.black,
+                          decoration: TextDecoration.none,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ],
           ),
-
-          SizedBox(height: 20),
-
-          SizedBox(
-            width: 250,
-            height: 250,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Box(0.8, 0.8, 4, _controller, Colors.grey.withOpacity(0.2)),
-                Box(0.6, 0.6, 3, _controller, Colors.grey.withOpacity(0.4)),
-                Box(0.4, 0.4, 2, _controller, Colors.grey.withOpacity(0.6)),
-                Box(0.2, 0.2, 1, _controller, Colors.grey.withOpacity(0.8)),
-                Box(0.1, 0.1, 0, _controller, Colors.grey),
-                LogoBox(_controller),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text("Help"),
+              content: Text("You can toggle Dark/Light mode, start or stop speech recognition, and chat here."),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: Text("Close"),
+                ),
               ],
             ),
-          ),
-
-          SizedBox(height: 20),
-
-          // Move the listening/generating indicator below the animation stack
-          Center(
-            child: FadeTransition(
-              opacity: _fadeAnimation,
-              child: Text(
-                _isListening ? 'Listening...' : (isGenerating ? 'Generating...' : ''),
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  decoration: TextDecoration.none,
-                ),
-              ),
-            ),
-          ),
-
-          SizedBox(height: 20),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ScaleTransition(
-                scale: _buttonAnimation,
-                child: IconButton(
-                  icon: Icon(Icons.stop, color: Colors.red),
-                  onPressed: isGenerating  ? _stopTTS : null,
-                  tooltip: 'Stop',
-                  iconSize: 28,
-                ),
-              ),
-              SizedBox(width: 40),
-              ScaleTransition(
-                scale: _buttonAnimation,
-                child: IconButton(
-                  icon: Icon(Icons.mic, color: Colors.green),
-                  onPressed: !_isListening && !isGenerating ? _listen : null,
-                  tooltip: 'Start Listening',
-                  iconSize: 28,
-                ),
-              ),
-            ],
-          )
-        ],
+          );
+        },
+        backgroundColor: isDarkMode ? Colors.grey[800] : Colors.blue,
+        child: Icon(Icons.help),
       ),
     );
   }

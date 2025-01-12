@@ -2,6 +2,8 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:Nexia/ai/screens/VoiceChat.dart';
+import 'package:Nexia/ai/screens/pdf_ai.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart'; 
 import 'package:chat_bubbles/bubbles/bubble_normal.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
@@ -18,6 +20,7 @@ import 'dart:convert'; // Add this import for JSON encoding/decoding
 import 'VoiceChat.dart' as nexia;
 // import 'CustomChatMessage.dart'; // Add this import
 import '../widgets/Waveform.dart';
+import 'NotesPage.dart'; // Import the NotesPage
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -66,11 +69,14 @@ class _HomePageState extends State<HomePage> {
   // Store the current input for auto-completion
   String _currentInput = '';
 
+  List<String> notes = []; // List to store notes
+
   @override
   void initState() {
     super.initState();
     _loadPreferences();
     _loadMessages(); // Load messages on init
+    _loadNotes(); // Load notes on init
     speechToText = stt.SpeechToText();
     _requestPermission();
     _initSpeech();
@@ -117,6 +123,21 @@ class _HomePageState extends State<HomePage> {
     await prefs.setString('messages', jsonEncode(encoded));
   }
 
+  // Load notes from SharedPreferences
+  Future<void> _loadNotes() async {
+    final String? storedNotes = prefs.getString('notes');
+    if (storedNotes != null) {
+      setState(() {
+        notes = List<String>.from(jsonDecode(storedNotes));
+      });
+    }
+  }
+
+  // Save notes to SharedPreferences
+  Future<void> _saveNotes() async {
+    await prefs.setString('notes', jsonEncode(notes));
+  }
+
   @override
   void dispose() {
     _focusNode.dispose();
@@ -148,7 +169,7 @@ String _cleanResponse(String response) {
   // Define a map of words to replace
   Map<String, String> replacements = {
     'Gemini': 'Nexia',
-    'Google': 'Vishnu',
+    'Google': 'Nexia',
   };
 
   // Replace each word in the map
@@ -167,6 +188,8 @@ String _cleanResponse(String response) {
     });
     _saveMessages(); // Save after sending
     try {
+      // Combine all previous messages into a single string
+      String history = messages.reversed.map((msg) => msg.text).join('\n');
       String question = chatMessage.text;
       List<Uint8List>? images;
       if (chatMessage.medias?.isNotEmpty ?? false) {
@@ -177,7 +200,7 @@ String _cleanResponse(String response) {
 
       gemini
           .streamGenerateContent(
-        question,
+        history + '\n' + question, // Include the entire chat history
         images: images,
       )
           .listen((event) async {
@@ -266,52 +289,74 @@ String _cleanResponse(String response) {
     });
   }
 
-  // Modify the _fetchSuggestions method to prompt Gemini for query completions
-  Future<void> _fetchSuggestions(String input) async {
-    _currentInput = input;
-    if (input.isEmpty) {
-      setState(() {
-        _filteredSuggestions = [];
-      });
-      return;
-    }
-    try {
-      // Refine the prompt to clearly request query completions
-      String prompt = 'Complete the user\'s query: "$input"';
-      gemini.streamGenerateContent(prompt).listen((event) {
-        String response = event.content?.parts?.fold(
-                "", (previous, current) => "$previous ${current.text}") ??
-            "";
-        // Split responses by newlines and filter for meaningful completions
-        List<String> suggestions = response
-            .split('\n')
-            .map((s) => s.trim().replaceAll('*', '')) // Remove asterisks
-            .where((s) => s.isNotEmpty)
-            .toList();
-        setState(() {
-          _filteredSuggestions = suggestions;
-        });
-      });
-    } catch (e) {
-      print(e);
-      setState(() {
-        _filteredSuggestions = [];
-      });
+  void _showUploadOptions() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(Icons.image),
+                title: Text('Upload Image'),
+                subtitle: Text('PNG, JPG'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _sendMediaMessage();
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.picture_as_pdf),
+                title: Text('Upload Document'),
+                subtitle: Text('PDF only'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _sendDocumentMessage();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _sendDocumentMessage() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
+
+    if (result != null) {
+      Uint8List fileBytes = result.files.single.bytes!;
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PdfChat(
+            fileBytes: fileBytes,
+          ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please select a PDF document.')),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: isDarkMode ? Colors.black87 : Colors.white,
-      drawer: _drawerUI(),
+      backgroundColor: isDarkMode ? Colors.black : Colors.white, // Ensure fully dark background
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.menu, color: isDarkMode ? Colors.white : Colors.black), // Updated icon
+          icon: Icon(Icons.arrow_back, color: isDarkMode ? Colors.white : Colors.black), // Updated icon
           onPressed: () {
-            Scaffold.of(context).openDrawer();
+            Navigator.pop(context); // Navigate back to the previous page
           },
-          tooltip: 'Menu',
+          tooltip: 'Back',
         ),
         title: const Text('Ask Nexia'),
         titleTextStyle: TextStyle(color: isDarkMode ? Colors.white : Colors.black, fontSize: 22, fontWeight: FontWeight.bold),
@@ -330,52 +375,19 @@ String _cleanResponse(String response) {
               });
             },
           ),
+          IconButton(
+            icon: Icon(Icons.note, color: isDarkMode ? Colors.white : Colors.black),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotesPage(notes: notes)),
+              );
+            },
+            tooltip: 'View Notes',
+          ),
         ],
       ),
       body: _chatUI(),
-    );
-  }
-
-  Widget _drawerUI() {
-    return Drawer(
-      child: Container(
-        color: isDarkMode ? Colors.black87 : Colors.white,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(height: 44),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 9.0),
-                decoration: BoxDecoration(
-                  color: isDarkMode ? Colors.grey.shade800 : Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: TextField(
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Search",
-                    hintStyle: TextStyle(color: isDarkMode ? Colors.white60 : Colors.black54),
-                    suffixIcon: Icon(Icons.search, color: Colors.white60),
-                  ),
-                ),
-              ),
-              ListTile(
-                title: const Text('Dark Mode'),
-                trailing: Switch(
-                  value: isDarkMode,
-                  onChanged: (value) {
-                    setState(() {
-                      isDarkMode = value;
-                      prefs.setBool('isDarkMode', value); // Save preference
-                    });
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 
@@ -449,6 +461,24 @@ Widget _chatUI() {
                             },
                           ),
                         ),
+                      if (isAI)
+                        SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            icon: Icon(Icons.note_add, size: 18, color: isDarkMode ? Colors.white : Colors.black54),
+                            onPressed: () {
+                              setState(() {
+                                notes.add(message.text);
+                              });
+                              _saveNotes();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Message saved as note!')),
+                              );
+                            },
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -495,8 +525,8 @@ Widget _chatUI() {
                     children: [
                       IconButton(
                         icon: Icon(Icons.photo, color: isDarkMode ? Colors.white : Colors.black54),
-                        onPressed: _sendMediaMessage,
-                        tooltip: 'Send Photo',
+                        onPressed: _showUploadOptions, // Show upload options
+                        tooltip: 'Send Photo or Document',
                       ),
                       Expanded(
                         child: TextField(
@@ -505,9 +535,6 @@ Widget _chatUI() {
                           cursorColor: isDarkMode ? Colors.white : Colors.black,
                           style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
                           textCapitalization: TextCapitalization.sentences,
-                          onChanged: (text) {
-                            _fetchSuggestions(text);
-                          },
                           onSubmitted: (text) {
                             if (text.isNotEmpty) {
                               _sendMessage(ChatMessage(
@@ -569,53 +596,6 @@ Widget _chatUI() {
               ),
             ],
           ),
-          if (_filteredSuggestions.isNotEmpty)
-            Container(
-              constraints: BoxConstraints(maxHeight: 150),
-              decoration: BoxDecoration(
-                color: isDarkMode ? Colors.grey.shade800 : Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 4,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: ListView.builder(
-                controller: _suggestionsScrollController,
-                itemCount: _filteredSuggestions.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(
-                      _filteredSuggestions[index],
-                      style: TextStyle(
-                        color: isDarkMode ? Colors.white : Colors.black87,
-                      ),
-                    ),
-                    onTap: () {
-                      // Append the selected suggestion to the existing input
-                      String currentText = controller.text;
-                      String suggestion = _filteredSuggestions[index];
-                      // Ensure there's a space before appending if needed
-                      if (currentText.isNotEmpty && !currentText.endsWith(' ')) {
-                        controller.text = currentText + ' ' + suggestion;
-                      } else {
-                        controller.text = currentText + suggestion;
-                      }
-                      controller.selection = TextSelection.fromPosition(
-                        TextPosition(offset: controller.text.length),
-                      );
-                      setState(() {
-                        _filteredSuggestions = [];
-                      });
-                    },
-                    trailing: Icon(Icons.arrow_forward, color: isDarkMode ? Colors.white54 : Colors.black54),
-                  );
-                },
-              ),
-            ),
         ],
       ),
     );

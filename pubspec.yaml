@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: 'none' # Prevent publishing to pub.dev
 
-version: 1.0.0+11
+version: 1.0.0+13
 
 platforms:
   android:
@@ -60,7 +60,7 @@ dependencies:
   flutter_chat_ui: ^1.6.12
   uuid: ^4.3.3
   flutter_chat_types: ^3.6.2
-  flutter_secure_storage: ^4.2.1
+  flutter_secure_storage: ^8.0.0
   flutter_riverpod: ^2.4.10
   riverpod_annotation: ^2.3.4
   file_picker: ^6.1.1
@@ -73,7 +73,6 @@ dependencies:
   syncfusion_flutter_pdfviewer:
   flutter_markdown:
   sizer: ^3.0.4
-  firebase_auth:
   shared_preferences:
   intl:
   url_launcher:

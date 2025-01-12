@@ -25,28 +25,28 @@ class _bmeState extends State<bme> {
   final List<UnitItem> units = [
     UnitItem(
       title: 'MODULE I: Thermodynamics and Heat Transfer',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_1',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?id=1XI0lw-dkG6Pg-8SD-O8dIvV4Opna6jLu&export=download',
     ),
     UnitItem(
       title: 'MODULE II: Thermal Power Generation Systems',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_2',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?id=1VLPSe3vgnX8HjeDrutp3_L54rJIMdTPY&export=download',
     ),
     UnitItem(
       title: 'MODULE III: Fluid Machines',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_3',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?id=1VTGNJAYBCMLVzd1YavpHWi9hINwcFB34&export=download',
     ),
     UnitItem(
       title: 'MODULE IV: Refrigeration and Air Conditioning',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_4',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?id=13fb3OYc-L8oTBT5B1TJ94wjiPXbscQ9S&export=download',
     ),
     UnitItem(
       title: 'MODULE V: Manufacturing Process',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_5',
+      isAvailable: true,
+      pdfUrl: 'https://drive.google.com/uc?id=19-oWN-cAY3yeR2bLL6_TDR7cqSyjbztb&export=download',
     ),
   ];
 
