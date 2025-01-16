@@ -24,29 +24,19 @@ class _physics1State extends State<physics1> {
 
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: Oscillations and Wave Motion',
+      title: 'Series 1',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?id=1V-FCKg7Tz_umFg8S4-jWIqVeZhBZ9vik&export=download',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1jlzA7LnwaADgbx1C9Yu4YmOvxyW_a2vL',
     ),
     UnitItem(
-      title: 'MODULE II: Wave Optics',
+      title: 'Series 2',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?id=1Ut1Dzv04dHfP2XC19MFDpTaw_Tg1ebiN&export=download',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1jYzdSyD-FAjV6H9NQcHdz3urn3lmFZ5K',
     ),
     UnitItem(
-      title: 'MODULE III: Quantum Mechanics for Engineers',
+      title: 'SEM',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1RevW5URdibj1YaHkcK6H2o5hzzlJAOSX',
-    ),
-    UnitItem(
-      title: 'MODULE IV: Introduction to Electromagnetic Theory',
-      isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?id=1wAN75ixM3jg2veCKDH4meb2z0eM4Igoz&export=download',
-    ),
-    UnitItem(
-      title: 'MODULE V: Introduction to Solids',
-      isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?id=1zbtXyLrD3ePTP5ts66DimQbQ89Gj58Go&export=download',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1jmr_Qc2wK21AnyDap_LazaBkoiQvVUyy',
     ),
   ];
 

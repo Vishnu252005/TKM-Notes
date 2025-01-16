@@ -24,30 +24,19 @@ class _fec1State extends State<fec1> {
 
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: Electronic Components & Devices',
+      title: 'Series 1',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1Xgr0YAMbPfAB0mRc6-DlFtxlAMLdBsfm',
-      
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1k5BPeDBCNChs_vVb8DGHIgQu90Pm_nGC',
     ),
     UnitItem(
-      title: 'MODULE II: Electronic Circuits',
+      title: 'Series 2',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1ai44hKJIcbdpyZ2EUTUJR2QPuBJBwgA3',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1k0dvTTeNcL3gRDrrhVsiqBNDvNbL4W-1',
     ),
     UnitItem(
-      title: 'MODULE III: Integrated Circuits',
+      title: 'SEM',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=14vnK7RRcSMYST4GmYWF1VAWf9iXIc8hS',
-    ),
-    UnitItem(
-      title: 'MODULE IV: Electronic Instrumentation',
-      isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1DJdH-mpT8K9BKETyXxF6nB4f1sVUzCmB',
-    ),
-    UnitItem(
-      title: 'MODULE V: Communication Systems',
-      isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1r1NdveyCEm_iFdBgzEGX4CmTZ4kXwLUq',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1jwHdmyxzftaq14Zb70UFuT61Pav0zdff',
     ),
   ];
 

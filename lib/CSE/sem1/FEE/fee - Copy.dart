@@ -29,31 +29,19 @@ class _FeeState extends State<Fee1> {
 
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: Elementary Concepts of DC and AC Electric Circuits',
+      title: 'Series 1',
       isAvailable: true,
-      pdfUrl: 'url_to_module1_pdf',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1k5BPeDBCNChs_vVb8DGHIgQu90Pm_nGC',
     ),
     UnitItem(
-      title: 'MODULE II: Representation of Sinusoidal Quantities & Analysis',
+      title: 'Series 2',
       isAvailable: true,
-      pdfUrl: 'url_to_module2_pdf',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1k0dvTTeNcL3gRDrrhVsiqBNDvNbL4W-1',
     ),
     UnitItem(
-      title:
-          'MODULE III: Electrical Installation in Buildings and Wiring Design',
+      title: 'SEM',
       isAvailable: true,
-      pdfUrl: 'url_to_module3_pdf',
-    ),
-    UnitItem(
-      title:
-          'MODULE IV: Introduction to Semiconductor Devices and Basic Electronic Circuits',
-      isAvailable: true,
-      pdfUrl: 'url_to_module4_pdf',
-    ),
-    UnitItem(
-      title: 'MODULE V: Communication Systems and Public Address Systems',
-      isAvailable: true,
-      pdfUrl: 'url_to_module5_pdf',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1jwHdmyxzftaq14Zb70UFuT61Pav0zdff',
     ),
   ];
 

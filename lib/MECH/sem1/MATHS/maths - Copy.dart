@@ -24,30 +24,21 @@ class _maths1State extends State<maths1> {
 
   final List<UnitItem> units = [
     UnitItem(
-      title: 'Module I: Multivariable Calculus and Applications',
+      title: 'Series 1',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=19VcJjEQ43bu9gV4lS4t-mV-Aj_jo7GjP',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1j2I_crJEeRcYWc0rol466WxtHxdJ7tnH',
     ),
     UnitItem(
-      title: 'Module II: Multiple Integrals and Applications',
+      title: 'Series 2',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1hhHsiUv-XUQc6n9SR5gRb5rGT1bHUku5',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1j9CSKkOzWgbWnnZUdjHlUc_rAguGgTSh',
     ),
     UnitItem(
-      title: 'Module III: Vector Differentiation',
+      title: 'SEM',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1IqUm0K-Zpz0TEQEut2s8CcVh5YJSoDGk',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1j4S_ZXCJFtqGkzSR7jymEknCW8WWonkJ',
     ),
-    UnitItem(
-      title: 'Module IV: Vector Integration',
-      isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1ru1Hhfx0bpHNoN1JXx3sQqdzlVxLytJr',
-    ),
-    UnitItem(
-      title: 'Module V: Linear Algebra',
-      isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1uv2dxXLwmBzWl2z0yQO8dWd3Mo4s57al',
-    ),
+    
   ];
 
   @override
