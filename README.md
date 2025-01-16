@@ -1,5 +1,3 @@
-Here's the full **README** file with the error and solution included at the end, formatted for easy copy-pasting into a terminal:
-
 ```markdown
 # Flutter App Management and Troubleshooting Guide
 
