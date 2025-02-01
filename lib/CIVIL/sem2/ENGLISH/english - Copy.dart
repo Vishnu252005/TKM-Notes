@@ -24,29 +24,19 @@ class _english1State extends State<english1> {
 
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: Use of Language in Communication',
-      isAvailable: true,
-      pdfUrl: 'http://drive.google.com/uc?export=download&id=1wHumE5jVk8XZJOaEC8B7LQzYt5g3udFn',
+      title: 'Series 1',
+      isAvailable: false,
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1k5BPeDBCNChs_vVb8DGHIgQu90Pm_nGC',
     ),
     UnitItem(
-      title: 'MODULE II: Oral Presentation',
+      title: 'Series 2',
       isAvailable: true,
-      pdfUrl: 'http://drive.google.com/uc?export=download&id=1wJVMzrvDAZIWzOvJE0a0LCdgkeUwyJOT',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1kAK3rF8E1XVVLadXUCOrv1b-e-5gP7Ea',
     ),
     UnitItem(
-      title: 'MODULE III: Interview Skills',
+      title: 'SEM',
       isAvailable: true,
-      pdfUrl: 'http://drive.google.com/uc?export=download&id=1wKjk0e44K2fm20cM6x3F8_rHfbEJN2Nq',
-    ),
-    UnitItem(
-      title: 'MODULE IV: Formal Writing',
-      isAvailable: true,
-      pdfUrl: 'http://drive.google.com/uc?export=download&id=1wKYGUO7wbYWpN7zG6WGxc-nFNeJqNV3C',
-    ),
-    UnitItem(
-      title: 'MODULE V: Reading Comprehension and Listening Skills',
-      isAvailable: true,
-      pdfUrl: 'http://drive.google.com/uc?export=download&id=1wKlF4f4hvDnUtSTBCTyzu1htdO4eP_0G',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1kBMaEljlowIDW_QEK8Q1nuSKWB_OjqQz',
     ),
   ];
 

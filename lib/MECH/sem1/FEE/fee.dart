@@ -29,32 +29,32 @@ class _FeeState extends State<Fee> {
 
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: Elementary Concepts of DC and AC Electric Circuits',
+      title: 'MODULE I: Electronic Components & Devices',
       isAvailable: true,
-      pdfUrl: 'url_to_module1_pdf',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1Xgr0YAMbPfAB0mRc6-DlFtxlAMLdBsfm',
+      
     ),
     UnitItem(
-      title: 'MODULE II: Representation of Sinusoidal Quantities & Analysis',
+      title: 'MODULE II: Electronic Circuits',
       isAvailable: true,
-      pdfUrl: 'url_to_module2_pdf',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1ai44hKJIcbdpyZ2EUTUJR2QPuBJBwgA3',
     ),
     UnitItem(
-      title: 'MODULE III: Electrical Installation in Buildings and Wiring Design',
+      title: 'MODULE III: Integrated Circuits',
       isAvailable: true,
-      pdfUrl: 'url_to_module3_pdf',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=14vnK7RRcSMYST4GmYWF1VAWf9iXIc8hS',
     ),
     UnitItem(
-      title: 'MODULE IV: Introduction to Semiconductor Devices and Basic Electronic Circuits',
+      title: 'MODULE IV: Electronic Instrumentation',
       isAvailable: true,
-      pdfUrl: 'url_to_module4_pdf',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1DJdH-mpT8K9BKETyXxF6nB4f1sVUzCmB',
     ),
     UnitItem(
-      title: 'MODULE V: Communication Systems and Public Address Systems',
+      title: 'MODULE V: Communication Systems',
       isAvailable: true,
-      pdfUrl: 'url_to_module5_pdf',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1r1NdveyCEm_iFdBgzEGX4CmTZ4kXwLUq',
     ),
   ];
-
   @override
   void initState() {
     super.initState();

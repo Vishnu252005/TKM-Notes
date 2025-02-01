@@ -29,31 +29,34 @@ class _Mechanic1State extends State<Mechanic> {
 
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: Resultant of Force Systems',
+      title: 'MODULE I: Resultant of concurrent force systems',
       isAvailable: true,
-      pdfUrl: 'url_to_module1_pdf',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1jA9FFX4auRR7C7Lbw8pKztvAWZ6NqT_5',
     ),
     UnitItem(
-      title: 'MODULE II: Equilibrium of Rigid Bodies',
+      title:
+          'MODULE II: Resultant of non-concurrent force systems, equilibrium of rigid bodies',
       isAvailable: true,
-      pdfUrl: 'url_to_module2_pdf',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=110s6eW2KgDCl-VsspJJXoNVkM-QvupJC',
     ),
     UnitItem(
-      title: 'MODULE III: Centroid and Moment of Inertia',
+      title:
+          'MODULE III: Centroid and moment of inertia, support reaction of beams',
       isAvailable: true,
-      pdfUrl: 'url_to_module3_pdf',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1xZMv5sOfSNGiOQPRbjyXmgUu_FY1kMqz',
     ),
     UnitItem(
-      title: 'MODULE IV: Support Reactions of Beams, Forces in Space',
+      title: 'MODULE IV: Kinetics of translation',
       isAvailable: true,
-      pdfUrl: 'url_to_module4_pdf',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1dSVtCSDlO8IH0jpOrgabhngI4UmdnM90',
     ),
     UnitItem(
-      title: 'MODULE V: Dynamics of Rigid Bodies',
+      title: 'MODULE V: Kinematics and kinetics of rotation',
       isAvailable: true,
-      pdfUrl: 'url_to_module5_pdf',
+      pdfUrl: 'https://drive.google.com/uc?export=download&id=1dSXgPvjXvlLIDAVmARrdiAA1vairXAzq',
     ),
   ];
+
 
   @override
   void initState() {

@@ -30,31 +30,32 @@ class _FeeState extends State<Fee> {
 
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: Introduction and Basic Grammar',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_1',
+      title: 'MODULE I: Elementary Concepts of DC and AC Electric Circuits',
+      isAvailable: true,
+      pdfUrl: 'url_to_module1_pdf',
     ),
     UnitItem(
-      title: 'MODULE II: Presentation Skills and Public Speaking',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_2',
+      title: 'MODULE II: Representation of Sinusoidal Quantities & Analysis',
+      isAvailable: true,
+      pdfUrl: 'url_to_module2_pdf',
     ),
     UnitItem(
-      title: 'MODULE III: Interview Preparation',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_3',
+      title: 'MODULE III: Electrical Installation in Buildings and Wiring Design',
+      isAvailable: true,
+      pdfUrl: 'url_to_module3_pdf',
     ),
     UnitItem(
-      title: 'MODULE IV: Formal Writing and Documentation',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_4',
+      title: 'MODULE IV: Introduction to Semiconductor Devices and Basic Electronic Circuits',
+      isAvailable: true,
+      pdfUrl: 'url_to_module4_pdf',
     ),
     UnitItem(
-      title: 'MODULE V: Reading and Listening Skills',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_5',
+      title: 'MODULE V: Communication Systems and Public Address Systems',
+      isAvailable: true,
+      pdfUrl: 'url_to_module5_pdf',
     ),
   ];
+
 
   @override
   void initState() {
