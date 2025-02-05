@@ -19,6 +19,9 @@ import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../ai/screens/HomePage.dart';
 import '../../ai/widgets/lottie_button.dart';
+import 'package:Nexia/widgets/navbar/ai_screen.dart';
+import 'package:Nexia/widgets/navbar/profile_screen.dart';
+import 'package:Nexia/widgets/navbar/tools_screen.dart';
 
 class EEESem1Screen extends StatefulWidget {
   final String fullName;
@@ -43,6 +46,7 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
   final List<String> _tabs = ['Notes & Books', 'PYQs'];
   bool _isDarkMode = true;
   late Map<String, List<Map<String, dynamic>>> _subjects;
+  int _currentIndex = 0; // Track the current index of the bottom navigation bar
 
   @override
   void initState() {
@@ -360,7 +364,63 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
                 ),
               ),
             ),
+            IndexedStack(
+              index: _currentIndex,
+              children: [
+                // Home Screen
+                Column(
+                  // ... existing code for the main content
+                ),
+                AIScreen(), // AI Screen
+                ToolsScreen(), // Tools Screen
+                ProfileScreen(), // Profile Screen
+              ],
+            ),
           ],
+        ),
+      ),
+      bottomNavigationBar: AnimatedContainer(
+        duration: Duration(milliseconds: 300), // Animation duration
+        decoration: BoxDecoration(
+          color: _isDarkMode ? Color(0xFF121212) : Colors.white, // Use a better shade of black
+          boxShadow: [
+            BoxShadow(
+              color: Colors.blue.withOpacity(0.5), // Blue shadow effect
+              blurRadius: 8,
+              spreadRadius: 2,
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index; // Update the current index
+            });
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home, color: _isDarkMode ? Colors.white : Colors.black), // Change icon color
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.android, color: _isDarkMode ? Colors.white : Colors.black), // Change icon color
+              label: 'AI',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.build, color: _isDarkMode ? Colors.white : Colors.black), // Change icon color
+              label: 'Tools',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person, color: _isDarkMode ? Colors.white : Colors.black), // Change icon color
+              label: 'Profile',
+            ),
+          ],
+          selectedItemColor: Colors.blue, // Keep selected item color blue
+          unselectedItemColor: Colors.white70, // Adjust unselected item color for better visibility
+          backgroundColor: _isDarkMode ? Color(0xFF121212) : Colors.white, // Use a better shade of black
+          type: BottomNavigationBarType.fixed,
+          elevation: 0, // Remove elevation from BottomNavigationBar
         ),
       ),
     );
