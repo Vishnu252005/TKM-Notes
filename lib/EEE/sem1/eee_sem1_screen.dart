@@ -22,6 +22,7 @@ import '../../ai/widgets/lottie_button.dart';
 import 'package:Nexia/widgets/navbar/ai_screen.dart';
 import 'package:Nexia/widgets/navbar/profile_screen.dart';
 import 'package:Nexia/widgets/navbar/tools_screen.dart';
+import 'package:Nexia/widgets/navbar/home_screen.dart';
 
 class EEESem1Screen extends StatefulWidget {
   final String fullName;
@@ -424,5 +425,64 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
         ),
       ),
     );
+  }
+}
+
+class EEEHomeScreen extends StatefulWidget {
+  @override
+  _EEEHomeScreenState createState() => _EEEHomeScreenState();
+}
+
+class _EEEHomeScreenState extends State<EEEHomeScreen> {
+  bool _isDarkMode = true;
+  int _currentIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('EEE Home')),
+      body: _getBody(),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.android),
+            label: 'AI',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.build),
+            label: 'Tools',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _getBody() {
+    switch (_currentIndex) {
+      case 0:
+        return HomeScreen();
+      case 1:
+        return AIScreen();
+      case 2:
+        return ToolsScreen();
+      case 3:
+        return ProfileScreen();
+      default:
+        return HomeScreen();
+    }
   }
 }

@@ -3,6 +3,10 @@ import 'package:Nexia/widgets/profile.dart';
 import 'package:Nexia/widgets/pdfviewer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:Nexia/widgets/navbar/home_screen.dart'; // Import HomeScreen
+import 'package:Nexia/widgets/navbar/ai_screen.dart'; // Import AIScreen
+import 'package:Nexia/widgets/navbar/tools_screen.dart'; // Import ToolsScreen
+import 'package:Nexia/widgets/navbar/profile_screen.dart'; // Import ProfileScreen
 
 class fec extends StatefulWidget { // Capitalized class name
   final String fullName;
@@ -18,6 +22,7 @@ class fec extends StatefulWidget { // Capitalized class name
 
 class _fecState extends State<fec> {
   bool _isDarkMode = true;
+  int _currentIndex = 0;
 
   late BannerAd _bannerAd;
   bool _isBannerAdLoaded = false;
@@ -227,14 +232,50 @@ class _fecState extends State<fec> {
           ),
         ],
       ),
-      bottomNavigationBar: _isBannerAdLoaded
-          ? Container(
-               width: MediaQuery.of(context).size.width, // Full width of the screen
-               height: _bannerAd.size.height.toDouble(),
-               color: Colors.white, // Set background color to white
-               child: AdWidget(ad: _bannerAd),
-            )
-          : null,
+      bottomNavigationBar: AnimatedContainer(
+        duration: Duration(milliseconds: 300), // Animation duration
+        decoration: BoxDecoration(
+          color: _isDarkMode ? Color(0xFF121212) : Colors.white, // Use a better shade of black
+          boxShadow: [
+            BoxShadow(
+              color: Colors.blue.withOpacity(0.5), // Blue shadow effect
+              blurRadius: 8,
+              spreadRadius: 2,
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index; // Update the current index
+            });
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home, color: _isDarkMode ? Colors.white : Colors.black), // Change icon color
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.android, color: _isDarkMode ? Colors.white : Colors.black), // Change icon color
+              label: 'AI',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.build, color: _isDarkMode ? Colors.white : Colors.black), // Change icon color
+              label: 'Tools',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person, color: _isDarkMode ? Colors.white : Colors.black), // Change icon color
+              label: 'Profile',
+            ),
+          ],
+          selectedItemColor: Colors.blue, // Keep selected item color blue
+          unselectedItemColor: Colors.white70, // Adjust unselected item color for better visibility
+          backgroundColor: _isDarkMode ? Color(0xFF121212) : Colors.white, // Use a better shade of black
+          type: BottomNavigationBarType.fixed,
+          elevation: 0, // Remove elevation from BottomNavigationBar
+        ),
+      ),
     );
   }
 

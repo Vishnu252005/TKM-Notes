@@ -3,6 +3,10 @@ import 'package:Nexia/widgets/profile.dart';
 import 'package:Nexia/widgets/pdfviewer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:Nexia/widgets/navbar/home_screen.dart';
+import 'package:Nexia/widgets/navbar/ai_screen.dart';
+import 'package:Nexia/widgets/navbar/tools_screen.dart';
+import 'package:Nexia/widgets/navbar/profile_screen.dart';
 
 
 class Bee extends StatefulWidget {
@@ -24,6 +28,7 @@ class Bee extends StatefulWidget {
 
 class _BeeState extends State<Bee> {
   bool _isDarkMode = true;
+  int _currentIndex = 0;
 
   late BannerAd _bannerAd;
   bool _isBannerAdLoaded = false;
@@ -129,119 +134,82 @@ class _BeeState extends State<Bee> {
           ),
         ],
       ),
-      body: Stack(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(28.0, 0, 28.0, 16.0),
-                child: TweenAnimationBuilder(
-                  duration: const Duration(milliseconds: 500),
-                  tween: Tween<double>(begin: -100, end: 0),
-                  builder: (BuildContext context, double value, Widget? child) {
-                    return Transform.translate(
-                      offset: Offset(value, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Basics of Electrical Engineering',
-                            style: _textStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            'Select Chapter',
-                            style: _textStyle(fontSize: 18),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: _isDarkMode ? Colors.black : Colors.white,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30),
-                    ),
-                    boxShadow: !_isDarkMode
-                        ? [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 5,
-                              blurRadius: 7,
-                              offset: const Offset(0, 3), // changes position of shadow
-                            ),
-                          ]
-                        : [],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                    child: ListView(
-                      children: [
-                        _buildListItem(context, 'Textbooks', false, null),
-                        ...units.map((unit) => _buildListItem(context, unit.title, unit.isAvailable, unit.pdfUrl)).toList(),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Positioned(
-            top: 1,
-            right: 10,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProfilePage(
-                      fullName: widget.fullName,
-                      branch: widget.branch,
-                      year: widget.year,
-                      semester: widget.semester,
-                    ),
-                  ),
-                );
-              },
-              
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.blue[700], // Updated color
-                  child: Text(
-                    widget.fullName[0].toUpperCase(),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                    ),
-                  ),
-                ),
-              ),
+      body: _getBody(),
+      bottomNavigationBar: AnimatedContainer(
+        duration: Duration(milliseconds: 300), // Animation duration
+        decoration: BoxDecoration(
+          color: _isDarkMode ? Color(0xFF121212) : Colors.white, // Use a better shade of black
+          boxShadow: [
+            BoxShadow(
+              color: Colors.blue.withOpacity(0.5), // Blue shadow effect
+              blurRadius: 8,
+              spreadRadius: 2,
             ),
-          ),
-        ],
+          ],
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index; // Update the current index
+            });
+            switch (index) {
+              case 0:
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+                break;
+              case 1:
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AIScreen()));
+                break;
+              case 2:
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ToolsScreen()));
+                break;
+              case 3:
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
+                break;
+            }
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home, color: _isDarkMode ? Colors.white : Colors.black), // Change icon color
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.android, color: _isDarkMode ? Colors.white : Colors.black), // Change icon color
+              label: 'AI',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.build, color: _isDarkMode ? Colors.white : Colors.black), // Change icon color
+              label: 'Tools',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person, color: _isDarkMode ? Colors.white : Colors.black), // Change icon color
+              label: 'Profile',
+            ),
+          ],
+          selectedItemColor: Colors.blue, // Keep selected item color blue
+          unselectedItemColor: Colors.white70, // Adjust unselected item color for better visibility
+          backgroundColor: _isDarkMode ? Color(0xFF121212) : Colors.white, // Use a better shade of black
+          type: BottomNavigationBarType.fixed,
+          elevation: 0, // Remove elevation from BottomNavigationBar
+        ),
       ),
-      bottomNavigationBar: _isBannerAdLoaded
-          ? Container(
-               width: MediaQuery.of(context).size.width, // Full width of the screen
-               height: _bannerAd.size.height.toDouble(),
-               color: Colors.white, // Set background color to white
-               child: AdWidget(ad: _bannerAd),
-            )
-          : null,
     );
   }
 
-  
+  Widget _getBody() {
+    switch (_currentIndex) {
+      case 0:
+        return HomeScreen();
+      case 1:
+        return AIScreen();
+      case 2:
+        return ToolsScreen();
+      case 3:
+        return ProfileScreen();
+      default:
+        return HomeScreen();
+    }
+  }
 
   TextStyle _textStyle({required double fontSize, FontWeight fontWeight = FontWeight.normal}) {
     return TextStyle(
