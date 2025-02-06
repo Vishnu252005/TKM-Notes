@@ -68,11 +68,14 @@ import 'widgets/signup.dart';
 import 'package:flutter/material.dart';
 import 'ai/constants/const.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
-
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'ai/screens/HomePage.dart';
+import 'firebase_init.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await FirebaseInit.initialize();
   MobileAds.instance.initialize();
   Gemini.init(apiKey: "AIzaSyDqPfAa1C8sn2hDKLFpMTeiavIHg2vf_C8");
   runApp(const MyApp());
