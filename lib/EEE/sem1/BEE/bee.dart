@@ -8,7 +8,6 @@ import 'package:Nexia/widgets/navbar/ai_screen.dart';
 import 'package:Nexia/widgets/navbar/tools_screen.dart';
 import 'package:Nexia/widgets/navbar/profile_screen.dart';
 
-
 class Bee extends StatefulWidget {
   final String fullName;
   final String branch;
@@ -37,17 +36,20 @@ class _BeeState extends State<Bee> {
     UnitItem(
       title: 'MODULE I: D.C. Circuits and Magnetic Circuits',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?id=1HfowrHTQNAbo-MU8m33FaMLLQb6jLVW1&export=download',
+      pdfUrl:
+          'https://drive.google.com/uc?id=1upWv1xmmJS04tXp6wSAyDnn9CMCDXYCb&export=download',
     ),
     UnitItem(
       title: 'MODULE II: Single Phase Systems',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?id=18of05v5k0LTXA4UZb2dV9jjar7OnFEX-&export=download',
+      pdfUrl:
+          'https://drive.google.com/uc?id=1C6Rq9tyDeEiQEBsuxgFbIlZtEkIqk3UV&export=download',
     ),
     UnitItem(
       title: 'MODULE III: Three Phase Systems and Power Transmission',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?id=1fOE2zTU78oFMNNwQIMzDNLlO3wOg4NKi&export=download',
+      pdfUrl:
+          'https://drive.google.com/uc?id=1M2_s78Psixy20UTdWURZbKH1TSqrk6oo&export=download',
     ),
     UnitItem(
       title: 'MODULE IV: DC Machines and Transformers',
@@ -89,10 +91,10 @@ class _BeeState extends State<Bee> {
     });
   }
 
-
   void _loadBannerAd() {
     _bannerAd = BannerAd(
-      adUnitId: 'ca-app-pub-1850470420397635/2911662464', // Replace with your Ad Unit ID
+      adUnitId:
+          'ca-app-pub-1850470420397635/2911662464', // Replace with your Ad Unit ID
       size: AdSize.banner,
       request: AdRequest(),
       listener: BannerAdListener(
@@ -138,7 +140,9 @@ class _BeeState extends State<Bee> {
       bottomNavigationBar: AnimatedContainer(
         duration: Duration(milliseconds: 300), // Animation duration
         decoration: BoxDecoration(
-          color: _isDarkMode ? Color(0xFF121212) : Colors.white, // Use a better shade of black
+          color: _isDarkMode
+              ? Color(0xFF121212)
+              : Colors.white, // Use a better shade of black
           boxShadow: [
             BoxShadow(
               color: Colors.blue.withOpacity(0.5), // Blue shadow effect
@@ -155,40 +159,59 @@ class _BeeState extends State<Bee> {
             });
             switch (index) {
               case 0:
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()));
                 break;
               case 1:
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AIScreen()));
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => AIScreen()));
                 break;
               case 2:
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ToolsScreen()));
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => ToolsScreen()));
                 break;
               case 3:
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => ProfileScreen()));
                 break;
             }
           },
           items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home, color: _isDarkMode ? Colors.white : Colors.black), // Change icon color
+              icon: Icon(Icons.home,
+                  color: _isDarkMode
+                      ? Colors.white
+                      : Colors.black), // Change icon color
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.android, color: _isDarkMode ? Colors.white : Colors.black), // Change icon color
+              icon: Icon(Icons.android,
+                  color: _isDarkMode
+                      ? Colors.white
+                      : Colors.black), // Change icon color
               label: 'AI',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.build, color: _isDarkMode ? Colors.white : Colors.black), // Change icon color
+              icon: Icon(Icons.build,
+                  color: _isDarkMode
+                      ? Colors.white
+                      : Colors.black), // Change icon color
               label: 'Tools',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person, color: _isDarkMode ? Colors.white : Colors.black), // Change icon color
+              icon: Icon(Icons.person,
+                  color: _isDarkMode
+                      ? Colors.white
+                      : Colors.black), // Change icon color
               label: 'Profile',
             ),
           ],
           selectedItemColor: Colors.blue, // Keep selected item color blue
-          unselectedItemColor: Colors.white70, // Adjust unselected item color for better visibility
-          backgroundColor: _isDarkMode ? Color(0xFF121212) : Colors.white, // Use a better shade of black
+          unselectedItemColor: Colors
+              .white70, // Adjust unselected item color for better visibility
+          backgroundColor: _isDarkMode
+              ? Color(0xFF121212)
+              : Colors.white, // Use a better shade of black
           type: BottomNavigationBarType.fixed,
           elevation: 0, // Remove elevation from BottomNavigationBar
         ),
@@ -211,7 +234,8 @@ class _BeeState extends State<Bee> {
     }
   }
 
-  TextStyle _textStyle({required double fontSize, FontWeight fontWeight = FontWeight.normal}) {
+  TextStyle _textStyle(
+      {required double fontSize, FontWeight fontWeight = FontWeight.normal}) {
     return TextStyle(
       fontSize: fontSize,
       fontWeight: fontWeight,
@@ -219,7 +243,8 @@ class _BeeState extends State<Bee> {
     );
   }
 
-  Widget _buildListItem(BuildContext context, String title, bool isAvailable, String? pdfUrl) {
+  Widget _buildListItem(
+      BuildContext context, String title, bool isAvailable, String? pdfUrl) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(
@@ -239,7 +264,8 @@ class _BeeState extends State<Bee> {
       child: ListTile(
         title: Text(
           title,
-          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[900]),
+          style:
+              TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[900]),
         ),
         trailing: const Icon(Icons.chevron_right, color: Colors.white),
         onTap: () {
@@ -247,7 +273,8 @@ class _BeeState extends State<Bee> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PDFViewerPage(pdfUrl: pdfUrl, title: title),
+                builder: (context) =>
+                    PDFViewerPage(pdfUrl: pdfUrl, title: title),
               ),
             );
           } else {
@@ -274,5 +301,6 @@ class UnitItem {
   final bool isAvailable;
   final String pdfUrl;
 
-  UnitItem({required this.title, required this.isAvailable, required this.pdfUrl});
+  UnitItem(
+      {required this.title, required this.isAvailable, required this.pdfUrl});
 }

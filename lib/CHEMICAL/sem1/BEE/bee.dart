@@ -37,13 +37,13 @@ class _BeeState extends State<Bee> {
       title: 'MODULE II: Single Phase Systems',
       isAvailable: true,
       pdfUrl:
-          'https://drive.google.com/uc?id=18of05v5k0LTXA4UZb2dV9jjar7OnFEX-&export=download',
+          'https://drive.google.com/uc?id=1C6Rq9tyDeEiQEBsuxgFbIlZtEkIqk3UV&export=download',
     ),
     UnitItem(
       title: 'MODULE III: Three Phase Systems and Power Transmission',
       isAvailable: true,
       pdfUrl:
-          'https://drive.google.com/uc?id=1fOE2zTU78oFMNNwQIMzDNLlO3wOg4NKi&export=download',
+          'https://drive.google.com/uc?id=1M2_s78Psixy20UTdWURZbKH1TSqrk6oo&export=download',
     ),
     UnitItem(
       title: 'MODULE IV: DC Machines and Transformers',
