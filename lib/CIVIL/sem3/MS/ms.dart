@@ -37,22 +37,26 @@ class _MsState extends State<Ms> {
     UnitItem(
       title: 'MODULE II:',
       isAvailable: false,
-      pdfUrl: 'url_to_pdf_2',
+      pdfUrl:
+          'https://drive.google.com/uc?id=1mlB0kf8cqzWdqbIb3nhlPXF8vEkR0JCy&export=download',
     ),
     UnitItem(
       title: 'MODULE III: ',
       isAvailable: false,
-      pdfUrl: 'url_to_pdf_3',
+      pdfUrl:
+          'https://drive.google.com/uc?id=1ejqzHj0X5sUf5lbJlDZTHuB8uQ6a8PbC&export=download',
     ),
     UnitItem(
       title: 'MODULE IV: ',
       isAvailable: false,
-      pdfUrl: 'url_to_pdf_4',
+      pdfUrl:
+          'https://drive.google.com/uc?id=1hipVAmzoZEMpumASEAjIMgdNC9Zlwnf6&export=download',
     ),
     UnitItem(
       title: 'MODULE V: ',
       isAvailable: false,
-      pdfUrl: 'url_to_pdf_5',
+      pdfUrl:
+          'https://drive.google.com/uc?id=1fNIAg8CSn2wRydRNjtSk1OBVyELgIjB5&export=download',
     ),
   ];
 
