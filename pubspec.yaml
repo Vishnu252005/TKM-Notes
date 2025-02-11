@@ -101,17 +101,13 @@ flutter:
     - assets/s1.png
     - assets/s2.png
     - assets/robocat.riv
-    - assets/fonts/
-    - assets/images/
-    - assets/animations/
-    - Sets/E3.txt
-    - Sets/E6.txt
-    - Sets/E12.txt
-    - Sets/E24.txt
-    - Sets/E48.txt
-    - Sets/E96.txt
-    - Sets/E192.txt
-    - images/0.png
+    - assets/in.png
+    - assets/location.png
+    - assets/mail.png
+    - assets/mobile.png
+    - animations/resume.json
+    - assets/cv.png
+    
 
   # Optional: Customize fonts
   # fonts:
