@@ -73,7 +73,7 @@ dependencies:
   syncfusion_flutter_pdfviewer:
   flutter_markdown:
   sizer: ^3.0.4
-  shared_preferences:
+  shared_preferences: ^2.2.2
   intl:
   url_launcher:
   flutter_spinkit: ^5.1.0  
@@ -83,6 +83,11 @@ dependencies:
   firebase_storage: ^12.4.2
   cloud_firestore: ^5.6.3
   dropdown_search: ^5.0.0
+  
+  material_design_icons_flutter: ^5.0.0
+  vector_math: ^2.1.1
+  custom_radio_grouped_button: ^2.2.1
+  flutter_material_color_picker: ^1.0.0
 
 flutter_icons:
   image_path: "assets/app_logo.png"
@@ -99,6 +104,14 @@ flutter:
     - assets/fonts/
     - assets/images/
     - assets/animations/
+    - Sets/E3.txt
+    - Sets/E6.txt
+    - Sets/E12.txt
+    - Sets/E24.txt
+    - Sets/E48.txt
+    - Sets/E96.txt
+    - Sets/E192.txt
+    - images/0.png
 
   # Optional: Customize fonts
   # fonts:
