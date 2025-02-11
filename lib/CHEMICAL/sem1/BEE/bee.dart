@@ -4,7 +4,6 @@ import 'package:Nexia/widgets/pdfviewer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-
 class Bee extends StatefulWidget {
   final String fullName;
   final String branch;
@@ -32,17 +31,19 @@ class _BeeState extends State<Bee> {
     UnitItem(
       title: 'MODULE I: D.C. Circuits and Magnetic Circuits',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?id=1HfowrHTQNAbo-MU8m33FaMLLQb6jLVW1&export=download',
+      pdfUrl: 'f',
     ),
     UnitItem(
       title: 'MODULE II: Single Phase Systems',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?id=18of05v5k0LTXA4UZb2dV9jjar7OnFEX-&export=download',
+      pdfUrl:
+          'https://drive.google.com/uc?id=1C6Rq9tyDeEiQEBsuxgFbIlZtEkIqk3UV&export=download',
     ),
     UnitItem(
       title: 'MODULE III: Three Phase Systems and Power Transmission',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?id=1fOE2zTU78oFMNNwQIMzDNLlO3wOg4NKi&export=download',
+      pdfUrl:
+          'https://drive.google.com/uc?id=1M2_s78Psixy20UTdWURZbKH1TSqrk6oo&export=download',
     ),
     UnitItem(
       title: 'MODULE IV: DC Machines and Transformers',
@@ -84,10 +85,10 @@ class _BeeState extends State<Bee> {
     });
   }
 
-
   void _loadBannerAd() {
     _bannerAd = BannerAd(
-      adUnitId: 'ca-app-pub-1850470420397635/2911662464', // Replace with your Ad Unit ID
+      adUnitId:
+          'ca-app-pub-1850470420397635/2911662464', // Replace with your Ad Unit ID
       size: AdSize.banner,
       request: AdRequest(),
       listener: BannerAdListener(
@@ -176,7 +177,8 @@ class _BeeState extends State<Bee> {
                               color: Colors.grey.withOpacity(0.5),
                               spreadRadius: 5,
                               blurRadius: 7,
-                              offset: const Offset(0, 3), // changes position of shadow
+                              offset: const Offset(
+                                  0, 3), // changes position of shadow
                             ),
                           ]
                         : [],
@@ -186,7 +188,10 @@ class _BeeState extends State<Bee> {
                     child: ListView(
                       children: [
                         _buildListItem(context, 'Textbooks', false, null),
-                        ...units.map((unit) => _buildListItem(context, unit.title, unit.isAvailable, unit.pdfUrl)).toList(),
+                        ...units
+                            .map((unit) => _buildListItem(context, unit.title,
+                                unit.isAvailable, unit.pdfUrl))
+                            .toList(),
                       ],
                     ),
                   ),
@@ -231,18 +236,18 @@ class _BeeState extends State<Bee> {
       ),
       bottomNavigationBar: _isBannerAdLoaded
           ? Container(
-               width: MediaQuery.of(context).size.width, // Full width of the screen
-               height: _bannerAd.size.height.toDouble(),
-               color: Colors.white, // Set background color to white
-               child: AdWidget(ad: _bannerAd),
+              width:
+                  MediaQuery.of(context).size.width, // Full width of the screen
+              height: _bannerAd.size.height.toDouble(),
+              color: Colors.white, // Set background color to white
+              child: AdWidget(ad: _bannerAd),
             )
           : null,
     );
   }
 
-  
-
-  TextStyle _textStyle({required double fontSize, FontWeight fontWeight = FontWeight.normal}) {
+  TextStyle _textStyle(
+      {required double fontSize, FontWeight fontWeight = FontWeight.normal}) {
     return TextStyle(
       fontSize: fontSize,
       fontWeight: fontWeight,
@@ -250,7 +255,8 @@ class _BeeState extends State<Bee> {
     );
   }
 
-  Widget _buildListItem(BuildContext context, String title, bool isAvailable, String? pdfUrl) {
+  Widget _buildListItem(
+      BuildContext context, String title, bool isAvailable, String? pdfUrl) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(
@@ -270,7 +276,8 @@ class _BeeState extends State<Bee> {
       child: ListTile(
         title: Text(
           title,
-          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[900]),
+          style:
+              TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[900]),
         ),
         trailing: const Icon(Icons.chevron_right, color: Colors.white),
         onTap: () {
@@ -278,7 +285,8 @@ class _BeeState extends State<Bee> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PDFViewerPage(pdfUrl: pdfUrl, title: title),
+                builder: (context) =>
+                    PDFViewerPage(pdfUrl: pdfUrl, title: title),
               ),
             );
           } else {
@@ -305,5 +313,6 @@ class UnitItem {
   final bool isAvailable;
   final String pdfUrl;
 
-  UnitItem({required this.title, required this.isAvailable, required this.pdfUrl});
+  UnitItem(
+      {required this.title, required this.isAvailable, required this.pdfUrl});
 }
