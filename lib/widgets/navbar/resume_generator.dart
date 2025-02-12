@@ -450,8 +450,17 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
             collegeGraduatingYear: _collegeGraduatingYear,
             degree: _degree,
             skills: _skills.join(', '),
-            experiences: _experiences.map((e) => e.description).join('\n'),
-            projects: _projects.map((p) => p.description).join('\n'),
+            experiences: _experiences.map((e) {
+              return '${e.companyName} | ${e.startDate.toString().split(' ')[0]} - ${e.isPresent ? 'Present' : e.endDate?.toString().split(' ')[0] ?? 'N/A'}\n'
+                     '● ${e.description}\n'
+                     '● Skills: ${e.skills.join(', ')}\n';
+            }).join('\n'),
+            projects: _projects.map((p) {
+              return '${p.projectName} | ${p.startDate.toString().split(' ')[0]} - ${p.isPresent ? 'Present' : p.endDate?.toString().split(' ')[0] ?? 'N/A'}\n'
+                     '● ${p.description}\n'
+                     '● Technologies: ${p.technologies.join(', ')}\n'
+                     '● GitHub Link: ${p.githubLink}\n';
+            }).join('\n'),
           ),
         ),
       );

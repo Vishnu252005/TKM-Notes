@@ -5,8 +5,16 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:universal_html/html.dart' as html;
+import 'package:share_plus/share_plus.dart';
+import 'package:open_file/open_file.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class GraphPlotter extends StatefulWidget {
   @override
@@ -51,18 +59,32 @@ class _GraphPlotterState extends State<GraphPlotter> {
 
   void _updateGraph() {
     setState(() {
-      _spots = _pointController.text
-          .split(';')
-          .map((point) {
-            List<double> values = point
-                .split(',')
-                .map((v) => double.tryParse(v) ?? 0)
-                .toList();
-            return FlSpot(values[0], values[1]);
-          })
-          .toList();
+      try {
+        _spots = _pointController.text
+            .split(';')
+            .where((point) => point.trim().isNotEmpty) // Filter empty entries
+            .map((point) {
+              final values = point.split(',');
+              if (values.length != 2) return null;
+              final x = double.tryParse(values[0].trim());
+              final y = double.tryParse(values[1].trim());
+              if (x == null || y == null) return null;
+              return FlSpot(x, y);
+            })
+            .where((spot) => spot != null)
+            .cast<FlSpot>()
+            .toList();
 
-      _adjustAxisRanges();
+        _adjustAxisRanges();
+      } catch (e) {
+        print('Error updating graph: $e');
+        // Set default values if parsing fails
+        _spots = [];
+        _xMin = 0;
+        _xMax = 10;
+        _yMin = 0;
+        _yMax = 10;
+      }
     });
   }
 
@@ -82,19 +104,125 @@ class _GraphPlotterState extends State<GraphPlotter> {
 
   Future<void> _capturePng() async {
     try {
-      RenderRepaintBoundary boundary =
-          _globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData? byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
-      Uint8List pngBytes = byteData!.buffer.asUint8List();
-      final directory = await getExternalStorageDirectory();
-      final imagePath = File('${directory!.path}/graph.png');
-      await imagePath.writeAsBytes(pngBytes);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Image saved to ${imagePath.path}')),
+      // Show loading indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       );
+
+      // Capture the graph as an image
+      RenderRepaintBoundary boundary = _globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      Uint8List pngBytes = byteData!.buffer.asUint8List();
+
+      // Create PDF document
+      final pdf = pw.Document();
+
+      // Use default built-in fonts instead of custom fonts
+      pdf.addPage(
+        pw.Page(
+          pageFormat: PdfPageFormat.a4,
+          build: (pw.Context context) {
+            return pw.Center(
+              child: pw.Column(
+                mainAxisAlignment: pw.MainAxisAlignment.center,
+                children: [
+                  pw.Text(
+                    'Graph Plot',
+                    style: pw.TextStyle(
+                      fontSize: 24,
+                      fontWeight: pw.FontWeight.bold,
+                    ),
+                  ),
+                  pw.SizedBox(height: 20),
+                  pw.Image(pw.MemoryImage(pngBytes), height: 400),
+                  pw.SizedBox(height: 20),
+                  pw.Text(
+                    'Points: ${_pointController.text}',
+                    style: const pw.TextStyle(fontSize: 12),
+                  ),
+                  pw.Text(
+                    'X Range: $_xMin to $_xMax, Y Range: $_yMin to $_yMax',
+                    style: const pw.TextStyle(fontSize: 12),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      );
+
+      // Close loading dialog
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+
+      if (kIsWeb) {
+        final bytes = await pdf.save();
+        final blob = html.Blob([bytes], 'application/pdf');
+        final url = html.Url.createObjectUrlFromBlob(blob);
+        final anchor = html.AnchorElement()
+          ..href = url
+          ..style.display = 'none'
+          ..download = 'graph_plot.pdf';
+        html.document.body?.children.add(anchor);
+        anchor.click();
+        html.document.body?.children.remove(anchor);
+        html.Url.revokeObjectUrl(url);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Graph PDF downloaded successfully')),
+        );
+      } else {
+        final directory = await getApplicationDocumentsDirectory();
+        final file = File('${directory.path}/graph_plot.pdf');
+        await file.writeAsBytes(await pdf.save());
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Graph PDF Generated'),
+              content: Text('What would you like to do with the PDF?'),
+              actions: [
+                TextButton(
+                  onPressed: () async {
+                    await OpenFile.open(file.path);
+                    Navigator.pop(context);
+                  },
+                  child: Text('Open'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    await Share.shareXFiles([XFile(file.path)], text: 'Graph Plot');
+                    Navigator.pop(context);
+                  },
+                  child: Text('Share'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('Cancel'),
+                ),
+              ],
+            );
+          },
+        );
+      }
     } catch (e) {
+      // Make sure to close loading dialog if there's an error
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to generate PDF: ${e.toString()}')),
+      );
       print(e);
     }
   }
