@@ -6,7 +6,7 @@ import 'resistance_calculator.dart'; // Import the new resistance calculator
 import 'unit_converter.dart'; // Import the unit converter
 import 'project_idea.dart'; // Import the ProjectIdeaScreen
 import 'resume_generator.dart'; // Import the ResumeGenerator
-import 'resume/screen/on_boarding/on_boarding_page.dart';
+// import 'resume/screen/on_boarding/on_boarding_page.dart';
 
 class ToolsScreen extends StatelessWidget {
   @override
