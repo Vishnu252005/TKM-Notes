@@ -7,6 +7,8 @@ import 'package:open_file/open_file.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:universal_html/html.dart' as html;
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ResumeGenerator extends StatefulWidget {
   @override
@@ -790,6 +792,10 @@ class _ResumeDisplayState extends State<ResumeDisplay> {
   Future<void> _generateAndDownloadPDF() async {
     final pdf = pw.Document();
 
+    // Load the font
+    final font = await rootBundle.load("assets/fonts/Roboto-Regular.ttf");
+    final ttf = pw.Font.ttf(font);
+
     // Create PDF content
     pdf.addPage(
       pw.Page(
@@ -807,6 +813,7 @@ class _ResumeDisplayState extends State<ResumeDisplay> {
                       pw.Text(
                         nameController.text.toUpperCase(),
                         style: pw.TextStyle(
+                          font: ttf,
                           fontSize: 24,
                           fontWeight: pw.FontWeight.bold,
                         ),
@@ -815,9 +822,9 @@ class _ResumeDisplayState extends State<ResumeDisplay> {
                       pw.Row(
                         mainAxisAlignment: pw.MainAxisAlignment.center,
                         children: [
-                          pw.Text(emailController.text),
-                          pw.Text(' | '),
-                          pw.Text(phoneController.text),
+                          pw.Text(emailController.text, style: pw.TextStyle(font: ttf)),
+                          pw.Text(' | ', style: pw.TextStyle(font: ttf)),
+                          pw.Text(phoneController.text, style: pw.TextStyle(font: ttf)),
                         ],
                       ),
                     ],
@@ -829,63 +836,68 @@ class _ResumeDisplayState extends State<ResumeDisplay> {
                 pw.Text(
                   'ABOUT ME',
                   style: pw.TextStyle(
+                    font: ttf,
                     fontSize: 16,
                     fontWeight: pw.FontWeight.bold,
                   ),
                 ),
                 pw.SizedBox(height: 8),
-                pw.Text(aboutMeController.text),
+                pw.Text(aboutMeController.text, style: pw.TextStyle(font: ttf)),
                 pw.SizedBox(height: 16),
 
                 // Education
                 pw.Text(
                   'EDUCATION',
                   style: pw.TextStyle(
+                    font: ttf,
                     fontSize: 16,
                     fontWeight: pw.FontWeight.bold,
                   ),
                 ),
                 pw.SizedBox(height: 8),
-                pw.Text('${widget.collegeName} - ${widget.degree}'),
-                pw.Text('${widget.collegeType} | Graduating Year: ${widget.collegeGraduatingYear}'),
-                pw.Text('${widget.schoolName} - ${widget.schoolClass}'),
-                pw.Text('Passout Year: ${widget.schoolPassoutYear}'),
+                pw.Text('${widget.collegeName} - ${widget.degree}', style: pw.TextStyle(font: ttf)),
+                pw.Text('${widget.collegeType} | Graduating Year: ${widget.collegeGraduatingYear}', style: pw.TextStyle(font: ttf)),
+                pw.Text('${widget.schoolName} - ${widget.schoolClass}', style: pw.TextStyle(font: ttf)),
+                pw.Text('Passout Year: ${widget.schoolPassoutYear}', style: pw.TextStyle(font: ttf)),
                 pw.SizedBox(height: 16),
 
                 // Skills
                 pw.Text(
                   'SKILLS',
                   style: pw.TextStyle(
+                    font: ttf,
                     fontSize: 16,
                     fontWeight: pw.FontWeight.bold,
                   ),
                 ),
                 pw.SizedBox(height: 8),
-                pw.Text(skillsController.text),
+                pw.Text(skillsController.text, style: pw.TextStyle(font: ttf)),
                 pw.SizedBox(height: 16),
 
                 // Experience
                 pw.Text(
                   'EXPERIENCE',
                   style: pw.TextStyle(
+                    font: ttf,
                     fontSize: 16,
                     fontWeight: pw.FontWeight.bold,
                   ),
                 ),
                 pw.SizedBox(height: 8),
-                pw.Text(experiencesController.text),
+                pw.Text(experiencesController.text, style: pw.TextStyle(font: ttf)),
                 pw.SizedBox(height: 16),
 
                 // Projects
                 pw.Text(
                   'PROJECTS',
                   style: pw.TextStyle(
+                    font: ttf,
                     fontSize: 16,
                     fontWeight: pw.FontWeight.bold,
                   ),
                 ),
                 pw.SizedBox(height: 8),
-                pw.Text(projectsController.text),
+                pw.Text(projectsController.text, style: pw.TextStyle(font: ttf)),
               ],
             ),
           );
