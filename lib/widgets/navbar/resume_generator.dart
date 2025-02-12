@@ -1,4 +1,12 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:path_provider/path_provider.dart';
+import 'package:open_file/open_file.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:universal_html/html.dart' as html;
 
 class ResumeGenerator extends StatefulWidget {
   @override
@@ -231,10 +239,10 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
   Widget _buildProjectCard(Project project) {
     return Card(
       margin: EdgeInsets.symmetric(vertical: 8),
-      child: Padding(
+        child: Padding(
         padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextFormField(
               decoration: InputDecoration(labelText: 'Project Name'),
@@ -275,17 +283,17 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
               decoration: InputDecoration(labelText: 'Description'),
               maxLines: 3,
               onChanged: (value) => project.description = value,
-            ),
-            TextFormField(
+                ),
+                TextFormField(
               decoration: InputDecoration(
                 labelText: 'Technologies (comma separated)',
                 hintText: 'e.g., Flutter, Dart, Firebase',
               ),
               onChanged: (value) {
                 project.technologies = value.split(',').map((e) => e.trim()).toList();
-              },
-            ),
-            TextFormField(
+                  },
+                ),
+                TextFormField(
               decoration: InputDecoration(labelText: 'GitHub Link'),
               onChanged: (value) => project.githubLink = value,
             ),
@@ -306,73 +314,73 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
   Widget _buildEducationSection() {
     return Column(
       children: [
-        TextFormField(
-          decoration: InputDecoration(labelText: 'School Name'),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter your school name';
-            }
-            return null;
-          },
-          onSaved: (value) {
-            _schoolName = value!;
-          },
-        ),
-        TextFormField(
-          decoration: InputDecoration(labelText: 'Passout Year'),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter your passout year';
-            }
-            return null;
-          },
-          onSaved: (value) {
-            _schoolPassoutYear = value!;
-          },
-        ),
-        DropdownButtonFormField<String>(
-          value: _schoolClass,
-          decoration: InputDecoration(labelText: 'Class'),
-          items: ['12th', 'Diploma'].map((String className) {
-            return DropdownMenuItem<String>(
-              value: className,
-              child: Text(className),
-            );
-          }).toList(),
-          onChanged: (value) {
-            setState(() {
-              _schoolClass = value!;
-            });
-          },
-        ),
-        SizedBox(height: 10),
-        TextFormField(
-          decoration: InputDecoration(labelText: 'College Name'),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter your college name';
-            }
-            return null;
-          },
-          onSaved: (value) {
-            _collegeName = value!;
-          },
-        ),
-        DropdownButtonFormField<String>(
-          value: _collegeType,
-          decoration: InputDecoration(labelText: 'College Type'),
-          items: ['Undergraduate', 'Graduate'].map((String type) {
-            return DropdownMenuItem<String>(
-              value: type,
-              child: Text(type),
-            );
-          }).toList(),
-          onChanged: (value) {
-            setState(() {
-              _collegeType = value!;
-            });
-          },
-        ),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'School Name'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your school name';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _schoolName = value!;
+                  },
+                ),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Passout Year'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your passout year';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _schoolPassoutYear = value!;
+                  },
+                ),
+                DropdownButtonFormField<String>(
+                  value: _schoolClass,
+                  decoration: InputDecoration(labelText: 'Class'),
+                  items: ['12th', 'Diploma'].map((String className) {
+                    return DropdownMenuItem<String>(
+                      value: className,
+                      child: Text(className),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      _schoolClass = value!;
+                    });
+                  },
+                ),
+                SizedBox(height: 10),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'College Name'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your college name';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _collegeName = value!;
+                  },
+                ),
+                DropdownButtonFormField<String>(
+                  value: _collegeType,
+                  decoration: InputDecoration(labelText: 'College Type'),
+                  items: ['Undergraduate', 'Graduate'].map((String type) {
+                    return DropdownMenuItem<String>(
+                      value: type,
+                      child: Text(type),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      _collegeType = value!;
+                    });
+                  },
+                ),
         DropdownButtonFormField<String>(
           value: _degree,
           decoration: InputDecoration(labelText: 'Degree'),
@@ -406,19 +414,19 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
             });
           },
         ),
-        TextFormField(
-          decoration: InputDecoration(labelText: 'Graduating Year'),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter your graduating year';
-            }
-            return null;
-          },
-          onSaved: (value) {
-            _collegeGraduatingYear = value!;
-          },
-        ),
-        SizedBox(height: 20),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Graduating Year'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your graduating year';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _collegeGraduatingYear = value!;
+                  },
+                ),
+                SizedBox(height: 20),
       ],
     );
   }
@@ -562,7 +570,7 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
                           children: [
                             Expanded(
                               child: TextFormField(
-                                controller: _skillController,
+                  controller: _skillController,
                                 decoration: InputDecoration(
                                   labelText: 'Add a skill',
                                   suffixIcon: IconButton(
@@ -595,7 +603,7 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
                     _buildSectionCard(
                       title: 'Experience',
                       children: [
-                        _buildExperienceForm(),
+                _buildExperienceForm(),
                       ],
                     ),
                     SizedBox(height: 24),
@@ -603,14 +611,14 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
                     _buildSectionCard(
                       title: 'Projects',
                       children: [
-                        _buildProjectForm(),
+                _buildProjectForm(),
                       ],
                     ),
                     SizedBox(height: 24),
 
                     Center(
                       child: ElevatedButton.icon(
-                        onPressed: _generateResume,
+                  onPressed: _generateResume,
                         icon: Icon(Icons.description),
                         label: Text('Generate Resume'),
                         style: ElevatedButton.styleFrom(
@@ -770,6 +778,185 @@ class _ResumeDisplayState extends State<ResumeDisplay> {
     );
   }
 
+  Future<void> _generateAndDownloadPDF() async {
+    final pdf = pw.Document();
+
+    // Create PDF content
+    pdf.addPage(
+      pw.Page(
+        pageFormat: PdfPageFormat.a4,
+        build: (pw.Context context) {
+          return pw.Padding(
+            padding: pw.EdgeInsets.all(24),
+            child: pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                // Header
+                pw.Center(
+                  child: pw.Column(
+                    children: [
+                      pw.Text(
+                        nameController.text.toUpperCase(),
+                        style: pw.TextStyle(
+                          fontSize: 24,
+                          fontWeight: pw.FontWeight.bold,
+                        ),
+                      ),
+                      pw.SizedBox(height: 8),
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Text(emailController.text),
+                          pw.Text(' | '),
+                          pw.Text(phoneController.text),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                pw.SizedBox(height: 20),
+
+                // About Me
+                pw.Text(
+                  'ABOUT ME',
+                  style: pw.TextStyle(
+                    fontSize: 16,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+                pw.SizedBox(height: 8),
+                pw.Text(aboutMeController.text),
+                pw.SizedBox(height: 16),
+
+                // Education
+                pw.Text(
+                  'EDUCATION',
+                  style: pw.TextStyle(
+                    fontSize: 16,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+                pw.SizedBox(height: 8),
+                pw.Text('${widget.collegeName} - ${widget.degree}'),
+                pw.Text('${widget.collegeType} | Graduating Year: ${widget.collegeGraduatingYear}'),
+                pw.Text('${widget.schoolName} - ${widget.schoolClass}'),
+                pw.Text('Passout Year: ${widget.schoolPassoutYear}'),
+                pw.SizedBox(height: 16),
+
+                // Skills
+                pw.Text(
+                  'SKILLS',
+                  style: pw.TextStyle(
+                    fontSize: 16,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+                pw.SizedBox(height: 8),
+                pw.Text(skillsController.text),
+                pw.SizedBox(height: 16),
+
+                // Experience
+                pw.Text(
+                  'EXPERIENCE',
+                  style: pw.TextStyle(
+                    fontSize: 16,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+                pw.SizedBox(height: 8),
+                pw.Text(experiencesController.text),
+                pw.SizedBox(height: 16),
+
+                // Projects
+                pw.Text(
+                  'PROJECTS',
+                  style: pw.TextStyle(
+                    fontSize: 16,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+                pw.SizedBox(height: 8),
+                pw.Text(projectsController.text),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+
+    try {
+      if (kIsWeb) {
+        // For web platform
+        final bytes = await pdf.save();
+        final blob = html.Blob([bytes], 'application/pdf');
+        final url = html.Url.createObjectUrlFromBlob(blob);
+        final anchor = html.AnchorElement()
+          ..href = url
+          ..style.display = 'none'
+          ..download = 'resume.pdf';
+        html.document.body?.children.add(anchor);
+        anchor.click();
+        html.document.body?.children.remove(anchor);
+        html.Url.revokeObjectUrl(url);
+      } else {
+        // For mobile/desktop platforms
+        final dir = await getApplicationDocumentsDirectory();
+        final file = File('${dir.path}/resume.pdf');
+        await file.writeAsBytes(await pdf.save());
+
+        // Show options dialog
+        if (!mounted) return;
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Resume Generated'),
+              content: Text('What would you like to do with your resume?'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    OpenFile.open(file.path);
+                    Navigator.pop(context);
+                  },
+                  child: Text('Open'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Share.shareXFiles([XFile(file.path)], text: 'My Resume');
+                    Navigator.pop(context);
+                  },
+                  child: Text('Share'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('Cancel'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } catch (e) {
+      // Show error dialog
+      if (!mounted) return;
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Failed to generate PDF: ${e.toString()}'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -779,9 +966,7 @@ class _ResumeDisplayState extends State<ResumeDisplay> {
         actions: [
           IconButton(
             icon: Icon(Icons.download),
-            onPressed: () {
-              // TODO: Implement PDF download functionality
-            },
+            onPressed: _generateAndDownloadPDF,
           ),
         ],
       ),
@@ -789,7 +974,7 @@ class _ResumeDisplayState extends State<ResumeDisplay> {
         color: Colors.grey[100],
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -805,9 +990,9 @@ class _ResumeDisplayState extends State<ResumeDisplay> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
                     // Header Section with Edit
                     Center(
                       child: Column(
