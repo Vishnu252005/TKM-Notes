@@ -47,6 +47,7 @@ class Project {
 
 class _ResumeGeneratorState extends State<ResumeGenerator> {
   final _formKey = GlobalKey<FormState>();
+  bool isDarkMode = false;  // Add this for theme toggle
   
   // Personal Details
   String _name = '';
@@ -61,6 +62,7 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
   String _collegeName = '';
   String _collegeType = 'Undergraduate'; // Default value
   String _collegeGraduatingYear = '';
+  String _degree = 'B.Tech'; // Default value
 
   // Skills
   List<String> _skills = [];
@@ -301,10 +303,129 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
     );
   }
 
+  Widget _buildEducationSection() {
+    return Column(
+      children: [
+        TextFormField(
+          decoration: InputDecoration(labelText: 'School Name'),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter your school name';
+            }
+            return null;
+          },
+          onSaved: (value) {
+            _schoolName = value!;
+          },
+        ),
+        TextFormField(
+          decoration: InputDecoration(labelText: 'Passout Year'),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter your passout year';
+            }
+            return null;
+          },
+          onSaved: (value) {
+            _schoolPassoutYear = value!;
+          },
+        ),
+        DropdownButtonFormField<String>(
+          value: _schoolClass,
+          decoration: InputDecoration(labelText: 'Class'),
+          items: ['12th', 'Diploma'].map((String className) {
+            return DropdownMenuItem<String>(
+              value: className,
+              child: Text(className),
+            );
+          }).toList(),
+          onChanged: (value) {
+            setState(() {
+              _schoolClass = value!;
+            });
+          },
+        ),
+        SizedBox(height: 10),
+        TextFormField(
+          decoration: InputDecoration(labelText: 'College Name'),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter your college name';
+            }
+            return null;
+          },
+          onSaved: (value) {
+            _collegeName = value!;
+          },
+        ),
+        DropdownButtonFormField<String>(
+          value: _collegeType,
+          decoration: InputDecoration(labelText: 'College Type'),
+          items: ['Undergraduate', 'Graduate'].map((String type) {
+            return DropdownMenuItem<String>(
+              value: type,
+              child: Text(type),
+            );
+          }).toList(),
+          onChanged: (value) {
+            setState(() {
+              _collegeType = value!;
+            });
+          },
+        ),
+        DropdownButtonFormField<String>(
+          value: _degree,
+          decoration: InputDecoration(labelText: 'Degree'),
+          items: [
+            'B.Tech',
+            'M.Tech',
+            'B.Arch',
+            'M.Arch',
+            'B.Com',
+            'M.Com',
+            'B.A',
+            'M.A',
+            'B.B.A',
+            'MBA',
+            'B.Sc',
+            'M.Sc',
+            'B.Ed',
+            'M.Ed',
+            'PhD',
+            'Diploma',
+            'Other'
+          ].map((String degree) {
+            return DropdownMenuItem<String>(
+              value: degree,
+              child: Text(degree),
+            );
+          }).toList(),
+          onChanged: (value) {
+            setState(() {
+              _degree = value!;
+            });
+          },
+        ),
+        TextFormField(
+          decoration: InputDecoration(labelText: 'Graduating Year'),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter your graduating year';
+            }
+            return null;
+          },
+          onSaved: (value) {
+            _collegeGraduatingYear = value!;
+          },
+        ),
+        SizedBox(height: 20),
+      ],
+    );
+  }
+
   void _generateResume() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      // Navigate to the resume display screen
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -319,6 +440,7 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
             collegeName: _collegeName,
             collegeType: _collegeType,
             collegeGraduatingYear: _collegeGraduatingYear,
+            degree: _degree,
             skills: _skills.join(', '),
             experiences: _experiences.map((e) => e.description).join('\n'),
             projects: _projects.map((p) => p.description).join('\n'),
@@ -328,187 +450,239 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
     }
   }
 
+  ThemeData _getTheme() {
+    return isDarkMode
+        ? ThemeData.dark().copyWith(
+            primaryColor: Colors.blue,
+            appBarTheme: AppBarTheme(
+              backgroundColor: Colors.blue[900],
+            ),
+            inputDecorationTheme: InputDecorationTheme(
+              filled: true,
+              fillColor: Colors.grey[850],
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.grey[600]!),
+              ),
+            ),
+          )
+        : ThemeData.light().copyWith(
+            primaryColor: Colors.blue,
+            appBarTheme: AppBarTheme(
+              backgroundColor: Colors.blue,
+            ),
+            inputDecorationTheme: InputDecorationTheme(
+              filled: true,
+              fillColor: Colors.grey[50],
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.grey[300]!),
+              ),
+            ),
+          );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Resume Generator'),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Personal Details Section
-                Text('Personal Details', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Name'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your name';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _name = value!;
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Email'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _email = value!;
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Phone (optional)'),
-                  onSaved: (value) {
-                    _phone = value!;
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'About Me'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter something about yourself';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _aboutMe = value!;
-                  },
-                ),
-                SizedBox(height: 20),
+    return Theme(
+      data: _getTheme(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Resume Generator'),
+          centerTitle: true,
+          actions: [
+            IconButton(
+              icon: Icon(isDarkMode ? Icons.light_mode : Icons.dark_mode),
+              onPressed: () {
+                setState(() {
+                  isDarkMode = !isDarkMode;
+                });
+              },
+            ),
+          ],
+        ),
+        body: Container(
+          color: isDarkMode ? Colors.grey[900] : Colors.grey[100],
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildSectionCard(
+                      title: 'Personal Details',
+                      children: [
+                        _buildTextField(
+                          label: 'Full Name',
+                          validator: (value) => value?.isEmpty ?? true ? 'Please enter your name' : null,
+                          onSaved: (value) => _name = value!,
+                        ),
+                        SizedBox(height: 16),
+                        _buildTextField(
+                          label: 'Email',
+                          validator: (value) => value?.isEmpty ?? true ? 'Please enter your email' : null,
+                          onSaved: (value) => _email = value!,
+                        ),
+                        SizedBox(height: 16),
+                        _buildTextField(
+                          label: 'Phone',
+                          onSaved: (value) => _phone = value!,
+                        ),
+                        SizedBox(height: 16),
+                        _buildTextField(
+                          label: 'About Me',
+                          maxLines: 3,
+                          validator: (value) => value?.isEmpty ?? true ? 'Please enter something about yourself' : null,
+                          onSaved: (value) => _aboutMe = value!,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 24),
 
-                // Education Section
-                Text('Education', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'School Name'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your school name';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _schoolName = value!;
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Passout Year'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your passout year';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _schoolPassoutYear = value!;
-                  },
-                ),
-                DropdownButtonFormField<String>(
-                  value: _schoolClass,
-                  decoration: InputDecoration(labelText: 'Class'),
-                  items: ['12th', 'Diploma'].map((String className) {
-                    return DropdownMenuItem<String>(
-                      value: className,
-                      child: Text(className),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _schoolClass = value!;
-                    });
-                  },
-                ),
-                SizedBox(height: 10),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'College Name'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your college name';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _collegeName = value!;
-                  },
-                ),
-                DropdownButtonFormField<String>(
-                  value: _collegeType,
-                  decoration: InputDecoration(labelText: 'College Type'),
-                  items: ['Undergraduate', 'Graduate'].map((String type) {
-                    return DropdownMenuItem<String>(
-                      value: type,
-                      child: Text(type),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _collegeType = value!;
-                    });
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Graduating Year'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your graduating year';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _collegeGraduatingYear = value!;
-                  },
-                ),
-                SizedBox(height: 20),
+                    _buildSectionCard(
+                      title: 'Education',
+                      children: [
+                        _buildEducationSection(),
+                      ],
+                    ),
+                    SizedBox(height: 24),
 
-                // Skills Section
-                Text('Skills', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                TextFormField(
-                  controller: _skillController,
-                  decoration: InputDecoration(labelText: 'Add a skill'),
-                ),
-                ElevatedButton(
-                  onPressed: _addSkill,
-                  child: Text('Add Skill'),
-                ),
-                SizedBox(height: 10),
-                Text('Skills: ${_skills.join(', ')}', style: TextStyle(fontSize: 16)),
+                    _buildSectionCard(
+                      title: 'Skills',
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: _skillController,
+                                decoration: InputDecoration(
+                                  labelText: 'Add a skill',
+                                  suffixIcon: IconButton(
+                                    icon: Icon(Icons.add),
+                                    onPressed: _addSkill,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 16),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: _skills.map((skill) => Chip(
+                            label: Text(skill),
+                            deleteIcon: Icon(Icons.close),
+                            onDeleted: () {
+                              setState(() {
+                                _skills.remove(skill);
+                              });
+                            },
+                          )).toList(),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 24),
 
-                // Experience Section
-                Text('Experience', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                _buildExperienceForm(),
-                SizedBox(height: 20),
+                    _buildSectionCard(
+                      title: 'Experience',
+                      children: [
+                        _buildExperienceForm(),
+                      ],
+                    ),
+                    SizedBox(height: 24),
 
-                // Projects Section
-                Text('Projects', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                _buildProjectForm(),
-                SizedBox(height: 20),
+                    _buildSectionCard(
+                      title: 'Projects',
+                      children: [
+                        _buildProjectForm(),
+                      ],
+                    ),
+                    SizedBox(height: 24),
 
-                ElevatedButton(
-                  onPressed: _generateResume,
-                  child: Text('Generate Resume'),
+                    Center(
+                      child: ElevatedButton.icon(
+                        onPressed: _generateResume,
+                        icon: Icon(Icons.description),
+                        label: Text('Generate Resume'),
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                          textStyle: TextStyle(fontSize: 18),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 24),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
       ),
     );
   }
+
+  Widget _buildSectionCard({required String title, required List<Widget> children}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: isDarkMode ? Colors.grey[850] : Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: isDarkMode ? Colors.blue[300] : Colors.blue[800],
+              ),
+            ),
+            SizedBox(height: 20),
+            ...children,
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required String label,
+    int maxLines = 1,
+    String? Function(String?)? validator,
+    void Function(String?)? onSaved,
+  }) {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: label,
+        alignLabelWithHint: maxLines > 1,
+      ),
+      maxLines: maxLines,
+      validator: validator,
+      onSaved: onSaved,
+    );
+  }
 }
 
-class ResumeDisplay extends StatelessWidget {
+class ResumeDisplay extends StatefulWidget {
   final String name;
   final String email;
   final String phone;
@@ -519,6 +693,7 @@ class ResumeDisplay extends StatelessWidget {
   final String collegeName;
   final String collegeType;
   final String collegeGraduatingYear;
+  final String degree;
   final String skills;
   final String experiences;
   final String projects;
@@ -534,10 +709,66 @@ class ResumeDisplay extends StatelessWidget {
     required this.collegeName,
     required this.collegeType,
     required this.collegeGraduatingYear,
+    required this.degree,
     required this.skills,
     required this.experiences,
     required this.projects,
   });
+
+  @override
+  _ResumeDisplayState createState() => _ResumeDisplayState();
+}
+
+class _ResumeDisplayState extends State<ResumeDisplay> {
+  late TextEditingController nameController;
+  late TextEditingController emailController;
+  late TextEditingController phoneController;
+  late TextEditingController aboutMeController;
+  late TextEditingController skillsController;
+  late TextEditingController experiencesController;
+  late TextEditingController projectsController;
+
+  @override
+  void initState() {
+    super.initState();
+    nameController = TextEditingController(text: widget.name);
+    emailController = TextEditingController(text: widget.email);
+    phoneController = TextEditingController(text: widget.phone);
+    aboutMeController = TextEditingController(text: widget.aboutMe);
+    skillsController = TextEditingController(text: widget.skills);
+    experiencesController = TextEditingController(text: widget.experiences);
+    projectsController = TextEditingController(text: widget.projects);
+  }
+
+  void _showEditDialog(String title, TextEditingController controller, {int maxLines = 1}) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Edit $title'),
+        content: TextField(
+          controller: controller,
+          maxLines: maxLines,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: 'Enter $title',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {});
+              Navigator.pop(context);
+            },
+            child: Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -545,28 +776,187 @@ class ResumeDisplay extends StatelessWidget {
       appBar: AppBar(
         title: Text('Your Resume'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.download),
+            onPressed: () {
+              // TODO: Implement PDF download functionality
+            },
+          ),
+        ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Name: $name', style: TextStyle(fontSize: 20)),
-            Text('Email: $email', style: TextStyle(fontSize: 20)),
-            Text('Phone: $phone', style: TextStyle(fontSize: 20)),
-            Text('About Me: $aboutMe', style: TextStyle(fontSize: 20)),
-            Text('School: $schoolName', style: TextStyle(fontSize: 20)),
-            Text('Passout Year: $schoolPassoutYear', style: TextStyle(fontSize: 20)),
-            Text('Class: $schoolClass', style: TextStyle(fontSize: 20)),
-            Text('College: $collegeName', style: TextStyle(fontSize: 20)),
-            Text('College Type: $collegeType', style: TextStyle(fontSize: 20)),
-            Text('Graduating Year: $collegeGraduatingYear', style: TextStyle(fontSize: 20)),
-            Text('Skills: $skills', style: TextStyle(fontSize: 20)),
-            Text('Work Experience: $experiences', style: TextStyle(fontSize: 20)),
-            Text('Projects: $projects', style: TextStyle(fontSize: 20)),
-          ],
+      body: Container(
+        color: Colors.grey[100],
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Header Section with Edit
+                    Center(
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                nameController.text.toUpperCase(),
+                                style: TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.5,
+                                ),
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.edit, size: 20),
+                                onPressed: () => _showEditDialog('Name', nameController),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.email, size: 16, color: Colors.grey[600]),
+                              SizedBox(width: 4),
+                              Text(emailController.text),
+                              IconButton(
+                                icon: Icon(Icons.edit, size: 16),
+                                onPressed: () => _showEditDialog('Email', emailController),
+                              ),
+                              Icon(Icons.phone, size: 16, color: Colors.grey[600]),
+                              SizedBox(width: 4),
+                              Text(phoneController.text),
+                              IconButton(
+                                icon: Icon(Icons.edit, size: 16),
+                                onPressed: () => _showEditDialog('Phone', phoneController),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 32),
+
+                    // About Me Section with Edit
+                    _buildSectionWithEdit(
+                      title: 'ABOUT ME',
+                      content: aboutMeController.text,
+                      onEdit: () => _showEditDialog('About Me', aboutMeController, maxLines: 5),
+                    ),
+
+                    // Skills Section with Edit
+                    _buildSectionWithEdit(
+                      title: 'SKILLS',
+                      content: skillsController.text,
+                      onEdit: () => _showEditDialog('Skills', skillsController),
+                      contentWidget: Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: skillsController.text.split(', ').map((skill) => Container(
+                          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.blue[50],
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.blue[200]!),
+                          ),
+                          child: Text(skill.trim()),
+                        )).toList(),
+                      ),
+                    ),
+
+                    // Experience Section with Edit
+                    _buildSectionWithEdit(
+                      title: 'EXPERIENCE',
+                      content: experiencesController.text,
+                      onEdit: () => _showEditDialog('Experience', experiencesController, maxLines: 5),
+                    ),
+
+                    // Projects Section with Edit
+                    _buildSectionWithEdit(
+                      title: 'PROJECTS',
+                      content: projectsController.text,
+                      onEdit: () => _showEditDialog('Projects', projectsController, maxLines: 5),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );
+  }
+
+  Widget _buildSectionWithEdit({
+    required String title,
+    required String content,
+    required VoidCallback onEdit,
+    Widget? contentWidget,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue[800],
+                letterSpacing: 1.2,
+              ),
+            ),
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: onEdit,
+            ),
+          ],
+        ),
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.grey[50],
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey[200]!),
+          ),
+          child: contentWidget ?? Text(
+            content,
+            style: TextStyle(fontSize: 16, height: 1.5),
+          ),
+        ),
+        SizedBox(height: 24),
+      ],
+    );
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    aboutMeController.dispose();
+    skillsController.dispose();
+    experiencesController.dispose();
+    projectsController.dispose();
+    super.dispose();
   }
 } 
