@@ -10,9 +10,12 @@ class _ResistanceCalculatorState extends State<ResistanceCalculator> {
   String _color1 = 'Brown';
   String _color2 = 'Black';
   String _color3 = 'Red';
+  String _color4 = 'Green';
+  String _color5 = 'Blue';
   String _tolerance = 'Gold';
   String _result = '';
   bool _isDarkMode = false;
+  String _numberOfBands = '4'; // Default to 4 bands
 
   final Map<String, Color> colorMap = {
     'Black': Colors.black,
@@ -37,27 +40,57 @@ class _ResistanceCalculatorState extends State<ResistanceCalculator> {
     'Brown', 'Red', 'Green', 'Blue', 'Violet', 'Gray', 'Gold', 'Silver'
   ];
 
+  final List<String> numberOfBandsOptions = ['2', '4', '5', '6'];
+
+  @override
+  void initState() {
+    super.initState();
+    _setDefaultColors(); // Set default colors based on the initial number of bands
+  }
+
+  void _setDefaultColors() {
+    if (_numberOfBands == '2') {
+      _color1 = 'Brown';
+      _color2 = 'Black';
+      _color3 = 'Red'; // Default multiplier
+      _color4 = 'Green'; // Not used for 2 bands
+      _color5 = 'Blue'; // Not used for 2 bands
+    } else if (_numberOfBands == '4') {
+      _color1 = 'Brown';
+      _color2 = 'Black';
+      _color3 = 'Red';
+      _color4 = 'Green'; // Default third band
+      _color5 = 'Blue'; // Not used for 4 bands
+    } else if (_numberOfBands == '5') {
+      _color1 = 'Brown';
+      _color2 = 'Black';
+      _color3 = 'Red';
+      _color4 = 'Green';
+      _color5 = 'Blue'; // Default fifth band
+    } else if (_numberOfBands == '6') {
+      _color1 = 'Brown';
+      _color2 = 'Black';
+      _color3 = 'Red';
+      _color4 = 'Green';
+      _color5 = 'Blue'; // Default sixth band
+    }
+  }
+
   void _calculateResistance() {
     int band1 = colors.indexOf(_color1);
     int band2 = colors.indexOf(_color2);
-    int band3 = colors.indexOf(_color3);
-    int multiplier = pow(10, band3).toInt();
+    int multiplier = pow(10, colors.indexOf(_color3)).toInt();
+    int resistance = 0; // Initialize resistance to 0
 
-    int resistance = ((band1 * 10) + band2) * multiplier;
-    String formattedResistance = _formatResistance(resistance);
-
-    String toleranceValue;
-    switch (_tolerance) {
-      case 'Brown': toleranceValue = '1%'; break;
-      case 'Red': toleranceValue = '2%'; break;
-      case 'Green': toleranceValue = '0.5%'; break;
-      case 'Blue': toleranceValue = '0.25%'; break;
-      case 'Violet': toleranceValue = '0.1%'; break;
-      case 'Gray': toleranceValue = '0.05%'; break;
-      case 'Gold': toleranceValue = '5%'; break;
-      case 'Silver': toleranceValue = '10%'; break;
-      default: toleranceValue = 'Unknown';
+    if (_numberOfBands == '2') {
+      resistance = (band1 * 10 + band2) * multiplier;
+    } else if (_numberOfBands == '4' || _numberOfBands == '5' || _numberOfBands == '6') {
+      int band3 = colors.indexOf(_color4);
+      resistance = ((band1 * 100) + (band2 * 10) + band3) * multiplier;
     }
+
+    String formattedResistance = _formatResistance(resistance);
+    String toleranceValue = _getToleranceValue();
 
     setState(() {
       _result = '$formattedResistance Ω ± $toleranceValue';
@@ -71,6 +104,20 @@ class _ResistanceCalculatorState extends State<ResistanceCalculator> {
       return '${(resistance / 1000).toStringAsFixed(2)}k';
     }
     return resistance.toString();
+  }
+
+  String _getToleranceValue() {
+    switch (_tolerance) {
+      case 'Brown': return '1%';
+      case 'Red': return '2%';
+      case 'Green': return '0.5%';
+      case 'Blue': return '0.25%';
+      case 'Violet': return '0.1%';
+      case 'Gray': return '0.05%';
+      case 'Gold': return '5%';
+      case 'Silver': return '10%';
+      default: return 'Unknown';
+    }
   }
 
   @override
@@ -106,56 +153,7 @@ class _ResistanceCalculatorState extends State<ResistanceCalculator> {
                 children: [
                   _buildResistorVisualization(),
                   SizedBox(height: 24),
-                  Card(
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Column(
-                        children: [
-                          Text(
-                            'Color Band Selection',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: _isDarkMode ? Colors.white : Colors.black87,
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          _buildColorDropdown('First Band', _color1, (newValue) {
-                            setState(() => _color1 = newValue!);
-                          }),
-                          _buildColorDropdown('Second Band', _color2, (newValue) {
-                            setState(() => _color2 = newValue!);
-                          }),
-                          _buildColorDropdown('Multiplier', _color3, (newValue) {
-                            setState(() => _color3 = newValue!);
-                          }),
-                          _buildColorDropdown('Tolerance', _tolerance, (newValue) {
-                            setState(() => _tolerance = newValue!);
-                          }, isTolerance: true),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _calculateResistance,
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: Text(
-                      'Calculate',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  ),
                   if (_result.isNotEmpty) ...[
-                    SizedBox(height: 24),
                     Card(
                       elevation: 4,
                       shape: RoundedRectangleBorder(
@@ -187,7 +185,71 @@ class _ResistanceCalculatorState extends State<ResistanceCalculator> {
                         ),
                       ),
                     ),
+                    SizedBox(height: 24),
                   ],
+                  _buildColorDropdown('Number of Bands', _numberOfBands, (newValue) {
+                    setState(() {
+                      _numberOfBands = newValue!;
+                      _setDefaultColors(); // Reset colors based on new number of bands
+                      _calculateResistance(); // Recalculate on change
+                    });
+                  }, isTolerance: false, options: numberOfBandsOptions),
+                  if (_numberOfBands == '2') ...[
+                    _buildColorDropdown('First Band', _color1, (newValue) {
+                      setState(() {
+                        _color1 = newValue!;
+                        _calculateResistance();
+                      });
+                    }),
+                    _buildColorDropdown('Second Band', _color2, (newValue) {
+                      setState(() {
+                        _color2 = newValue!;
+                        _calculateResistance();
+                      });
+                    }),
+                  ] else if (_numberOfBands == '4' || _numberOfBands == '5' || _numberOfBands == '6') ...[
+                    _buildColorDropdown('First Band', _color1, (newValue) {
+                      setState(() {
+                        _color1 = newValue!;
+                        _calculateResistance();
+                      });
+                    }),
+                    _buildColorDropdown('Second Band', _color2, (newValue) {
+                      setState(() {
+                        _color2 = newValue!;
+                        _calculateResistance();
+                      });
+                    }),
+                    _buildColorDropdown('Multiplier', _color3, (newValue) {
+                      setState(() {
+                        _color3 = newValue!;
+                        _calculateResistance();
+                      });
+                    }),
+                    if (_numberOfBands == '5' || _numberOfBands == '6') ...[
+                      _buildColorDropdown('Third Band', _color4, (newValue) {
+                        setState(() {
+                          _color4 = newValue!;
+                          _calculateResistance();
+                        });
+                      }),
+                    ],
+                    if (_numberOfBands == '6') ...[
+                      _buildColorDropdown('Fourth Band', _color5, (newValue) {
+                        setState(() {
+                          _color5 = newValue!;
+                          _calculateResistance();
+                        });
+                      }),
+                    ],
+                  ],
+                  _buildColorDropdown('Tolerance', _tolerance, (newValue) {
+                    setState(() {
+                      _tolerance = newValue!;
+                      _calculateResistance();
+                    });
+                  }, isTolerance: true),
+                  SizedBox(height: 20),
                 ],
               ),
             ),
@@ -217,7 +279,12 @@ class _ResistanceCalculatorState extends State<ResistanceCalculator> {
           Container(width: 40, color: Colors.grey[400]),
           Container(width: 15, color: colorMap[_color1]),
           Container(width: 15, color: colorMap[_color2]),
-          Container(width: 15, color: colorMap[_color3]),
+          if (_numberOfBands == '4' || _numberOfBands == '5' || _numberOfBands == '6') 
+            Container(width: 15, color: colorMap[_color3]),
+          if (_numberOfBands == '5' || _numberOfBands == '6') 
+            Container(width: 15, color: colorMap[_color4]),
+          if (_numberOfBands == '6') 
+            Container(width: 15, color: colorMap[_color5]),
           Container(width: 15, color: colorMap[_tolerance]),
           Container(width: 40, color: Colors.grey[400]),
         ],
@@ -225,7 +292,7 @@ class _ResistanceCalculatorState extends State<ResistanceCalculator> {
     );
   }
 
-  Widget _buildColorDropdown(String label, String currentValue, ValueChanged<String?> onChanged, {bool isTolerance = false}) {
+  Widget _buildColorDropdown(String label, String currentValue, ValueChanged<String?> onChanged, {bool isTolerance = false, List<String>? options}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8),
       child: Column(
@@ -262,7 +329,7 @@ class _ResistanceCalculatorState extends State<ResistanceCalculator> {
               title: DropdownButton<String>(
                 value: currentValue,
                 onChanged: onChanged,
-                items: (isTolerance ? tolerances : colors).map((String value) {
+                items: (options ?? (isTolerance ? tolerances : colors)).map((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),

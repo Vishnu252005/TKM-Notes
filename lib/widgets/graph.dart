@@ -236,11 +236,11 @@ class _GraphPlotterState extends State<GraphPlotter> {
       appBar: AppBar(
         title: Text(
           'Graph Plotter',
-          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[800]),
+          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.blueAccent),
         ),
-        backgroundColor: _isDarkMode ? Colors.black : Colors.white,
+        backgroundColor: _isDarkMode ? Colors.black87 : Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: _isDarkMode ? Colors.white : Colors.blue[800]),
+          icon: Icon(Icons.arrow_back, color: _isDarkMode ? Colors.white : Colors.blueAccent),
           onPressed: () {
             Navigator.of(context).pop(); // Go back to the previous screen
           },
@@ -249,17 +249,17 @@ class _GraphPlotterState extends State<GraphPlotter> {
           IconButton(
             icon: Icon(
               _isDarkMode ? Icons.wb_sunny : Icons.nightlight_round,
-              color: _isDarkMode ? Colors.white : Colors.blue[800],
+              color: _isDarkMode ? Colors.white : Colors.blueAccent,
             ),
             onPressed: _toggleTheme,
           ),
           IconButton(
-            icon: Icon(Icons.save_alt, color: _isDarkMode ? Colors.white : Colors.blue[800]),
+            icon: Icon(Icons.save_alt, color: _isDarkMode ? Colors.white : Colors.blueAccent),
             onPressed: _capturePng,
           ),
         ],
       ),
-      backgroundColor: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[50],
+      backgroundColor: _isDarkMode ? Color(0xFF1A1A1A) : Colors.blue[50],
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -271,7 +271,7 @@ class _GraphPlotterState extends State<GraphPlotter> {
                 child: Text(
                   'X: ($_xMin - $_xMax), Y: ($_yMin - $_yMax)',
                   style: TextStyle(
-                    color: Colors.deepPurple,
+                    color: _isDarkMode ? Colors.white : Colors.blueAccent,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -282,14 +282,14 @@ class _GraphPlotterState extends State<GraphPlotter> {
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: _isDarkMode ? Colors.black : Colors.white,
+                  color: _isDarkMode ? Color(0xFF2A2A2A) : Colors.white,
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(24),
                     topRight: Radius.circular(24),
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: _isDarkMode ? Colors.black12 : Colors.blue.withOpacity(0.1),
+                      color: _isDarkMode ? Colors.black54 : Colors.blue.withOpacity(0.1),
                       blurRadius: 10,
                       spreadRadius: 5,
                     ),
@@ -305,9 +305,8 @@ class _GraphPlotterState extends State<GraphPlotter> {
                         controller: _pointController,
                         decoration: InputDecoration(
                           labelText: 'Enter Points (x,y) separated by ";"',
+                          labelStyle: TextStyle(color: _isDarkMode ? Colors.white : Colors.blueAccent),
                           border: OutlineInputBorder(),
-                          hintText: 'E.g. 1,2;3,4;5,6',
-                          hintStyle: TextStyle(color: _isDarkMode ? Colors.white54 : Colors.black54),
                         ),
                         style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black),
                         onChanged: (value) => _updateGraph(),
@@ -337,7 +336,7 @@ class _GraphPlotterState extends State<GraphPlotter> {
                                           return Text(
                                             value.toStringAsFixed(1),
                                             style: TextStyle(
-                                              color: Colors.deepPurple,
+                                              color: _isDarkMode ? Colors.white : Colors.blueAccent,
                                               fontSize: 12,
                                             ),
                                           );
@@ -351,7 +350,7 @@ class _GraphPlotterState extends State<GraphPlotter> {
                                           return Text(
                                             value.toStringAsFixed(1),
                                             style: TextStyle(
-                                              color: Colors.deepPurple,
+                                              color: _isDarkMode ? Colors.white : Colors.blueAccent,
                                               fontSize: 12,
                                             ),
                                           );
@@ -370,7 +369,7 @@ class _GraphPlotterState extends State<GraphPlotter> {
                                   ],
                                   borderData: FlBorderData(
                                     show: true,
-                                    border: Border.all(color: Colors.deepPurple, width: 2),
+                                    border: Border.all(color: Colors.blueAccent, width: 2),
                                   ),
                                   minX: _xMin,
                                   maxX: _xMax,
