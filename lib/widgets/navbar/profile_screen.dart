@@ -253,19 +253,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     // Method to handle password reset
     Future<void> resetPassword() async {
-        String emailInput = emailController.text; // Get email from controller
+        String emailInput = emailController.text; // Get email from the controller
         if (emailInput.isNotEmpty) {
             try {
                 await FirebaseAuth.instance.sendPasswordResetEmail(email: emailInput);
                 // Show a message to the user
-                print("Password reset email sent!");
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Password reset email sent! Check your inbox.")),
+                );
             } catch (e) {
                 // Handle error (e.g., show error message)
-                print("Error sending password reset email: $e");
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Error sending password reset email: $e")),
+                );
             }
         } else {
             // Show a message to enter an email
-            print("Please enter your email address.");
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Please enter your email address.")),
+            );
         }
     }
 
@@ -307,6 +313,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // Handle error (e.g., show error message)
             print("Error updating profile: $e");
         }
+    }
+
+    // Add this method to your _ProfileScreenState class
+    Future<void> logout() async {
+        try {
+            await FirebaseAuth.instance.signOut();
+            // Set username to null to show the authentication screen
+            setState(() {
+                username = null; // This will trigger the _buildAuthScreen to be displayed
+            });
+        } catch (e) {
+            // Handle logout error (e.g., show error message)
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Error logging out: $e")),
+            );
+        }
+    }
+
+    @override
+    void initState() {
+        super.initState();
+        _checkUserSignIn(); // Check if the user is signed in
+    }
+
+    Future<void> _checkUserSignIn() async {
+        User? user = FirebaseAuth.instance.currentUser; // Get the current user
+        if (user == null) {
+            // If no user is signed in, navigate to the sign-in screen
+            Navigator.of(context).pushReplacementNamed('/sign_in');
+        } else {
+            // If user is signed in, fetch their data
+            await _fetchUserData(user.uid);
+        }
+    }
+
+    Future<void> _fetchUserData(String uid) async {
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+        // Update state with user data
+        setState(() {
+            username = userDoc['username'];
+            email = userDoc['email'];
+            phone = userDoc['phone'];
+            address = userDoc['address'];
+            major = userDoc['major'];
+            university = userDoc['university'];
+            year = userDoc['year'];
+            bio = userDoc['bio'];
+            interests = userDoc['interests'];
+            socialMedia = userDoc['socialMedia'];
+        });
     }
 
     @override
@@ -359,6 +415,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     _buildBioSection(),
                                     _buildInterestsSection(),
                                     _buildContactSection(),
+                                    SizedBox(height: 20),
+                                    // Add the Logout button here
+                                    ElevatedButton(
+                                        onPressed: logout,
+                                        child: Text('Logout'),
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.red, // Change color as needed
+                                            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                                        ),
+                                    ),
                                     SizedBox(height: 20),
                                 ],
                             ),
@@ -750,14 +816,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 padding: EdgeInsets.symmetric(vertical: 15),
                                             ),
                                         ),
-                                TextButton(
-                                            onPressed: resetPassword,
+                                SizedBox(height: 20), // Add some space before the button
+                                // Add the Forgot Password button here
+                                if (!isSignUp) // Only show this button on the sign-in page
+                                  TextButton(
+                                    onPressed: resetPassword, // Ensure this method is defined
                                     child: Text('Forgot Password?'),
                                 ),
                                 TextButton(
                                     onPressed: () {
                                         setState(() {
-                                                    isSignUp = !isSignUp;
+                                            isSignUp = !isSignUp; // Toggle between sign-up and sign-in
                                         });
                                     },
                                     child: Text(isSignUp ? 'Already have an account? Sign In' : 'Don\'t have an account? Sign Up'),

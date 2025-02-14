@@ -12,6 +12,12 @@ class _SignInScreenState extends State<SignInScreen> {
     bool isSignUp = false; // Toggle between sign-up and sign-in
 
     @override
+    void initState() {
+        super.initState();
+        _checkUserSignIn(); // Check if the user is signed in
+    }
+
+    @override
     Widget build(BuildContext context) {
         return Scaffold(
             appBar: AppBar(
@@ -63,6 +69,11 @@ class _SignInScreenState extends State<SignInScreen> {
                                             padding: EdgeInsets.symmetric(vertical: 15),
                                         ),
                                     ),
+                                    SizedBox(height: 20),
+                                    TextButton(
+                                        onPressed: resetPassword,
+                                        child: Text('Forgot Password?'),
+                                    ),
                                     TextButton(
                                         onPressed: () {
                                             setState(() {
@@ -107,6 +118,20 @@ class _SignInScreenState extends State<SignInScreen> {
         } catch (e) {
             print("Error signing up: $e");
             // Handle sign-up error (e.g., show a message)
+        }
+    }
+
+    Future<void> resetPassword() async {
+        // Implement the reset password logic here
+        // This is a placeholder and should be replaced with the actual implementation
+        print("Reset password method called");
+    }
+
+    Future<void> _checkUserSignIn() async {
+        User? user = FirebaseAuth.instance.currentUser; // Get the current user
+        if (user != null) {
+            // If user is already signed in, navigate to the profile screen
+            Navigator.of(context).pushReplacementNamed('/profile');
         }
     }
 } 
