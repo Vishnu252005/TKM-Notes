@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
+import 'package:flutter_animate/flutter_animate.dart'; // Import the flutter_animate package
 
 class ProfileScreen extends StatefulWidget {
     @override
@@ -21,6 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final TextEditingController bioController = TextEditingController(); // Controller for bio
     final TextEditingController interestsController = TextEditingController(); // Controller for interests
     final TextEditingController socialMediaController = TextEditingController(); // Controller for social media links
+    final TextEditingController departmentController = TextEditingController(); // Controller for department
 
     bool isSignUp = true; // Toggle between sign-up and sign-in
     String? username; // Store username
@@ -36,6 +38,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     String? selectedCollege; // Variable to hold the selected college
     String? selectedDepartment; // Variable to hold the selected department
     String? selectedYear; // Variable to hold the selected year of study
+    String? department; // Store department
+    bool isDarkMode = false; // Variable to hold the theme mode
 
     // List of engineering colleges for the dropdown
     final List<String> colleges = [
@@ -171,6 +175,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     void initState() {
         super.initState();
         _loadUserCredentials(); // Load user credentials on app launch
+        _loadThemePreference(); // Load theme preference
     }
 
     // Method to load user credentials from SharedPreferences
@@ -184,6 +189,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
             passwordController.text = savedPassword; // Pre-fill password
             await signIn(); // Automatically sign in the user
         }
+    }
+
+    // Method to load theme preference from SharedPreferences
+    Future<void> _loadThemePreference() async {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        setState(() {
+            isDarkMode = prefs.getBool('isDarkMode') ?? false; // Default to false if not set
+        });
+    }
+
+    // Method to toggle theme
+    void _toggleTheme() async {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        setState(() {
+            isDarkMode = !isDarkMode; // Toggle the theme
+            prefs.setBool('isDarkMode', isDarkMode); // Save preference
+        });
     }
 
     // Method to handle sign-up
@@ -305,8 +327,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         String phoneInput = phoneController.text; // Get phone number from controller
         String addressInput = addressController.text; // Get address from controller
         String majorInput = majorController.text; // Get major from controller
-        String universityInput = universityController.text; // Get university from controller
-        String yearInput = yearController.text; // Get year from controller
+        String universityInput = selectedCollege ?? ''; // Provide default value if null
+        String yearInput = selectedYear ?? ''; // Provide default value if null
+        String departmentInput = selectedDepartment ?? ''; // Provide default value if null
         String bioInput = bioController.text; // Get bio from controller
         String interestsInput = interestsController.text; // Get interests from controller
         String socialMediaInput = socialMediaController.text; // Get social media from controller
@@ -316,8 +339,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 'phone': phoneInput,
                 'address': addressInput,
                 'major': majorInput,
-                'university': universityInput,
-                'year': yearInput,
+                'university': universityInput, // Update university
+                'year': yearInput, // Update year
+                'department': departmentInput, // Update department
                 'bio': bioInput,
                 'interests': interestsInput,
                 'socialMedia': socialMediaInput,
@@ -328,8 +352,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 phone = phoneInput;
                 address = addressInput;
                 major = majorInput;
-                university = universityInput;
-                year = yearInput;
+                university = universityInput; // Update state for university
+                year = yearInput; // Update state for year
+                department = departmentInput; // Update state for department
                 bio = bioInput;
                 interests = interestsInput;
                 socialMedia = socialMediaInput;
@@ -363,17 +388,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     @override
     Widget build(BuildContext context) {
-        return Scaffold(
-            body: username == null
-                ? _buildAuthScreen()
-                : CustomScrollView(
-                    slivers: [
-                        SliverAppBar(
-                            expandedHeight: 200.0,
-                            floating: false,
-                            pinned: true,
-                            flexibleSpace: FlexibleSpaceBar(
-                                background: Container(
+        return MaterialApp(
+            theme: isDarkMode ? ThemeData.dark() : ThemeData.light(), // Set theme based on preference
+            home: Scaffold(
+                appBar: AppBar(
+                    title: Text('Profile'),
+                    actions: [
+                        IconButton(
+                            icon: Icon(isDarkMode ? Icons.wb_sunny : Icons.nights_stay),
+                            onPressed: _toggleTheme, // Toggle theme on button press
+                        ),
+                    ],
+                ),
+                body: username == null
+                    ? _buildAuthScreen()
+                    : SingleChildScrollView( // Use SingleChildScrollView instead of CustomScrollView
+                        child: Column(
+                            children: [
+                                Container(
+                                    width: double.infinity, // Set width to full
+                                    height: 200.0,
                                     decoration: BoxDecoration(
                                         gradient: LinearGradient(
                                             colors: [Colors.blue[800]!, Colors.blue[500]!],
@@ -388,7 +422,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 radius: 50,
                                                 backgroundColor: Colors.white,
                                                 child: Icon(Icons.person, size: 50, color: Colors.blue[800]),
-                                            ),
+                                            ).animate().fadeIn(duration: 500.ms), // Animate the avatar
                                             SizedBox(height: 10),
                                             Text(
                                                 username ?? '',
@@ -397,43 +431,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                     fontSize: 24,
                                                     fontWeight: FontWeight.bold,
                                                 ),
-                                            ),
+                                            ).animate().slideY(begin: -0.5).fadeIn(duration: 500.ms), // Animate the username
+                                            SizedBox(height: 10),
+                                            Text(
+                                                'Welcome to Your Profile',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.w500,
+                                                ),
+                                            ).animate().slideY(begin: -0.5).fadeIn(duration: 500.ms), // Animate the welcome text
                                         ],
                                     ),
                                 ),
-                            ),
-                        ),
-                        SliverToBoxAdapter(
-                            child: Column(
-                                children: [
-                                    _buildProfileSection(),
-                                    _buildEducationSection(),
-                                    _buildBioSection(),
-                                    _buildInterestsSection(),
-                                    _buildContactSection(),
-                                    SizedBox(height: 20),
-                                    // Add the Logout button here
-                                    ElevatedButton(
-                                        onPressed: logout,
-                                        child: Text('Logout'),
-                                        style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.red, // Change color as needed
-                                            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                                        ),
+                                SizedBox(height: 20),
+                                _buildProfileSection(),
+                                _buildEducationSection(),
+                                _buildBioSection(),
+                                _buildInterestsSection(),
+                                _buildContactSection(),
+                                SizedBox(height: 20),
+                                // Add the Logout button here
+                                ElevatedButton(
+                                    onPressed: logout,
+                                    child: Text('Logout'),
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.red, // Change color as needed
+                                        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
                                     ),
-                                    SizedBox(height: 20),
-                                ],
-                            ),
+                                ),
+                                SizedBox(height: 20),
+                            ],
                         ),
-                    ],
-                ),
-            floatingActionButton: username != null
-                ? FloatingActionButton(
-                    onPressed: _showEditProfileDialog,
-                    child: Icon(Icons.edit),
-                    backgroundColor: Colors.blue[800],
-                )
-                : null,
+                    ),
+                floatingActionButton: username != null
+                    ? FloatingActionButton(
+                        onPressed: _showEditProfileDialog,
+                        child: Icon(Icons.edit),
+                        backgroundColor: Colors.blue[800],
+                    )
+                    : null,
+            ),
         );
     }
 
@@ -453,9 +491,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             'Education',
             Icons.school,
             [
-                _buildCollegeDropdown(),
-                _buildDepartmentDropdown(),
-                _buildYearDropdown(),
+                _buildCollegeDropdown(), // Dropdown for university
+                _buildDepartmentDropdown(), // Dropdown for department
+                _buildYearDropdown(), // Dropdown for year
             ],
         );
     }
@@ -545,14 +583,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 label,
                 style: TextStyle(
                     fontWeight: FontWeight.w500,
-                    color: Colors.grey[700],
+                    color: isDarkMode ? Colors.white : Colors.black,
                 ),
             ),
             subtitle: Text(
                 value,
                 style: TextStyle(
                     fontSize: 16,
-                    color: Colors.black87,
+                    color: isDarkMode ? Colors.white : Colors.black,
                 ),
             ),
         );
@@ -599,7 +637,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 selectedItem: selectedCollege,
                 onChanged: (String? newValue) {
                     setState(() {
-                        selectedCollege = newValue;
+                        selectedCollege = newValue; // Update selected university
                     });
                 },
             ),
@@ -637,7 +675,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 selectedItem: selectedDepartment,
                 onChanged: (String? newValue) {
                     setState(() {
-                        selectedDepartment = newValue;
+                        selectedDepartment = newValue; // Update selected department
                     });
                 },
             ),
@@ -757,126 +795,89 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
             ),
             child: Center(
-                child: username == null ? // Check if user is signed in
-                    Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Card(
-                            elevation: 8, // Increased elevation for depth
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15), // Rounded corners
-                            ),
-                            child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                        child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                                if (isSignUp)
-                                    TextField(
-                                                controller: usernameController,
-                                                decoration: InputDecoration(
-                                                    labelText: 'Username',
-                                                    border: OutlineInputBorder(),
-                                                ),
-                                            ),
-                                        SizedBox(height: 16),
-                                TextField(
-                                            controller: emailController,
-                                            decoration: InputDecoration(
-                                                labelText: 'Email',
-                                                border: OutlineInputBorder(),
-                                            ),
-                                        ),
-                                        SizedBox(height: 16),
-                                TextField(
-                                            controller: passwordController,
-                                            decoration: InputDecoration(
-                                                labelText: 'Password',
-                                                border: OutlineInputBorder(),
-                                            ),
-                                    obscureText: true,
-                                ),
-                                SizedBox(height: 20),
-                                        ElevatedButton.icon(
-                                    onPressed: () {
-                                        if (isSignUp) {
-                                            signUp();
-                                        } else {
-                                            signIn();
-                                        }
-                                    },
-                                            icon: Icon(Icons.login),
-                                            label: Text(isSignUp ? 'Sign Up' : 'Sign In'),
-                                            style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.blueAccent, // Button color
-                                                padding: EdgeInsets.symmetric(vertical: 15),
-                                            ),
-                                        ),
-                                SizedBox(height: 20), // Add some space before the button
-                                // Add the Forgot Password button here
-                                if (!isSignUp) // Only show this button on the sign-in page
-                                  TextButton(
-                                    onPressed: resetPassword, // Ensure this method is defined
-                                    child: Text('Forgot Password?'),
-                                ),
-                                TextButton(
-                                    onPressed: () {
-                                        setState(() {
-                                            isSignUp = !isSignUp; // Toggle between sign-up and sign-in
-                                        });
-                                    },
-                                    child: Text(isSignUp ? 'Already have an account? Sign In' : 'Don\'t have an account? Sign Up'),
-                                ),
-                            ],
-                                ),
-                            ),
+                child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Card(
+                        elevation: 8, // Increased elevation for depth
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15), // Rounded corners
                         ),
-                    ) :
-                    Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Card(
-                            elevation: 8,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                            ),
-                                    child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                        child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                                CircleAvatar(
-                                                    radius: 50,
-                                            child: Icon(Icons.person, size: 50),
-                                                ),
-                                                SizedBox(height: 20),
-                                                Text('Hey $username', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                                                SizedBox(height: 10),
-                                        _buildProfileInfo(Icons.email, 'Email: $email'),
-                                        _buildProfileInfo(Icons.phone, 'Phone: ${phone ?? "Not provided"}'),
-                                        _buildProfileInfo(Icons.school, 'Major: ${major ?? "Not provided"}'),
-                                        _buildProfileInfo(Icons.business, 'College: ${selectedCollege ?? "Not provided"}'),
-                                        _buildProfileInfo(Icons.calendar_today, 'Year: ${selectedYear ?? "Not provided"}'),
-                                        _buildProfileInfo(Icons.info, 'Bio: ${bio ?? "Not provided"}'),
-                                        _buildProfileInfo(Icons.star, 'Interests: ${interests ?? "Not provided"}'),
-                                        _buildProfileInfo(Icons.link, 'Social Media: ${socialMedia ?? "Not provided"}'),
-                                SizedBox(height: 20),
-                                ElevatedButton.icon(
-                                    onPressed: () {
-                                                _showEditProfileDialog();
-                                    },
-                                    icon: Icon(Icons.edit),
-                                    label: Text('Edit Profile'),
-                                            style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.blueAccent,
-                                                padding: EdgeInsets.symmetric(vertical: 15),
+                        child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                    Text(
+                                        isSignUp ? 'Create Your Account' : 'Welcome Back!', // Improved heading
+                                        style: TextStyle(
+                                            fontSize: 28, // Increased font size
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.blue[800], // Changed color for better visibility
+                                        ),
+                                        textAlign: TextAlign.center, // Center the text
+                                    ),
+                                    SizedBox(height: 20), // Space between heading and form
+                                    if (isSignUp)
+                                        TextField(
+                                            controller: usernameController,
+                                            decoration: InputDecoration(
+                                                labelText: 'Username',
+                                                border: OutlineInputBorder(),
                                             ),
                                         ),
-                                    ],
-                                ),
+                                    SizedBox(height: 16),
+                                    TextField(
+                                        controller: emailController,
+                                        decoration: InputDecoration(
+                                            labelText: 'Email',
+                                            border: OutlineInputBorder(),
+                                        ),
+                                    ),
+                                    SizedBox(height: 16),
+                                    TextField(
+                                        controller: passwordController,
+                                        decoration: InputDecoration(
+                                            labelText: 'Password',
+                                            border: OutlineInputBorder(),
+                                        ),
+                                        obscureText: true,
+                                    ),
+                                    SizedBox(height: 20),
+                                    ElevatedButton.icon(
+                                        onPressed: () {
+                                            if (isSignUp) {
+                                                signUp();
+                                            } else {
+                                                signIn();
+                                            }
+                                        },
+                                        icon: Icon(Icons.login),
+                                        label: Text(isSignUp ? 'Sign Up' : 'Sign In'),
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.blueAccent, // Button color
+                                            padding: EdgeInsets.symmetric(vertical: 15),
+                                        ),
+                                    ),
+                                    SizedBox(height: 20), // Add some space before the button
+                                    if (!isSignUp) // Only show this button on the sign-in page
+                                        TextButton(
+                                            onPressed: resetPassword, // Ensure this method is defined
+                                            child: Text('Forgot Password?'),
+                                        ),
+                                    TextButton(
+                                        onPressed: () {
+                                            setState(() {
+                                                isSignUp = !isSignUp; // Toggle between sign-up and sign-in
+                                            });
+                                        },
+                                        child: Text(isSignUp ? 'Already have an account? Sign In' : 'Don\'t have an account? Sign Up'),
+                                    ),
+                                ],
                             ),
                         ),
                     ),
+                ),
             ),
         );
     }
