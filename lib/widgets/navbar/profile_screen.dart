@@ -2,6 +2,7 @@ import 'package:flutter/material.dart'; // Import Flutter Material
 import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
 
 class ProfileScreen extends StatefulWidget {
     @override
@@ -166,6 +167,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // List of years for the dropdown
     final List<String> years = ['1', '2', '3', '4', '5'];
 
+    @override
+    void initState() {
+        super.initState();
+        _loadUserCredentials(); // Load user credentials on app launch
+    }
+
+    // Method to load user credentials from SharedPreferences
+    Future<void> _loadUserCredentials() async {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String? savedEmail = prefs.getString('email');
+        String? savedPassword = prefs.getString('password');
+
+        if (savedEmail != null && savedPassword != null) {
+            emailController.text = savedEmail; // Pre-fill email
+            passwordController.text = savedPassword; // Pre-fill password
+            await signIn(); // Automatically sign in the user
+        }
+    }
+
     // Method to handle sign-up
     Future<void> signUp() async {
         String usernameInput = usernameController.text; // Get username from controller
@@ -220,6 +240,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 email: emailInput,
                 password: password,
             );
+
+            // Save user credentials to SharedPreferences
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            await prefs.setString('email', emailInput);
+            await prefs.setString('password', password);
 
             // Fetch user data from Firestore
             DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).get();
@@ -319,6 +344,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Future<void> logout() async {
         try {
             await FirebaseAuth.instance.signOut();
+            // Clear user credentials from SharedPreferences
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            await prefs.remove('email');
+            await prefs.remove('password');
+
             // Set username to null to show the authentication screen
             setState(() {
                 username = null; // This will trigger the _buildAuthScreen to be displayed
@@ -329,40 +359,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SnackBar(content: Text("Error logging out: $e")),
             );
         }
-    }
-
-    @override
-    void initState() {
-        super.initState();
-        _checkUserSignIn(); // Check if the user is signed in
-    }
-
-    Future<void> _checkUserSignIn() async {
-        User? user = FirebaseAuth.instance.currentUser; // Get the current user
-        if (user == null) {
-            // If no user is signed in, navigate to the sign-in screen
-            Navigator.of(context).pushReplacementNamed('/sign_in');
-        } else {
-            // If user is signed in, fetch their data
-            await _fetchUserData(user.uid);
-        }
-    }
-
-    Future<void> _fetchUserData(String uid) async {
-        DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
-        // Update state with user data
-        setState(() {
-            username = userDoc['username'];
-            email = userDoc['email'];
-            phone = userDoc['phone'];
-            address = userDoc['address'];
-            major = userDoc['major'];
-            university = userDoc['university'];
-            year = userDoc['year'];
-            bio = userDoc['bio'];
-            interests = userDoc['interests'];
-            socialMedia = userDoc['socialMedia'];
-        });
     }
 
     @override

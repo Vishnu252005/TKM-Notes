@@ -12,12 +12,6 @@ class _SignInScreenState extends State<SignInScreen> {
     bool isSignUp = false; // Toggle between sign-up and sign-in
 
     @override
-    void initState() {
-        super.initState();
-        _checkUserSignIn(); // Check if the user is signed in
-    }
-
-    @override
     Widget build(BuildContext context) {
         return Scaffold(
             appBar: AppBar(
@@ -125,13 +119,5 @@ class _SignInScreenState extends State<SignInScreen> {
         // Implement the reset password logic here
         // This is a placeholder and should be replaced with the actual implementation
         print("Reset password method called");
-    }
-
-    Future<void> _checkUserSignIn() async {
-        User? user = FirebaseAuth.instance.currentUser; // Get the current user
-        if (user != null) {
-            // If user is already signed in, navigate to the profile screen
-            Navigator.of(context).pushReplacementNamed('/profile');
-        }
     }
 } 
