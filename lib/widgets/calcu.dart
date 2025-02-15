@@ -102,7 +102,7 @@ class _ScientificCalculatorState extends State<ScientificCalculator> {
       });
     } catch (e) {
       setState(() {
-        _result = 'Error';
+        _result = 'Error: ${e.toString()}';
         _expression = '';
         _controller.text = _result;
       });
@@ -110,7 +110,9 @@ class _ScientificCalculatorState extends State<ScientificCalculator> {
   }
 
   double _evaluateExpression(String expression) {
-    expression = expression.replaceAll('×', '*').replaceAll('÷', '/').replaceAll('π', '${math.pi}').replaceAll('e', '${math.e}');
+    expression = expression.replaceAll('×', '*').replaceAll('÷', '/')
+      .replaceAll('π', '${math.pi}').replaceAll('e', '${math.e}')
+      .replaceAll('φ', '${(1 + math.sqrt(5)) / 2}'); // Golden ratio
     List<String> tokens = _tokenize(expression);
     List<String> postfix = _infixToPostfix(tokens);
     return _evaluatePostfix(postfix);
@@ -239,6 +241,18 @@ class _ScientificCalculatorState extends State<ScientificCalculator> {
             double a = stack.removeLast();
             stack.add(1 / a);
             break;
+          case 'exp':
+            double a = stack.removeLast();
+            stack.add(math.exp(a));
+            break;
+          case 'log10':
+            double a = stack.removeLast();
+            stack.add(math.log(a) / math.ln10);
+            break;
+          case 'abs':
+            double a = stack.removeLast();
+            stack.add(a.abs());
+            break;
         }
       }
     }
@@ -352,6 +366,10 @@ class _ScientificCalculatorState extends State<ScientificCalculator> {
       _buildButton('AC', isOperator: true, onPressed: _clearExpression),
       _buildButton('rad', isFunction: true, onPressed: _toggleAngleMode),
       _buildButton('=', isOperator: true, onPressed: _calculate),
+      _buildButton('exp', isFunction: true, onPressed: () => _appendToExpression('exp(')),
+      _buildButton('log10', isFunction: true, onPressed: () => _appendToExpression('log10(')),
+      _buildButton('abs', isFunction: true, onPressed: () => _appendToExpression('abs(')),
+      _buildButton('φ', onPressed: () => _appendToExpression('φ')),
     ];
   }
 

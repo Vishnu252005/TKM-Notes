@@ -72,13 +72,21 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'ai/screens/HomePage.dart';
 import 'firebase_init.dart';
+import 'package:provider/provider.dart';
+import 'theme_provider.dart';
+import 'widgets/navbar/unit_converter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FirebaseInit.initialize();
   MobileAds.instance.initialize();
   Gemini.init(apiKey: "AIzaSyDqPfAa1C8sn2hDKLFpMTeiavIHg2vf_C8");
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -86,12 +94,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return MaterialApp(
       title: 'Nexia Notes',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 3, 13, 148)),
-        useMaterial3: true,
-      ),
+      theme: themeProvider.isDarkMode ? ThemeData.dark() : ThemeData.light(),
       home: const SignUpScreen(),
       onGenerateRoute: (settings) {
         final args = settings.arguments as Map<String, String>?;

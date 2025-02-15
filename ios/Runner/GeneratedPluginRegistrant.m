@@ -90,6 +90,12 @@
 @import image_picker_ios;
 #endif
 
+#if __has_include(<open_file_ios/OpenFilePlugin.h>)
+#import <open_file_ios/OpenFilePlugin.h>
+#else
+@import open_file_ios;
+#endif
+
 #if __has_include(<path_provider_foundation/PathProviderPlugin.h>)
 #import <path_provider_foundation/PathProviderPlugin.h>
 #else
@@ -106,6 +112,12 @@
 #import <rive_common/RivePlugin.h>
 #else
 @import rive_common;
+#endif
+
+#if __has_include(<share_plus/FPPSharePlusPlugin.h>)
+#import <share_plus/FPPSharePlusPlugin.h>
+#else
+@import share_plus;
 #endif
 
 #if __has_include(<shared_preferences_foundation/SharedPreferencesPlugin.h>)
@@ -167,9 +179,11 @@
   [FlutterTtsPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterTtsPlugin"]];
   [FLTGoogleMobileAdsPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTGoogleMobileAdsPlugin"]];
   [FLTImagePickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTImagePickerPlugin"]];
+  [OpenFilePlugin registerWithRegistrar:[registry registrarForPlugin:@"OpenFilePlugin"]];
   [PathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"PathProviderPlugin"]];
   [PermissionHandlerPlugin registerWithRegistrar:[registry registrarForPlugin:@"PermissionHandlerPlugin"]];
   [RivePlugin registerWithRegistrar:[registry registrarForPlugin:@"RivePlugin"]];
+  [FPPSharePlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"FPPSharePlusPlugin"]];
   [SharedPreferencesPlugin registerWithRegistrar:[registry registrarForPlugin:@"SharedPreferencesPlugin"]];
   [SpeechToTextPlugin registerWithRegistrar:[registry registrarForPlugin:@"SpeechToTextPlugin"]];
   [SqflitePlugin registerWithRegistrar:[registry registrarForPlugin:@"SqflitePlugin"]];
