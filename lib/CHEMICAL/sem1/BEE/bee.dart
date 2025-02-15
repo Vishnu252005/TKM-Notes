@@ -48,7 +48,8 @@ class _BeeState extends State<Bee> {
     UnitItem(
       title: 'MODULE IV: DC Machines and Transformers',
       isAvailable: false,
-      pdfUrl: 'url_to_pdf_4',
+      pdfUrl:
+          'https://drive.google.com/uc?id=1cytyh20LsW6hSEmBun8LBi8ZKdbfy9wM&export=download',
     ),
     UnitItem(
       title: 'MODULE V: AC Machines',

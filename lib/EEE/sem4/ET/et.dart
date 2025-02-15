@@ -31,7 +31,8 @@ class _EtState extends State<Et> {
     UnitItem(
       title: 'MODULE I: Coordinate systems and vector calculus',
       isAvailable: false,
-      pdfUrl: 'url_to_pdf_1',
+      pdfUrl:
+          'https://drive.google.com/uc?id=1gxS0SpG9Om8zVGxrX9vZAm53AF0gL-3u&export=download',
     ),
     UnitItem(
       title: 'MODULE II: Electrostatics',
@@ -85,7 +86,8 @@ class _EtState extends State<Et> {
 
   void _loadBannerAd() {
     _bannerAd = BannerAd(
-      adUnitId: 'ca-app-pub-1850470420397635/2911662464', // Replace with your Ad Unit ID
+      adUnitId:
+          'ca-app-pub-1850470420397635/2911662464', // Replace with your Ad Unit ID
       size: AdSize.banner,
       request: AdRequest(),
       listener: BannerAdListener(
@@ -106,12 +108,14 @@ class _EtState extends State<Et> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _isDarkMode ? const Color.fromARGB(255, 3, 13, 148) : Colors.blue[50],
+      backgroundColor:
+          _isDarkMode ? const Color.fromARGB(255, 3, 13, 148) : Colors.blue[50],
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: _isDarkMode ? Colors.white : Colors.blue[900]),
+          icon: Icon(Icons.arrow_back,
+              color: _isDarkMode ? Colors.white : Colors.blue[900]),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -147,14 +151,17 @@ class _EtState extends State<Et> {
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
-                              color: _isDarkMode ? Colors.white : Colors.blue[900],
+                              color:
+                                  _isDarkMode ? Colors.white : Colors.blue[900],
                             ),
                           ),
                           Text(
                             'Select Chapter',
                             style: TextStyle(
                               fontSize: 18,
-                              color: _isDarkMode ? Colors.white70 : Colors.blue[700],
+                              color: _isDarkMode
+                                  ? Colors.white70
+                                  : Colors.blue[700],
                             ),
                           ),
                         ],
@@ -187,7 +194,10 @@ class _EtState extends State<Et> {
                     child: ListView(
                       children: [
                         _buildListItem(context, 'Textbooks', false, null),
-                        ...units.map((unit) => _buildListItem(context, unit.title, unit.isAvailable, unit.pdfUrl)).toList(),
+                        ...units
+                            .map((unit) => _buildListItem(context, unit.title,
+                                unit.isAvailable, unit.pdfUrl))
+                            .toList(),
                       ],
                     ),
                   ),
@@ -232,16 +242,18 @@ class _EtState extends State<Et> {
       ),
       bottomNavigationBar: _isBannerAdLoaded
           ? Container(
-               width: MediaQuery.of(context).size.width, // Full width of the screen
-               height: _bannerAd.size.height.toDouble(),
-               color: Colors.white, // Set background color to white
-               child: AdWidget(ad: _bannerAd),
+              width:
+                  MediaQuery.of(context).size.width, // Full width of the screen
+              height: _bannerAd.size.height.toDouble(),
+              color: Colors.white, // Set background color to white
+              child: AdWidget(ad: _bannerAd),
             )
           : null,
     );
   }
 
-  TextStyle _textStyle({required double fontSize, FontWeight fontWeight = FontWeight.normal}) {
+  TextStyle _textStyle(
+      {required double fontSize, FontWeight fontWeight = FontWeight.normal}) {
     return TextStyle(
       fontSize: fontSize,
       fontWeight: fontWeight,
@@ -249,7 +261,8 @@ class _EtState extends State<Et> {
     );
   }
 
-  Widget _buildListItem(BuildContext context, String title, bool isAvailable, String? pdfUrl) {
+  Widget _buildListItem(
+      BuildContext context, String title, bool isAvailable, String? pdfUrl) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(
@@ -269,15 +282,18 @@ class _EtState extends State<Et> {
       child: ListTile(
         title: Text(
           title,
-          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[900]),
+          style:
+              TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[900]),
         ),
-        trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.blue[900]),
+        trailing: Icon(Icons.chevron_right,
+            color: _isDarkMode ? Colors.white : Colors.blue[900]),
         onTap: () {
           if (isAvailable && pdfUrl != null) {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PDFViewerPage(pdfUrl: pdfUrl, title: title),
+                builder: (context) =>
+                    PDFViewerPage(pdfUrl: pdfUrl, title: title),
               ),
             );
           } else {
@@ -304,5 +320,6 @@ class UnitItem {
   final bool isAvailable;
   final String pdfUrl;
 
-  UnitItem({required this.title, required this.isAvailable, required this.pdfUrl});
+  UnitItem(
+      {required this.title, required this.isAvailable, required this.pdfUrl});
 }
