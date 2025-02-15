@@ -4,7 +4,7 @@ import 'package:Nexia/widgets/pdfviewer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:Nexia/widgets/navbar/home_screen.dart'; // Import HomeScreen
-import 'package:Nexia/widgets/navbar/ai_screen.dart'; // Import AIScreen
+import 'package:Nexia/ai/screens/HomePage.dart'; // Import HomePage
 import 'package:Nexia/widgets/navbar/tools_screen.dart'; // Import ToolsScreen
 import 'package:Nexia/widgets/navbar/profile_screen.dart'; // Import ProfileScreen
 

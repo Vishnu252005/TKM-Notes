@@ -19,7 +19,7 @@ import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../ai/screens/HomePage.dart';
 import '../../ai/widgets/lottie_button.dart';
-import 'package:Nexia/widgets/navbar/ai_screen.dart';
+import 'package:Nexia/ai/screens/HomePage.dart';
 import 'package:Nexia/widgets/navbar/profile_screen.dart';
 import 'package:Nexia/widgets/navbar/tools_screen.dart';
 import 'package:Nexia/widgets/navbar/home_screen.dart';
@@ -372,7 +372,7 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
                 Column(
                   // ... existing code for the main content
                 ),
-                AIScreen(), // AI Screen
+                HomePage(), // AI Screen
                 ToolsScreen(), // Tools Screen
                 ProfileScreen(), // Profile Screen
               ],
@@ -418,7 +418,7 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
             ),
           ],
           selectedItemColor: Colors.blue, // Keep selected item color blue
-          unselectedItemColor: Colors.white70, // Adjust unselected item color for better visibility
+          unselectedItemColor: _isDarkMode ? Colors.white70 : Colors.black, // Adjust unselected item color
           backgroundColor: _isDarkMode ? Color(0xFF121212) : Colors.white, // Use a better shade of black
           type: BottomNavigationBarType.fixed,
           elevation: 0, // Remove elevation from BottomNavigationBar
@@ -476,7 +476,7 @@ class _EEEHomeScreenState extends State<EEEHomeScreen> {
       case 0:
         return HomeScreen();
       case 1:
-        return AIScreen();
+        return HomePage();
       case 2:
         return ToolsScreen();
       case 3:

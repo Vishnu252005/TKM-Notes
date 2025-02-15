@@ -26,50 +26,62 @@ class _ProjectIdeaScreenState extends State<ProjectIdeaScreen> {
         title: Text('Project Ideas'),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _ideaController,
-              decoration: InputDecoration(
-                labelText: 'Enter your project idea',
-                border: OutlineInputBorder(),
+      body: Center(
+        child: Container(
+          padding: EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.engineering_rounded,
+                size: 80,
+                color: Theme.of(context).primaryColor,
               ),
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: _addProjectIdea,
-              child: Text('Add Idea'),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Search Ideas',
-                border: OutlineInputBorder(),
+              SizedBox(height: 24),
+              Text(
+                '🚀 Coming Soon!',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
+                ),
               ),
-              onChanged: (value) {
-                setState(() {
-                  _searchQuery = value.toLowerCase();
-                });
-              },
-            ),
-            SizedBox(height: 20),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _projectIdeas.length,
-                itemBuilder: (context, index) {
-                  final idea = _projectIdeas[index];
-                  if (_searchQuery.isEmpty || idea.toLowerCase().contains(_searchQuery)) {
-                    return ListTile(
-                      title: Text(idea),
-                    );
-                  }
-                  return Container(); // Return an empty container if it doesn't match the search query
-                },
+              SizedBox(height: 16),
+              Text(
+                'We\'re building something awesome!',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.grey[600],
+                ),
+                textAlign: TextAlign.center,
               ),
-            ),
-          ],
+              SizedBox(height: 8),
+              Text(
+                'Our Project Ideas feature will help you organize and track your innovative ideas.',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey[600],
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 32),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  'Stay tuned for updates!',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

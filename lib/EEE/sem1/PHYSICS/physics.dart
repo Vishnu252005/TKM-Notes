@@ -4,7 +4,7 @@ import 'package:Nexia/widgets/pdfviewer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:Nexia/widgets/navbar/home_screen.dart';
-import 'package:Nexia/widgets/navbar/ai_screen.dart';
+import 'package:Nexia/ai/screens/HomePage.dart';
 import 'package:Nexia/widgets/navbar/tools_screen.dart';
 import 'package:Nexia/widgets/navbar/profile_screen.dart';
 import 'package:Nexia/EEE/sem1/eee_sem1_screen.dart';
@@ -239,7 +239,7 @@ class _physicsState extends State<physics> {
               ),
             ],
           ),
-          AIScreen(),
+          HomePage(),
           ToolsScreen(),
           ProfileScreen(),
         ],
@@ -313,7 +313,7 @@ class _physicsState extends State<physics> {
             ),
           ],
           selectedItemColor: Colors.blue, // Keep selected item color blue
-          unselectedItemColor: Colors.white70, // Adjust unselected item color for better visibility
+          unselectedItemColor: _isDarkMode ? Colors.white70 : Colors.black, // Adjust unselected item color
           backgroundColor: _isDarkMode ? Color(0xFF121212) : Colors.white, // Use a better shade of black
           type: BottomNavigationBarType.fixed,
           elevation: 0, // Remove elevation from BottomNavigationBar

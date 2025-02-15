@@ -4,7 +4,7 @@ import 'package:Nexia/widgets/pdfviewer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:Nexia/widgets/navbar/home_screen.dart';
-import 'package:Nexia/widgets/navbar/ai_screen.dart';
+import 'package:Nexia/ai/screens/HomePage.dart';
 import 'package:Nexia/widgets/navbar/tools_screen.dart';
 import 'package:Nexia/widgets/navbar/profile_screen.dart';
 
@@ -164,7 +164,7 @@ class _BeeState extends State<Bee> {
                 break;
               case 1:
                 Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => AIScreen()));
+                    MaterialPageRoute(builder: (context) => HomePage()));
                 break;
               case 2:
                 Navigator.pushReplacement(context,
@@ -224,7 +224,7 @@ class _BeeState extends State<Bee> {
       case 0:
         return HomeScreen();
       case 1:
-        return AIScreen();
+        return HomePage();
       case 2:
         return ToolsScreen();
       case 3:
