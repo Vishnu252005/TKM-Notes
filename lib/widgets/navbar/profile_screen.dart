@@ -406,44 +406,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                         // Main content
                         username == null
-                            ? _buildAuthScreen()
+                    ? _buildAuthScreen()
                             : SingleChildScrollView(
-                                child: Column(
-                                    children: [
+                        child: Column(
+                            children: [
                                         // Top profile section with animation
-                                        Container(
+                                Container(
                                             width: double.infinity,
-                                            height: 200.0,
-                                            decoration: BoxDecoration(
-                                                gradient: LinearGradient(
+                                    height: 200.0,
+                                    decoration: BoxDecoration(
+                                        gradient: LinearGradient(
                                                     colors: isDarkMode 
                                                         ? [Color(0xFF1A1A2E), Color(0xFF16213E)]
                                                         : [Colors.blue[800]!, Colors.blue[500]!],
-                                                    begin: Alignment.topCenter,
-                                                    end: Alignment.bottomCenter,
-                                                ),
-                                            ),
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                        ),
+                                    ),
                                             child: SafeArea(
-                                                child: Column(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                        CircleAvatar(
-                                                            radius: 50,
-                                                            backgroundColor: Colors.white,
-                                                            child: Icon(Icons.person, size: 50, color: Colors.blue[800]),
+                                    child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                            CircleAvatar(
+                                                radius: 50,
+                                                backgroundColor: Colors.white,
+                                                child: Icon(Icons.person, size: 50, color: Colors.blue[800]),
                                                         )
                                                             .animate()
                                                             .fadeIn(duration: 600.ms)
                                                             .scale(delay: 200.ms)
                                                             .then()
                                                             .shimmer(duration: 1200.ms),
-                                                        SizedBox(height: 10),
-                                                        Text(
-                                                            username ?? '',
-                                                            style: TextStyle(
-                                                                color: Colors.white,
-                                                                fontSize: 24,
-                                                                fontWeight: FontWeight.bold,
+                                            SizedBox(height: 10),
+                                            Text(
+                                                username ?? '',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 24,
+                                                    fontWeight: FontWeight.bold,
                                                                 shadows: [
                                                                     Shadow(
                                                                         offset: Offset(0, 2),
@@ -456,21 +456,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                             .animate()
                                                             .fadeIn(delay: 400.ms)
                                                             .slideY(begin: 0.3),
-                                                        SizedBox(height: 10),
-                                                        Text(
-                                                            'Welcome to Your Profile',
-                                                            style: TextStyle(
+                                            SizedBox(height: 10),
+                                            Text(
+                                                'Welcome to Your Profile',
+                                                style: TextStyle(
                                                                 color: Colors.white.withOpacity(0.9),
-                                                                fontSize: 20,
-                                                                fontWeight: FontWeight.w500,
-                                                            ),
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.w500,
+                                                ),
                                                         )
                                                             .animate()
                                                             .fadeIn(delay: 600.ms)
                                                             .slideY(begin: 0.3),
-                                                    ],
-                                                ),
-                                            ),
+                                        ],
+                                    ),
+                                ),
                                         )
                                             .animate()
                                             .fadeIn()
@@ -481,7 +481,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             padding: EdgeInsets.symmetric(horizontal: 16),
                                             child: Column(
                                                 children: [
-                                                    SizedBox(height: 20),
+                                SizedBox(height: 20),
                                                     _buildProfileSection()
                                                         .animate()
                                                         .fadeIn(delay: 200.ms)
@@ -507,14 +507,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         .fadeIn(delay: 1000.ms)
                                                         .slideX(begin: -0.2),
                                                     
-                                                    SizedBox(height: 20),
+                                SizedBox(height: 20),
                                                     
                                                     // Animated logout button
-                                                    ElevatedButton(
-                                                        onPressed: logout,
-                                                        style: ElevatedButton.styleFrom(
+                                ElevatedButton(
+                                    onPressed: logout,
+                                    style: ElevatedButton.styleFrom(
                                                             backgroundColor: Colors.red.withOpacity(0.9),
-                                                            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                                        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
                                                             shape: RoundedRectangleBorder(
                                                                 borderRadius: BorderRadius.circular(12),
                                                             ),
@@ -540,9 +540,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         .scale(delay: 1200.ms)
                                                         .shimmer(delay: 1200.ms),
                                                     
-                                                    SizedBox(height: 20),
-                                                ],
-                                            ),
+                                SizedBox(height: 20),
+                            ],
+                        ),
                                         ),
                                     ],
                                 ),
@@ -577,7 +577,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                         ),
                     ],
-                ),
+                    ),
                 floatingActionButton: username != null
                     ? FloatingActionButton(
                         onPressed: _showEditProfileDialog,
@@ -669,10 +669,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                         )
                         : Wrap(
-                            spacing: 8.0,
-                            runSpacing: 8.0,
+                        spacing: 8.0,
+                        runSpacing: 8.0,
                             children: interestsList
-                                .map((interest) => Chip(
+                            .map((interest) => Chip(
                                     label: Text(
                                         interest.trim(),
                                         style: TextStyle(
@@ -685,8 +685,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ? Colors.blue[900]!.withOpacity(0.2)
                                         : Colors.blue[50],
                                 ))
-                                .toList(),
-                        ),
+                            .toList(),
+                    ),
                 ),
             ],
         );
@@ -716,9 +716,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         width: 1,
                     ),
                 ),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                         Container(
                             decoration: BoxDecoration(
                                 gradient: LinearGradient(
@@ -734,8 +734,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                             ),
                             padding: EdgeInsets.all(16),
-                            child: Row(
-                                children: [
+                        child: Row(
+                            children: [
                                     Icon(
                                         icon,
                                         color: isDarkMode ? Colors.blue[400] : Colors.blue[800],
@@ -746,21 +746,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         .then()
                                         .shimmer(duration: 1200.ms),
                                     SizedBox(width: 12),
-                                    Text(
-                                        title,
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
+                                Text(
+                                    title,
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
                                             color: isDarkMode ? Colors.white : Colors.blue[800],
-                                        ),
+                                    ),
                                     )
                                         .animate()
                                         .fadeIn(duration: 400.ms)
                                         .slideX(begin: 0.2),
-                                ],
-                            ),
+                            ],
                         ),
-                        Divider(height: 1),
+                    ),
+                    Divider(height: 1),
                         ...children.map((child) => 
                             child
                                 .animate()
@@ -801,19 +801,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                                 Text(
-                                    label,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w500,
+                label,
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
                                         color: isDarkMode ? Colors.grey[300] : Colors.grey[700],
                                         fontSize: 14,
-                                    ),
-                                ),
+                ),
+            ),
                                 SizedBox(height: 4),
                                 Text(
-                                    value,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: isDarkMode ? Colors.white : Colors.black,
+                value,
+                style: TextStyle(
+                    fontSize: 16,
+                    color: isDarkMode ? Colors.white : Colors.black,
                                         fontWeight: FontWeight.w500,
                                     ),
                                 ),
@@ -1042,7 +1042,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             child: Center(
                 child: SingleChildScrollView(
-                    child: Padding(
+                child: Padding(
                         padding: const EdgeInsets.all(24.0),
                         child: Column(
                             children: [
@@ -1062,25 +1062,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 // Main Card with improved dark mode styling
                                 Card(
                                     elevation: isDarkMode ? 20 : 12,  // Higher elevation in dark mode
-                                    shape: RoundedRectangleBorder(
+                        shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20),
                                         side: isDarkMode 
                                             ? BorderSide(color: darkPrimaryColor.withOpacity(0.1), width: 1)
                                             : BorderSide.none,
-                                    ),
+                        ),
                                     color: isDarkMode ? darkCardColor : Colors.white,
-                                    child: Padding(
+                        child: Padding(
                                         padding: const EdgeInsets.all(24.0),
-                                        child: Column(
+                            child: Column(
                                             mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                                            children: [
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
                                                 // Title with improved dark mode color
-                                                Text(
+                                    Text(
                                                     isSignUp ? 'Create Account' : 'Welcome Back',
-                                                    style: TextStyle(
+                                        style: TextStyle(
                                                         fontSize: 28,
-                                                        fontWeight: FontWeight.bold,
+                                            fontWeight: FontWeight.bold,
                                                         color: isDarkMode ? darkTextColor : Colors.blue[800],
                                                     ),
                                                     textAlign: TextAlign.center,
@@ -1109,9 +1109,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 SizedBox(height: 32),
                                                 
                                                 // Form Fields
-                                                if (isSignUp)
+                                    if (isSignUp)
                                                     _buildAnimatedTextField(
-                                                        controller: usernameController,
+                                            controller: usernameController,
                                                         icon: Icons.person,
                                                         label: 'Username',
                                                         delay: 0,
@@ -1120,16 +1120,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 SizedBox(height: isSignUp ? 16 : 0),
                                                 
                                                 _buildAnimatedTextField(
-                                                    controller: emailController,
+                                        controller: emailController,
                                                     icon: Icons.email,
                                                     label: 'Email',
                                                     delay: isSignUp ? 200 : 0,
                                                 ),
                                                 
-                                                SizedBox(height: 16),
+                                    SizedBox(height: 16),
                                                 
                                                 _buildAnimatedTextField(
-                                                    controller: passwordController,
+                                        controller: passwordController,
                                                     icon: Icons.lock,
                                                     label: 'Password',
                                                     isPassword: true,
@@ -1174,14 +1174,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 
                                                 // Main Button
                                                 ElevatedButton(
-                                                    onPressed: () {
-                                                        if (isSignUp) {
-                                                            signUp();
-                                                        } else {
-                                                            signIn();
-                                                        }
-                                                    },
-                                                    style: ElevatedButton.styleFrom(
+                                        onPressed: () {
+                                            if (isSignUp) {
+                                                signUp();
+                                            } else {
+                                                signIn();
+                                            }
+                                        },
+                                        style: ElevatedButton.styleFrom(
                                                         backgroundColor: isDarkMode ? darkPrimaryColor : Colors.blue[600],
                                                         padding: EdgeInsets.symmetric(vertical: 16),
                                                         elevation: isDarkMode ? 8 : 4,
@@ -1205,7 +1205,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 // Forgot Password - Only show in sign in mode
                                                 if (!isSignUp) ...[
                                                     SizedBox(height: 16),
-                                                    TextButton(
+                                    TextButton(
                                                         onPressed: resetPassword,
                                                         child: Text(
                                                             'Forgot Password?',
