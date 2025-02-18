@@ -8,6 +8,10 @@ import 'package:Nexia/EEE/sem3/MATHS3/maths3.dart';
 import 'package:Nexia/EEE/sem3/MI/mi.dart';
 import 'package:Nexia/widgets/profiledark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 
 class EEESem3Screen extends StatefulWidget {
   final String fullName;

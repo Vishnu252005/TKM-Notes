@@ -8,6 +8,10 @@ import 'package:Nexia/ER/sem4/PRD/prd.dart'; // Import the correct file for unit
 import 'package:Nexia/ER/sem4/MM/mm.dart';
 import 'package:Nexia/widgets/profiledark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 
 class ERSem4Screen extends StatefulWidget {
   final String fullName;

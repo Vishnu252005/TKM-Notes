@@ -13,6 +13,10 @@ import 'package:share_plus/share_plus.dart';
 import 'package:open_file/open_file.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:ui';
@@ -412,39 +416,39 @@ class _GraphPlotterState extends State<GraphPlotter> {
                                     ),
                                     Row(
                                       children: [
-                                        IconButton(
-                                          icon: Icon(
+          IconButton(
+            icon: Icon(
                                             _isDarkMode ? Icons.light_mode : Icons.dark_mode,
                                             color: Colors.white,
-                                          ),
-                                          onPressed: _toggleTheme,
-                                        ),
-                                        IconButton(
+            ),
+            onPressed: _toggleTheme,
+          ),
+          IconButton(
                                           icon: Icon(
                                             Icons.save_alt,
                                             color: Colors.white,
                                           ),
-                                          onPressed: _capturePng,
-                                        ),
-                                      ],
-                                    ),
+            onPressed: _capturePng,
+          ),
+        ],
+      ),
                                   ],
                                 ),
                                 SizedBox(height: 20),
                                 Text(
                                   'Graph\nPlotter',
-                                  style: TextStyle(
+                  style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 28,
-                                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.bold,
                                     height: 1.2,
                                   ),
                                 ),
                               ],
-                            ),
-                          ),
-                        ),
-                      ),
+                  ),
+                ),
+              ),
+            ),
                     ),
                   ),
                 ),
@@ -490,10 +494,10 @@ class _GraphPlotterState extends State<GraphPlotter> {
                               ),
                             ),
                             SizedBox(height: 12),
-                            TextField(
-                              controller: _pointController,
-                              decoration: InputDecoration(
-                                labelText: 'Enter Points (x,y) separated by ";"',
+                      TextField(
+                        controller: _pointController,
+                        decoration: InputDecoration(
+                          labelText: 'Enter Points (x,y) separated by ";"',
                                 labelStyle: TextStyle(
                                   color: _isDarkMode ? Colors.white70 : Colors.blueAccent,
                                 ),
@@ -551,8 +555,8 @@ class _GraphPlotterState extends State<GraphPlotter> {
                               aspectRatio: 1,
                               child: RepaintBoundary(
                                 key: _globalKey,
-                                child: LineChart(
-                                  LineChartData(
+                              child: LineChart(
+                                LineChartData(
                                     gridData: FlGridData(
                                       show: true,
                                       getDrawingHorizontalLine: (value) {
@@ -572,44 +576,44 @@ class _GraphPlotterState extends State<GraphPlotter> {
                                         );
                                       },
                                     ),
-                                    titlesData: FlTitlesData(
-                                      bottomTitles: AxisTitles(
-                                        sideTitles: SideTitles(
-                                          showTitles: true,
+                                  titlesData: FlTitlesData(
+                                    bottomTitles: AxisTitles(
+                                      sideTitles: SideTitles(
+                                        showTitles: true,
                                           reservedSize: 30,
-                                          getTitlesWidget: (value, meta) {
+                                        getTitlesWidget: (value, meta) {
                                             return Padding(
                                               padding: const EdgeInsets.only(top: 8.0),
                                               child: Text(
-                                                value.toStringAsFixed(1),
-                                                style: TextStyle(
+                                            value.toStringAsFixed(1),
+                                            style: TextStyle(
                                                   color: _isDarkMode 
                                                       ? Colors.white 
                                                       : Colors.black87,
-                                                  fontSize: 12,
+                                              fontSize: 12,
                                                   fontWeight: FontWeight.bold,
                                                 ),
-                                              ),
-                                            );
-                                          },
-                                        ),
+                                            ),
+                                          );
+                                        },
                                       ),
-                                      leftTitles: AxisTitles(
-                                        sideTitles: SideTitles(
-                                          showTitles: true,
+                                    ),
+                                    leftTitles: AxisTitles(
+                                      sideTitles: SideTitles(
+                                        showTitles: true,
                                           reservedSize: 45,
-                                          getTitlesWidget: (value, meta) {
-                                            return Text(
-                                              value.toStringAsFixed(1),
-                                              style: TextStyle(
+                                        getTitlesWidget: (value, meta) {
+                                          return Text(
+                                            value.toStringAsFixed(1),
+                                            style: TextStyle(
                                                 color: _isDarkMode 
                                                     ? Colors.white 
                                                     : Colors.black87,
-                                                fontSize: 12,
+                                              fontSize: 12,
                                                 fontWeight: FontWeight.bold,
-                                              ),
-                                            );
-                                          },
+                                            ),
+                                          );
+                                        },
                                         ),
                                       ),
                                       topTitles: AxisTitles(
@@ -617,12 +621,12 @@ class _GraphPlotterState extends State<GraphPlotter> {
                                       ),
                                       rightTitles: AxisTitles(
                                         sideTitles: SideTitles(showTitles: false),
-                                      ),
                                     ),
-                                    lineBarsData: [
-                                      LineChartBarData(
-                                        spots: _spots,
-                                        isCurved: true,
+                                  ),
+                                  lineBarsData: [
+                                    LineChartBarData(
+                                      spots: _spots,
+                                      isCurved: true,
                                         color: Color(0xFF4C4DDC),
                                         dotData: FlDotData(
                                           show: true,
@@ -641,21 +645,21 @@ class _GraphPlotterState extends State<GraphPlotter> {
                                           show: true,
                                           color: Color(0xFF4C4DDC).withOpacity(0.1),
                                         ),
-                                      ),
-                                    ],
-                                    borderData: FlBorderData(
-                                      show: true,
+                                    ),
+                                  ],
+                                  borderData: FlBorderData(
+                                    show: true,
                                       border: Border.all(
                                         color: _isDarkMode 
                                             ? Colors.white.withOpacity(0.5)
                                             : Colors.grey[400]!,
                                         width: 2,
                                       ),
-                                    ),
-                                    minX: _xMin,
-                                    maxX: _xMax,
-                                    minY: _yMin,
-                                    maxY: _yMax,
+                                  ),
+                                  minX: _xMin,
+                                  maxX: _xMax,
+                                  minY: _yMin,
+                                  maxY: _yMax,
                                     backgroundColor: _isDarkMode 
                                         ? Color(0xFF252542)
                                         : Colors.white,
@@ -671,8 +675,8 @@ class _GraphPlotterState extends State<GraphPlotter> {
                 ),
               ),
             ],
-          ),
-        ],
+            ),
+          ],
       ),
     );
   }

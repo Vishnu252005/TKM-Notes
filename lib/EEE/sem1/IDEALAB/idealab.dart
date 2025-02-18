@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:Nexia/widgets/profile.dart';
 import 'package:Nexia/widgets/pdfviewer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:ui';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -13,8 +17,15 @@ class idea extends StatefulWidget { // Capitalized class name
   final String branch;
   final String year;
   final String semester;
+  final String subjectName;
 
-  idea({required this.fullName, required this.branch, required this.year, required this.semester});
+  idea({
+    required this.fullName,
+    required this.branch,
+    required this.year,
+    required this.semester,
+    required this.subjectName,
+  });
 
   @override
   _ideaState createState() => _ideaState();
@@ -144,8 +155,8 @@ class _ideaState extends State<idea> {
                                 Color(0xFF1A1A2E),
                               ]
                             : [
-                                Color(0xFF0A84FF),
-                                Color(0xFF48A2FF),
+                                Color(0xFF0A84FF),  // iOS-style blue
+                                Color(0xFF48A2FF),  // Lighter vibrant blue
                               ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -165,10 +176,10 @@ class _ideaState extends State<idea> {
                                     color: Colors.white,
                                     size: 20,
                                   ),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
                                 Container(
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 16,
@@ -181,13 +192,13 @@ class _ideaState extends State<idea> {
                                   child: Row(
                                     children: [
                                       Icon(
-                                        Icons.lightbulb_outline,
+                                        Icons.science,
                                         color: Colors.white,
                                         size: 16,
                                       ),
                                       SizedBox(width: 8),
                                       Text(
-                                        'IDEA LAB',
+                                        'PHYSICS',
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 14,
@@ -199,22 +210,22 @@ class _ideaState extends State<idea> {
                                 ),
                               ],
                             ),
-                            IconButton(
-                              icon: Icon(
-                                _isDarkMode ? Icons.wb_sunny : Icons.nightlight_round,
-                                color: Colors.white,
-                              ),
-                              onPressed: _toggleTheme,
-                            ),
-                          ],
+                IconButton(
+                  icon: Icon(
+                    _isDarkMode ? Icons.wb_sunny : Icons.nightlight_round,
+                    color: Colors.white,
+                  ),
+                  onPressed: _toggleTheme,
+                ),
+              ],
                         ),
                         SizedBox(height: 20),
-                        Text(
-                          'Innovation\nDesign & Engineering',
-                          style: TextStyle(
+                              Text(
+                          widget.subjectName,
+                                style: TextStyle(
                             color: Colors.white,
                             fontSize: 32,
-                            fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.bold,
                             height: 1.2,
                             shadows: [
                               Shadow(
@@ -225,17 +236,17 @@ class _ideaState extends State<idea> {
                             ],
                           ),
                         ),
-                      ],
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
 
               // Units List
               Expanded(
                 child: ListView.builder(
                   padding: EdgeInsets.all(16),
-                  itemCount: units.length + 1,
+                  itemCount: units.length + 1, // +1 for textbooks
                   itemBuilder: (context, index) {
                     if (index == 0) {
                       return _buildListItem(context, 'Textbooks', false, null)
@@ -355,6 +366,9 @@ class _ideaState extends State<idea> {
             size: 16,
           ),
         ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
         onTap: () {
           if (isAvailable && pdfUrl != null) {
             HapticFeedback.lightImpact();
@@ -362,8 +376,8 @@ class _ideaState extends State<idea> {
               context,
               MaterialPageRoute(
                 builder: (context) => PDFViewerPage(pdfUrl: pdfUrl, title: title),
-                ),
-              );
+              ),
+            );
           } else {
             HapticFeedback.lightImpact();
             ScaffoldMessenger.of(context).showSnackBar(
@@ -409,7 +423,6 @@ class UnitItem {
   UnitItem({required this.title, required this.isAvailable, required this.pdfUrl});
 }
 
-// Add DotPatternPainter class
 class DotPatternPainter extends CustomPainter {
   final Color color;
   

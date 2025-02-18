@@ -212,10 +212,10 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
           ),
 
           Padding(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
                 _buildTextField(
                   label: 'Company Name',
                   onSaved: (value) => experience.companyName = value ?? '',
@@ -228,11 +228,11 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
                 SizedBox(height: 16),
 
                 // Date Range Row
-                Row(
-                  children: [
-                    Expanded(
+            Row(
+              children: [
+                Expanded(
                       child: InkWell(
-                        onTap: () => _selectDate(context, true, experience: experience),
+                    onTap: () => _selectDate(context, true, experience: experience),
                         child: Container(
                           padding: EdgeInsets.all(12),
                           decoration: BoxDecoration(
@@ -265,7 +265,7 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
                       ),
                     ),
                     SizedBox(width: 16),
-                    Expanded(
+                Expanded(
                       child: Column(
                         children: [
                           SwitchListTile(
@@ -276,20 +276,20 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
                                 fontSize: 14,
                               ),
                             ),
-                            value: experience.isPresent,
+                          value: experience.isPresent,
                             activeColor: Color(0xFF4C4DDC),
                             onChanged: (bool value) {
-                              setState(() {
+                            setState(() {
                                 experience.isPresent = value;
                                 if (value) {
                                   experience.endDate = null;
-                                }
-                              });
-                            },
+                              }
+                            });
+                          },
                           ),
                           if (!experience.isPresent)
                             InkWell(
-                              onTap: () => _selectDate(context, false, experience: experience),
+                          onTap: () => _selectDate(context, false, experience: experience),
                               child: Container(
                                 padding: EdgeInsets.all(12),
                                 decoration: BoxDecoration(
@@ -314,10 +314,10 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
                                       style: TextStyle(
                                         color: isDarkMode ? Colors.white : Colors.black87,
                                         fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                        ),
+                ),
+              ],
+            ),
                               ),
                             ),
                         ],
@@ -342,9 +342,9 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
                   maxLines: 3,
                   onSaved: (value) => experience.description = value ?? '',
                 ),
-              ],
-            ),
-          ),
+          ],
+        ),
+      ),
         ],
       ),
     ).animate().fadeIn().slideX();
@@ -441,10 +441,10 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
           ),
 
           Padding(
-            padding: EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+          children: [
                 _buildTextField(
                   label: 'Project Name',
                   onSaved: (value) => project.projectName = value ?? '',
@@ -452,11 +452,11 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
                 SizedBox(height: 16),
 
                 // Date Range Row
-                Row(
-                  children: [
-                    Expanded(
+            Row(
+              children: [
+                Expanded(
                       child: InkWell(
-                        onTap: () => _selectDate(context, true, project: project),
+                    onTap: () => _selectDate(context, true, project: project),
                         child: Container(
                           padding: EdgeInsets.all(12),
                           decoration: BoxDecoration(
@@ -489,7 +489,7 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
                       ),
                     ),
                     SizedBox(width: 16),
-                    Expanded(
+                Expanded(
                       child: Column(
                         children: [
                           SwitchListTile(
@@ -500,20 +500,20 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
                                 fontSize: 14,
                               ),
                             ),
-                            value: project.isPresent,
+                          value: project.isPresent,
                             activeColor: Color(0xFF4C4DDC),
                             onChanged: (bool value) {
-                              setState(() {
+                            setState(() {
                                 project.isPresent = value;
                                 if (value) {
                                   project.endDate = null;
-                                }
-                              });
-                            },
+                              }
+                            });
+                          },
                           ),
                           if (!project.isPresent)
                             InkWell(
-                              onTap: () => _selectDate(context, false, project: project),
+                          onTap: () => _selectDate(context, false, project: project),
                               child: Container(
                                 padding: EdgeInsets.all(12),
                                 decoration: BoxDecoration(
@@ -538,10 +538,10 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
                                       style: TextStyle(
                                         color: isDarkMode ? Colors.white : Colors.black87,
                                         fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                        ),
+                ),
+              ],
+            ),
                               ),
                             ),
                         ],
@@ -573,9 +573,9 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
                   label: 'GitHub Link',
                   onSaved: (value) => project.githubLink = value ?? '',
                 ),
-              ],
-            ),
-          ),
+          ],
+        ),
+      ),
         ],
       ),
     ).animate().fadeIn().slideX();

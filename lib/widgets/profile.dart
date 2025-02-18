@@ -5,6 +5,10 @@ import 'package:flutter/material.dart';
 import '../widgets/sgpa.dart';
 import '../widgets/signup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 
 
 class ProfilePage extends StatefulWidget {

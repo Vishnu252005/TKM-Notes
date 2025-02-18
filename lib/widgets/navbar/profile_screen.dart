@@ -2,7 +2,11 @@ import 'package:flutter/material.dart'; // Import Flutter Material
 import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart'; // Import SharedPreferences
 import 'package:flutter_animate/flutter_animate.dart'; // Import the flutter_animate package
 import 'package:flutter/rendering.dart'; // Import flutter rendering
 import 'package:flutter/services.dart'; // Add this import for HapticFeedback

@@ -17,6 +17,10 @@ import 'package:Nexia/EEE/sem1/IDEALAB/idealab.dart';
 import 'package:Nexia/widgets/profiledark.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import '../../ai/screens/HomePage.dart';
 import '../../ai/widgets/lottie_button.dart';
 import 'package:Nexia/ai/screens/HomePage.dart';
@@ -68,50 +72,99 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
     });
   }
 
-    void _initializeSubjects() {
+  void _initializeSubjects() {
     _subjects = {
       'Notes & Books': [
         {
           'name': 'Calculus and Linear Algebra',
           'description': 'Study of calculus and linear algebra including...',
           'image': 'assets/s1.png',
-          'page': () => maths(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+          'page': ({required String fullName, required String branch, required String year, required String semester, required String subjectName}) => 
+              maths(
+                fullName: fullName,
+                branch: branch,
+                year: year,
+                semester: semester,
+                subjectName: subjectName,
+              ),
         },
         {
           'name': 'Engineering Physics',
           'description': 'Exploration of fundamental concepts in physics...',
           'image': 'assets/s1.png',
-          'page': () => physics(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+          'page': ({required String fullName, required String branch, required String year, required String semester, required String subjectName}) => 
+              physics(
+                fullName: fullName,
+                branch: branch,
+                year: year,
+                semester: semester,
+                subjectName: subjectName,
+              ),
         },
         {
           'name': 'Fundamentals of Electronics Engineering',
           'description': 'Basics of electronics and electrical engineering...',
           'image': 'assets/s1.png',
-          'page': () => fec(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+          'page': ({required String fullName, required String branch, required String year, required String semester, required String subjectName}) => 
+              fec(
+                fullName: fullName,
+                branch: branch,
+                year: year,
+                semester: semester,
+                subjectName: subjectName,
+              ),
         },
         {
           'name': 'Technical English for Engineers',
           'description': 'Improving technical communication skills...',
           'image': 'assets/s1.png',
-          'page': () => english(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+          'page': ({required String fullName, required String branch, required String year, required String semester, required String subjectName}) => 
+              english(
+                fullName: fullName,
+                branch: branch,
+                year: year,
+                semester: semester,
+                subjectName: subjectName,
+              ),
         },
         {
-          'name': 'IDEA Lab ',
+          'name': 'IDEA Lab',
           'description': 'Hands-on workshop focusing on innovative design...',
           'image': 'assets/s1.png',
-          'page': () => idea(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+          'page': ({required String fullName, required String branch, required String year, required String semester, required String subjectName}) => 
+              idea(
+                fullName: fullName,
+                branch: branch,
+                year: year,
+                semester: semester,
+                subjectName: subjectName,
+              ),
         },
         {
           'name': 'Basics of Electrical Engineering',
           'description': 'Introduction to electrical engineering principles...',
           'image': 'assets/s1.png',
-          'page': () => Bee(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+          'page': ({required String fullName, required String branch, required String year, required String semester, required String subjectName}) => 
+              Bee(
+                fullName: fullName,
+                branch: branch,
+                year: year,
+                semester: semester,
+                subjectName: subjectName,
+              ),
         },
         {
           'name': 'Basic Mechanical Engineering',
           'description': 'Fundamental concepts in mechanical engineering...',
           'image': 'assets/s1.png',
-          'page': () => bme(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+          'page': ({required String fullName, required String branch, required String year, required String semester, required String subjectName}) => 
+              bme(
+                fullName: fullName,
+                branch: branch,
+                year: year,
+                semester: semester,
+                subjectName: subjectName,
+              ),
         },
       ],
       'PYQs': [
@@ -119,43 +172,92 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
           'name': 'Calculus and Linear Algebra PYQs',
           'description': 'Previous Year Questions for Calculus and Linear Algebra...',
           'image': 'assets/s2.png',
-          'page': () => maths1(fullName: widget.fullName ,branch: widget.branch, year: widget.year, semester: widget.semester),
+          'page': ({required String fullName, required String branch, required String year, required String semester, required String subjectName}) => 
+              maths1(
+                fullName: fullName,
+                branch: branch,
+                year: year,
+                semester: semester,
+                subjectName: subjectName,
+              ),
         },
         {
           'name': 'Engineering Physics PYQs',
           'description': 'Previous Year Questions for Engineering Physics...',
           'image': 'assets/s2.png',
-          'page': () => physics1(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+          'page': ({required String fullName, required String branch, required String year, required String semester, required String subjectName}) => 
+              physics1(
+                fullName: fullName,
+                branch: branch,
+                year: year,
+                semester: semester,
+                subjectName: subjectName,
+              ),
         },
         {
           'name': 'Fundamentals of Electronics Engineering PYQs',
           'description': 'Previous Year Questions for Electronics Engineering...',
           'image': 'assets/s2.png',
-          'page': () => fec1(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+          'page': ({required String fullName, required String branch, required String year, required String semester, required String subjectName}) => 
+              fec1(
+                fullName: fullName,
+                branch: branch,
+                year: year,
+                semester: semester,
+                subjectName: subjectName,
+              ),
         },
         {
           'name': 'Technical English for Engineers PYQs',
           'description': 'Previous Year Questions for Technical English...',
           'image': 'assets/s2.png',
-          'page': () => english1(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+          'page': ({required String fullName, required String branch, required String year, required String semester, required String subjectName}) => 
+              english1(
+                fullName: fullName,
+                branch: branch,
+                year: year,
+                semester: semester,
+                subjectName: subjectName,
+              ),
         },
         {
           'name': 'IDEA Lab  PYQs',
           'description': 'Previous Year Questions for IDEA Lab Workshop...',
           'image': 'assets/s2.png',
-          'page': () => idea1(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+          'page': ({required String fullName, required String branch, required String year, required String semester, required String subjectName}) => 
+              idea1(
+                fullName: fullName,
+                branch: branch,
+                year: year,
+                semester: semester,
+                subjectName: subjectName,
+              ),
         },
         {
           'name': 'Basics of Electrical Engineering PYQs',
           'description': 'Previous Year Questions for Electrical Engineering...',
           'image': 'assets/s2.png',
-          'page': () => Bee1(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+          'page': ({required String fullName, required String branch, required String year, required String semester, required String subjectName}) => 
+              Bee1(
+                fullName: fullName,
+                branch: branch,
+                year: year,
+                semester: semester,
+                subjectName: subjectName,
+              ),
         },
         {
           'name': 'Basic Mechanical Engineering PYQs',
           'description': 'Previous Year Questions for Mechanical Engineering...',
           'image': 'assets/s2.png',
-          'page': () => bme1(fullName: widget.fullName, branch: widget.branch, year: widget.year, semester: widget.semester),
+          'page': ({required String fullName, required String branch, required String year, required String semester, required String subjectName}) => 
+              bme1(
+                fullName: fullName,
+                branch: branch,
+                year: year,
+                semester: semester,
+                subjectName: subjectName,
+              ),
         },
       ],
     };
@@ -689,7 +791,13 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => subject['page'](),
+        builder: (context) => subject['page'](
+          fullName: widget.fullName,
+          branch: widget.branch,
+          year: widget.year,
+          semester: widget.semester,
+          subjectName: subject['name'],
+        ),
       ),
     );
   }

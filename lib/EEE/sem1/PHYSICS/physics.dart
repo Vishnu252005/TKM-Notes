@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:Nexia/widgets/profile.dart';
 import 'package:Nexia/widgets/pdfviewer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:Nexia/widgets/navbar/home_screen.dart';
 import 'package:Nexia/ai/screens/HomePage.dart';
@@ -18,8 +22,15 @@ class physics extends StatefulWidget {
   final String branch;
   final String year;
   final String semester;
+  final String subjectName;
 
-  physics({required this.fullName, required this.branch, required this.year, required this.semester});
+  physics({
+    required this.fullName, 
+    required this.branch, 
+    required this.year, 
+    required this.semester,
+    required this.subjectName,
+  });
 
   @override
   _physicsState createState() => _physicsState();
@@ -215,7 +226,7 @@ class _physicsState extends State<physics> {
                         ),
                         SizedBox(height: 20),
                               Text(
-                          'Engineering\nPhysics',
+                          widget.subjectName,
                                 style: TextStyle(
                             color: Colors.white,
                             fontSize: 32,

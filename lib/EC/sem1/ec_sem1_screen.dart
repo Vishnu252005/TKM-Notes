@@ -13,6 +13,10 @@ import 'package:Nexia/EC/sem1/PHYSICS/physics.dart';
 import 'package:Nexia/EC/sem1/ENGLISH/english.dart';
 import 'package:Nexia/widgets/profiledark.dart'; // Import the profile.dart file
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 class ECSem1Screen extends StatefulWidget {
   final String fullName;
   final String branch;
