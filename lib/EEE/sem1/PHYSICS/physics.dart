@@ -170,9 +170,10 @@ class _physicsState extends State<physics> {
                                     color: Colors.white,
                                     size: 20,
                                   ),
-                                  onPressed: () => Navigator.pop(context),
-                                  semanticLabel: 'Go back',
-                                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
                                 Container(
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 16,
@@ -365,7 +366,12 @@ class _physicsState extends State<physics> {
         onTap: () {
           if (isAvailable && pdfUrl != null) {
             HapticFeedback.lightImpact();
-            _openPDF(pdfUrl, title);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PDFViewerPage(pdfUrl: pdfUrl, title: title),
+              ),
+            );
           } else {
             HapticFeedback.lightImpact();
             ScaffoldMessenger.of(context).showSnackBar(
@@ -400,21 +406,6 @@ class _physicsState extends State<physics> {
       .fadeIn(duration: Duration(milliseconds: 500))
       .slideX(begin: -0.2, end: 0)
       .scale(begin: Offset(0.95, 0.95), end: Offset(1, 1));
-  }
-
-  void _openPDF(String pdfUrl, String title) {
-    try {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => PDFViewerPage(pdfUrl: pdfUrl, title: title),
-        ),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load PDF')),
-      );
-    }
   }
 }
 
