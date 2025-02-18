@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'dart:ui';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class ResistanceCalculator extends StatefulWidget {
   @override
@@ -122,139 +124,235 @@ class _ResistanceCalculatorState extends State<ResistanceCalculator> {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: _isDarkMode ? ThemeData.dark() : ThemeData.light(),
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Resistance Calculator'),
-          centerTitle: true,
-          actions: [
-            IconButton(
-              icon: Icon(_isDarkMode ? Icons.light_mode : Icons.dark_mode),
-              onPressed: () => setState(() => _isDarkMode = !_isDarkMode),
-            ),
-          ],
-        ),
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: _isDarkMode 
-                ? [Colors.grey[900]!, Colors.grey[800]!]
-                : [Colors.blue[50]!, Colors.white],
-            ),
-          ),
-          child: SafeArea(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _buildResistorVisualization(),
-                  SizedBox(height: 24),
-                  if (_result.isNotEmpty) ...[
-                    Card(
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Column(
-                          children: [
-                            Text(
-                              'Result',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: _isDarkMode ? Colors.white70 : Colors.black87,
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              _result,
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: _isDarkMode ? Colors.blue[300] : Colors.blue[700],
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 24),
-                  ],
-                  _buildColorDropdown('Number of Bands', _numberOfBands, (newValue) {
-                    setState(() {
-                      _numberOfBands = newValue!;
-                      _setDefaultColors(); // Reset colors based on new number of bands
-                      _calculateResistance(); // Recalculate on change
-                    });
-                  }, isTolerance: false, options: numberOfBandsOptions),
-                  if (_numberOfBands == '2') ...[
-                    _buildColorDropdown('First Band', _color1, (newValue) {
-                      setState(() {
-                        _color1 = newValue!;
-                        _calculateResistance();
-                      });
-                    }),
-                    _buildColorDropdown('Second Band', _color2, (newValue) {
-                      setState(() {
-                        _color2 = newValue!;
-                        _calculateResistance();
-                      });
-                    }),
-                  ] else if (_numberOfBands == '4' || _numberOfBands == '5' || _numberOfBands == '6') ...[
-                    _buildColorDropdown('First Band', _color1, (newValue) {
-                      setState(() {
-                        _color1 = newValue!;
-                        _calculateResistance();
-                      });
-                    }),
-                    _buildColorDropdown('Second Band', _color2, (newValue) {
-                      setState(() {
-                        _color2 = newValue!;
-                        _calculateResistance();
-                      });
-                    }),
-                    _buildColorDropdown('Multiplier', _color3, (newValue) {
-                      setState(() {
-                        _color3 = newValue!;
-                        _calculateResistance();
-                      });
-                    }),
-                    if (_numberOfBands == '5' || _numberOfBands == '6') ...[
-                      _buildColorDropdown('Third Band', _color4, (newValue) {
-                        setState(() {
-                          _color4 = newValue!;
-                          _calculateResistance();
-                        });
-                      }),
-                    ],
-                    if (_numberOfBands == '6') ...[
-                      _buildColorDropdown('Fourth Band', _color5, (newValue) {
-                        setState(() {
-                          _color5 = newValue!;
-                          _calculateResistance();
-                        });
-                      }),
-                    ],
-                  ],
-                  _buildColorDropdown('Tolerance', _tolerance, (newValue) {
-                    setState(() {
-                      _tolerance = newValue!;
-                      _calculateResistance();
-                    });
-                  }, isTolerance: true),
-                  SizedBox(height: 20),
-                ],
+    return Scaffold(
+      backgroundColor: _isDarkMode ? Color(0xFF1A1A2E) : Colors.blue[50],
+      body: Stack(
+        children: [
+          // Background pattern
+          Positioned.fill(
+            child: CustomPaint(
+              painter: DotPatternPainter(
+                color: _isDarkMode 
+                    ? Colors.white.withOpacity(0.03)
+                    : Colors.blue.withOpacity(0.05),
               ),
             ),
           ),
-        ),
+
+          CustomScrollView(
+            physics: BouncingScrollPhysics(),
+            slivers: [
+              SliverAppBar(
+                automaticallyImplyLeading: true,
+                floating: false,
+                pinned: false,
+                expandedHeight: 200,
+                backgroundColor: Colors.transparent,
+                flexibleSpace: ClipRRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: FlexibleSpaceBar(
+                      background: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: _isDarkMode 
+                                ? [Color(0xFF4C4DDC), Color(0xFF1A1A2E)]
+                                : [Colors.blue[400]!, Colors.blue[100]!],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                        child: SafeArea(
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 8,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.15),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.calculate_outlined,
+                                            color: Colors.white,
+                                            size: 16,
+                                          ),
+                                          SizedBox(width: 8),
+                                          Text(
+                                            'CALCULATOR',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              letterSpacing: 0.3,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(
+                                        _isDarkMode ? Icons.light_mode : Icons.dark_mode,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: () => setState(() => _isDarkMode = !_isDarkMode),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 20),
+                                Text(
+                                  'Resistance\nCalculator',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                    height: 1.2,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              // Content
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _buildResistorVisualization(),
+                      SizedBox(height: 24),
+                      if (_result.isNotEmpty) ...[
+                        Container(
+                          decoration: BoxDecoration(
+                            color: _isDarkMode ? Color(0xFF252542) : Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: _isDarkMode 
+                                  ? Color(0xFF4C4DDC).withOpacity(0.2)
+                                  : Colors.blue.withOpacity(0.1),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: _isDarkMode 
+                                    ? Colors.black.withOpacity(0.3)
+                                    : Colors.blue.withOpacity(0.1),
+                                offset: Offset(4, 4),
+                                blurRadius: 15,
+                                spreadRadius: 1,
+                              ),
+                            ],
+                          ),
+                          padding: EdgeInsets.all(16),
+                          child: Column(
+                            children: [
+                              Text(
+                                'Result',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: _isDarkMode ? Colors.white70 : Colors.black87,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                _result,
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[700],
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 24),
+                      ],
+                      _buildColorDropdown('Number of Bands', _numberOfBands, (newValue) {
+                        setState(() {
+                          _numberOfBands = newValue!;
+                          _setDefaultColors();
+                          _calculateResistance();
+                        });
+                      }, isTolerance: false, options: numberOfBandsOptions),
+                      if (_numberOfBands == '2') ...[
+                        _buildColorDropdown('First Band', _color1, (newValue) {
+                          setState(() {
+                            _color1 = newValue!;
+                            _calculateResistance();
+                          });
+                        }),
+                        _buildColorDropdown('Second Band', _color2, (newValue) {
+                          setState(() {
+                            _color2 = newValue!;
+                            _calculateResistance();
+                          });
+                        }),
+                      ] else if (_numberOfBands == '4' || _numberOfBands == '5' || _numberOfBands == '6') ...[
+                        _buildColorDropdown('First Band', _color1, (newValue) {
+                          setState(() {
+                            _color1 = newValue!;
+                            _calculateResistance();
+                          });
+                        }),
+                        _buildColorDropdown('Second Band', _color2, (newValue) {
+                          setState(() {
+                            _color2 = newValue!;
+                            _calculateResistance();
+                          });
+                        }),
+                        _buildColorDropdown('Multiplier', _color3, (newValue) {
+                          setState(() {
+                            _color3 = newValue!;
+                            _calculateResistance();
+                          });
+                        }),
+                        if (_numberOfBands == '5' || _numberOfBands == '6') ...[
+                          _buildColorDropdown('Third Band', _color4, (newValue) {
+                            setState(() {
+                              _color4 = newValue!;
+                              _calculateResistance();
+                            });
+                          }),
+                        ],
+                        if (_numberOfBands == '6') ...[
+                          _buildColorDropdown('Fourth Band', _color5, (newValue) {
+                            setState(() {
+                              _color5 = newValue!;
+                              _calculateResistance();
+                            });
+                          }),
+                        ],
+                      ],
+                      _buildColorDropdown('Tolerance', _tolerance, (newValue) {
+                        setState(() {
+                          _tolerance = newValue!;
+                          _calculateResistance();
+                        });
+                      }, isTolerance: true),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -303,16 +401,29 @@ class _ResistanceCalculatorState extends State<ResistanceCalculator> {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
-              color: _isDarkMode ? Colors.white70 : Colors.black87,
+              color: _isDarkMode ? Colors.white : Colors.black87,
             ),
           ),
           SizedBox(height: 8),
           Container(
             decoration: BoxDecoration(
+              color: _isDarkMode ? Color(0xFF252542) : Colors.white,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: _isDarkMode ? Colors.white24 : Colors.black12,
+                color: _isDarkMode 
+                    ? Color(0xFF4C4DDC).withOpacity(0.2)
+                    : Colors.blue.withOpacity(0.1),
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: _isDarkMode 
+                      ? Colors.black.withOpacity(0.3)
+                      : Colors.blue.withOpacity(0.1),
+                  offset: Offset(4, 4),
+                  blurRadius: 15,
+                  spreadRadius: 1,
+                ),
+              ],
             ),
             child: ListTile(
               leading: Container(
@@ -326,17 +437,36 @@ class _ResistanceCalculatorState extends State<ResistanceCalculator> {
                   ),
                 ),
               ),
-              title: DropdownButton<String>(
-                value: currentValue,
-                onChanged: onChanged,
-                items: (options ?? (isTolerance ? tolerances : colors)).map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                isExpanded: true,
-                underline: SizedBox(),
+              title: Theme(
+                data: Theme.of(context).copyWith(
+                  canvasColor: _isDarkMode ? Color(0xFF252542) : Colors.white,
+                ),
+                child: DropdownButton<String>(
+                  value: currentValue,
+                  onChanged: onChanged,
+                  items: (options ?? (isTolerance ? tolerances : colors)).map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: TextStyle(
+                          color: _isDarkMode ? Colors.white : Colors.black87,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                  isExpanded: true,
+                  underline: SizedBox(),
+                  dropdownColor: _isDarkMode ? Color(0xFF252542) : Colors.white,
+                  style: TextStyle(
+                    color: _isDarkMode ? Colors.white : Colors.black87,
+                    fontSize: 16,
+                  ),
+                  icon: Icon(
+                    Icons.arrow_drop_down,
+                    color: _isDarkMode ? Colors.white70 : Colors.black54,
+                  ),
+                ),
               ),
             ),
           ),
@@ -344,4 +474,28 @@ class _ResistanceCalculatorState extends State<ResistanceCalculator> {
       ),
     );
   }
+}
+
+class DotPatternPainter extends CustomPainter {
+  final Color color;
+  
+  DotPatternPainter({required this.color});
+  
+  @override
+  void paint(Canvas canvas, Size size) {
+    final double spacing = 20;
+    final double radius = 1;
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+      
+    for (double x = 0; x < size.width; x += spacing) {
+      for (double y = 0; y < size.height; y += spacing) {
+        canvas.drawCircle(Offset(x, y), radius, paint);
+      }
+    }
+  }
+  
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }

@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'dart:ui';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 
 class NumberConverter extends StatefulWidget {
   @override
@@ -204,110 +208,312 @@ class _NumberConverterState extends State<NumberConverter> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _isDarkMode ? Color(0xFF1E1E2E) : Colors.white,
-      appBar: AppBar(
-        backgroundColor: _isDarkMode ? Color(0xFF1E1E2E) : Colors.white,
-        elevation: 0,
-        title: Text(
-          'Number System Converter',
-          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              _isDarkMode ? Icons.wb_sunny : Icons.nightlight_round,
-              color: _isDarkMode ? Colors.white : Colors.black,
+      backgroundColor: _isDarkMode ? Color(0xFF1A1A2E) : Colors.blue[50],
+      body: Stack(
+        children: [
+          // Background pattern
+          Positioned.fill(
+            child: CustomPaint(
+              painter: DotPatternPainter(
+                color: _isDarkMode 
+                    ? Colors.white.withOpacity(0.03)
+                    : Colors.blue.withOpacity(0.05),
+              ),
             ),
-            onPressed: () {
-              setState(() {
-                _isDarkMode = !_isDarkMode;
-                _saveThemePreference();
-              });
-            },
           ),
-        ],
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Select Number System',
-                  style: TextStyle(color: Colors.grey),
-                ),
-                SizedBox(height: 8),
-                DropdownButton<String>(
-                  value: _selectedSystem,
-                  isExpanded: true,
-                  dropdownColor: _isDarkMode ? Color(0xFF2E2E42) : Colors.white,
-                  items: <String>['Decimal', 'Binary', 'Octal', 'Hexadecimal']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(
-                        value,
-                        style: TextStyle(
-                          color: _isDarkMode ? Colors.white : Colors.black,
+
+          CustomScrollView(
+            physics: BouncingScrollPhysics(),
+            slivers: [
+              SliverAppBar(
+                automaticallyImplyLeading: true,
+                floating: false,
+                pinned: false,
+                expandedHeight: 200,
+                backgroundColor: Colors.transparent,
+                flexibleSpace: ClipRRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: FlexibleSpaceBar(
+                      background: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: _isDarkMode 
+                                ? [Color(0xFF4C4DDC), Color(0xFF1A1A2E)]
+                                : [Colors.blue[400]!, Colors.blue[100]!],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                        child: SafeArea(
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 8,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.15),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.numbers,
+                                            color: Colors.white,
+                                            size: 16,
+                                          ),
+                                          SizedBox(width: 8),
+                                          Text(
+                                            'CONVERTER',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              letterSpacing: 0.3,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(
+                                        _isDarkMode ? Icons.light_mode : Icons.dark_mode,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _isDarkMode = !_isDarkMode;
+                                          _saveThemePreference();
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 20),
+                                Text(
+                                  'Number\nSystem',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                    height: 1.2,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedSystem = newValue!;
-                      _inputController.clear(); // Clear input when changing system
-                      _convertNumber(_inputController.text);
-                    });
-                  },
-                ),
-                SizedBox(height: 20),
-                TextField(
-                  controller: _inputController,
-                  decoration: InputDecoration(
-                    labelText: 'Enter $_selectedSystem Number',
-                    border: OutlineInputBorder(),
-                    labelStyle: TextStyle(
-                      color: _isDarkMode ? Colors.white70 : Colors.blue[600],
                     ),
                   ),
-                  keyboardType: TextInputType.text,
-                  style: TextStyle(
-                    color: _isDarkMode ? Colors.white : Colors.black,
+                ),
+              ),
+
+              // Content
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: _isDarkMode ? Color(0xFF252542) : Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: _isDarkMode 
+                                ? Color(0xFF4C4DDC).withOpacity(0.2)
+                                : Colors.blue.withOpacity(0.1),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: _isDarkMode 
+                                  ? Colors.black.withOpacity(0.3)
+                                  : Colors.blue.withOpacity(0.1),
+                              offset: Offset(4, 4),
+                              blurRadius: 15,
+                              spreadRadius: 1,
+                            ),
+                          ],
+                        ),
+                        padding: EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Select Number System',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: _isDarkMode ? Colors.white : Colors.black87,
+                              ),
+                            ),
+                            SizedBox(height: 12),
+                            Theme(
+                              data: Theme.of(context).copyWith(
+                                canvasColor: _isDarkMode ? Color(0xFF252542) : Colors.white,
+                              ),
+                              child: DropdownButton<String>(
+                                value: _selectedSystem,
+                                isExpanded: true,
+                                dropdownColor: _isDarkMode ? Color(0xFF252542) : Colors.white,
+                                style: TextStyle(
+                                  color: _isDarkMode ? Colors.white : Colors.black87,
+                                  fontSize: 16,
+                                ),
+                                items: ['Decimal', 'Binary', 'Octal', 'Hexadecimal']
+                                    .map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    _selectedSystem = newValue!;
+                                    _inputController.clear();
+                                    _convertNumber(_inputController.text);
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ).animate().fadeIn().slideY(),
+
+                      SizedBox(height: 16),
+
+                      Container(
+                        decoration: BoxDecoration(
+                          color: _isDarkMode ? Color(0xFF252542) : Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: _isDarkMode 
+                                ? Color(0xFF4C4DDC).withOpacity(0.2)
+                                : Colors.blue.withOpacity(0.1),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: _isDarkMode 
+                                  ? Colors.black.withOpacity(0.3)
+                                  : Colors.blue.withOpacity(0.1),
+                              offset: Offset(4, 4),
+                              blurRadius: 15,
+                              spreadRadius: 1,
+                            ),
+                          ],
+                        ),
+                        padding: EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Enter Value',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: _isDarkMode ? Colors.white : Colors.black87,
+                              ),
+                            ),
+                            SizedBox(height: 12),
+                            TextField(
+                              controller: _inputController,
+                              decoration: InputDecoration(
+                                labelText: 'Enter $_selectedSystem Number',
+                                labelStyle: TextStyle(
+                                  color: _isDarkMode ? Colors.white70 : Colors.blue[600],
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                filled: true,
+                                fillColor: _isDarkMode ? Colors.black12 : Colors.grey[100],
+                              ),
+                              style: TextStyle(
+                                color: _isDarkMode ? Colors.white : Colors.black,
+                              ),
+                              inputFormatters: _getInputFormatters(),
+                            ),
+                          ],
+                        ),
+                      ).animate().fadeIn().slideY(delay: 200.ms),
+
+                      SizedBox(height: 16),
+
+                      if (_decimalValue.isNotEmpty)
+                        Container(
+                          decoration: BoxDecoration(
+                            color: _isDarkMode ? Color(0xFF252542) : Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: _isDarkMode 
+                                  ? Color(0xFF4C4DDC).withOpacity(0.2)
+                                  : Colors.blue.withOpacity(0.1),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: _isDarkMode 
+                                    ? Colors.black.withOpacity(0.3)
+                                    : Colors.blue.withOpacity(0.1),
+                                offset: Offset(4, 4),
+                                blurRadius: 15,
+                                spreadRadius: 1,
+                              ),
+                            ],
+                          ),
+                          padding: EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Results',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: _isDarkMode ? Colors.white : Colors.black87,
+                                ),
+                              ),
+                              SizedBox(height: 16),
+                              ResultCard(
+                                title: 'Decimal',
+                                value: _decimalValue,
+                                isDarkMode: _isDarkMode,
+                              ).animate().fadeIn().slideX(delay: 300.ms),
+                              Divider(height: 24, color: _isDarkMode ? Colors.white12 : Colors.black12),
+                              ResultCard(
+                                title: 'Binary',
+                                value: _binaryValue,
+                                isDarkMode: _isDarkMode,
+                              ).animate().fadeIn().slideX(delay: 400.ms),
+                              Divider(height: 24, color: _isDarkMode ? Colors.white12 : Colors.black12),
+                              ResultCard(
+                                title: 'Octal',
+                                value: _octalValue,
+                                isDarkMode: _isDarkMode,
+                              ).animate().fadeIn().slideX(delay: 500.ms),
+                              Divider(height: 24, color: _isDarkMode ? Colors.white12 : Colors.black12),
+                              ResultCard(
+                                title: 'Hexadecimal',
+                                value: _hexValue,
+                                isDarkMode: _isDarkMode,
+                              ).animate().fadeIn().slideX(delay: 600.ms),
+                            ],
+                          ),
+                        ).animate().fadeIn().scale(),
+                    ],
                   ),
-                  inputFormatters: _getInputFormatters(),
                 ),
-                SizedBox(height: 20),
-                Text(
-                  'Conversion Results',
-                  style: TextStyle(color: Colors.grey),
-                ),
-                SizedBox(height: 8),
-                Container(
-                  width: double.infinity,
-                  child: ResultCard(title: 'Decimal', value: _decimalValue, isDarkMode: _isDarkMode),
-                ),
-                SizedBox(height: 10),
-                Container(
-                  width: double.infinity,
-                  child: ResultCard(title: 'Binary', value: _binaryValue, isDarkMode: _isDarkMode),
-                ),
-                SizedBox(height: 10),
-                Container(
-                  width: double.infinity,
-                  child: ResultCard(title: 'Octal', value: _octalValue, isDarkMode: _isDarkMode),
-                ),
-                SizedBox(height: 10),
-                Container(
-                  width: double.infinity,
-                  child: ResultCard(title: 'Hexadecimal', value: _hexValue, isDarkMode: _isDarkMode),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ),
+        ],
       ),
     );
   }
@@ -324,41 +530,130 @@ class ResultCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: isDarkMode ? Color(0xFF2E2E42) : Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        color: isDarkMode ? Color(0xFF252542) : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isDarkMode 
+              ? Color(0xFF4C4DDC).withOpacity(0.2)
+              : Colors.blue.withOpacity(0.1),
+        ),
         boxShadow: [
-          if (!isDarkMode) BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
+          BoxShadow(
+            color: isDarkMode 
+                ? Colors.black.withOpacity(0.3)
+                : Colors.blue.withOpacity(0.1),
+            offset: Offset(4, 4),
+            blurRadius: 15,
             spreadRadius: 1,
-            blurRadius: 5,
-            offset: Offset(0, 3),
           ),
         ],
       ),
-      child: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: isDarkMode ? Colors.white : Colors.black,
-              ),
+      padding: EdgeInsets.all(20),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: isDarkMode 
+                  ? Color(0xFF4C4DDC).withOpacity(0.1)
+                  : Colors.blue.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
             ),
-            SizedBox(height: 8),
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 14,
-                color: isDarkMode ? Colors.white70 : Colors.black87,
-              ),
+            child: Icon(
+              _getIconForSystem(title),
+              color: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[700],
+              size: 24,
             ),
-          ],
-        ),
+          ),
+          SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: isDarkMode ? Colors.white : Colors.black87,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'monospace',
+                    color: isDarkMode 
+                        ? Color(0xFF4C4DDC)
+                        : Colors.blue[700],
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.copy,
+              color: isDarkMode ? Colors.white54 : Colors.black45,
+              size: 20,
+            ),
+            onPressed: () {
+              Clipboard.setData(ClipboardData(text: value));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Copied to clipboard'),
+                  duration: Duration(seconds: 1),
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
+
+  IconData _getIconForSystem(String system) {
+    switch (system) {
+      case 'Decimal':
+        return Icons.looks_one_outlined;
+      case 'Binary':
+        return Icons.code_outlined;
+      case 'Octal':
+        return Icons.looks_3_outlined;
+      case 'Hexadecimal':
+        return Icons.tag_outlined;
+      default:
+        return Icons.numbers;
+    }
+  }
+}
+
+class DotPatternPainter extends CustomPainter {
+  final Color color;
+  
+  DotPatternPainter({required this.color});
+  
+  @override
+  void paint(Canvas canvas, Size size) {
+    final double spacing = 20;
+    final double radius = 1;
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+      
+    for (double x = 0; x < size.width; x += spacing) {
+      for (double y = 0; y < size.height; y += spacing) {
+        canvas.drawCircle(Offset(x, y), radius, paint);
+      }
+    }
+  }
+  
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }

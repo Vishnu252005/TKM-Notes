@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import '../../theme_provider.dart'; // Import the ThemeProvider
+import 'dart:ui'; // Add this import for ImageFilter
 
 class UnitConverter extends StatefulWidget {
   @override
@@ -234,175 +235,272 @@ class _UnitConverterState extends State<UnitConverter> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Provider.of<ThemeProvider>(context).isDarkMode; // Get the current theme state
+    final isDark = Provider.of<ThemeProvider>(context).isDarkMode;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Unit Converter')
-            .animate()
-            .fadeIn()
-            .slideX(),
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context); // Go back to the previous screen
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
-            onPressed: () {
-              Provider.of<ThemeProvider>(context, listen: false).toggleTheme(); // Toggle theme
-            },
-          ),
-        ],
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: isDark 
-              ? [Colors.grey[900]!, Colors.grey[850]!]
-              : [Colors.blue[50]!, Colors.white],
-          ),
-        ),
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    _buildCard(
-                      'Difficulty Level',
-                      DropdownButton<String>(
-                        value: _difficulty,
-                        isExpanded: true,
-                        icon: Icon(Icons.arrow_drop_down_circle),
-                        underline: Container(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            _difficulty = newValue!;
-                            _fromUnit = 'Centimeters (cm)';
-                            _toUnit = 'Meters (m)';
-                            _result = '';
-                          });
-                        },
-                        items: ['Easy', 'Advanced'].map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      ),
-                    ).animate().fadeIn().slideY(),
-
-                    SizedBox(height: 16),
-
-                    _buildCard(
-                      'Convert From',
-                      _buildUnitSelector(true, isDark),
-                    ).animate().fadeIn().slideY(delay: 200.ms),
-
-                    SizedBox(height: 16),
-
-                    _buildCard(
-                      'Convert To',
-                      _buildUnitSelector(false, isDark),
-                    ).animate().fadeIn().slideY(delay: 400.ms),
-
-                    SizedBox(height: 16),
-
-                    _buildCard(
-                      'Enter Value',
-                      Column(
-                        children: [
-                          TextField(
-                            controller: _inputController,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              filled: true,
-                              fillColor: isDark ? Colors.grey[800] : Colors.grey[100],
-                              prefixIcon: Icon(Icons.calculate),
-                            ),
-                            keyboardType: TextInputType.number,
-                            onChanged: (value) {
-                              setState(() {
-                                _inputValue = double.tryParse(value) ?? 0.0;
-                              });
-                            },
-                          ),
-                          SizedBox(height: 16),
-                          ElevatedButton.icon(
-                            onPressed: _convert,
-                            icon: Icon(Icons.swap_horiz),
-                            label: Text('Convert', style: TextStyle(fontSize: 18)),
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              backgroundColor: isDark ? Colors.blue[700] : Colors.blue,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ).animate().fadeIn().slideY(delay: 600.ms),
-
-                    SizedBox(height: 16),
-
-                    if (_result.isNotEmpty)
-                      _buildCard(
-                        'Result',
-                        Text(
-                          _result,
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: isDark ? Colors.white : Colors.blue[900],
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        color: isDark ? Colors.blue[900] : Colors.blue[50],
-                      ).animate().fadeIn().scale(),
-                  ],
-                ),
+      backgroundColor: isDark ? Color(0xFF1A1A2E) : Colors.blue[50],
+      body: Stack(
+        children: [
+          // Background pattern
+          Positioned.fill(
+            child: CustomPaint(
+              painter: DotPatternPainter(
+                color: isDark 
+                    ? Colors.white.withOpacity(0.03)
+                    : Colors.blue.withOpacity(0.05),
               ),
             ),
-          ],
-        ),
+          ),
+
+          CustomScrollView(
+            physics: BouncingScrollPhysics(),
+            slivers: [
+              SliverAppBar(
+                automaticallyImplyLeading: true,
+                floating: false,
+                pinned: false,
+                expandedHeight: 200,
+                backgroundColor: Colors.transparent,
+                flexibleSpace: ClipRRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: FlexibleSpaceBar(
+                      background: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: isDark 
+                                ? [Color(0xFF4C4DDC), Color(0xFF1A1A2E)]
+                                : [Colors.blue[400]!, Colors.blue[100]!],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                        child: SafeArea(
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 8,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.15),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.swap_horiz,
+                                            color: Colors.white,
+                                            size: 16,
+                                          ),
+                                          SizedBox(width: 8),
+                                          Text(
+                                            'CONVERTER',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              letterSpacing: 0.3,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(
+                                        isDark ? Icons.light_mode : Icons.dark_mode,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: () {
+                                        Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 20),
+                                Text(
+                                  'Unit\nConverter',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                    height: 1.2,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              // Content
+              SliverToBoxAdapter(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _buildCard(
+                        'Difficulty Level',
+                        DropdownButton<String>(
+                          value: _difficulty,
+                          isExpanded: true,
+                          icon: Icon(
+                            Icons.arrow_drop_down,
+                            color: isDark ? Colors.white70 : Colors.black54,
+                          ),
+                          underline: Container(),
+                          dropdownColor: isDark ? Color(0xFF252542) : Colors.white,
+                          style: TextStyle(
+                            color: isDark ? Colors.white : Colors.black87,
+                            fontSize: 16,
+                          ),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _difficulty = newValue!;
+                              _fromUnit = 'Centimeters (cm)';
+                              _toUnit = 'Meters (m)';
+                              _result = '';
+                            });
+                          },
+                          items: ['Easy', 'Advanced'].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                      ).animate().fadeIn().slideY(),
+
+                      SizedBox(height: 16),
+
+                      _buildCard(
+                        'Convert From',
+                        _buildUnitSelector(true, isDark),
+                      ).animate().fadeIn().slideY(delay: 200.ms),
+
+                      SizedBox(height: 16),
+
+                      _buildCard(
+                        'Convert To',
+                        _buildUnitSelector(false, isDark),
+                      ).animate().fadeIn().slideY(delay: 400.ms),
+
+                      SizedBox(height: 16),
+
+                      _buildCard(
+                        'Enter Value',
+                        Column(
+                          children: [
+                            TextField(
+                              controller: _inputController,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                filled: true,
+                                fillColor: isDark ? Colors.grey[800] : Colors.grey[100],
+                                prefixIcon: Icon(Icons.calculate),
+                              ),
+                              keyboardType: TextInputType.number,
+                              onChanged: (value) {
+                                setState(() {
+                                  _inputValue = double.tryParse(value) ?? 0.0;
+                                });
+                              },
+                            ),
+                            SizedBox(height: 16),
+                            ElevatedButton.icon(
+                              onPressed: _convert,
+                              icon: Icon(Icons.swap_horiz),
+                              label: Text('Convert', style: TextStyle(fontSize: 18)),
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                backgroundColor: isDark ? Colors.blue[700] : Colors.blue,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ).animate().fadeIn().slideY(delay: 600.ms),
+
+                      SizedBox(height: 16),
+
+                      if (_result.isNotEmpty)
+                        _buildCard(
+                          'Result',
+                          Text(
+                            _result,
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: isDark ? Colors.white : Colors.blue[900],
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          color: isDark ? Colors.blue[900] : Colors.blue[50],
+                        ).animate().fadeIn().scale(),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildCard(String title, Widget content, {Color? color}) {
-    return Card(
-      elevation: 4,
-      color: color,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 12),
-            content,
-          ],
+    final isDark = Provider.of<ThemeProvider>(context).isDarkMode;
+    
+    return Container(
+      decoration: BoxDecoration(
+        color: color ?? (isDark ? Color(0xFF252542) : Colors.white),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isDark 
+              ? Color(0xFF4C4DDC).withOpacity(0.2)
+              : Colors.blue.withOpacity(0.1),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: isDark 
+                ? Colors.black.withOpacity(0.3)
+                : Colors.blue.withOpacity(0.1),
+            offset: Offset(4, 4),
+            blurRadius: 15,
+            spreadRadius: 1,
+          ),
+        ],
+      ),
+      padding: EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: isDark ? Colors.white : Colors.black87,
+            ),
+          ),
+          SizedBox(height: 12),
+          content,
+        ],
       ),
     );
   }
@@ -435,5 +533,29 @@ class _UnitConverterState extends State<UnitConverter> {
     _inputController.dispose();
     super.dispose();
   }
+}
+
+class DotPatternPainter extends CustomPainter {
+  final Color color;
+  
+  DotPatternPainter({required this.color});
+  
+  @override
+  void paint(Canvas canvas, Size size) {
+    final double spacing = 20;
+    final double radius = 1;
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+      
+    for (double x = 0; x < size.width; x += spacing) {
+      for (double y = 0; y < size.height; y += spacing) {
+        canvas.drawCircle(Offset(x, y), radius, paint);
+      }
+    }
+  }
+  
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 

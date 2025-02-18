@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPre
 import 'package:flutter_animate/flutter_animate.dart'; // Import the flutter_animate package
 import 'package:flutter/rendering.dart'; // Import flutter rendering
 import 'package:flutter/services.dart'; // Add this import for HapticFeedback
+import 'dart:ui';
 
 class ProfileScreen extends StatefulWidget {
     @override
@@ -399,193 +400,180 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     @override
     Widget build(BuildContext context) {
-        return MaterialApp(
-            theme: isDarkMode ? ThemeData.dark() : ThemeData.light(),
-            home: Scaffold(
-                body: Stack(  // Wrap with Stack to overlay the theme button
-                    children: [
-                        // Main content
-                        username == null
-                    ? _buildAuthScreen()
-                            : SingleChildScrollView(
-                        child: Column(
-                            children: [
-                                        // Top profile section with animation
-                                Container(
-                                            width: double.infinity,
-                                    height: 200.0,
-                                    decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                                    colors: isDarkMode 
-                                                        ? [Color(0xFF1A1A2E), Color(0xFF16213E)]
-                                                        : [Colors.blue[800]!, Colors.blue[500]!],
-                                            begin: Alignment.topCenter,
-                                            end: Alignment.bottomCenter,
-                                        ),
-                                    ),
-                                            child: SafeArea(
-                                    child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                            CircleAvatar(
-                                                radius: 50,
-                                                backgroundColor: Colors.white,
-                                                child: Icon(Icons.person, size: 50, color: Colors.blue[800]),
-                                                        )
-                                                            .animate()
-                                                            .fadeIn(duration: 600.ms)
-                                                            .scale(delay: 200.ms)
-                                                            .then()
-                                                            .shimmer(duration: 1200.ms),
-                                            SizedBox(height: 10),
-                                            Text(
-                                                username ?? '',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 24,
-                                                    fontWeight: FontWeight.bold,
-                                                                shadows: [
-                                                                    Shadow(
-                                                                        offset: Offset(0, 2),
-                                                                        blurRadius: 4,
-                                                                        color: Colors.black.withOpacity(0.3),
-                                                                    ),
-                                                                ],
-                                                            ),
-                                                        )
-                                                            .animate()
-                                                            .fadeIn(delay: 400.ms)
-                                                            .slideY(begin: 0.3),
-                                            SizedBox(height: 10),
-                                            Text(
-                                                'Welcome to Your Profile',
-                                                style: TextStyle(
-                                                                color: Colors.white.withOpacity(0.9),
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.w500,
-                                                ),
-                                                        )
-                                                            .animate()
-                                                            .fadeIn(delay: 600.ms)
-                                                            .slideY(begin: 0.3),
-                                        ],
-                                    ),
-                                ),
-                                        )
-                                            .animate()
-                                            .fadeIn()
-                                            .slide(),
+        return Scaffold(
+            backgroundColor: isDarkMode ? Color(0xFF1A1A2E) : Colors.blue[50],
+            body: Stack(
+                children: [
+                    // Background pattern
+                    Positioned.fill(
+                        child: CustomPaint(
+                            painter: DotPatternPainter(
+                                color: isDarkMode 
+                                    ? Colors.white.withOpacity(0.03)
+                                    : Colors.blue.withOpacity(0.05),
+                            ),
+                        ),
+                    ),
 
-                                        // Profile sections with staggered animations
-                                        Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 16),
-                                            child: Column(
-                                                children: [
-                                SizedBox(height: 20),
-                                                    _buildProfileSection()
-                                                        .animate()
-                                                        .fadeIn(delay: 200.ms)
-                                                        .slideX(begin: -0.2),
-                                                    
-                                                    _buildEducationSection()
-                                                        .animate()
-                                                        .fadeIn(delay: 400.ms)
-                                                        .slideX(begin: 0.2),
-                                                    
-                                                    _buildBioSection()
-                                                        .animate()
-                                                        .fadeIn(delay: 600.ms)
-                                                        .slideX(begin: -0.2),
-                                                    
-                                                    _buildInterestsSection()
-                                                        .animate()
-                                                        .fadeIn(delay: 800.ms)
-                                                        .slideX(begin: 0.2),
-                                                    
-                                                    _buildContactSection()
-                                                        .animate()
-                                                        .fadeIn(delay: 1000.ms)
-                                                        .slideX(begin: -0.2),
-                                                    
-                                SizedBox(height: 20),
-                                                    
-                                                    // Animated logout button
-                                ElevatedButton(
-                                    onPressed: logout,
-                                    style: ElevatedButton.styleFrom(
-                                                            backgroundColor: Colors.red.withOpacity(0.9),
-                                        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                                                            shape: RoundedRectangleBorder(
-                                                                borderRadius: BorderRadius.circular(12),
-                                                            ),
-                                                            elevation: 8,
-                                                        ),
-                                                        child: Row(
-                                                            mainAxisSize: MainAxisSize.min,
+                    // Main content
+                    username == null
+                        ? _buildAuthScreen()
+                        : SingleChildScrollView(
+                            child: Column(
+                                children: [
+                                    // Enhanced Header with Glass Effect
+                                    ClipRRect(
+                                        borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(30),
+                                            bottomRight: Radius.circular(30),
+                                        ),
+                                        child: BackdropFilter(
+                                            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                                            child: Container(
+                                                width: double.infinity,
+                                                decoration: BoxDecoration(
+                                                    gradient: LinearGradient(
+                                                        colors: isDarkMode 
+                                                            ? [
+                                                                Color(0xFF4C4DDC),
+                                                                Color(0xFF1A1A2E),
+                                                            ]
+                                                            : [
+                                                                Colors.blue[400]!,
+                                                                Colors.blue[100]!,
+                                                            ],
+                                                        begin: Alignment.topLeft,
+                                                        end: Alignment.bottomRight,
+                                                    ),
+                                                ),
+                                                child: SafeArea(
+                                                    child: Padding(
+                                                        padding: EdgeInsets.all(24),
+                                                        child: Column(
                                                             children: [
-                                                                Icon(Icons.logout),
-                                                                SizedBox(width: 8),
+                                                                Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                    children: [
+                                                                        Container(
+                                                                            padding: EdgeInsets.symmetric(
+                                                                                horizontal: 16,
+                                                                                vertical: 8,
+                                                                            ),
+                                                                            decoration: BoxDecoration(
+                                                                                color: Colors.white.withOpacity(0.15),
+                                                                                borderRadius: BorderRadius.circular(20),
+                                                                            ),
+                                                                            child: Row(
+                                                                                children: [
+                                                                                    Icon(
+                                                                                        Icons.person,
+                                                                                        color: Colors.white,
+                                                                                        size: 16,
+                                                                                    ),
+                                                                                    SizedBox(width: 8),
+                                                                                    Text(
+                                                                                        'PROFILE',
+                                                                                        style: TextStyle(
+                                                                                            color: Colors.white,
+                                                                                            fontSize: 14,
+                                                                                            letterSpacing: 0.3,
+                                                                                        ),
+                                                                                    ),
+                                                                                ],
+                                                                            ),
+                                                                        ),
+                                                                        _buildThemeToggle(),
+                                                                    ],
+                                                                ),
+                                                                SizedBox(height: 24),
+                                                                CircleAvatar(
+                                                                    radius: 50,
+                                                                    backgroundColor: Colors.white,
+                                                                    child: Text(
+                                                                        username?[0].toUpperCase() ?? 'U',
+                                                                        style: TextStyle(
+                                                                            fontSize: 40,
+                                                                            fontWeight: FontWeight.bold,
+                                                                            color: isDarkMode 
+                                                                                ? Color(0xFF4C4DDC)
+                                                                                : Colors.blue[700],
+                                                                        ),
+                                                                    ),
+                                                                ).animate()
+                                                                    .fadeIn(duration: 600.ms)
+                                                                    .scale(delay: 200.ms),
+                                                                SizedBox(height: 16),
                                                                 Text(
-                                                                    'Logout',
+                                                                    username ?? 'User',
                                                                     style: TextStyle(
-                                                                        fontSize: 16,
+                                                                        color: Colors.white,
+                                                                        fontSize: 24,
                                                                         fontWeight: FontWeight.bold,
                                                                     ),
                                                                 ),
+                                                                if (email != null)
+                                                                    Text(
+                                                                        email!,
+                                                                        style: TextStyle(
+                                                                            color: Colors.white.withOpacity(0.8),
+                                                                            fontSize: 16,
+                                                                        ),
+                                                                    ),
                                                             ],
                                                         ),
-                                                    )
-                                                        .animate()
-                                                        .fadeIn(delay: 1200.ms)
-                                                        .scale(delay: 1200.ms)
-                                                        .shimmer(delay: 1200.ms),
-                                                    
-                                SizedBox(height: 20),
-                            ],
-                        ),
+                                                    ),
+                                                ),
+                                            ),
                                         ),
-                                    ],
-                                ),
-                            ),
-                        
-                        // Theme toggle button - positioned at top right
-                        Positioned(
-                            top: MediaQuery.of(context).padding.top + 10,  // Account for status bar
-                            right: 16,
-                            child: Container(
-                                decoration: BoxDecoration(
-                                    color: isDarkMode 
-                                        ? Colors.white.withOpacity(0.1)
-                                        : Colors.black.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: IconButton(
-                                    icon: Icon(
-                                        isDarkMode ? Icons.wb_sunny : Icons.nights_stay,
-                                        color: isDarkMode ? Colors.white : Colors.black,
                                     ),
-                                    onPressed: () {
-                                        _toggleTheme();
-                                        HapticFeedback.lightImpact();
-                                    },
-                                ),
-                            )
-                                .animate()
-                                .scale(
-                                    duration: 200.ms,
-                                    curve: Curves.easeInOut,
-                                ),
+
+                                    // Profile sections with consistent styling
+                                    Padding(
+                                        padding: EdgeInsets.all(16),
+                                        child: Column(
+                                            children: [
+                                                _buildProfileSection()
+                                                    .animate()
+                                                    .fadeIn(delay: 200.ms)
+                                                    .slideX(begin: -0.2),
+                                                SizedBox(height: 16),
+                                                _buildEducationSection()
+                                                    .animate()
+                                                    .fadeIn(delay: 400.ms)
+                                                    .slideX(begin: 0.2),
+                                                SizedBox(height: 16),
+                                                _buildBioSection()
+                                                    .animate()
+                                                    .fadeIn(delay: 600.ms)
+                                                    .slideX(begin: -0.2),
+                                                SizedBox(height: 16),
+                                                _buildInterestsSection()
+                                                    .animate()
+                                                    .fadeIn(delay: 800.ms)
+                                                    .slideX(begin: 0.2),
+                                                SizedBox(height: 16),
+                                                _buildContactSection()
+                                                    .animate()
+                                                    .fadeIn(delay: 1000.ms)
+                                                    .slideX(begin: -0.2),
+                                                SizedBox(height: 24),
+                                                _buildLogoutButton(),
+                                            ],
+                                        ),
+                                    ),
+                                ],
+                            ),
                         ),
-                    ],
-                    ),
-                floatingActionButton: username != null
-                    ? FloatingActionButton(
-                        onPressed: _showEditProfileDialog,
-                        child: Icon(Icons.edit),
-                        backgroundColor: Colors.blue[800],
-                    )
-                    : null,
+                ],
             ),
+            floatingActionButton: username != null
+                ? FloatingActionButton(
+                    onPressed: _showEditProfileDialog,
+                    backgroundColor: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[700],
+                    child: Icon(Icons.edit, color: Colors.white),
+                  ).animate()
+                    .scale(delay: 1200.ms)
+                : null,
         );
     }
 
@@ -704,75 +692,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     Widget _buildSection(String title, IconData icon, List<Widget> children) {
         return Container(
-            margin: EdgeInsets.symmetric(vertical: 8.0),
-            child: Card(
-                elevation: isDarkMode ? 8 : 4,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    side: BorderSide(
-                        color: isDarkMode 
-                            ? Colors.blue[700]!.withOpacity(0.2)
-                            : Colors.grey[300]!,
-                        width: 1,
-                    ),
+            decoration: BoxDecoration(
+                color: isDarkMode ? Color(0xFF252542) : Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                    color: isDarkMode 
+                        ? Color(0xFF4C4DDC).withOpacity(0.2)
+                        : Colors.blue.withOpacity(0.1),
+                    width: 1,
                 ),
+                boxShadow: [
+                    BoxShadow(
+                        color: isDarkMode 
+                            ? Colors.black.withOpacity(0.3)
+                            : Colors.blue.withOpacity(0.1),
+                        offset: Offset(4, 4),
+                        blurRadius: 15,
+                        spreadRadius: 1,
+                    ),
+                    BoxShadow(
+                        color: Colors.white.withOpacity(isDarkMode ? 0.1 : 1),
+                        offset: Offset(-4, -4),
+                        blurRadius: 15,
+                        spreadRadius: 1,
+                    ),
+                ],
+            ),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                        Container(
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                    colors: isDarkMode
-                                        ? [Color(0xFF1E1E30), Color(0xFF2A2A40)]
-                                        : [Colors.blue[50]!, Colors.white],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                ),
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(16),
-                                    topRight: Radius.circular(16),
-                                ),
-                            ),
-                            padding: EdgeInsets.all(16),
+                    Padding(
+                        padding: EdgeInsets.all(16),
                         child: Row(
                             children: [
-                                    Icon(
+                                Container(
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                        color: isDarkMode 
+                                            ? Color(0xFF4C4DDC).withOpacity(0.1)
+                                            : Colors.blue[50],
+                                        borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Icon(
                                         icon,
-                                        color: isDarkMode ? Colors.blue[400] : Colors.blue[800],
-                                        size: 24,
-                                    )
-                                        .animate()
-                                        .scale(duration: 300.ms)
-                                        .then()
-                                        .shimmer(duration: 1200.ms),
-                                    SizedBox(width: 12),
+                                        color: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[700],
+                                    ),
+                                ),
+                                SizedBox(width: 12),
                                 Text(
                                     title,
                                     style: TextStyle(
-                                        fontSize: 20,
+                                        fontSize: 18,
                                         fontWeight: FontWeight.bold,
-                                            color: isDarkMode ? Colors.white : Colors.blue[800],
+                                        color: isDarkMode ? Colors.white : Colors.blue[800],
                                     ),
-                                    )
-                                        .animate()
-                                        .fadeIn(duration: 400.ms)
-                                        .slideX(begin: 0.2),
+                                ),
                             ],
                         ),
                     ),
-                    Divider(height: 1),
-                        ...children.map((child) => 
-                            child
-                                .animate()
-                                .fadeIn(duration: 400.ms)
-                                .slideY(begin: 0.1)
-                        ).toList(),
-                    ],
-                ),
-            )
-                .animate()
-                .fadeIn(duration: 600.ms)
-                .scale(delay: 200.ms),
+                    ...children,
+                ],
+            ),
         );
     }
 
@@ -1018,219 +998,214 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     Widget _buildAuthScreen() {
-        // Define better dark mode colors
-        final darkBgGradient = [
-            Color(0xFF1A1A2E),  // Deep blue-black
-            Color(0xFF16213E),  // Rich dark blue
-        ];
-        
-        final darkCardColor = Color(0xFF1E1E30);  // Slightly lighter than background
-        final darkPrimaryColor = Colors.blue[400]!;  // Brighter blue for dark mode
-        final darkTextColor = Colors.grey[100]!;
-        final darkSecondaryTextColor = Colors.grey[300]!;
-        final darkInputBgColor = Color(0xFF2A2A40);  // Slightly lighter than card
-
-        return Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    colors: isDarkMode 
-                        ? darkBgGradient
-                        : [Colors.blue[100]!, Colors.white],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                ),
-            ),
-            child: Center(
-                child: SingleChildScrollView(
-                child: Padding(
-                        padding: const EdgeInsets.all(24.0),
-                        child: Column(
-                            children: [
-                                // Logo/Icon Section with improved dark mode color
-                                Icon(
-                                    Icons.person_outline,
-                                    size: 80,
-                                    color: isDarkMode ? darkPrimaryColor : Colors.blue[800],
-                                )
-                                    .animate()
-                                    .scale(duration: 600.ms, curve: Curves.easeOut)
-                                    .then()
-                                    .shimmer(duration: 1200.ms),
-                                
-                                SizedBox(height: 30),
-                                
-                                // Main Card with improved dark mode styling
-                                Card(
-                                    elevation: isDarkMode ? 20 : 12,  // Higher elevation in dark mode
-                        shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                        side: isDarkMode 
-                                            ? BorderSide(color: darkPrimaryColor.withOpacity(0.1), width: 1)
-                                            : BorderSide.none,
-                        ),
-                                    color: isDarkMode ? darkCardColor : Colors.white,
-                        child: Padding(
-                                        padding: const EdgeInsets.all(24.0),
-                            child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                                // Title with improved dark mode color
-                                    Text(
-                                                    isSignUp ? 'Create Account' : 'Welcome Back',
-                                        style: TextStyle(
-                                                        fontSize: 28,
-                                            fontWeight: FontWeight.bold,
-                                                        color: isDarkMode ? darkTextColor : Colors.blue[800],
+        return Stack(
+            children: [
+                // Glass effect header
+                ClipRRect(
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(30),
+                        bottomRight: Radius.circular(30),
+                    ),
+                    child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                        child: Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    colors: isDarkMode 
+                                        ? [
+                                            Color(0xFF4C4DDC),
+                                            Color(0xFF1A1A2E),
+                                        ]
+                                        : [
+                                            Colors.blue[400]!,
+                                            Colors.blue[100]!,
+                                        ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                ),
+                            ),
+                            child: SafeArea(
+                                child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                        Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                                Container(
+                                                    padding: EdgeInsets.symmetric(
+                                                        horizontal: 16,
+                                                        vertical: 8,
                                                     ),
-                                                    textAlign: TextAlign.center,
-                                                )
-                                                    .animate()
-                                                    .fadeIn(duration: 500.ms)
-                                                    .slideY(begin: -0.2),
-                                                
-                                                SizedBox(height: 8),
-                                                
-                                                // Subtitle with improved dark mode color
-                                                Text(
-                                                    isSignUp 
-                                                        ? 'Join our community today!'
-                                                        : 'Sign in to continue',
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: isDarkMode ? darkSecondaryTextColor : Colors.grey[600],
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.white.withOpacity(0.15),
+                                                        borderRadius: BorderRadius.circular(20),
                                                     ),
-                                                    textAlign: TextAlign.center,
-                                                )
-                                                    .animate()
-                                                    .fadeIn(duration: 500.ms, delay: 200.ms)
-                                                    .slideY(begin: -0.2),
-                                                
-                                                SizedBox(height: 32),
-                                                
-                                                // Form Fields
-                                    if (isSignUp)
-                                                    _buildAnimatedTextField(
-                                            controller: usernameController,
-                                                        icon: Icons.person,
-                                                        label: 'Username',
-                                                        delay: 0,
-                                                    ),
-                                                
-                                                SizedBox(height: isSignUp ? 16 : 0),
-                                                
-                                                _buildAnimatedTextField(
-                                        controller: emailController,
-                                                    icon: Icons.email,
-                                                    label: 'Email',
-                                                    delay: isSignUp ? 200 : 0,
-                                                ),
-                                                
-                                    SizedBox(height: 16),
-                                                
-                                                _buildAnimatedTextField(
-                                        controller: passwordController,
-                                                    icon: Icons.lock,
-                                                    label: 'Password',
-                                                    isPassword: true,
-                                                    delay: isSignUp ? 400 : 200,
-                                                ),
-                                                
-                                                SizedBox(height: 24),
-                                                
-                                                // Toggle Sign In/Sign Up - Moved up
-                                                TextButton(
-                                                    onPressed: () {
-                                                        setState(() {
-                                                            isSignUp = !isSignUp;
-                                                        });
-                                                    },
-                                                    child: Text.rich(
-                                                        TextSpan(
-                                                            children: [
-                                                                TextSpan(
-                                                                    text: isSignUp 
-                                                                        ? 'Already have an account? '
-                                                                        : 'Don\'t have an account? ',
-                                                                    style: TextStyle(
-                                                                        color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
-                                                                    ),
-                                                                ),
-                                                                TextSpan(
-                                                                    text: isSignUp ? 'Sign In' : 'Sign Up',
-                                                                    style: TextStyle(
-                                                                        color: isDarkMode ? Colors.blue[300] : Colors.blue[700],
-                                                                        fontWeight: FontWeight.bold,
-                                                                    ),
-                                                                ),
-                                                            ],
-                                                        ),
-                                                    ),
-                                                )
-                                                    .animate()
-                                                    .fadeIn(duration: 500.ms, delay: 600.ms),
-                                                
-                                                SizedBox(height: 16),
-                                                
-                                                // Main Button
-                                                ElevatedButton(
-                                        onPressed: () {
-                                            if (isSignUp) {
-                                                signUp();
-                                            } else {
-                                                signIn();
-                                            }
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                                        backgroundColor: isDarkMode ? darkPrimaryColor : Colors.blue[600],
-                                                        padding: EdgeInsets.symmetric(vertical: 16),
-                                                        elevation: isDarkMode ? 8 : 4,
-                                                        shape: RoundedRectangleBorder(
-                                                            borderRadius: BorderRadius.circular(12),
-                                                        ),
-                                                    ),
-                                                    child: Text(
-                                                        isSignUp ? 'Create Account' : 'Sign In',
-                                                        style: TextStyle(
-                                                            fontSize: 18,
-                                                            fontWeight: FontWeight.bold,
-                                                            color: isDarkMode ? Colors.white : Colors.white,
-                                                        ),
-                                                    ),
-                                                )
-                                                    .animate()
-                                                    .fadeIn(duration: 500.ms, delay: 800.ms)
-                                                    .slideY(begin: 0.2),
-                                                
-                                                // Forgot Password - Only show in sign in mode
-                                                if (!isSignUp) ...[
-                                                    SizedBox(height: 16),
-                                    TextButton(
-                                                        onPressed: resetPassword,
-                                                        child: Text(
-                                                            'Forgot Password?',
-                                                            style: TextStyle(
-                                                                color: isDarkMode ? Colors.blue[300] : Colors.blue[700],
+                                                    child: Row(
+                                                        children: [
+                                                            Icon(
+                                                                Icons.person_outline,
+                                                                color: Colors.white,
+                                                                size: 16,
                                                             ),
-                                                        ),
-                                                    )
-                                                        .animate()
-                                                        .fadeIn(duration: 500.ms, delay: 1000.ms),
-                                                ],
+                                                            SizedBox(width: 8),
+                                                            Text(
+                                                                isSignUp ? 'SIGN UP' : 'SIGN IN',
+                                                                style: TextStyle(
+                                                                    color: Colors.white,
+                                                                    fontSize: 14,
+                                                                    letterSpacing: 0.3,
+                                                                ),
+                                                            ),
+                                                        ],
+                                                    ),
+                                                ),
+                                                _buildThemeToggle(),
                                             ],
                                         ),
-                                    ),
-                                )
-                                    .animate()
-                                    .fadeIn(duration: 600.ms)
-                                    .scaleXY(begin: 0.8),
-                                
-                                SizedBox(height: 24),
-                            ],
+                                        SizedBox(height: 40),
+                                        Text(
+                                            isSignUp ? 'Create\nAccount' : 'Welcome\nBack',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 40,
+                                                fontWeight: FontWeight.bold,
+                                                height: 1.2,
+                                            ),
+                                        ).animate()
+                                            .fadeIn(duration: 600.ms)
+                                            .slideY(begin: 0.2),
+                                        SizedBox(height: 8),
+                                        Text(
+                                            isSignUp 
+                                                ? 'Sign up to get started!'
+                                                : 'Sign in to continue',
+                                            style: TextStyle(
+                                                color: Colors.white.withOpacity(0.8),
+                                                fontSize: 16,
+                                            ),
+                                        ).animate()
+                                            .fadeIn(duration: 600.ms, delay: 200.ms)
+                                            .slideY(begin: 0.2),
+                                    ],
+                                ),
+                            ),
                         ),
                     ),
                 ),
-            ),
+
+                // Form content
+                Padding(
+                    padding: EdgeInsets.only(top: 280),
+                    child: SingleChildScrollView(
+                        child: Padding(
+                            padding: EdgeInsets.all(24),
+                            child: Column(
+                                children: [
+                                    if (isSignUp) 
+                                        _buildAnimatedTextField(
+                                            controller: usernameController,
+                                            icon: Icons.person_outline,
+                                            label: 'Username',
+                                            delay: 0,
+                                        ),
+                                    SizedBox(height: isSignUp ? 16 : 0),
+                                    _buildAnimatedTextField(
+                                        controller: emailController,
+                                        icon: Icons.email_outlined,
+                                        label: 'Email',
+                                        delay: isSignUp ? 200 : 0,
+                                    ),
+                                    SizedBox(height: 16),
+                                    _buildAnimatedTextField(
+                                        controller: passwordController,
+                                        icon: Icons.lock_outline,
+                                        label: 'Password',
+                                        isPassword: true,
+                                        delay: isSignUp ? 400 : 200,
+                                    ),
+                                    SizedBox(height: 24),
+
+                                    // Sign In/Sign Up Button
+                                    Container(
+                                        width: double.infinity,
+                                        child: ElevatedButton(
+                                            onPressed: isSignUp ? signUp : signIn,
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[700],
+                                                padding: EdgeInsets.symmetric(vertical: 16),
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(12),
+                                                ),
+                                                elevation: 8,
+                                            ),
+                                            child: Text(
+                                                isSignUp ? 'Create Account' : 'Sign In',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                ),
+                                            ),
+                                        ),
+                                    ).animate()
+                                        .fadeIn(duration: 600.ms, delay: 600.ms)
+                                        .slideY(begin: 0.2),
+
+                                    SizedBox(height: 24),
+
+                                    // Toggle Sign In/Sign Up
+                                    TextButton(
+                                        onPressed: () {
+                                            setState(() {
+                                                isSignUp = !isSignUp;
+                                            });
+                                        },
+                                        child: Text.rich(
+                                            TextSpan(
+                                                children: [
+                                                    TextSpan(
+                                                        text: isSignUp 
+                                                            ? 'Already have an account? '
+                                                            : 'Don\'t have an account? ',
+                                                        style: TextStyle(
+                                                            color: isDarkMode ? Colors.white70 : Colors.grey[600],
+                                                        ),
+                                                    ),
+                                                    TextSpan(
+                                                        text: isSignUp ? 'Sign In' : 'Sign Up',
+                                                        style: TextStyle(
+                                                            color: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[700],
+                                                            fontWeight: FontWeight.bold,
+                                                        ),
+                                                    ),
+                                                ],
+                                            ),
+                                        ),
+                                    ).animate()
+                                        .fadeIn(duration: 600.ms, delay: 800.ms),
+
+                                    if (!isSignUp) ...[
+                                        SizedBox(height: 16),
+                                        TextButton(
+                                            onPressed: resetPassword,
+                                            child: Text(
+                                                'Forgot Password?',
+                                                style: TextStyle(
+                                                    color: isDarkMode ? Colors.white70 : Colors.grey[600],
+                                                ),
+                                            ),
+                                        ).animate()
+                                            .fadeIn(duration: 600.ms, delay: 1000.ms),
+                                    ],
+                                ],
+                            ),
+                        ),
+                    ),
+                ),
+            ],
         );
     }
 
@@ -1290,6 +1265,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
         );
     }
+
+    Widget _buildThemeToggle() {
+        return Container(
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: isDarkMode 
+                    ? Colors.white.withOpacity(0.15)
+                    : Colors.blue.withOpacity(0.15),
+            ),
+            child: IconButton(
+                icon: Icon(
+                    isDarkMode ? Icons.light_mode : Icons.dark_mode,
+                    color: Colors.white,
+                ),
+                onPressed: _toggleTheme,
+            ),
+        );
+    }
+
+    Widget _buildLogoutButton() {
+        return ElevatedButton(
+            onPressed: logout,
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red.withOpacity(0.9),
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 8,
+            ),
+            child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                    Icon(Icons.logout, color: Colors.white),
+                    SizedBox(width: 8),
+                    Text(
+                        'Logout',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                        ),
+                    ),
+                ],
+            ),
+        ).animate()
+            .fadeIn(delay: 1200.ms)
+            .scale(delay: 1200.ms)
+            .shimmer(delay: 1200.ms);
+    }
 }
 
 // New UserProfileScreen to display user information
@@ -1322,4 +1347,28 @@ class UserProfileScreen extends StatelessWidget {
             ),
         );
     }
+}
+
+class DotPatternPainter extends CustomPainter {
+    final Color color;
+    
+    DotPatternPainter({required this.color});
+    
+    @override
+    void paint(Canvas canvas, Size size) {
+        final double spacing = 20;
+        final double radius = 1;
+        final paint = Paint()
+            ..color = color
+            ..style = PaintingStyle.fill;
+        
+        for (double x = 0; x < size.width; x += spacing) {
+            for (double y = 0; y < size.height; y += spacing) {
+                canvas.drawCircle(Offset(x, y), radius, paint);
+            }
+        }
+    }
+    
+    @override
+    bool shouldRepaint(CustomPainter oldDelegate) => false;
 }

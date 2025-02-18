@@ -9,6 +9,8 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:universal_html/html.dart' as html;
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'dart:ui';
 
 class ResumeGenerator extends StatefulWidget {
   @override
@@ -67,11 +69,11 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
 
   // Education
   String _schoolName = '';
-  String _schoolPassoutYear = '';
+  String _schoolPassoutYear = DateTime.now().year.toString();
   String _schoolClass = '12th'; // Default value
   String _collegeName = '';
   String _collegeType = 'Undergraduate'; // Default value
-  String _collegeGraduatingYear = '';
+  String _collegeGraduatingYear = DateTime.now().year.toString();
   String _degree = 'B.Tech'; // Default value
 
   // Skills
@@ -142,78 +144,210 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
   }
 
   Widget _buildExperienceCard(Experience experience) {
-    return Card(
-      margin: EdgeInsets.symmetric(vertical: 8),
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextFormField(
-              decoration: InputDecoration(labelText: 'Company Name'),
-              onChanged: (value) => experience.companyName = value,
+    return Container(
+      margin: EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: isDarkMode ? Color(0xFF2A2A42) : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isDarkMode 
+              ? Color(0xFF4C4DDC).withOpacity(0.2)
+              : Colors.blue.withOpacity(0.1),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: isDarkMode 
+                ? Colors.black.withOpacity(0.2)
+                : Colors.blue.withOpacity(0.05),
+            offset: Offset(0, 4),
+            blurRadius: 12,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header with company name and delete button
+          Container(
+            padding: EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: isDarkMode 
+                  ? Color(0xFF4C4DDC).withOpacity(0.1)
+                  : Colors.blue.withOpacity(0.05),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             ),
-            Row(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  child: ListTile(
-                    title: Text('Start Date'),
-                    subtitle: Text(experience.startDate.toString().split(' ')[0]),
-                    onTap: () => _selectDate(context, true, experience: experience),
-                  ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.business,
+                      color: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[700],
+                    ),
+                    SizedBox(width: 12),
+                    Text(
+                      experience.companyName.isEmpty ? 'New Experience' : experience.companyName,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: isDarkMode ? Colors.white : Colors.black87,
+                      ),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  child: experience.isPresent
-                      ? CheckboxListTile(
-                          title: Text('Present'),
-                          value: experience.isPresent,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              experience.isPresent = value ?? false;
-                              if (!experience.isPresent) {
-                                experience.endDate = DateTime.now();
-                              }
-                            });
-                          },
-                        )
-                      : ListTile(
-                          title: Text('End Date'),
-                          subtitle: Text(experience.endDate?.toString().split(' ')[0] ?? 'Select'),
-                          onTap: () => _selectDate(context, false, experience: experience),
-                        ),
+                IconButton(
+                  icon: Icon(
+                    Icons.delete_outline,
+                    color: Colors.red[300],
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _experiences.remove(experience);
+                    });
+                  },
                 ),
               ],
             ),
-            TextFormField(
-              decoration: InputDecoration(labelText: 'Position'),
-              onChanged: (value) => experience.position = value,
+          ),
+
+          Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildTextField(
+                  label: 'Company Name',
+                  onSaved: (value) => experience.companyName = value ?? '',
+                ),
+                SizedBox(height: 16),
+                _buildTextField(
+                  label: 'Position',
+                  onSaved: (value) => experience.position = value ?? '',
+                ),
+                SizedBox(height: 16),
+
+                // Date Range Row
+                Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        onTap: () => _selectDate(context, true, experience: experience),
+                        child: Container(
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: isDarkMode 
+                                ? Color(0xFF4C4DDC).withOpacity(0.1)
+                                : Colors.blue.withOpacity(0.05),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Start Date',
+                                style: TextStyle(
+                                  color: isDarkMode ? Colors.white60 : Colors.black54,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                experience.startDate.toString().split(' ')[0],
+                                style: TextStyle(
+                                  color: isDarkMode ? Colors.white : Colors.black87,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          SwitchListTile(
+                            title: Text(
+                              'Present',
+                              style: TextStyle(
+                                color: isDarkMode ? Colors.white : Colors.black87,
+                                fontSize: 14,
+                              ),
+                            ),
+                            value: experience.isPresent,
+                            activeColor: Color(0xFF4C4DDC),
+                            onChanged: (bool value) {
+                              setState(() {
+                                experience.isPresent = value;
+                                if (value) {
+                                  experience.endDate = null;
+                                }
+                              });
+                            },
+                          ),
+                          if (!experience.isPresent)
+                            InkWell(
+                              onTap: () => _selectDate(context, false, experience: experience),
+                              child: Container(
+                                padding: EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: isDarkMode 
+                                      ? Color(0xFF4C4DDC).withOpacity(0.1)
+                                      : Colors.blue.withOpacity(0.05),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'End Date',
+                                      style: TextStyle(
+                                        color: isDarkMode ? Colors.white60 : Colors.black54,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      experience.endDate?.toString().split(' ')[0] ?? 'Select',
+                                      style: TextStyle(
+                                        color: isDarkMode ? Colors.white : Colors.black87,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
+
+                // Skills
+                _buildTextField(
+                  label: 'Skills (comma separated)',
+                  onSaved: (value) {
+                    experience.skills = value?.split(',').map((e) => e.trim()).toList() ?? [];
+                  },
+                ),
+                SizedBox(height: 16),
+
+                // Description
+                _buildTextField(
+                  label: 'Description',
+                  maxLines: 3,
+                  onSaved: (value) => experience.description = value ?? '',
+                ),
+              ],
             ),
-            TextFormField(
-              decoration: InputDecoration(
-                labelText: 'Skills (comma separated)',
-                hintText: 'e.g., Flutter, Dart, Firebase',
-              ),
-              onChanged: (value) {
-                experience.skills = value.split(',').map((e) => e.trim()).toList();
-              },
-            ),
-            TextFormField(
-              decoration: InputDecoration(labelText: 'Description'),
-              maxLines: 3,
-              onChanged: (value) => experience.description = value,
-            ),
-            IconButton(
-              icon: Icon(Icons.delete),
-              onPressed: () {
-                setState(() {
-                  _experiences.remove(experience);
-                });
-              },
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
+    ).animate().fadeIn().slideX();
   }
 
   Widget _buildProjectForm() {
@@ -239,114 +373,296 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
   }
 
   Widget _buildProjectCard(Project project) {
-    return Card(
-      margin: EdgeInsets.symmetric(vertical: 8),
-        child: Padding(
-        padding: EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextFormField(
-              decoration: InputDecoration(labelText: 'Project Name'),
-              onChanged: (value) => project.projectName = value,
+    return Container(
+      margin: EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: isDarkMode ? Color(0xFF2A2A42) : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isDarkMode 
+              ? Color(0xFF4C4DDC).withOpacity(0.2)
+              : Colors.blue.withOpacity(0.1),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: isDarkMode 
+                ? Colors.black.withOpacity(0.2)
+                : Colors.blue.withOpacity(0.05),
+            offset: Offset(0, 4),
+            blurRadius: 12,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header with project name and delete button
+          Container(
+            padding: EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: isDarkMode 
+                  ? Color(0xFF4C4DDC).withOpacity(0.1)
+                  : Colors.blue.withOpacity(0.05),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             ),
-            Row(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  child: ListTile(
-                    title: Text('Start Date'),
-                    subtitle: Text(project.startDate.toString().split(' ')[0]),
-                    onTap: () => _selectDate(context, true, project: project),
-                  ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.code,
+                      color: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[700],
+                    ),
+                    SizedBox(width: 12),
+                    Text(
+                      project.projectName.isEmpty ? 'New Project' : project.projectName,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: isDarkMode ? Colors.white : Colors.black87,
+                      ),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  child: project.isPresent
-                      ? CheckboxListTile(
-                          title: Text('Present'),
-                          value: project.isPresent,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              project.isPresent = value ?? false;
-                              if (!project.isPresent) {
-                                project.endDate = DateTime.now();
-                              }
-                            });
-                          },
-                        )
-                      : ListTile(
-                          title: Text('End Date'),
-                          subtitle: Text(project.endDate?.toString().split(' ')[0] ?? 'Select'),
-                          onTap: () => _selectDate(context, false, project: project),
-                        ),
+                IconButton(
+                  icon: Icon(
+                    Icons.delete_outline,
+                    color: Colors.red[300],
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _projects.remove(project);
+                    });
+                  },
                 ),
               ],
             ),
-            TextFormField(
-              decoration: InputDecoration(labelText: 'Description'),
-              maxLines: 3,
-              onChanged: (value) => project.description = value,
+          ),
+
+          Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildTextField(
+                  label: 'Project Name',
+                  onSaved: (value) => project.projectName = value ?? '',
                 ),
-                TextFormField(
-              decoration: InputDecoration(
-                labelText: 'Technologies (comma separated)',
-                hintText: 'e.g., Flutter, Dart, Firebase',
-              ),
-              onChanged: (value) {
-                project.technologies = value.split(',').map((e) => e.trim()).toList();
+                SizedBox(height: 16),
+
+                // Date Range Row
+                Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        onTap: () => _selectDate(context, true, project: project),
+                        child: Container(
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: isDarkMode 
+                                ? Color(0xFF4C4DDC).withOpacity(0.1)
+                                : Colors.blue.withOpacity(0.05),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Start Date',
+                                style: TextStyle(
+                                  color: isDarkMode ? Colors.white60 : Colors.black54,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                project.startDate.toString().split(' ')[0],
+                                style: TextStyle(
+                                  color: isDarkMode ? Colors.white : Colors.black87,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          SwitchListTile(
+                            title: Text(
+                              'Ongoing',
+                              style: TextStyle(
+                                color: isDarkMode ? Colors.white : Colors.black87,
+                                fontSize: 14,
+                              ),
+                            ),
+                            value: project.isPresent,
+                            activeColor: Color(0xFF4C4DDC),
+                            onChanged: (bool value) {
+                              setState(() {
+                                project.isPresent = value;
+                                if (value) {
+                                  project.endDate = null;
+                                }
+                              });
+                            },
+                          ),
+                          if (!project.isPresent)
+                            InkWell(
+                              onTap: () => _selectDate(context, false, project: project),
+                              child: Container(
+                                padding: EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: isDarkMode 
+                                      ? Color(0xFF4C4DDC).withOpacity(0.1)
+                                      : Colors.blue.withOpacity(0.05),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'End Date',
+                                      style: TextStyle(
+                                        color: isDarkMode ? Colors.white60 : Colors.black54,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      project.endDate?.toString().split(' ')[0] ?? 'Select',
+                                      style: TextStyle(
+                                        color: isDarkMode ? Colors.white : Colors.black87,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
+
+                // Technologies
+                _buildTextField(
+                  label: 'Technologies (comma separated)',
+                  onSaved: (value) {
+                    project.technologies = value?.split(',').map((e) => e.trim()).toList() ?? [];
                   },
                 ),
-                TextFormField(
-              decoration: InputDecoration(labelText: 'GitHub Link'),
-              onChanged: (value) => project.githubLink = value,
+                SizedBox(height: 16),
+
+                // Description
+                _buildTextField(
+                  label: 'Description',
+                  maxLines: 3,
+                  onSaved: (value) => project.description = value ?? '',
+                ),
+                SizedBox(height: 16),
+
+                // GitHub Link
+                _buildTextField(
+                  label: 'GitHub Link',
+                  onSaved: (value) => project.githubLink = value ?? '',
+                ),
+              ],
             ),
-            IconButton(
-              icon: Icon(Icons.delete),
-              onPressed: () {
-                setState(() {
-                  _projects.remove(project);
-                });
-              },
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
+    ).animate().fadeIn().slideX();
   }
 
   Widget _buildEducationSection() {
-    return Column(
+    // Generate a list of years from 1990 to current year + 10
+    final List<String> years = List.generate(
+      DateTime.now().year + 10 - 1990 + 1,
+      (index) => (1990 + index).toString(),
+    ).reversed.toList();  // Reverse to show recent years first
+
+    return _buildSectionCard(
+      title: 'Education',
       children: [
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'School Name'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your school name';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _schoolName = value!;
-                  },
+        // School Education
+        Text(
+          'School Education',
+          style: TextStyle(
+            color: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[700],
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ).animate().fadeIn().slideX(),
+        SizedBox(height: 16),
+        
+        _buildTextField(
+          label: 'School Name',
+          validator: (value) => value?.isEmpty ?? true ? 'Please enter school name' : null,
+          onSaved: (value) => _schoolName = value!,
+        ).animate().fadeIn().slideX(delay: 100.ms),
+        
+        SizedBox(height: 16),
+        
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: isDarkMode ? Color(0xFF2A2A42) : Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(
+                    color: isDarkMode 
+                        ? Color(0xFF4C4DDC).withOpacity(0.2)
+                        : Colors.blue.withOpacity(0.1),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: isDarkMode 
+                          ? Colors.black.withOpacity(0.2)
+                          : Colors.blue.withOpacity(0.05),
+                      offset: Offset(0, 4),
+                      blurRadius: 8,
+                    ),
+                  ],
                 ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Passout Year'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your passout year';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _schoolPassoutYear = value!;
-                  },
-                ),
-                DropdownButtonFormField<String>(
+                child: DropdownButtonFormField<String>(
                   value: _schoolClass,
-                  decoration: InputDecoration(labelText: 'Class'),
-                  items: ['12th', 'Diploma'].map((String className) {
+                  decoration: InputDecoration(
+                    labelText: 'Class',
+                    labelStyle: TextStyle(
+                      color: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[700],
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: BorderSide.none,
+                    ),
+                    filled: true,
+                    fillColor: Colors.transparent,
+                  ),
+                  style: TextStyle(
+                    color: isDarkMode ? Colors.white : Colors.black87,
+                    fontSize: 16,
+                  ),
+                  dropdownColor: isDarkMode ? Color(0xFF2A2A42) : Colors.white,
+                  items: ['10th', '12th'].map((String value) {
                     return DropdownMenuItem<String>(
-                      value: className,
-                      child: Text(className),
+                      value: value,
+                      child: Text(
+                        value,
+                        style: TextStyle(
+                          color: isDarkMode ? Colors.white : Colors.black87,
+                        ),
+                      ),
                     );
                   }).toList(),
                   onChanged: (value) {
@@ -355,59 +671,147 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
                     });
                   },
                 ),
-                SizedBox(height: 10),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'College Name'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your college name';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _collegeName = value!;
-                  },
+              ),
+            ),
+            SizedBox(width: 16),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: isDarkMode ? Color(0xFF2A2A42) : Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(
+                    color: isDarkMode 
+                        ? Color(0xFF4C4DDC).withOpacity(0.2)
+                        : Colors.blue.withOpacity(0.1),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: isDarkMode 
+                          ? Colors.black.withOpacity(0.2)
+                          : Colors.blue.withOpacity(0.05),
+                      offset: Offset(0, 4),
+                      blurRadius: 8,
+                    ),
+                  ],
                 ),
-                DropdownButtonFormField<String>(
-                  value: _collegeType,
-                  decoration: InputDecoration(labelText: 'College Type'),
-                  items: ['Undergraduate', 'Graduate'].map((String type) {
+                child: DropdownButtonFormField<String>(
+                  value: _schoolPassoutYear.isEmpty ? years.first : _schoolPassoutYear,
+                  decoration: InputDecoration(
+                    labelText: 'Passing Year',
+                    labelStyle: TextStyle(
+                      color: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[700],
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: BorderSide.none,
+                    ),
+                    filled: true,
+                    fillColor: Colors.transparent,
+                  ),
+                  style: TextStyle(
+                    color: isDarkMode ? Colors.white : Colors.black87,
+                    fontSize: 16,
+                  ),
+                  dropdownColor: isDarkMode ? Color(0xFF2A2A42) : Colors.white,
+                  items: years.map((String year) {
                     return DropdownMenuItem<String>(
-                      value: type,
-                      child: Text(type),
+                      value: year,
+                      child: Text(
+                        year,
+                        style: TextStyle(
+                          color: isDarkMode ? Colors.white : Colors.black87,
+                        ),
+                      ),
                     );
                   }).toList(),
                   onChanged: (value) {
                     setState(() {
-                      _collegeType = value!;
+                      _schoolPassoutYear = value!;
                     });
                   },
                 ),
-        DropdownButtonFormField<String>(
+              ),
+            ),
+          ],
+        ).animate().fadeIn().slideX(delay: 200.ms),
+
+        SizedBox(height: 32),
+
+        // College Education
+        Text(
+          'College Education',
+          style: TextStyle(
+            color: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[700],
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ).animate().fadeIn().slideX(delay: 300.ms),
+        SizedBox(height: 16),
+
+        _buildTextField(
+          label: 'College Name',
+          validator: (value) => value?.isEmpty ?? true ? 'Please enter college name' : null,
+          onSaved: (value) => _collegeName = value!,
+        ).animate().fadeIn().slideX(delay: 400.ms),
+
+        SizedBox(height: 16),
+
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: isDarkMode ? Color(0xFF2A2A42) : Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(
+                    color: isDarkMode 
+                        ? Color(0xFF4C4DDC).withOpacity(0.2)
+                        : Colors.blue.withOpacity(0.1),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: isDarkMode 
+                          ? Colors.black.withOpacity(0.2)
+                          : Colors.blue.withOpacity(0.05),
+                      offset: Offset(0, 4),
+                      blurRadius: 8,
+                    ),
+                  ],
+                ),
+                child: DropdownButtonFormField<String>(
           value: _degree,
-          decoration: InputDecoration(labelText: 'Degree'),
-          items: [
-            'B.Tech',
-            'M.Tech',
-            'B.Arch',
-            'M.Arch',
-            'B.Com',
-            'M.Com',
-            'B.A',
-            'M.A',
-            'B.B.A',
-            'MBA',
-            'B.Sc',
-            'M.Sc',
-            'B.Ed',
-            'M.Ed',
-            'PhD',
-            'Diploma',
-            'Other'
-          ].map((String degree) {
+                  decoration: InputDecoration(
+                    labelText: 'Degree',
+                    labelStyle: TextStyle(
+                      color: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[700],
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: BorderSide.none,
+                    ),
+                    filled: true,
+                    fillColor: Colors.transparent,
+                  ),
+                  style: TextStyle(
+                    color: isDarkMode ? Colors.white : Colors.black87,
+                    fontSize: 16,
+                  ),
+                  dropdownColor: isDarkMode ? Color(0xFF2A2A42) : Colors.white,
+                  items: ['B.Tech', 'M.Tech', 'BCA', 'MCA', 'B.Sc', 'M.Sc'].map((String value) {
             return DropdownMenuItem<String>(
-              value: degree,
-              child: Text(degree),
+                      value: value,
+                      child: Text(
+                        value,
+                        style: TextStyle(
+                          color: isDarkMode ? Colors.white : Colors.black87,
+                        ),
+                      ),
             );
           }).toList(),
           onChanged: (value) {
@@ -416,21 +820,74 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
             });
           },
         ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Graduating Year'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your graduating year';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
+              ),
+            ),
+            SizedBox(width: 16),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: isDarkMode ? Color(0xFF2A2A42) : Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(
+                    color: isDarkMode 
+                        ? Color(0xFF4C4DDC).withOpacity(0.2)
+                        : Colors.blue.withOpacity(0.1),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: isDarkMode 
+                          ? Colors.black.withOpacity(0.2)
+                          : Colors.blue.withOpacity(0.05),
+                      offset: Offset(0, 4),
+                      blurRadius: 8,
+                    ),
+                  ],
+                ),
+                child: DropdownButtonFormField<String>(
+                  value: _collegeGraduatingYear.isEmpty ? years.first : _collegeGraduatingYear,
+                  decoration: InputDecoration(
+                    labelText: 'Graduating Year',
+                    labelStyle: TextStyle(
+                      color: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[700],
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: BorderSide.none,
+                    ),
+                    filled: true,
+                    fillColor: Colors.transparent,
+                  ),
+                  style: TextStyle(
+                    color: isDarkMode ? Colors.white : Colors.black87,
+                    fontSize: 16,
+                  ),
+                  dropdownColor: isDarkMode ? Color(0xFF2A2A42) : Colors.white,
+                  items: years.map((String year) {
+                    return DropdownMenuItem<String>(
+                      value: year,
+                      child: Text(
+                        year,
+                        style: TextStyle(
+                          color: isDarkMode ? Colors.white : Colors.black87,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
                     _collegeGraduatingYear = value!;
+                    });
                   },
                 ),
-                SizedBox(height: 20),
+              ),
+            ),
       ],
-    );
+        ).animate().fadeIn().slideX(delay: 500.ms),
+      ],
+    ).animate().fadeIn().scale();
   }
 
   void _generateResume() {
@@ -509,15 +966,86 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: _getTheme(),
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Resume Generator'),
-          centerTitle: true,
-          actions: [
+    return Scaffold(
+      backgroundColor: isDarkMode ? Color(0xFF1A1A2E) : Colors.blue[50],
+      body: Stack(
+        children: [
+          // Background pattern
+          Positioned.fill(
+            child: CustomPaint(
+              painter: DotPatternPainter(
+                color: isDarkMode 
+                    ? Colors.white.withOpacity(0.03)
+                    : Colors.blue.withOpacity(0.05),
+              ),
+            ),
+          ),
+
+          CustomScrollView(
+            physics: BouncingScrollPhysics(),
+            slivers: [
+              SliverAppBar(
+                automaticallyImplyLeading: true,
+                floating: false,
+                pinned: false,
+                expandedHeight: 200,
+                backgroundColor: Colors.transparent,
+                flexibleSpace: ClipRRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: FlexibleSpaceBar(
+                      background: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: isDarkMode 
+                                ? [Color(0xFF4C4DDC), Color(0xFF1A1A2E)]
+                                : [Colors.blue[400]!, Colors.blue[100]!],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                        child: SafeArea(
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 8,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.15),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.description_outlined,
+                                            color: Colors.white,
+                                            size: 16,
+                                          ),
+                                          SizedBox(width: 8),
+                                          Text(
+                                            'RESUME',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              letterSpacing: 0.3,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
             IconButton(
-              icon: Icon(isDarkMode ? Icons.light_mode : Icons.dark_mode),
+                                      icon: Icon(
+                                        isDarkMode ? Icons.light_mode : Icons.dark_mode,
+                                        color: Colors.white,
+                                      ),
               onPressed: () {
                 setState(() {
                   isDarkMode = !isDarkMode;
@@ -526,15 +1054,33 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
             ),
           ],
         ),
-        body: Container(
-          color: isDarkMode ? Colors.grey[900] : Colors.grey[100],
-          child: SingleChildScrollView(
+                                SizedBox(height: 20),
+                                Text(
+                                  'Resume\nGenerator',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                    height: 1.2,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              // Content
+              SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+                  padding: EdgeInsets.all(16.0),
               child: Form(
                 key: _formKey,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildSectionCard(
                       title: 'Personal Details',
@@ -543,108 +1089,96 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
                           label: 'Full Name',
                           validator: (value) => value?.isEmpty ?? true ? 'Please enter your name' : null,
                           onSaved: (value) => _name = value!,
-                        ),
+                            ).animate().fadeIn().slideX(),
                         SizedBox(height: 16),
                         _buildTextField(
                           label: 'Email',
                           validator: (value) => value?.isEmpty ?? true ? 'Please enter your email' : null,
                           onSaved: (value) => _email = value!,
-                        ),
+                            ).animate().fadeIn().slideX(delay: 100.ms),
                         SizedBox(height: 16),
                         _buildTextField(
                           label: 'Phone',
                           onSaved: (value) => _phone = value!,
-                        ),
+                            ).animate().fadeIn().slideX(delay: 200.ms),
                         SizedBox(height: 16),
                         _buildTextField(
                           label: 'About Me',
                           maxLines: 3,
                           validator: (value) => value?.isEmpty ?? true ? 'Please enter something about yourself' : null,
                           onSaved: (value) => _aboutMe = value!,
-                        ),
+                            ).animate().fadeIn().slideX(delay: 300.ms),
                       ],
-                    ),
-                    SizedBox(height: 24),
+                        ).animate().fadeIn().scale(),
 
-                    _buildSectionCard(
-                      title: 'Education',
-                      children: [
+                        SizedBox(height: 16),
+
                         _buildEducationSection(),
-                      ],
-                    ),
-                    SizedBox(height: 24),
+
+                        SizedBox(height: 16),
 
                     _buildSectionCard(
                       title: 'Skills',
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                  controller: _skillController,
-                                decoration: InputDecoration(
-                                  labelText: 'Add a skill',
-                                  suffixIcon: IconButton(
-                                    icon: Icon(Icons.add),
-                                    onPressed: _addSkill,
-                                  ),
-                                ),
-                              ),
-                            ),
+                            _buildSkillInput(),
                           ],
-                        ),
+                        ).animate().fadeIn().slideX(delay: 500.ms),
+
                         SizedBox(height: 16),
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: _skills.map((skill) => Chip(
-                            label: Text(skill),
-                            deleteIcon: Icon(Icons.close),
-                            onDeleted: () {
-                              setState(() {
-                                _skills.remove(skill);
-                              });
-                            },
-                          )).toList(),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 24),
 
                     _buildSectionCard(
                       title: 'Experience',
                       children: [
                 _buildExperienceForm(),
                       ],
-                    ),
-                    SizedBox(height: 24),
+                        ).animate().fadeIn().slideX(delay: 600.ms),
+
+                        SizedBox(height: 16),
 
                     _buildSectionCard(
                       title: 'Projects',
                       children: [
                 _buildProjectForm(),
                       ],
-                    ),
-                    SizedBox(height: 24),
+                        ).animate().fadeIn().slideX(delay: 700.ms),
+
+                        SizedBox(height: 16),
 
                     Center(
                       child: ElevatedButton.icon(
                   onPressed: _generateResume,
-                        icon: Icon(Icons.description),
-                        label: Text('Generate Resume'),
+                              icon: Icon(Icons.description, color: Colors.white),
+                              label: Text(
+                                'Generate Resume',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                          textStyle: TextStyle(fontSize: 18),
+                                backgroundColor: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
                         ),
+                                elevation: 8,
+                                shadowColor: isDarkMode 
+                                    ? Color(0xFF4C4DDC).withOpacity(0.5)
+                                    : Colors.blue.withOpacity(0.5),
                       ),
                     ),
-                    SizedBox(height: 24),
+                          ),
+
+                        SizedBox(height: 16),
                   ],
                 ),
               ),
             ),
           ),
+            ],
         ),
+        ],
       ),
     );
   }
@@ -652,35 +1186,77 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
   Widget _buildSectionCard({required String title, required List<Widget> children}) {
     return Container(
       decoration: BoxDecoration(
-        color: isDarkMode ? Colors.grey[850] : Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        color: isDarkMode ? Color(0xFF252542) : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isDarkMode 
+              ? Color(0xFF4C4DDC).withOpacity(0.2)
+              : Colors.blue.withOpacity(0.1),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: Offset(0, 5),
+            color: isDarkMode 
+                ? Colors.black.withOpacity(0.3)
+                : Colors.blue.withOpacity(0.1),
+            offset: Offset(4, 4),
+            blurRadius: 15,
+            spreadRadius: 1,
           ),
         ],
       ),
-      child: Padding(
         padding: EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: isDarkMode 
+                      ? Color(0xFF4C4DDC).withOpacity(0.1)
+                      : Colors.blue.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  _getIconForSection(title),
+                  color: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[700],
+                  size: 24,
+                ),
+              ),
+              SizedBox(width: 16),
             Text(
               title,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: isDarkMode ? Colors.blue[300] : Colors.blue[800],
+                  color: isDarkMode ? Colors.white : Colors.black87,
               ),
+              ),
+            ],
             ),
             SizedBox(height: 20),
             ...children,
           ],
-        ),
       ),
     );
+  }
+
+  IconData _getIconForSection(String section) {
+    switch (section) {
+      case 'Personal Details':
+        return Icons.person_outline;
+      case 'Education':
+        return Icons.school_outlined;
+      case 'Skills':
+        return Icons.psychology_outlined;
+      case 'Experience':
+        return Icons.work_outline;
+      case 'Projects':
+        return Icons.code_outlined;
+      default:
+        return Icons.article_outlined;
+    }
   }
 
   Widget _buildTextField({
@@ -689,14 +1265,203 @@ class _ResumeGeneratorState extends State<ResumeGenerator> {
     String? Function(String?)? validator,
     void Function(String?)? onSaved,
   }) {
-    return TextFormField(
+    return Container(
+      decoration: BoxDecoration(
+        color: isDarkMode ? Color(0xFF2A2A42) : Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(
+          color: isDarkMode 
+              ? Color(0xFF4C4DDC).withOpacity(0.2)
+              : Colors.blue.withOpacity(0.1),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: isDarkMode 
+                ? Colors.black.withOpacity(0.2)
+                : Colors.blue.withOpacity(0.05),
+            offset: Offset(0, 4),
+            blurRadius: 8,
+          ),
+        ],
+      ),
+      child: TextFormField(
+        style: TextStyle(
+          color: isDarkMode ? Colors.white : Colors.black87,
+          fontSize: 16,
+          height: 1.5,
+        ),
+        maxLines: maxLines,
       decoration: InputDecoration(
         labelText: label,
         alignLabelWithHint: maxLines > 1,
-      ),
-      maxLines: maxLines,
+          labelStyle: TextStyle(
+            color: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[700],
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+          floatingLabelStyle: TextStyle(
+            color: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[700],
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide.none,
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide(
+              color: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+              width: 2,
+            ),
+          ),
+          filled: true,
+          fillColor: Colors.transparent,
+          hintStyle: TextStyle(
+            color: isDarkMode ? Colors.white60 : Colors.black45,
+          ),
+          errorStyle: TextStyle(
+            color: Colors.red[300]!,
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
       validator: validator,
       onSaved: onSaved,
+      ),
+    );
+  }
+
+  Widget _buildSkillInput() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: isDarkMode ? Color(0xFF2A2A42) : Colors.white,
+            borderRadius: BorderRadius.circular(15),
+            border: Border.all(
+              color: isDarkMode 
+                  ? Color(0xFF4C4DDC).withOpacity(0.2)
+                  : Colors.blue.withOpacity(0.1),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: isDarkMode 
+                    ? Colors.black.withOpacity(0.2)
+                    : Colors.blue.withOpacity(0.05),
+                offset: Offset(0, 4),
+                blurRadius: 8,
+              ),
+            ],
+          ),
+          child: TextField(
+            controller: _skillController,
+            style: TextStyle(
+              color: isDarkMode ? Colors.white : Colors.black87,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+            decoration: InputDecoration(
+              labelText: 'Add a skill',
+              labelStyle: TextStyle(
+                color: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[700],
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+              hintText: 'e.g., Flutter, React, Python',
+              hintStyle: TextStyle(
+                color: isDarkMode ? Colors.white38 : Colors.black38,
+                fontSize: 14,
+              ),
+              contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: BorderSide.none,
+              ),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  Icons.add_circle_outlined,
+                  color: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[700],
+                  size: 28,
+                ),
+                onPressed: _addSkill,
+              ),
+              filled: true,
+              fillColor: Colors.transparent,
+            ),
+            onSubmitted: (_) => _addSkill(),
+          ),
+        ),
+        SizedBox(height: 20),
+        if (_skills.isNotEmpty) ...[
+          Text(
+            'Your Skills',
+            style: TextStyle(
+              color: isDarkMode ? Colors.white70 : Colors.black87,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: _skills.map((skill) => Container(
+              decoration: BoxDecoration(
+                color: isDarkMode 
+                    ? Color(0xFF4C4DDC).withOpacity(0.15)
+                    : Colors.blue.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(25),
+                border: Border.all(
+                  color: isDarkMode 
+                      ? Color(0xFF4C4DDC)
+                      : Colors.blue,
+                  width: 1,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: isDarkMode 
+                        ? Colors.black.withOpacity(0.2)
+                        : Colors.blue.withOpacity(0.1),
+                    offset: Offset(0, 2),
+                    blurRadius: 4,
+                  ),
+                ],
+              ),
+              child: Chip(
+                label: Text(
+                  skill,
+                  style: TextStyle(
+                    color: isDarkMode ? Colors.white : Colors.black87,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                backgroundColor: Colors.transparent,
+                deleteIcon: Icon(
+                  Icons.cancel_rounded,
+                  size: 20,
+                  color: isDarkMode ? Colors.white70 : Colors.black54,
+                ),
+                onDeleted: () {
+                  setState(() {
+                    _skills.remove(skill);
+                  });
+                },
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                visualDensity: VisualDensity.compact,
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+              ),
+            )).toList(),
+          ),
+        ],
+      ],
     );
   }
 }
@@ -1165,4 +1930,29 @@ class _ResumeDisplayState extends State<ResumeDisplay> {
     projectsController.dispose();
     super.dispose();
   }
+}
+
+// Add this class at the end of the file
+class DotPatternPainter extends CustomPainter {
+  final Color color;
+  
+  DotPatternPainter({required this.color});
+  
+  @override
+  void paint(Canvas canvas, Size size) {
+    final double spacing = 20;
+    final double radius = 1;
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+      
+    for (double x = 0; x < size.width; x += spacing) {
+      for (double y = 0; y < size.height; y += spacing) {
+        canvas.drawCircle(Offset(x, y), radius, paint);
+      }
+    }
+  }
+  
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 } 

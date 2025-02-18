@@ -16,6 +16,8 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/animation.dart'; // Required for animations
 import 'dart:convert'; // Add this import for JSON encoding/decoding
+import 'dart:ui';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import 'VoiceChat.dart' as nexia;
 // import 'CustomChatMessage.dart'; // Add this import
@@ -349,125 +351,293 @@ String _cleanResponse(String response) {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: isDarkMode ? Colors.black : Colors.white, // Ensure fully dark background
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: isDarkMode ? Colors.white : Colors.black), // Updated icon
-          onPressed: () {
-            Navigator.pop(context); // Navigate back to the previous page
-          },
-          tooltip: 'Back',
-        ),
-        title: const Text('Ask Nexia'),
-        titleTextStyle: TextStyle(color: isDarkMode ? Colors.white : Colors.black, fontSize: 22, fontWeight: FontWeight.bold),
-        backgroundColor: isDarkMode ? Colors.black : Colors.blue,
-        iconTheme: IconThemeData(color: isDarkMode ? Colors.white : Colors.black),
-        actions: [
+      backgroundColor: isDarkMode ? Color(0xFF1A1A2E) : Colors.blue[50],
+      body: Stack(
+        children: [
+          // Background pattern
+          Positioned.fill(
+            child: CustomPaint(
+              painter: DotPatternPainter(
+                color: isDarkMode 
+                    ? Colors.white.withOpacity(0.03)
+                    : Colors.blue.withOpacity(0.05),
+              ),
+            ),
+          ),
+
+          Column(
+            children: [
+              // Enhanced Glass Effect Header
+              ClipRRect(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
+                ),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: Container(
+                    padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).padding.top + 20,
+                      bottom: 20,
+                      left: 20,
+                      right: 20,
+                    ),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: isDarkMode 
+                            ? [
+                                Color(0xFF4C4DDC),
+                                Color(0xFF1A1A2E),
+                              ]
+                            : [
+                                Colors.blue[400]!,
+                                Colors.blue[100]!,
+                              ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.arrow_back_ios,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.15),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.psychology_rounded,
+                                        color: Colors.white,
+                                        size: 16,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'NEXIA AI',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          letterSpacing: 0.3,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
           IconButton(
             icon: Icon(
               isDarkMode ? Icons.wb_sunny : Icons.nightlight_round,
-              color: isDarkMode ? Colors.white : Colors.black,
+                                    color: Colors.white,
             ),
             onPressed: () {
               setState(() {
                 isDarkMode = !isDarkMode;
-                prefs.setBool('isDarkMode', isDarkMode); // Save preference
+                                      prefs.setBool('isDarkMode', isDarkMode);
               });
             },
           ),
           IconButton(
-            icon: Icon(Icons.note, color: isDarkMode ? Colors.white : Colors.black),
+                                  icon: Icon(Icons.note, color: Colors.white),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => NotesPage(notes: notes)),
-              );
-            },
-            tooltip: 'View Notes',
+                                      MaterialPageRoute(
+                                        builder: (context) => NotesPage(notes: notes),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          'How can I help\nyou today?',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            height: 1.2,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              // Chat Messages
+              Expanded(
+                child: _chatUI(),
+              ),
+
+              // Enhanced Input Field
+              _buildEnhancedTextField(),
+            ],
           ),
         ],
       ),
-      body: _chatUI(),
     );
   }
 
-// Import for Clipboard functionality
-// Import for Clipboard functionality
 Widget _chatUI() {
-  return Column(
-    children: [
-      Expanded(
-        child: ListView.builder(
+    return ListView.builder(
+      reverse: true,
           controller: scrollController,
-          reverse: true,
           itemCount: messages.length,
           itemBuilder: (context, index) {
-            ChatMessage message = messages[index];
+        final message = messages[index];
+        final isAI = message.user.id == nexiaUser.id;
+        return _buildMessageBubble(message, isAI);
+      },
+    );
+  }
 
-            // Check if the message is a response from the AI
-            bool isAI = message.user.id != "0";
-
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 10.0, left: 8.0, right: 8.0),
-              child: Align(
-                alignment: isAI ? Alignment.centerLeft : Alignment.centerRight,
+  Widget _buildMessageBubble(ChatMessage message, bool isAI) {
+    return Container(
+      margin: EdgeInsets.only(
+        left: 16,
+        right: 16,
+        bottom: 16,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Profile Icon
+          Container(
+            width: 40,
+            height: 40,
+            margin: EdgeInsets.only(right: 12),
+            decoration: BoxDecoration(
+              color: isAI 
+                  ? (isDarkMode ? Color(0xFF4C4DDC).withOpacity(0.1) : Colors.blue[50])
+                  : (isDarkMode ? Colors.white.withOpacity(0.1) : Colors.grey[100]),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: isAI 
+                    ? (isDarkMode ? Color(0xFF4C4DDC).withOpacity(0.2) : Colors.blue.withOpacity(0.2))
+                    : Colors.transparent,
+              ),
+            ),
+            child: Icon(
+              isAI ? Icons.psychology : Icons.person,
+              color: isAI 
+                  ? (isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[700])
+                  : (isDarkMode ? Colors.white : Colors.grey[600]),
+              size: 20,
+            ),
+          ),
+          
+          // Message Content
+          Expanded(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+              padding: EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: isAI
-                        ? (isDarkMode ? Colors.blueGrey.shade800 : Colors.blueGrey.shade100)
-                        : (isDarkMode ? Colors.blueAccent.shade700 : Colors.blueAccent.shade100),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(12),
-                      topRight: Radius.circular(12),
-                      bottomLeft: isAI ? Radius.circular(0) : Radius.circular(12),
-                      bottomRight: isAI ? Radius.circular(12) : Radius.circular(0),
-                    ),
-                    boxShadow: [
+                    ? (isDarkMode ? Color(0xFF252542) : Colors.white)
+                    : (isDarkMode ? Colors.white.withOpacity(0.05) : Colors.grey[100]),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: isAI 
+                      ? (isDarkMode ? Color(0xFF4C4DDC).withOpacity(0.2) : Colors.blue.withOpacity(0.1))
+                      : Colors.transparent,
+                  width: 1,
+                ),
+                boxShadow: isAI ? [
                       BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 4,
-                        offset: Offset(2, 2),
-                      ),
-                    ],
+                    color: isDarkMode 
+                        ? Colors.black.withOpacity(0.3)
+                        : Colors.blue.withOpacity(0.1),
+                    offset: Offset(4, 4),
+                    blurRadius: 15,
+                    spreadRadius: 1,
                   ),
-                  child: Row(
+                  BoxShadow(
+                    color: Colors.white.withOpacity(isDarkMode ? 0.1 : 1),
+                    offset: Offset(-4, -4),
+                    blurRadius: 15,
+                    spreadRadius: 1,
+                  ),
+                ] : null,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Sender Name
+                  if (isAI) ...[
+                    Row(
                     children: [
-                      Expanded(
-                        child: Text(
-                          _cleanResponse(message.text),
+                        Text(
+                          'Nexia AI',
                           style: TextStyle(
-                            color: isAI ? (isDarkMode ? Colors.white : Colors.black87) : (isDarkMode ? Colors.white : Colors.black87),
-                            fontWeight: isAI ? FontWeight.bold : FontWeight.normal,
-                            fontSize: isAI ? 16 : 16,
+                            color: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[700],
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
                           ),
-                          overflow: TextOverflow.visible,
-                          softWrap: true,
                         ),
-                      ),
-                      if (isAI)
-                        SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: IconButton(
-                            padding: EdgeInsets.zero,
-                            icon: Icon(Icons.copy, size: 18, color: isDarkMode ? Colors.white : Colors.black54),
+                        SizedBox(width: 4),
+                        Icon(
+                          Icons.verified,
+                          color: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[700],
+                          size: 14,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                  ],
+                  
+                  // Message Text
+                  Text(
+                    isAI ? _cleanResponse(message.text) : message.text,
+                    style: TextStyle(
+                      color: isDarkMode ? Colors.white : Colors.black87,
+                      fontSize: 16,
+                      height: 1.4,
+                    ),
+                  ),
+                  
+                  // Action Buttons for AI messages
+                  if (isAI) ...[
+                    SizedBox(height: 12),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildActionButton(
+                          icon: Icons.copy,
                             onPressed: () {
-                              Clipboard.setData(ClipboardData(text: message.text)).then((_) {
+                            Clipboard.setData(ClipboardData(text: message.text));
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(content: Text('Message copied to clipboard!')),
                                 );
-                              });
-                            },
-                          ),
+                          },
                         ),
-                      if (isAI)
-                        SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: IconButton(
-                            padding: EdgeInsets.zero,
-                            icon: Icon(Icons.note_add, size: 18, color: isDarkMode ? Colors.white : Colors.black54),
+                        SizedBox(width: 8),
+                        _buildActionButton(
+                          icon: Icons.note_add,
                             onPressed: () {
                               setState(() {
                                 notes.add(message.text);
@@ -478,91 +648,123 @@ Widget _chatUI() {
                               );
                             },
                           ),
+                      ],
                         ),
+                  ],
                     ],
                   ),
                 ),
               ),
-            );
-          },
-        ),
+        ],
       ),
-      _textFieldUI(), // Text field remains at the bottom
-    ],
-  );
-}
-  Widget _textFieldUI() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: AnimatedContainer(
-                  duration: Duration(milliseconds: 300),
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+    ).animate()
+      .fadeIn(duration: Duration(milliseconds: 500))
+      .slideY(begin: 0.2, end: 0);
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required VoidCallback onPressed,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: isDarkMode 
+            ? Colors.white.withOpacity(0.05)
+            : Colors.grey[100],
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: IconButton(
+        icon: Icon(
+          icon,
+          size: 16,
+          color: isDarkMode 
+              ? Colors.white.withOpacity(0.7)
+              : Colors.grey[600],
+        ),
+        constraints: BoxConstraints(
+          minWidth: 32,
+          minHeight: 32,
+        ),
+        padding: EdgeInsets.zero,
+        onPressed: onPressed,
+      ),
+    );
+  }
+
+  Widget _buildEnhancedTextField() {
+    return Container(
+      margin: EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: isDarkMode ? Colors.grey.shade900 : Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: _isFocused
-                        ? [
+        color: isDarkMode ? Color(0xFF252542) : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isDarkMode 
+              ? Color(0xFF4C4DDC).withOpacity(0.2)
+              : Colors.blue.withOpacity(0.1),
+          width: 1,
+        ),
+        boxShadow: [
                             BoxShadow(
-                              color: Colors.blueAccent.withOpacity(0.6),
-                              blurRadius: 8,
-                              offset: Offset(0, 4),
-                            ),
-                          ]
-                        : [
+            color: isDarkMode 
+                ? Colors.black.withOpacity(0.3)
+                : Colors.blue.withOpacity(0.1),
+            offset: Offset(4, 4),
+            blurRadius: 15,
+            spreadRadius: 1,
+          ),
                             BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 4,
-                              offset: Offset(0, 2),
+            color: Colors.white.withOpacity(isDarkMode ? 0.1 : 1),
+            offset: Offset(-4, -4),
+            blurRadius: 15,
+            spreadRadius: 1,
                             ),
                           ],
                   ),
                   child: Row(
                     children: [
                       IconButton(
-                        icon: Icon(Icons.photo, color: isDarkMode ? Colors.white : Colors.black54),
-                        onPressed: _showUploadOptions, // Show upload options
-                        tooltip: 'Send Photo or Document',
+            icon: Icon(
+              Icons.photo,
+              color: isDarkMode 
+                  ? Color(0xFF4C4DDC)
+                  : Colors.blue[700],
+            ),
+            onPressed: _showUploadOptions,
                       ),
                       Expanded(
                         child: TextField(
+              controller: controller,
                           focusNode: _focusNode,
-                          controller: controller,
-                          cursorColor: isDarkMode ? Colors.white : Colors.black,
-                          style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
-                          textCapitalization: TextCapitalization.sentences,
-                          onSubmitted: (text) {
-                            if (text.isNotEmpty) {
-                              _sendMessage(ChatMessage(
-                                user: currentUser,
-                                createdAt: DateTime.now(),
-                                text: text,
-                              ));
-                              controller.clear();
-                              FocusScope.of(context).requestFocus(_focusNode); // Refocus the text field
-                              setState(() {});
-                            } else {
-                              _listen();
-                            }
-                          },
+              style: TextStyle(
+                color: isDarkMode ? Colors.white : Colors.blue[900],
+              ),
                           decoration: InputDecoration(
+                hintText: 'Ask me anything...',
+                hintStyle: TextStyle(
+                  color: isDarkMode 
+                      ? Colors.white.withOpacity(0.5)
+                      : Colors.blue[900]?.withOpacity(0.5),
+                ),
                             border: InputBorder.none,
-                            hintText: "Type a message",
-                            hintStyle: TextStyle(color: isDarkMode ? Colors.white60 : Colors.black54),
+                contentPadding: EdgeInsets.symmetric(horizontal: 16),
                           ),
                         ),
                       ),
                       IconButton(
                         icon: Icon(
-                          _isListening
-                              ? Icons.stop_circle
-                              : (controller.text.isEmpty ? Icons.mic : Icons.send),
-                          color: isDarkMode ? Colors.white : Colors.blueAccent,
-                          size: 28,
+              _isListening ? Icons.stop : Icons.mic,
+              color: isDarkMode 
+                  ? Color(0xFF4C4DDC)
+                  : Colors.blue[700],
+            ),
+            onPressed: _listen,
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.send,
+              color: isDarkMode 
+                  ? Color(0xFF4C4DDC)
+                  : Colors.blue[700],
                         ),
                         onPressed: () {
                           if (controller.text.isNotEmpty) {
@@ -572,29 +774,8 @@ Widget _chatUI() {
                               text: controller.text,
                             ));
                             controller.clear();
-                            setState(() {});
-                          } else {
-                            _listen();
-                          }
-                        },
-                        tooltip: controller.text.isEmpty ? 'Start Listening' : 'Send Message',
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(width: 8),
-              IconButton(
-                icon: Icon(Icons.headset, color: isDarkMode ? Colors.white : Colors.black54),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => VoiceChat()),
-                  );
-                },
-                tooltip: 'Voice Chat',
-              ),
-            ],
+              }
+            },
           ),
         ],
       ),
@@ -706,4 +887,28 @@ enum MediaType {
   video,
   audio,
   // Add other types as needed
+}
+
+class DotPatternPainter extends CustomPainter {
+  final Color color;
+  
+  DotPatternPainter({required this.color});
+  
+  @override
+  void paint(Canvas canvas, Size size) {
+    final double spacing = 20;
+    final double radius = 1;
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+      
+    for (double x = 0; x < size.width; x += spacing) {
+      for (double y = 0; y < size.height; y += spacing) {
+        canvas.drawCircle(Offset(x, y), radius, paint);
+      }
+    }
+  }
+  
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
