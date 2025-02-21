@@ -1,4 +1,3 @@
-```markdown
 # Flutter App Management and Troubleshooting Guide
 
 ## Managing App Versions
@@ -167,5 +166,30 @@ e: C:/Users/vishn/.gradle/caches/transforms-3/9cb715769913d0a55e978e7366b82d6a/t
   keyAlias=upload
   keyPassword=321456987
   ```
+
+## Firebase Authentication and Firestore Issues
+
+### Error: Firestore Access Denied
+If Firebase Authentication is working but you're unable to read/write to Firestore (getting permission denied errors), this is likely due to incorrect Firestore security rules.
+
+#### Solution:
+Update your Firestore security rules in the Firebase Console:
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow create: if request.auth != null;
+      allow read, update: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
+  }
+}
+```
+
+These rules:
+1. Allow authenticated users to create new documents
+2. Allow users to read and update only their own data
+3. Ensure proper security by checking the user's ID against the document
+
 ---
 ```

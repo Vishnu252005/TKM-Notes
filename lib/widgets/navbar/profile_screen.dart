@@ -217,99 +217,181 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     // Method to handle sign-up
     Future<void> signUp() async {
-        String usernameInput = usernameController.text; // Get username from controller
-        String emailInput = emailController.text; // Get email from controller
-        String password = passwordController.text; // Get password from controller
+        String usernameInput = usernameController.text.trim();
+        String emailInput = emailController.text.trim();
+        String password = passwordController.text;
+
+        if (usernameInput.isEmpty || emailInput.isEmpty || password.isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Please fill in all required fields")),
+            );
+            return;
+        }
 
         try {
-            UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                email: emailInput,
-                password: password,
-            );
+            // Create user in Firebase Auth
+            UserCredential userCredential = await FirebaseAuth.instance
+                .createUserWithEmailAndPassword(
+                    email: emailInput,
+                    password: password,
+                );
 
-            // Add user data to Firestore
-            await FirebaseFirestore.instance.collection('users').doc(userCredential.user?.uid).set({
-                'username': usernameInput,
-                'email': emailInput,
-                'phone': null, // Initialize phone as null
-                'address': null, // Initialize address as null
-                'major': null, // Initialize major as null
-                'university': null, // Initialize university as null
-                'year': null, // Initialize year as null
-                'bio': null, // Initialize bio as null
-                'interests': null, // Initialize interests as null
-                'socialMedia': null, // Initialize social media as null
-            });
+            // Create a new document with auto-generated ID in users collection
+            await FirebaseFirestore.instance
+                .collection('users')
+                .add({  // Using .add() instead of .doc().set() for auto ID
+                    'username': usernameInput,
+                    'email': emailInput,
+                    'createdAt': FieldValue.serverTimestamp(),
+                    'userId': userCredential.user?.uid,  // Store Firebase Auth UID
+                    'phone': null,
+                    'address': null,
+                    'major': null,
+                    'university': null,
+                    'department': null,
+                    'year': null,
+                    'bio': null,
+                    'interests': null,
+                    'socialMedia': null,
+                });
 
-            // Update state with user data
+            // Save credentials
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            await prefs.setString('email', emailInput);
+            await prefs.setString('password', password);
+
+            // Update local state
             setState(() {
                 username = usernameInput;
                 email = emailInput;
-                phone = null; // Set to null initially
-                address = null; // Set to null initially
-                major = null; // Set to null initially
-                university = null; // Set to null initially
-                year = null; // Set to null initially
-                bio = null; // Set to null initially
-                interests = null; // Set to null initially
-                socialMedia = null; // Set to null initially
+                // Initialize other fields as null
+                phone = null;
+                address = null;
+                major = null;
+                university = null;
+                department = null;
+                year = null;
+                bio = null;
+                interests = null;
+                socialMedia = null;
             });
+
+            // Show success message
+            _showSuccessMessage(
+                "Account created successfully!",
+                Icons.check,
+            );
+
         } on FirebaseAuthException catch (e) {
-            // Handle sign-up error (e.g., show error message)
+            String errorMessage = "An error occurred during sign up";
+            
+            if (e.code == 'weak-password') {
+                errorMessage = 'The password provided is too weak';
+            } else if (e.code == 'email-already-in-use') {
+                errorMessage = 'An account already exists for this email';
+            } else if (e.code == 'invalid-email') {
+                errorMessage = 'Please enter a valid email address';
+            }
+            
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(errorMessage)),
+            );
+        } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Error: ${e.toString()}")),
+            );
         }
     }
 
     // Method to handle sign-in
     Future<void> signIn() async {
-        String emailInput = emailController.text;
+        String emailInput = emailController.text.trim();
         String password = passwordController.text;
 
+        if (emailInput.isEmpty || password.isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Please enter email and password")),
+            );
+            return;
+        }
+
         try {
-            await FirebaseAuth.instance.signInWithEmailAndPassword(
+            // Sign in with Firebase Auth
+            UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
                 email: emailInput,
                 password: password,
             );
 
-            // Save user credentials to SharedPreferences
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            await prefs.setString('email', emailInput);
-            await prefs.setString('password', password);
-
-            // Fetch user data from Firestore
-            DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            // Query Firestore to get user data using userId
+            QuerySnapshot userDocs = await FirebaseFirestore.instance
                 .collection('users')
-                .doc(FirebaseAuth.instance.currentUser?.uid)
+                .where('userId', isEqualTo: userCredential.user?.uid)
                 .get();
 
-            // Update state with all user data
-            setState(() {
-                username = userDoc.get('username') ?? '';
-                email = userDoc.get('email') ?? '';
-                phone = userDoc.get('phone') ?? 'Not provided';
-                address = userDoc.get('address') ?? 'Not provided';
-                major = userDoc.get('major') ?? 'Not provided';
-                university = userDoc.get('university') ?? 'Not provided';
-                year = userDoc.get('year') ?? 'Not provided';
-                department = userDoc.get('department') ?? 'Not provided';
-                bio = userDoc.get('bio') ?? 'No bio provided';
-                interests = userDoc.get('interests') ?? 'No interests added';
-                socialMedia = userDoc.get('socialMedia') ?? 'Not provided';
-                
-                // Update the controllers for edit profile dialog
-                phoneController.text = phone ?? '';
-                addressController.text = address ?? '';
-                majorController.text = major ?? '';
-                selectedCollege = university;
-                selectedYear = year;
-                selectedDepartment = department;
-                bioController.text = bio ?? '';
-                interestsController.text = interests ?? '';
-                socialMediaController.text = socialMedia ?? '';
-            });
+            if (userDocs.docs.isNotEmpty) {
+                // Get the first document (should be only one)
+                DocumentSnapshot userData = userDocs.docs.first;
+                Map<String, dynamic> data = userData.data() as Map<String, dynamic>;
+
+                // Save credentials
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                await prefs.setString('email', emailInput);
+                await prefs.setString('password', password);
+
+                // Update state with user data
+                setState(() {
+                    username = data['username'] ?? '';
+                    email = data['email'] ?? '';
+                    phone = data['phone'];
+                    address = data['address'];
+                    major = data['major'];
+                    university = data['university'];
+                    department = data['department'];
+                    year = data['year'];
+                    bio = data['bio'];
+                    interests = data['interests'];
+                    socialMedia = data['socialMedia'];
+
+                    // Update controllers
+                    phoneController.text = phone ?? '';
+                    addressController.text = address ?? '';
+                    majorController.text = major ?? '';
+                    selectedCollege = university;
+                    selectedDepartment = department;
+                    selectedYear = year;
+                    bioController.text = bio ?? '';
+                    interestsController.text = interests ?? '';
+                    socialMediaController.text = socialMedia ?? '';
+                });
+
+                // Show success message
+                _showSuccessMessage(
+                    "Welcome back! Signed in successfully",
+                    Icons.login_rounded,
+                );
+            } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("User data not found")),
+                );
+            }
+
         } on FirebaseAuthException catch (e) {
-            // Handle sign-in error
+            String errorMessage = "An error occurred during sign in";
+            
+            if (e.code == 'user-not-found') {
+                errorMessage = 'No user found for that email';
+            } else if (e.code == 'wrong-password') {
+                errorMessage = 'Wrong password provided';
+            } else if (e.code == 'invalid-email') {
+                errorMessage = 'Please enter a valid email address';
+            }
+            
             ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Error signing in: ${e.message}")),
+                SnackBar(content: Text(errorMessage)),
+            );
+        } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Error: ${e.toString()}")),
             );
         }
     }
@@ -321,9 +403,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             try {
                 await FirebaseAuth.instance.sendPasswordResetEmail(email: emailInput);
                 // Show a message to the user
-                ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Password reset email sent! Check your inbox.")),
-                );
+                _showSuccessMessage("Password reset email sent! Check your inbox.", Icons.email);
             } catch (e) {
                 // Handle error (e.g., show error message)
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -340,44 +420,74 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     // Method to update user profile
     Future<void> updateProfile() async {
-        String phoneInput = phoneController.text; // Get phone number from controller
-        String addressInput = addressController.text; // Get address from controller
-        String majorInput = majorController.text; // Get major from controller
-        String universityInput = selectedCollege ?? ''; // Provide default value if null
-        String yearInput = selectedYear ?? ''; // Provide default value if null
-        String departmentInput = selectedDepartment ?? ''; // Provide default value if null
-        String bioInput = bioController.text; // Get bio from controller
-        String interestsInput = interestsController.text; // Get interests from controller
-        String socialMediaInput = socialMediaController.text; // Get social media from controller
-
         try {
-            await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).update({
-                'phone': phoneInput,
-                'address': addressInput,
-                'major': majorInput,
-                'university': universityInput, // Update university
-                'year': yearInput, // Update year
-                'department': departmentInput, // Update department
-                'bio': bioInput,
-                'interests': interestsInput,
-                'socialMedia': socialMediaInput,
+            // Get current user's auth ID
+            String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
+            
+            if (currentUserId == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("No user signed in")),
+                );
+                return;
+            }
+
+            // Get the user document using userId field
+            QuerySnapshot userDocs = await FirebaseFirestore.instance
+                .collection('users')
+                .where('userId', isEqualTo: currentUserId)
+                .get();
+
+            if (userDocs.docs.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("User document not found")),
+                );
+                return;
+            }
+
+            // Get the document reference
+            DocumentReference userDoc = userDocs.docs.first.reference;
+
+            // Update the document with new values
+            await userDoc.update({
+                'phone': phoneController.text.trim(),
+                'address': addressController.text.trim(),
+                'major': majorController.text.trim(),
+                'university': selectedCollege,
+                'department': selectedDepartment,
+                'year': selectedYear,
+                'bio': bioController.text.trim(),
+                'interests': interestsController.text.trim(),
+                'socialMedia': socialMediaController.text.trim(),
             });
+
+            // Fetch updated data
+            DocumentSnapshot updatedData = await userDoc.get();
+            Map<String, dynamic> data = updatedData.data() as Map<String, dynamic>;
 
             // Update state with new values
             setState(() {
-                phone = phoneInput;
-                address = addressInput;
-                major = majorInput;
-                university = universityInput; // Update state for university
-                year = yearInput; // Update state for year
-                department = departmentInput; // Update state for department
-                bio = bioInput;
-                interests = interestsInput;
-                socialMedia = socialMediaInput;
+                phone = data['phone'];
+                address = data['address'];
+                major = data['major'];
+                university = data['university'];
+                department = data['department'];
+                year = data['year'];
+                bio = data['bio'];
+                interests = data['interests'];
+                socialMedia = data['socialMedia'];
             });
+
+            // Show success message
+            _showSuccessMessage(
+                "Your profile has been updated successfully!",
+                Icons.check_circle_outline,
+            );
+
         } catch (e) {
-            // Handle error (e.g., show error message)
-            print("Error updating profile: $e");
+            // Handle error
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Error updating profile: ${e.toString()}")),
+            );
         }
     }
 
@@ -1318,6 +1428,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
             .fadeIn(delay: 1200.ms)
             .scale(delay: 1200.ms)
             .shimmer(delay: 1200.ms);
+    }
+
+    void _showSuccessMessage(String message, IconData icon) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                duration: Duration(seconds: 4),
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                content: Container(
+                    padding: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                        color: isDarkMode ? Color(0xFF2A2A40) : Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                            BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 12,
+                                offset: Offset(0, 4),
+                            ),
+                        ],
+                    ),
+                    child: Row(
+                        children: [
+                            Container(
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                    color: Colors.green.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Icon(
+                                    icon,
+                                    color: Colors.green,
+                                    size: 24,
+                                ),
+                            ).animate()
+                                .scale(duration: 300.ms)
+                                .then()
+                                .shake(duration: 500.ms),
+                            SizedBox(width: 16),
+                            Expanded(
+                                child: Text(
+                                    message,
+                                    style: TextStyle(
+                                        color: isDarkMode ? Colors.white : Colors.black87,
+                                        fontSize: 16,
+                                    ),
+                                ),
+                            ),
+                        ],
+                    ),
+                ).animate()
+                    .fadeIn(duration: 400.ms)
+                    .slideY(begin: 1, end: 0),
+            ),
+        );
     }
 }
 
