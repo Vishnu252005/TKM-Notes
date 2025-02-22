@@ -46,7 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     String? selectedDepartment; // Variable to hold the selected department
     String? selectedYear; // Variable to hold the selected year of study
     String? department; // Store department
-    bool isDarkMode = false; // Variable to hold the theme mode
+    bool isDarkMode = true; // Set default to dark mode
 
     // List of engineering colleges for the dropdown
     final List<String> colleges = [
@@ -202,7 +202,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Future<void> _loadThemePreference() async {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         setState(() {
-            isDarkMode = prefs.getBool('isDarkMode') ?? false; // Default to false if not set
+            isDarkMode = prefs.getBool('isDarkMode') ?? true; // Default to true if not set
         });
     }
 

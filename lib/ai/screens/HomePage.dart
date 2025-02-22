@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
   bool _isGenerating = false;
   bool isTyping = false;
   String _text = '';
-  bool isDarkMode = false; // Added dark mode variable
+  bool isDarkMode = true; // Set default to dark mode
 
   // Remove predefined suggestions
   // final List<String> _suggestions = [
@@ -107,7 +107,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> _loadPreferences() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
-      isDarkMode = prefs.getBool('isDarkMode') ?? false; // Load dark mode preference
+      isDarkMode = prefs.getBool('isDarkMode') ?? true; // Load dark mode preference, default to true
     });
   }
 
