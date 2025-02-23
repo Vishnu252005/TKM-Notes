@@ -96,6 +96,7 @@ dependencies:
   webview_flutter: ^4.10.0
   petitparser: ^6.0.0
   google_nav_bar: ^5.0.7
+  eval_ex: ^1.1.6
 
 flutter_icons:
   android: true
@@ -108,7 +109,22 @@ flutter:
     - assets/s1.png
     - assets/s2.png
     - assets/robocat.riv
-    - assets/html/
+    - assets/images/
+
+  fonts:
+    - family: inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Inter-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/Inter-Black.ttf
+          weight: 900
     
     
 

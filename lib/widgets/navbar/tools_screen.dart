@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../calcu.dart'; // Adjust the path as necessary
 import '../conv.dart'; // Adjust the path as necessary
 import '../graph.dart'; // Adjust the path as necessary
 import 'resistance_calculator.dart'; // Import the new resistance calculator
@@ -9,6 +8,7 @@ import 'project_idea.dart'; // Import the ProjectIdeaScreen
 import 'resume_generator.dart'; // Import the ResumeGenerator
 import 'dart:ui';
 import 'package:flutter_animate/flutter_animate.dart';
+import '../tools/calculator/main.dart'; // Update this import path
 // import 'resume/screen/on_boarding/on_boarding_page.dart';
 
 class ToolsScreen extends StatefulWidget {
@@ -33,7 +33,7 @@ class _ToolsScreenState extends State<ToolsScreen> {
       'title': 'Scientific\nCalculator',
       'searchTerms': 'scientific calculator math mathematics compute',
       'icon': Icons.calculate,
-      'screen': ScientificCalculator(),
+      'screen': CalculatorWidget(),
     },
     {
       'title': 'Unit\nConverter',
