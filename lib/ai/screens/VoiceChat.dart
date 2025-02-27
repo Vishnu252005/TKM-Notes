@@ -5,6 +5,9 @@ import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:lottie/lottie.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class VoiceChat extends StatefulWidget {
   @override
@@ -37,6 +40,28 @@ class _VoiceChatState extends State<VoiceChat>
 
   final ScrollController _scrollController = ScrollController();
   double _confidenceLevel = 0.0;
+
+  // Update API key handling
+  String get _huggingFaceApiKey => dotenv.env['HUGGING_FACE_TOKEN'] ?? '';
+  String get _geminiApiKey => dotenv.env['GEMINI_API_KEY'] ?? '';
+
+  // Add new variables for Hugging Face
+  bool useHuggingFace = false;
+  String huggingFaceModel = 'facebook/blenderbot-400M-distill';
+  
+  ChatUser huggingFaceUser = ChatUser(
+    id: "2",
+    firstName: "HuggingFace",
+    profileImage:
+        "https://huggingface.co/front/assets/huggingface_logo-noborder.svg",
+  );
+
+  // Add model options
+  final List<String> availableModels = [
+    'facebook/blenderbot-400M-distill',
+    'microsoft/DialoGPT-medium',
+    'EleutherAI/gpt-neo-1.3B'
+  ];
 
   @override
   void initState() {
@@ -73,59 +98,85 @@ class _VoiceChatState extends State<VoiceChat>
         setState(() => _confidenceLevel = 0.0);
       }
     };
+
+    // Initialize Gemini with API key
+    Gemini.init(apiKey: _geminiApiKey);
   }
 
-  void _sendMessage(ChatMessage chatMessage) {
+  void _sendMessage(ChatMessage chatMessage) async {
     setState(() {
       messages = [chatMessage, ...messages];
+      isGenerating = true;
     });
 
     try {
-      String question = chatMessage.text;
-      StringBuffer responseBuffer = StringBuffer();
-
-      setState(() {
-        isGenerating = true;
-      });
-
-      gemini
-          .streamGenerateContent(
-        question,
-      )
-          .listen((event) async {
-        String responsePart = event.content?.parts?.fold(
-            "", (previous, current) => "$previous ${current.text}") ?? "";
-
-        responseBuffer.write(_cleanResponse(responsePart));
-
+      String response;
+      if (useHuggingFace) {
+        response = await _getHuggingFaceResponse(chatMessage.text);
         setState(() {
-          if (messages.isNotEmpty && messages.first.user == geminiUser) {
-            messages[0] = ChatMessage(
-              user: geminiUser,
+          messages = [
+            ChatMessage(
+              user: huggingFaceUser,
               createdAt: DateTime.now(),
-              text: responseBuffer.toString(),
-            );
-          } else {
-            messages = [
-              ChatMessage(
-                user: geminiUser,
-                createdAt: DateTime.now(),
-                text: responseBuffer.toString(),
-              ),
-              ...messages,
-            ];
-          }
+              text: _cleanResponse(response),
+            ),
+            ...messages,
+          ];
+          isGenerating = false;
         });
-      }, onDone: () async {
-        String finalResponse = responseBuffer.toString();
-        await flutterTts.speak(finalResponse);
-
+        
+        await flutterTts.speak(response);
         flutterTts.setCompletionHandler(() {
           _listen();
         });
-      });
+      } else {
+        // Existing Gemini implementation
+        StringBuffer responseBuffer = StringBuffer();
+        await for (final event in gemini.streamGenerateContent(chatMessage.text)) {
+          String responsePart = event.content?.parts?.fold(
+              "", (previous, current) => "$previous ${current.text}") ?? "";
+
+          responseBuffer.write(_cleanResponse(responsePart));
+
+          setState(() {
+            if (messages.isNotEmpty && messages.first.user == geminiUser) {
+              messages[0] = ChatMessage(
+                user: geminiUser,
+                createdAt: DateTime.now(),
+                text: responseBuffer.toString(),
+              );
+            } else {
+              messages = [
+                ChatMessage(
+                  user: geminiUser,
+                  createdAt: DateTime.now(),
+                  text: responseBuffer.toString(),
+                ),
+                ...messages,
+              ];
+            }
+          });
+        }
+
+        String finalResponse = responseBuffer.toString();
+        await flutterTts.speak(finalResponse);
+        flutterTts.setCompletionHandler(() {
+          _listen();
+        });
+      }
     } catch (e) {
-      print(e);
+      print('Error generating response: $e');
+      setState(() {
+        isGenerating = false;
+        messages = [
+          ChatMessage(
+            user: useHuggingFace ? huggingFaceUser : geminiUser,
+            createdAt: DateTime.now(),
+            text: 'Sorry, I encountered an error. Please try again.',
+          ),
+          ...messages,
+        ];
+      });
     }
   }
 
@@ -315,6 +366,7 @@ class _VoiceChatState extends State<VoiceChat>
           icon: Icon(Icons.arrow_back, color: isDarkMode ? Colors.white : Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
+        title: _buildModelSelector(),
         actions: [
           IconButton(
             onPressed: () {
@@ -434,6 +486,121 @@ class _VoiceChatState extends State<VoiceChat>
           ),
         ),
       ],
+    );
+  }
+
+  // Add model selection
+  void _toggleModel() {
+    setState(() {
+      useHuggingFace = !useHuggingFace;
+    });
+  }
+
+  // Add Hugging Face API call with improved error handling
+  Future<String> _getHuggingFaceResponse(String input) async {
+    try {
+      final response = await http.post(
+        Uri.parse('https://api-inference.huggingface.co/models/$huggingFaceModel'),
+        headers: {
+          'Authorization': 'Bearer $_huggingFaceApiKey',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'inputs': input,
+          'parameters': {
+            'max_length': 1000,
+            'temperature': 0.7,
+            'top_p': 0.9,
+            'repetition_penalty': 1.2,
+          }
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data is List && data.isNotEmpty) {
+          return data[0]['generated_text'] ?? 'No response generated';
+        }
+        return 'Invalid response format';
+      } else {
+        print('Error response: ${response.body}');
+        throw Exception('Failed to generate response: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Exception details: $e');
+      return 'Error: Unable to generate response. Please try again.';
+    }
+  }
+
+  // Add model selection dialog
+  void _showModelSelector() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Select Model'),
+        content: Container(
+          width: double.maxFinite,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: availableModels.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(availableModels[index]),
+                selected: huggingFaceModel == availableModels[index],
+                onTap: () {
+                  setState(() {
+                    huggingFaceModel = availableModels[index];
+                  });
+                  Navigator.pop(context);
+                },
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Update the AppBar title to include model selection
+  Widget _buildModelSelector() {
+    return GestureDetector(
+      onTap: _toggleModel,
+      onLongPress: useHuggingFace ? _showModelSelector : null,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CircleAvatar(
+            backgroundImage: NetworkImage(
+              useHuggingFace 
+                  ? huggingFaceUser.profileImage!
+                  : geminiUser.profileImage!,
+            ),
+            radius: 15,
+          ),
+          SizedBox(width: 8),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                useHuggingFace ? 'HuggingFace' : 'Gemini',
+                style: TextStyle(
+                  color: isDarkMode ? Colors.white : Colors.black,
+                  fontSize: 16,
+                ),
+              ),
+              if (useHuggingFace)
+                Text(
+                  huggingFaceModel.split('/').last,
+                  style: TextStyle(
+                    color: isDarkMode ? Colors.white70 : Colors.black54,
+                    fontSize: 12,
+                  ),
+                ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
