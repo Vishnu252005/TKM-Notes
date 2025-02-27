@@ -75,11 +75,18 @@ import 'firebase_init.dart';
 import 'package:provider/provider.dart';
 import 'theme_provider.dart';
 import 'widgets/navbar/unit_converter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'widgets/tools/ai/code_generator.dart';
+import 'widgets/tools/ai/translation.dart';
+import 'widgets/tools/ai/image_generator.dart';
+import 'ai/screens/pdf_ai.dart';
+import 'widgets/tools/ai/summarizer_ai.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FirebaseInit.initialize();
   MobileAds.instance.initialize();
+  await dotenv.load(fileName: '.env');
   Gemini.init(apiKey: "AIzaSyDqPfAa1C8sn2hDKLFpMTeiavIHg2vf_C8");
   runApp(
     ChangeNotifierProvider(

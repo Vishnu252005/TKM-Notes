@@ -23,7 +23,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import '../../ai/screens/HomePage.dart';
 import '../../ai/widgets/lottie_button.dart';
-import 'package:Nexia/ai/screens/HomePage.dart';
+import 'package:Nexia/widgets/tools/ai/ai_screen.dart';
 import 'package:Nexia/widgets/navbar/profile_screen.dart';
 import 'package:Nexia/widgets/navbar/tools_screen.dart';
 import 'package:Nexia/widgets/navbar/home_screen.dart';
@@ -444,7 +444,7 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
             ),
           ),
           // Other screens
-          HomePage(),
+          AIScreen(),
           ToolsScreen(),
           ProfileScreen(),
         ],
@@ -1007,7 +1007,7 @@ class _EEEHomeScreenState extends State<EEEHomeScreen> {
       case 0:
         return HomeScreen();
       case 1:
-        return HomePage();
+        return AIScreen();
       case 2:
         return ToolsScreen();
       case 3:

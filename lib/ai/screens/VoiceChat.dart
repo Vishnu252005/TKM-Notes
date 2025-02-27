@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:lottie/lottie.dart';
 
 class VoiceChat extends StatefulWidget {
   @override
@@ -34,6 +35,9 @@ class _VoiceChatState extends State<VoiceChat>
     "https://seeklogo.com/images/G/google-gemini-logo-A5787B2669-seeklogo.com.png",
   );
 
+  final ScrollController _scrollController = ScrollController();
+  double _confidenceLevel = 0.0;
+
   @override
   void initState() {
     super.initState();
@@ -62,6 +66,13 @@ class _VoiceChatState extends State<VoiceChat>
     flutterTts.setPitch(1.0);
     flutterTts.setSpeechRate(0.5);
     _listen();
+
+    // Initialize confidence level listener
+    speechToText.statusListener = (status) {
+      if (status == 'listening') {
+        setState(() => _confidenceLevel = 0.0);
+      }
+    };
   }
 
   void _sendMessage(ChatMessage chatMessage) {
@@ -211,41 +222,124 @@ class _VoiceChatState extends State<VoiceChat>
     super.dispose();
   }
 
+  Widget _buildTypingIndicator() {
+    return Container(
+      padding: EdgeInsets.all(16),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: NetworkImage(geminiUser.profileImage!),
+              ),
+            ),
+          ),
+          SizedBox(width: 12),
+          Lottie.network(
+            'https://assets1.lottiefiles.com/packages/lf20_b88nh30c.json',
+            width: 60,
+            height: 40,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMessageList() {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: ListView.builder(
+          controller: _scrollController,
+          reverse: true,
+          itemCount: messages.length + (isGenerating ? 1 : 0),
+          itemBuilder: (context, index) {
+            if (isGenerating && index == 0) {
+              return _buildTypingIndicator();
+            }
+            
+            final messageIndex = isGenerating ? index - 1 : index;
+            final message = messages[messageIndex];
+            final isUser = message.user == currentUser;
+            
+            return Padding(
+              padding: EdgeInsets.only(bottom: 16),
+              child: Row(
+                mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+                children: [
+                  if (!isUser) ...[
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(geminiUser.profileImage!),
+                      radius: 20,
+                    ),
+                    SizedBox(width: 8),
+                  ],
+                  Flexible(
+                    child: Container(
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: isUser 
+                            ? (isDarkMode ? Colors.blue[700] : Colors.blue[100])
+                            : (isDarkMode ? Colors.grey[800] : Colors.grey[200]),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Text(
+                        message.text,
+                        style: TextStyle(
+                          color: isDarkMode ? Colors.white : Colors.black87,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: isDarkMode ? Colors.grey[900] : Colors.white,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: isDarkMode ? Colors.white : Colors.black),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          tooltip: 'Back',
+          onPressed: () => Navigator.pop(context),
         ),
         actions: [
           IconButton(
             onPressed: () {
-              setState(() => isDarkMode = !isDarkMode);
+              setState(() => messages.clear());
             },
+            icon: Icon(
+              Icons.delete_outline,
+              color: isDarkMode ? Colors.white : Colors.black,
+            ),
+            tooltip: 'Clear Chat',
+          ),
+          IconButton(
+            onPressed: () => setState(() => isDarkMode = !isDarkMode),
             icon: Icon(
               isDarkMode ? Icons.wb_sunny : Icons.nights_stay,
               color: isDarkMode ? Colors.white : Colors.black,
             ),
-            tooltip: 'Toggle Theme',
           ),
         ],
       ),
       body: Container(
-        width: double.infinity,
-        height: double.infinity,
         decoration: BoxDecoration(
           gradient: isDarkMode
               ? LinearGradient(
-                  colors: [Colors.black87, Colors.black54],
+                  colors: [Colors.grey[900]!, Colors.black87],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 )
@@ -255,122 +349,91 @@ class _VoiceChatState extends State<VoiceChat>
                   end: Alignment.bottomCenter,
                 ),
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: 20),
-
-              SizedBox(
-                width: 250,
-                height: 250,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Box(0.8, 0.8, 4, _controller, Colors.grey.withOpacity(0.2)),
-                    Box(0.6, 0.6, 3, _controller, Colors.grey.withOpacity(0.4)),
-                    Box(0.4, 0.4, 2, _controller, Colors.grey.withOpacity(0.6)),
-                    Box(0.2, 0.2, 1, _controller, Colors.grey.withOpacity(0.8)),
-                    Box(0.1, 0.1, 0, _controller, Colors.grey),
-                    LogoBox(_controller),
-                  ],
-                ),
-              ),
-
-              SizedBox(height: 20),
-
-              // Move the listening/generating indicator below the animation stack
-              Center(
-                child: FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: Text(
-                    _isListening ? 'Listening...' : (isGenerating ? 'Generating...' : ''),
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: isDarkMode ? Colors.white : Colors.black,
-                      decoration: TextDecoration.none,
-                    ),
-                  ),
-                ),
-              ),
-
-              SizedBox(height: 20),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
+          children: [
+            _buildMessageList(),
+            Container(
+              padding: EdgeInsets.all(16),
+              child: Column(
                 children: [
-                  Column(
+                  if (_isListening)
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      child: LinearProgressIndicator(
+                        value: _confidenceLevel,
+                        backgroundColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          isDarkMode ? Colors.blue[700]! : Colors.blue,
+                        ),
+                      ),
+                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      ScaleTransition(
-                        scale: _buttonAnimation,
-                        child: IconButton(
-                          icon: Icon(Icons.stop, color: Colors.red),
-                          onPressed: isGenerating ? _stopTTS : null,
-                          tooltip: 'Stop',
-                          iconSize: 28,
-                        ),
+                      _buildActionButton(
+                        icon: Icons.stop,
+                        color: Colors.red,
+                        onPressed: isGenerating ? _stopTTS : null,
+                        label: "Stop",
                       ),
-                      Text(
-                        "Stop",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontStyle: FontStyle.italic,
-                          fontWeight: FontWeight.w600,
-                          color: isDarkMode ? Colors.white : Colors.black,
-                          decoration: TextDecoration.none,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(width: 40),
-                  Column(
-                    children: [
-                      ScaleTransition(
-                        scale: _buttonAnimation,
-                        child: IconButton(
-                          icon: Icon(Icons.mic, color: Colors.green),
-                          onPressed: !_isListening && !isGenerating ? _listen : null,
-                          tooltip: 'Start Listening',
-                          iconSize: 28,
-                        ),
-                      ),
-                      Text(
-                        "Start",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontStyle: FontStyle.italic,
-                          fontWeight: FontWeight.w600,
-                          color: isDarkMode ? Colors.white : Colors.black,
-                          decoration: TextDecoration.none,
-                        ),
+                      _buildActionButton(
+                        icon: Icons.mic,
+                        color: _isListening ? Colors.red : Colors.green,
+                        onPressed: !isGenerating ? _listen : null,
+                        label: _isListening ? "Listening..." : "Start",
                       ),
                     ],
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (ctx) => AlertDialog(
-              title: Text("Help"),
-              content: Text("You can toggle Dark/Light mode, start or stop speech recognition, and chat here."),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(ctx),
-                  child: Text("Close"),
+    );
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required Color color,
+    required VoidCallback? onPressed,
+    required String label,
+  }) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ScaleTransition(
+          scale: _buttonAnimation,
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: isDarkMode ? Colors.grey[800] : Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 8,
+                  offset: Offset(0, 2),
                 ),
               ],
             ),
-          );
-        },
-        backgroundColor: isDarkMode ? Colors.grey[800] : Colors.blue,
-        child: Icon(Icons.help),
-      ),
+            child: IconButton(
+              icon: Icon(icon, color: color),
+              onPressed: onPressed,
+              iconSize: 28,
+              padding: EdgeInsets.all(12),
+            ),
+          ),
+        ),
+        SizedBox(height: 8),
+        Text(
+          label,
+          style: TextStyle(
+            color: isDarkMode ? Colors.white70 : Colors.black87,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
     );
   }
 }

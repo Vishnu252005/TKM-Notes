@@ -9,6 +9,10 @@ import 'resume_generator.dart'; // Import the ResumeGenerator
 import 'dart:ui';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../tools/calculator/main.dart'; // Update this import path
+import '../tools/ai/ai_screen.dart'; // Add this import
+import '../tools/ai/translation.dart'; // Add this import
+import '../tools/ai/image_generator.dart';
+import '../tools/ai/code_generator.dart';
 // import 'resume/screen/on_boarding/on_boarding_page.dart';
 
 class ToolsScreen extends StatefulWidget {
@@ -23,6 +27,12 @@ class _ToolsScreenState extends State<ToolsScreen> {
 
   // Update the tools list with better search terms
   final List<Map<String, dynamic>> _allTools = [
+    {
+      'title': 'AI\nTools',
+      'searchTerms': 'ai artificial intelligence chat assistant tools',
+      'icon': Icons.smart_toy_outlined,
+      'screen': AIScreen(),
+    },
     {
       'title': 'Resistance\nCalculator',
       'searchTerms': 'resistance calculator ohm voltage current electric',
@@ -64,6 +74,24 @@ class _ToolsScreenState extends State<ToolsScreen> {
       'searchTerms': 'resume cv curriculum vitae generator builder',
       'icon': Icons.description_outlined,
       'screen': ResumeGenerator(),
+    },
+    {
+      'title': 'Text\nTranslation',
+      'searchTerms': 'text translation translator ocr scan camera language convert',
+      'icon': Icons.translate,
+      'screen': TranslationScreen(),
+    },
+    {
+      'title': 'Image\nGenerator',
+      'searchTerms': 'image generator ai artificial intelligence create picture photo art',
+      'icon': Icons.image_outlined,
+      'screen': ImageGenerator(),
+    },
+    {
+      'title': 'Code\nGenerator',
+      'searchTerms': 'code generator ai artificial intelligence programming development coding software engineer developer',
+      'icon': Icons.code_rounded,
+      'screen': CodeGenerator(),
     },
   ];
 

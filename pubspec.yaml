@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: 'none' # Prevent publishing to pub.dev
 
-version: 1.0.0+20
+version: 1.0.0+21
 
 platforms:
   android:
@@ -43,7 +43,7 @@ dependencies:
   # waveform: ^0.0.1-nightly.49
   flutter_svg: ^2.0.9
   flutter_launcher_icons: ^0.13.1
-  lottie: ^3.0.0
+  lottie: ^2.7.0
   animated_splash_screen: ^1.3.0
   flutter_lints: ^4.0.0
   rive: ^0.12.0 
@@ -98,6 +98,14 @@ dependencies:
   google_nav_bar: ^5.0.7
   eval_ex: ^1.1.6
 
+  get: ^4.6.6
+  sqflite: ^2.3.2
+  awesome_dialog: ^3.2.0
+  translator: ^1.0.3+1
+  printing: ^5.12.0
+  loading_animation_widget: ^1.2.0+4
+  dart_eval: ^0.7.3
+  flutter_dotenv: ^5.0.2
 flutter_icons:
   android: true
   ios: true
@@ -110,6 +118,7 @@ flutter:
     - assets/s2.png
     - assets/robocat.riv
     - assets/images/
+    - .env
 
   fonts:
     - family: inter
