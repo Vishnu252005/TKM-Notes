@@ -3,9 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
 import 'lib/widgets/navbar/profile_screen.dart'; // Import your ProfileScreen
 import 'lib/widgets/navbar/sign_in_screen.dart'; // Import your SignInScreen
 import 'package:firebase_core/firebase_core.dart'; // Import Firebase Core
+import 'package:flutter_dotenv/flutter_dotenv.dart'; // Import dotenv
 
 void main() async {
     WidgetsFlutterBinding.ensureInitialized(); // Ensure binding is initialized
+    await dotenv.load(fileName: ".env"); // Load the .env file
     await Firebase.initializeApp(); // Initialize Firebase
     runApp(MyApp());
 }

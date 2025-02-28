@@ -10,6 +10,7 @@ import 'package:open_file/open_file.dart';
 import 'package:universal_html/html.dart' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'dart:async';  // Add this import for TimeoutException
 
 class ImageGenerator extends StatefulWidget {
   const ImageGenerator({super.key});
@@ -23,18 +24,19 @@ class _ImageGeneratorState extends State<ImageGenerator> {
   Uint8List? _generatedImage;
   bool _isLoading = false;
   bool _isDarkMode = true; // Track theme mode
+  bool _isTokenValid = false;
 
   // Using environment variable for API token
-  String get _apiToken => dotenv.env['HUGGING_FACE_TOKEN'] ?? 'default_value';
+  String get _apiToken => dotenv.env['HUGGING_FACE_TOKEN'] ?? '';
 
-  // API configuration
-  static const String _apiUrl = 'https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2';
+  // Update API configuration to use OpenJourney model
+  static const String _apiUrl = 'https://api-inference.huggingface.co/models/prompthero/openjourney';
 
   final List<String> _examplePrompts = [
-    "A magical forest at sunset",
-    "Cyberpunk city street at night",
-    "Watercolor painting of mountains",
-    "Cute robot making coffee",
+    "A serene Japanese garden with cherry blossoms",
+    "A futuristic neon-lit cityscape at night",
+    "A cozy coffee shop interior with warm lighting",
+    "A majestic dragon soaring through clouds",
   ];
 
   // Add theme colors
@@ -52,51 +54,153 @@ class _ImageGeneratorState extends State<ImageGenerator> {
       ? Colors.white 
       : const Color(0xFF2D2D3A);
 
+  @override
+  void initState() {
+    super.initState();
+    _validateToken();
+  }
+
+  Future<void> _validateToken() async {
+    if (_apiToken.isEmpty || _apiToken == 'default_value') {
+      setState(() => _isTokenValid = false);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Please set your Hugging Face API token in the .env file'),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 8),
+          ),
+        );
+      });
+      return;
+    }
+
+    try {
+      final response = await http.get(
+        Uri.parse('https://api-inference.huggingface.co/models/prompthero/openjourney'),
+        headers: {'Authorization': 'Bearer $_apiToken'},
+      );
+
+      setState(() => _isTokenValid = response.statusCode != 401);
+      
+      if (!_isTokenValid) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Invalid Hugging Face API token. Please check your .env file'),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 8),
+            ),
+          );
+        });
+      }
+    } catch (e) {
+      print('Token validation error: $e');
+      // Set token as valid even if there's a network error to allow attempts
+      setState(() => _isTokenValid = true);
+    }
+  }
+
   Future<void> _generateImage() async {
     if (_promptController.text.isEmpty) return;
 
     setState(() {
       _isLoading = true;
+      _generatedImage = null;
     });
 
-    try {
-      final response = await http.post(
-        Uri.parse(_apiUrl),
-        headers: {
-          'Authorization': 'Bearer $_apiToken',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'inputs': _promptController.text,
-          'parameters': {
-            'negative_prompt': 'blurry, bad quality',
-            'num_inference_steps': 25,
-            'guidance_scale': 7.0,
-          }
-        }),
-      );
+    const int maxRetries = 3;
+    const int timeoutSeconds = 45;
 
-      if (response.statusCode == 200) {
-        setState(() {
-          _generatedImage = response.bodyBytes;
-          _isLoading = false;
-        });
-      } else {
-        print('Error response: ${response.body}'); // For debugging
-        throw Exception('Failed to generate image: ${response.statusCode}');
+    for (int retry = 0; retry < maxRetries; retry++) {
+      try {
+        // Format the prompt for OpenJourney (Midjourney-style prompts)
+        final String formattedPrompt = """
+mdjrny-v4 style ${_promptController.text}, 4k, high quality, highly detailed
+""".trim();
+
+        final response = await http.post(
+          Uri.parse(_apiUrl),
+          headers: {
+            'Authorization': 'Bearer $_apiToken',
+            'Content-Type': 'application/json',
+          },
+          body: jsonEncode({
+            'inputs': formattedPrompt,
+            'parameters': {
+              'negative_prompt': 'ugly, blurry, poor quality, deformed, malformed',
+              'num_inference_steps': 25,
+              'guidance_scale': 7.5,
+              'width': 512,
+              'height': 512,
+            }
+          }),
+        ).timeout(
+          Duration(seconds: timeoutSeconds),
+          onTimeout: () {
+            throw TimeoutException('Request timed out');
+          },
+        );
+
+        if (response.statusCode == 200) {
+          setState(() {
+            _generatedImage = response.bodyBytes;
+            _isLoading = false;
+          });
+          return;
+        } else if (response.statusCode == 503) {
+          // Model is loading, wait and retry
+          if (retry < maxRetries - 1) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Model is warming up, retrying in 5 seconds...'),
+                duration: Duration(seconds: 4),
+              ),
+            );
+            await Future.delayed(const Duration(seconds: 5));
+            continue;
+          }
+          throw Exception('Model is still loading after multiple retries');
+        } else {
+          print('Error response: ${response.statusCode} - ${response.body}');
+          throw Exception('Failed to generate image: ${response.statusCode}');
+        }
+      } catch (e) {
+        print('Attempt ${retry + 1} failed: $e');
+        
+        if (retry == maxRetries - 1) {
+          setState(() {
+            _isLoading = false;
+          });
+          
+          String errorMessage;
+          if (e is TimeoutException) {
+            errorMessage = 'Request timed out. Please try again.';
+          } else if (e.toString().contains('token')) {
+            errorMessage = 'Please check your Hugging Face API token in the .env file.';
+          } else if (e.toString().contains('Failed to fetch')) {
+            errorMessage = 'Network error. Please check your internet connection.';
+          } else {
+            errorMessage = 'Failed to generate image. Please try again later.';
+          }
+          
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(errorMessage),
+              backgroundColor: Colors.red,
+              duration: const Duration(seconds: 5),
+              action: SnackBarAction(
+                label: 'Retry',
+                textColor: Colors.white,
+                onPressed: _generateImage,
+              ),
+            ),
+          );
+          return;
+        }
+        
+        await Future.delayed(const Duration(seconds: 5));
       }
-    } catch (e) {
-      print('Exception details: $e'); // For debugging
-      setState(() {
-        _isLoading = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error generating image: $e'),
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 5),
-        ),
-      );
     }
   }
 
@@ -332,6 +436,14 @@ class _ImageGeneratorState extends State<ImageGenerator> {
                                   : Colors.grey.withOpacity(0.1),
                             ),
                             maxLines: 3,
+                            focusNode: FocusNode(
+                              canRequestFocus: true,
+                              skipTraversal: false,
+                            ),
+                            onTapOutside: (event) {
+                              FocusManager.instance.primaryFocus?.unfocus();
+                            },
+                            mouseCursor: MaterialStateMouseCursor.textable,
                           ).animate()
                             .fadeIn(duration: 600.ms, delay: 400.ms)
                             .slideY(begin: 0.2, end: 0),
@@ -339,39 +451,7 @@ class _ImageGeneratorState extends State<ImageGenerator> {
                           SizedBox(
                             width: double.infinity,
                             height: 56,
-                            child: ElevatedButton.icon(
-                              onPressed: _isLoading ? null : _generateImage,
-                              icon: Icon(
-                                _isLoading ? Icons.hourglass_empty : Icons.auto_awesome,
-                                color: _isLoading 
-                                    ? (_isDarkMode ? Colors.white38 : Colors.black38)
-                                    : Colors.white,
-                              ),
-                              label: Text(
-                                _isLoading ? 'Creating Magic...' : 'Generate Image',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  color: _isLoading 
-                                      ? (_isDarkMode ? Colors.white38 : Colors.black38)
-                                      : Colors.white,
-                                ),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: _isLoading
-                                    ? (_isDarkMode ? Colors.white12 : Colors.grey.shade200)
-                                    : (_isDarkMode 
-                                        ? const Color(0xFF4C4DDC)
-                                        : Colors.blue.shade600),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                elevation: _isLoading ? 0 : 4,
-                                shadowColor: _isDarkMode 
-                                    ? const Color(0xFF4C4DDC).withOpacity(0.5)
-                                    : Colors.blue.shade300,
-                              ),
-                            ),
+                            child: _buildGenerateButton(),
                           ).animate()
                             .fadeIn(duration: 600.ms, delay: 600.ms)
                             .slideY(begin: 0.2, end: 0),
@@ -572,6 +652,63 @@ class _ImageGeneratorState extends State<ImageGenerator> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildGenerateButton() {
+    if (!_isTokenValid) {
+      return ElevatedButton.icon(
+        onPressed: _validateToken,
+        icon: Icon(Icons.refresh, color: Colors.white),
+        label: Text(
+          'Check API Token',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.red,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+        ),
+      );
+    }
+
+    return ElevatedButton.icon(
+      onPressed: _isLoading ? null : _generateImage,
+      icon: Icon(
+        _isLoading ? Icons.hourglass_empty : Icons.auto_awesome,
+        color: _isLoading 
+            ? (_isDarkMode ? Colors.white38 : Colors.black38)
+            : Colors.white,
+      ),
+      label: Text(
+        _isLoading ? 'Creating Magic...' : 'Generate Image',
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+          color: _isLoading 
+              ? (_isDarkMode ? Colors.white38 : Colors.black38)
+              : Colors.white,
+        ),
+      ),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: _isLoading
+            ? (_isDarkMode ? Colors.white12 : Colors.grey.shade200)
+            : (_isDarkMode 
+                ? const Color(0xFF4C4DDC)
+                : Colors.blue.shade600),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        elevation: _isLoading ? 0 : 4,
+        shadowColor: _isDarkMode 
+            ? const Color(0xFF4C4DDC).withOpacity(0.5)
+            : Colors.blue.shade300,
       ),
     );
   }

@@ -82,6 +82,7 @@ import 'widgets/tools/ai/image_generator.dart';
 import 'ai/screens/pdf_ai.dart';
 import 'widgets/tools/ai/summarizer_ai.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FirebaseInit.initialize();

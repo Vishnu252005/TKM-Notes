@@ -255,7 +255,7 @@ class _HomePageState extends State<HomePage> {
       ChatMessage errorMessage = ChatMessage(
         user: nexiaUser,
         createdAt: DateTime.now(),
-        text: "I apologize, but I encountered an error. Please try again.",
+        text: "An error occurred. Please try again.",
       );
       
       setState(() {

@@ -47,7 +47,7 @@ class _VoiceChatState extends State<VoiceChat>
 
   // Add new variables for Hugging Face
   bool useHuggingFace = false;
-  String huggingFaceModel = 'facebook/blenderbot-400M-distill';
+  String huggingFaceModel = 'microsoft/Phi-4-multimodal-instruct';
   
   ChatUser huggingFaceUser = ChatUser(
     id: "2",
@@ -58,6 +58,7 @@ class _VoiceChatState extends State<VoiceChat>
 
   // Add model options
   final List<String> availableModels = [
+    'microsoft/Phi-4-multimodal-instruct',
     'facebook/blenderbot-400M-distill',
     'microsoft/DialoGPT-medium',
     'EleutherAI/gpt-neo-1.3B'
@@ -99,8 +100,10 @@ class _VoiceChatState extends State<VoiceChat>
       }
     };
 
-    // Initialize Gemini with API key
+    // Initialize Gemini with API key and set default model
     Gemini.init(apiKey: _geminiApiKey);
+    huggingFaceModel = 'microsoft/Phi-4-multimodal-instruct';
+    useHuggingFace = true;  // Set HuggingFace as default
   }
 
   void _sendMessage(ChatMessage chatMessage) async {

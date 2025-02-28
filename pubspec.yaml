@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: 'none' # Prevent publishing to pub.dev
 
-version: 1.0.0+22
+version: 1.0.0+23
 
 platforms:
   android:
