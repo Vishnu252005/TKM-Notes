@@ -30,6 +30,7 @@ import 'package:Nexia/widgets/navbar/home_screen.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:ui';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:Nexia/widgets/navbar/event_screen.dart';
 
 class EEESem1Screen extends StatefulWidget {
   final String fullName;
@@ -445,6 +446,7 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
           ),
           // Other screens
           AIScreen(),
+          EventScreen(),
           ToolsScreen(),
           ProfileScreen(),
         ],
@@ -737,8 +739,9 @@ class _EEESem1ScreenState extends State<EEESem1Screen> {
               items: [
                 _buildNavBarItem(Icons.home_rounded, 'Home', 0),
                 _buildNavBarItem(Icons.psychology_rounded, 'AI', 1),
-                _buildNavBarItem(Icons.build_rounded, 'Tools', 2),
-                _buildNavBarItem(Icons.person_rounded, 'Profile', 3),
+                _buildNavBarItem(Icons.event_rounded, 'Events', 2),
+                _buildNavBarItem(Icons.build_rounded, 'Tools', 3),
+                _buildNavBarItem(Icons.person_rounded, 'Profile', 4),
               ],
             ),
           ),
