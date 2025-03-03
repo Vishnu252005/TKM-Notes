@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
+import '../../../firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'event_create.dart';
 
 class EventScreen extends StatefulWidget {
   const EventScreen({Key? key}) : super(key: key);
@@ -21,11 +27,66 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
   RangeValues _pointsRange = RangeValues(0, 30);
   String _selectedCapacity = 'All';
   String _selectedDate = 'All';
+  
+  // Firebase instances
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  
+  // Stream of events from Firestore
+  late Stream<QuerySnapshot> _eventsStream;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _initializeFirebase();
+  }
+
+  Future<void> _initializeFirebase() async {
+    try {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      _eventsStream = _firestore.collection('events')
+          .orderBy('date', descending: true)
+          .snapshots();
+      setState(() {}); // Refresh UI after initialization
+    } catch (e) {
+      print('Error initializing Firebase: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error initializing Firebase: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> _createEvent(Map<String, dynamic> eventData) async {
+    try {
+      // Add creator ID and timestamp to event data
+      final Map<String, dynamic> finalEventData = {
+        ...eventData,
+        'createdAt': FieldValue.serverTimestamp(),
+        'creatorId': FirebaseAuth.instance.currentUser?.uid,
+        'image': 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678', // Default event image
+        'registeredUsers': [], // Initialize empty array for registered users
+        'registrationCount': 0, // Track number of registrations
+      };
+      
+      // Add to Firestore and get the event reference
+      DocumentReference eventRef = await _firestore.collection('events').add(finalEventData);
+      
+      // Create an empty document in the registrations subcollection to initialize it
+      await eventRef.collection('registrations').doc('_info').set({
+        'createdAt': FieldValue.serverTimestamp(),
+        'totalRegistrations': 0
+      });
+      
+    } catch (e) {
+      print('Error creating event: $e');
+      throw e;
+    }
   }
 
   @override
@@ -847,114 +908,142 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
   }
 
   Widget _buildEventList(List<Map<String, dynamic>> events) {
-    if (_searchQuery.isNotEmpty) {
-      events = events.where((event) {
-        return event['title'].toLowerCase().contains(_searchQuery.toLowerCase()) ||
-               event['description'].toLowerCase().contains(_searchQuery.toLowerCase());
-      }).toList();
-    }
-
-    if (_selectedFilter != 'All') {
-      events = events.where((event) => event['type'] == _selectedFilter).toList();
-    }
-
-    // Apply price range filter
-    events = events.where((event) {
-      return event['price'] >= _priceRange.start && event['price'] <= _priceRange.end;
-    }).toList();
-
-    // Apply points range filter
-    events = events.where((event) {
-      return event['points'] >= _pointsRange.start && event['points'] <= _pointsRange.end;
-    }).toList();
-
-    // Apply capacity status filter
-    if (_selectedCapacity != 'All') {
-      events = events.where((event) {
-        final registrationPercentage = (event['registrations'] / event['capacity'] * 100).round();
-        switch (_selectedCapacity) {
-          case 'Available':
-            return registrationPercentage < 80;
-          case 'Almost Full':
-            return registrationPercentage >= 80 && registrationPercentage < 100;
-          case 'Full':
-            return registrationPercentage == 100;
-          default:
-            return true;
-        }
-      }).toList();
-    }
-
-    // Apply date filter
-    if (_selectedDate != 'All') {
-      final now = DateTime.now();
-      events = events.where((event) {
-        final eventDate = DateTime.parse(event['date'].replaceAll(RegExp(r'[a-zA-Z\s,]'), ''));
-        switch (_selectedDate) {
-          case 'Today':
-            return eventDate.year == now.year &&
-                   eventDate.month == now.month &&
-                   eventDate.day == now.day;
-          case 'This Week':
-            final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
-            final endOfWeek = startOfWeek.add(Duration(days: 6));
-            return eventDate.isAfter(startOfWeek.subtract(Duration(days: 1))) &&
-                   eventDate.isBefore(endOfWeek.add(Duration(days: 1)));
-          case 'This Month':
-            return eventDate.year == now.year && eventDate.month == now.month;
-          default:
-            return true;
-        }
-      }).toList();
-    }
-
-    return events.isEmpty
-        ? Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.event_busy,
-                  size: 80,
-                  color: _isDarkMode ? Colors.white12 : Colors.grey[300],
-                ),
-                SizedBox(height: 16),
-                Text(
-                  'No events found',
-                  style: TextStyle(
-                    color: _isDarkMode ? Colors.white38 : Colors.grey,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'Try adjusting your search',
-                  style: TextStyle(
-                    color: _isDarkMode ? Colors.white24 : Colors.grey[400],
-                    fontSize: 14,
-                  ),
-                ),
-              ],
+    return StreamBuilder<QuerySnapshot>(
+      stream: _eventsStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Center(
+            child: Text(
+              'Error loading events: ${snapshot.error}',
+              style: TextStyle(
+                color: _isDarkMode ? Colors.white70 : Colors.grey[600],
+              ),
             ),
-          ).animate().fadeIn(duration: Duration(milliseconds: 300))
-        : ListView.builder(
-            padding: EdgeInsets.fromLTRB(24, 24, 24, 100),
-            itemCount: events.length,
-            itemBuilder: (context, index) {
-              final event = events[index];
-              return _buildEventCard(event).animate().fadeIn(
-                delay: Duration(milliseconds: index * 100),
-                duration: Duration(milliseconds: 300),
-              ).slideX(
-                begin: 0.2,
-                end: 0,
-                delay: Duration(milliseconds: index * 100),
-                duration: Duration(milliseconds: 300),
-                curve: Curves.easeOut,
-              );
-            },
           );
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(
+              color: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+            ),
+          );
+        }
+
+        List<Map<String, dynamic>> events = snapshot.data!.docs.map((doc) {
+          final data = doc.data() as Map<String, dynamic>;
+          // Convert Timestamp to DateTime for date filtering
+          final Timestamp timestamp = data['date'] as Timestamp;
+          final DateTime eventDate = timestamp.toDate();
+          
+          return {
+            ...data,
+            'id': doc.id,
+            'dateTime': eventDate,
+            'date': '${eventDate.day} ${_getMonthName(eventDate.month)}, ${eventDate.year}',
+          };
+        }).toList();
+
+        // Apply filters
+        if (_searchQuery.isNotEmpty) {
+          events = events.where((event) {
+            return event['title'].toString().toLowerCase().contains(_searchQuery.toLowerCase()) ||
+                   event['description'].toString().toLowerCase().contains(_searchQuery.toLowerCase());
+          }).toList();
+        }
+
+        if (_selectedFilter != 'All') {
+          events = events.where((event) => event['type'] == _selectedFilter).toList();
+        }
+
+        // Apply price range filter
+        events = events.where((event) {
+          final price = (event['price'] ?? 0) as num;
+          return price >= _priceRange.start && price <= _priceRange.end;
+        }).toList();
+
+        // Apply points range filter
+        events = events.where((event) {
+          final points = (event['points'] ?? 0) as num;
+          return points >= _pointsRange.start && points <= _pointsRange.end;
+        }).toList();
+
+        // Apply capacity filter
+        if (_selectedCapacity != 'All') {
+          events = events.where((event) {
+            final registrations = (event['registrations'] ?? 0) as num;
+            final capacity = (event['capacity'] ?? 0) as num;
+            if (capacity == 0) return false;
+            
+            final percentage = (registrations / capacity * 100).round();
+            switch (_selectedCapacity) {
+              case 'Available':
+                return percentage < 80;
+              case 'Almost Full':
+                return percentage >= 80 && percentage < 100;
+              case 'Full':
+                return percentage >= 100;
+              default:
+                return true;
+            }
+          }).toList();
+        }
+
+        // Apply date filter
+        if (_selectedDate != 'All') {
+          final now = DateTime.now();
+          events = events.where((event) {
+            final eventDate = event['dateTime'] as DateTime;
+            switch (_selectedDate) {
+              case 'Today':
+                return eventDate.year == now.year &&
+                       eventDate.month == now.month &&
+                       eventDate.day == now.day;
+              case 'This Week':
+                final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+                final endOfWeek = startOfWeek.add(Duration(days: 6));
+                return eventDate.isAfter(startOfWeek.subtract(Duration(days: 1))) &&
+                       eventDate.isBefore(endOfWeek.add(Duration(days: 1)));
+              case 'This Month':
+                return eventDate.year == now.year && eventDate.month == now.month;
+              default:
+                return true;
+            }
+          }).toList();
+        }
+
+        return events.isEmpty
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.event_busy,
+                      size: 80,
+                      color: _isDarkMode ? Colors.white12 : Colors.grey[300],
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'No events found',
+                      style: TextStyle(
+                        color: _isDarkMode ? Colors.white38 : Colors.grey,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : ListView.builder(
+                padding: EdgeInsets.fromLTRB(24, 24, 24, 100),
+                itemCount: events.length,
+                itemBuilder: (context, index) {
+                  final event = events[index];
+                  return _buildEventCard(event);
+                },
+              );
+      },
+    );
   }
 
   Widget _buildEventCard(Map<String, dynamic> event) {
@@ -984,14 +1073,43 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-                child: Image.network(
-                  event['image'],
-                  height: 200,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ).animate()
-                  .fadeIn(duration: Duration(milliseconds: 500))
-                  .scaleXY(begin: 1.2, end: 1.0),
+                child: event['image'] != null && event['image'].toString().startsWith('http')
+                    ? Image.network(
+                        event['image'],
+                        height: 200,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            height: 200,
+                            width: double.infinity,
+                            color: Colors.grey[300],
+                            child: Icon(Icons.error, color: Colors.red),
+                          );
+                        },
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Container(
+                            height: 200,
+                            width: double.infinity,
+                            color: Colors.grey[300],
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                value: loadingProgress.expectedTotalBytes != null
+                                    ? loadingProgress.cumulativeBytesLoaded / 
+                                      loadingProgress.expectedTotalBytes!
+                                    : null,
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : Container(
+                        height: 200,
+                        width: double.infinity,
+                        color: Colors.grey[300],
+                        child: Icon(Icons.image, color: Colors.grey[400]),
+                      ),
               ),
               Positioned(
                 top: 16,
@@ -1521,6 +1639,7 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
     final registrationPercentage = (event['registrations'] / event['capacity'] * 100).round();
     final spotsLeft = event['capacity'] - event['registrations'];
     final bool isFull = spotsLeft == 0;
+    final bool isCreator = FirebaseAuth.instance.currentUser?.uid == event['creatorId'];
 
     showDialog(
       context: context,
@@ -1562,15 +1681,46 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                     Positioned(
                       top: 16,
                       right: 16,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.5),
-                          shape: BoxShape.circle,
-                        ),
-                        child: IconButton(
-                          icon: Icon(Icons.close, color: Colors.white),
-                          onPressed: () => Navigator.pop(context),
-                        ),
+                      child: Row(
+                        children: [
+                          if (isCreator) ...[
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.5),
+                                shape: BoxShape.circle,
+                              ),
+                              child: IconButton(
+                                icon: Icon(Icons.edit, color: Colors.white),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  _showEditEventForm(event);
+                                },
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.5),
+                                shape: BoxShape.circle,
+                              ),
+                              child: IconButton(
+                                icon: Icon(Icons.delete, color: Colors.white),
+                                onPressed: () => _showDeleteEventConfirmation(event),
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                          ],
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.5),
+                              shape: BoxShape.circle,
+                            ),
+                            child: IconButton(
+                              icon: Icon(Icons.close, color: Colors.white),
+                              onPressed: () => Navigator.pop(context),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -1790,7 +1940,13 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
     );
   }
 
-  void _handleRegistration(Map<String, dynamic> event) {
+  void _handleRegistration(Map<String, dynamic> event) async {
+    // Check if user is authenticated
+    if (FirebaseAuth.instance.currentUser == null) {
+      _showAuthRequiredDialog('register for events');
+      return;
+    }
+
     if (event['registrations'] >= event['capacity']) {
       _showRegistrationDialog(
         'Event Full',
@@ -1868,183 +2024,205 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                     ],
                   ),
                 ),
-                // Form
-                Expanded(
+                // Form content
+                Flexible(
                   child: SingleChildScrollView(
-                    child: Padding(
-                      padding: EdgeInsets.all(24),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Event: ${event['title']}',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: _isDarkMode ? Colors.white : Colors.black,
+                    padding: EdgeInsets.all(24),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildFormField(
+                            controller: _nameController,
+                            label: 'Full Name',
+                            icon: Icons.person,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your name';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 16),
+                          _buildFormField(
+                            controller: _phoneController,
+                            label: 'Phone Number',
+                            icon: Icons.phone,
+                            keyboardType: TextInputType.phone,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your phone number';
+                              }
+                              if (value.length != 10) {
+                                return 'Please enter a valid 10-digit phone number';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 16),
+                          _buildFormField(
+                            controller: _collegeController,
+                            label: 'College Name',
+                            icon: Icons.school,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your college name';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 16),
+                          _buildFormField(
+                            controller: _deptController,
+                            label: 'Department',
+                            icon: Icons.business,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your department';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 16),
+                          DropdownButtonFormField<String>(
+                            value: _selectedYear,
+                            decoration: InputDecoration(
+                              labelText: 'Year of Study',
+                              prefixIcon: Icon(Icons.calendar_today),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            SizedBox(height: 24),
-                            _buildFormField(
-                              controller: _nameController,
-                              label: 'Full Name',
-                              icon: Icons.person,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter your name';
-                                }
-                                return null;
-                              },
-                            ),
-                            SizedBox(height: 16),
-                            _buildFormField(
-                              controller: _phoneController,
-                              label: 'Phone Number',
-                              icon: Icons.phone,
-                              keyboardType: TextInputType.phone,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter your phone number';
-                                }
-                                if (value.length != 10) {
-                                  return 'Please enter a valid 10-digit phone number';
-                                }
-                                return null;
-                              },
-                            ),
-                            SizedBox(height: 16),
-                            _buildFormField(
-                              controller: _collegeController,
-                              label: 'College Name',
-                              icon: Icons.school,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter your college name';
-                                }
-                                return null;
-                              },
-                            ),
-                            SizedBox(height: 16),
-                            _buildFormField(
-                              controller: _deptController,
-                              label: 'Department',
-                              icon: Icons.business,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter your department';
-                                }
-                                return null;
-                              },
-                            ),
-                            SizedBox(height: 16),
-                            Text(
-                              'Year',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: _isDarkMode ? Colors.white70 : Colors.grey[700],
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 16),
-                              decoration: BoxDecoration(
-                                color: _isDarkMode ? Colors.black.withOpacity(0.2) : Colors.grey[100],
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: _isDarkMode ? Colors.white24 : Colors.grey[300]!,
-                                ),
-                              ),
-                              child: StatefulBuilder(
-                                builder: (context, setState) {
-                                  return DropdownButtonHideUnderline(
-                                    child: DropdownButton<String>(
-                                      value: _selectedYear,
-                                      isExpanded: true,
-                                      dropdownColor: _isDarkMode ? Color(0xFF252542) : Colors.white,
-                                      style: TextStyle(
-                                        color: _isDarkMode ? Colors.white : Colors.black,
-                                        fontSize: 16,
-                                      ),
-                                      items: ['1st Year', '2nd Year', '3rd Year', '4th Year']
-                                          .map((year) => DropdownMenuItem(
-                                                value: year,
-                                                child: Text(year),
-                                              ))
-                                          .toList(),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _selectedYear = value!;
-                                        });
-                                      },
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
+                            items: [
+                              '1st Year',
+                              '2nd Year',
+                              '3rd Year',
+                              '4th Year',
+                              '5th Year',
+                            ].map((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              if (newValue != null) {
+                                _selectedYear = newValue;
+                              }
+                            },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please select your year of study';
+                              }
+                              return null;
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ),
-                // Submit button
+                // Actions
                 Container(
                   padding: EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    color: _isDarkMode ? Color(0xFF252542) : Colors.white,
-                    borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 10,
-                        offset: Offset(0, -5),
+                    border: Border(
+                      top: BorderSide(
+                        color: _isDarkMode ? Colors.white10 : Colors.grey[200]!,
                       ),
-                    ],
+                    ),
                   ),
                   child: Row(
                     children: [
                       Expanded(
-                        child: TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          style: TextButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              side: BorderSide(
-                                color: _isDarkMode 
-                                    ? Color(0xFF4C4DDC).withOpacity(0.5)
-                                    : Colors.blue.withOpacity(0.5),
-                              ),
-                            ),
-                          ),
-                          child: Text(
-                            'Cancel',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 16),
-                      Expanded(
                         child: ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              // Process registration
-                              Navigator.pop(context);
-                              setState(() {
-                                event['registrations']++;
-                              });
-                              _showRegistrationDialog(
-                                'Registration Successful!',
-                                'You have successfully registered for ${event["title"]}. We look forward to seeing you!',
-                                true
-                              );
+                              try {
+                                // Show loading
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (context) => Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                );
+
+                                // Get current user
+                                final user = FirebaseAuth.instance.currentUser;
+                                if (user == null) {
+                                  Navigator.pop(context); // Close loading
+                                  Navigator.pop(context); // Close form
+                                  _showAuthRequiredDialog('register for events');
+                                  return;
+                                }
+
+                                // Get event reference
+                                final eventRef = FirebaseFirestore.instance
+                                    .collection('events')
+                                    .doc(event['id']);
+
+                                // Create registration data
+                                final registrationData = {
+                                  'userId': user.uid,
+                                  'userName': _nameController.text,
+                                  'phone': _phoneController.text,
+                                  'college': _collegeController.text,
+                                  'department': _deptController.text,
+                                  'year': _selectedYear,
+                                  'registeredAt': FieldValue.serverTimestamp(),
+                                  'eventId': event['id'],
+                                  'eventTitle': event['title'],
+                                  'eventDate': event['date'],
+                                };
+
+                                // Start a batch write
+                                final batch = FirebaseFirestore.instance.batch();
+
+                                // 1. Add user to event's registeredUsers array
+                                batch.update(eventRef, {
+                                  'registeredUsers': FieldValue.arrayUnion([user.uid]),
+                                  'registrations': FieldValue.increment(1)
+                                });
+
+                                // 2. Create registration document in event's registrations subcollection
+                                final registrationRef = eventRef.collection('registrations').doc(user.uid);
+                                batch.set(registrationRef, registrationData);
+
+                                // 3. Create registration document in user's registrations collection
+                                final userRegistrationRef = FirebaseFirestore.instance
+                                    .collection('users')
+                                    .doc(user.uid)
+                                    .collection('registrations')
+                                    .doc(event['id']);
+                                batch.set(userRegistrationRef, registrationData);
+
+                                // Commit the batch
+                                await batch.commit();
+
+                                // Close loading and form
+                                Navigator.pop(context); // Close loading
+                                Navigator.pop(context); // Close form
+
+                                // Show success message
+                                _showRegistrationDialog(
+                                  'Registration Successful!',
+                                  'You have successfully registered for ${event["title"]}. We look forward to seeing you!',
+                                  true
+                                );
+                              } catch (e) {
+                                // Close loading
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+
+                                // Show error message
+                                _showRegistrationDialog(
+                                  'Registration Failed',
+                                  'An error occurred while registering. Please try again later.',
+                                  false
+                                );
+                              }
                             }
                           },
                           style: ElevatedButton.styleFrom(
@@ -2078,9 +2256,7 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
               ],
             ),
           ),
-        ).animate()
-          .fadeIn()
-          .scaleXY(begin: 0.95);
+        );
       },
     );
   }
@@ -2245,457 +2421,19 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
   }
 
   void _showCreateEventForm() {
-    final _formKey = GlobalKey<FormState>();
-    final _titleController = TextEditingController();
-    final _descriptionController = TextEditingController();
-    final _locationController = TextEditingController();
-    final _priceController = TextEditingController();
-    final _pointsController = TextEditingController();
-    final _capacityController = TextEditingController();
-    String _selectedType = 'Workshop';
-    DateTime _selectedDate = DateTime.now();
-    File? _selectedImage;
-    final _imagePicker = ImagePicker();
-
-    Future<void> _pickImage() async {
-      final XFile? pickedFile = await _imagePicker.pickImage(
-        source: ImageSource.gallery,
-        imageQuality: 80,
-      );
-      if (pickedFile != null) {
-        setState(() {
-          _selectedImage = File(pickedFile.path);
-        });
-      }
+    // Check if user is authenticated
+    if (FirebaseAuth.instance.currentUser == null) {
+      _showAuthRequiredDialog('create events');
+      return;
     }
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return Dialog(
-              backgroundColor: Colors.transparent,
-              insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-              child: Container(
-                width: double.infinity,
-                constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.85,
-                  maxWidth: 500,
-                ),
-                decoration: BoxDecoration(
-                  color: _isDarkMode ? Color(0xFF252542) : Colors.white,
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      blurRadius: 20,
-                      offset: Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Header
-                    Container(
-                      padding: EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                        color: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.event_available,
-                            color: Colors.white,
-                            size: 24,
-                          ),
-                          SizedBox(width: 12),
-                          Text(
-                            'Create New Event',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Spacer(),
-                          IconButton(
-                            icon: Icon(Icons.close, color: Colors.white),
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Form
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Padding(
-                          padding: EdgeInsets.all(24),
-                          child: Form(
-                            key: _formKey,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _buildFormField(
-                                  controller: _titleController,
-                                  label: 'Event Title',
-                                  icon: Icons.title,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please enter event title';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                SizedBox(height: 16),
-                                Text(
-                                  'Event Type',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: _isDarkMode ? Colors.white70 : Colors.grey[700],
-                                  ),
-                                ),
-                                SizedBox(height: 8),
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 16),
-                                  decoration: BoxDecoration(
-                                    color: _isDarkMode ? Colors.black.withOpacity(0.2) : Colors.grey[100],
-                                    borderRadius: BorderRadius.circular(16),
-                                    border: Border.all(
-                                      color: _isDarkMode ? Colors.white24 : Colors.grey[300]!,
-                                    ),
-                                  ),
-                                  child: StatefulBuilder(
-                                    builder: (context, setState) {
-                                      return DropdownButtonHideUnderline(
-                                        child: DropdownButton<String>(
-                                          value: _selectedType,
-                                          isExpanded: true,
-                                          dropdownColor: _isDarkMode ? Color(0xFF252542) : Colors.white,
-                                          style: TextStyle(
-                                            color: _isDarkMode ? Colors.white : Colors.black,
-                                            fontSize: 16,
-                                          ),
-                                          items: _filters
-                                              .where((type) => type != 'All')
-                                              .map((type) => DropdownMenuItem(
-                                                    value: type,
-                                                    child: Text(type),
-                                                  ))
-                                              .toList(),
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _selectedType = value!;
-                                            });
-                                          },
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                                SizedBox(height: 16),
-                                _buildFormField(
-                                  controller: _descriptionController,
-                                  label: 'Description',
-                                  icon: Icons.description,
-                                  maxLines: 3,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please enter event description';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                SizedBox(height: 16),
-                                Text(
-                                  'Event Date',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: _isDarkMode ? Colors.white70 : Colors.grey[700],
-                                  ),
-                                ),
-                                SizedBox(height: 8),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: _isDarkMode ? Colors.black.withOpacity(0.2) : Colors.grey[100],
-                                    borderRadius: BorderRadius.circular(16),
-                                    border: Border.all(
-                                      color: _isDarkMode ? Colors.white24 : Colors.grey[300]!,
-                                    ),
-                                  ),
-                                  child: StatefulBuilder(
-                                    builder: (context, setState) {
-                                      return ListTile(
-                                        leading: Icon(
-                                          Icons.calendar_today,
-                                          color: _isDarkMode ? Colors.white38 : Colors.grey[400],
-                                        ),
-                                        title: Text(
-                                          '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
-                                          style: TextStyle(
-                                            color: _isDarkMode ? Colors.white : Colors.black,
-                                          ),
-                                        ),
-                                        onTap: () async {
-                                          final DateTime? picked = await showDatePicker(
-                                            context: context,
-                                            initialDate: _selectedDate,
-                                            firstDate: DateTime.now(),
-                                            lastDate: DateTime.now().add(Duration(days: 365)),
-                                          );
-                                          if (picked != null) {
-                                            setState(() {
-                                              _selectedDate = picked;
-                                            });
-                                          }
-                                        },
-                                      );
-                                    },
-                                  ),
-                                ),
-                                SizedBox(height: 16),
-                                _buildFormField(
-                                  controller: _locationController,
-                                  label: 'Location',
-                                  icon: Icons.location_on,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please enter event location';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                SizedBox(height: 16),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: _buildFormField(
-                                        controller: _priceController,
-                                        label: 'Price (₹)',
-                                        icon: Icons.currency_rupee,
-                                        keyboardType: TextInputType.number,
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return 'Enter price';
-                                          }
-                                          if (int.tryParse(value) == null) {
-                                            return 'Invalid price';
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                    ),
-                                    SizedBox(width: 16),
-                                    Expanded(
-                                      child: _buildFormField(
-                                        controller: _pointsController,
-                                        label: 'Points',
-                                        icon: Icons.star,
-                                        keyboardType: TextInputType.number,
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return 'Enter points';
-                                          }
-                                          if (int.tryParse(value) == null) {
-                                            return 'Invalid points';
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 16),
-                                _buildFormField(
-                                  controller: _capacityController,
-                                  label: 'Capacity',
-                                  icon: Icons.people,
-                                  keyboardType: TextInputType.number,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Enter capacity';
-                                    }
-                                    if (int.tryParse(value) == null) {
-                                      return 'Invalid capacity';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                SizedBox(height: 16),
-                                Text(
-                                  'Event Image',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: _isDarkMode ? Colors.white70 : Colors.grey[700],
-                                  ),
-                                ),
-                                SizedBox(height: 8),
-                                GestureDetector(
-                                  onTap: _pickImage,
-                                  child: Container(
-                                    width: double.infinity,
-                                    height: 200,
-                                    decoration: BoxDecoration(
-                                      color: _isDarkMode ? Colors.black.withOpacity(0.2) : Colors.grey[100],
-                                      borderRadius: BorderRadius.circular(16),
-                                      border: Border.all(
-                                        color: _isDarkMode ? Colors.white24 : Colors.grey[300]!,
-                                      ),
-                                    ),
-                                    child: _selectedImage != null
-                                      ? ClipRRect(
-                                          borderRadius: BorderRadius.circular(16),
-                                          child: Image.file(
-                                            _selectedImage!,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        )
-                                      : Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.add_photo_alternate,
-                                              size: 48,
-                                              color: _isDarkMode ? Colors.white38 : Colors.grey[400],
-                                            ),
-                                            SizedBox(height: 8),
-                                            Text(
-                                              'Click to add event image',
-                                              style: TextStyle(
-                                                color: _isDarkMode ? Colors.white38 : Colors.grey[400],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                  ),
-                                ).animate()
-                                  .fadeIn()
-                                  .scaleXY(begin: 0.95)
-                                  .then()
-                                  .shimmer(delay: Duration(milliseconds: 800)),
-                                SizedBox(height: 16),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    // Submit button
-                    Container(
-                      padding: EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                        color: _isDarkMode ? Color(0xFF252542) : Colors.white,
-                        borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 10,
-                            offset: Offset(0, -5),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                  side: BorderSide(
-                                    color: _isDarkMode 
-                                        ? Color(0xFF4C4DDC).withOpacity(0.5)
-                                        : Colors.blue.withOpacity(0.5),
-                                  ),
-                                ),
-                              ),
-                              child: Text(
-                                'Cancel',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 16),
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  if (_selectedImage == null) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text('Please select an event image'),
-                                        backgroundColor: Colors.red,
-                                      ),
-                                    );
-                                    return;
-                                  }
-                                  // Create new event
-                                  final newEvent = {
-                                    'title': _titleController.text,
-                                    'type': _selectedType,
-                                    'description': _descriptionController.text,
-                                    'date': '${_selectedDate.day} ${_getMonthName(_selectedDate.month)}, ${_selectedDate.year}',
-                                    'location': _locationController.text,
-                                    'image': _selectedImage!.path,
-                                    'price': int.parse(_priceController.text),
-                                    'points': int.parse(_pointsController.text),
-                                    'capacity': int.parse(_capacityController.text),
-                                    'registrations': 0,
-                                  };
-
-                                  setState(() {
-                                    _upcomingEvents.insert(0, newEvent);
-                                  });
-
-                                  Navigator.pop(context);
-                                  _showEventCreatedDialog();
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
-                                padding: EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                elevation: 0,
-                              ),
-                              child: Text(
-                                'Create Event',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                  shadows: [
-                                    Shadow(
-                                      offset: Offset(0, 1),
-                                      blurRadius: 3,
-                                      color: Colors.black.withOpacity(0.3),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ).animate()
-              .fadeIn()
-              .scaleXY(begin: 0.95);
-          },
+        return EventCreateScreen(
+          isDarkMode: _isDarkMode,
+          showSuccessMessage: _showSuccessMessage,
+          showAuthRequiredDialog: _showAuthRequiredDialog,
         );
       },
     );
@@ -2783,6 +2521,118 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
     );
   }
 
+  void _showAuthRequiredDialog(String action) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            padding: EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: _isDarkMode ? Color(0xFF252542) : Colors.white,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 20,
+                  offset: Offset(0, 5),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.lock_outline,
+                    color: Colors.orange,
+                    size: 48,
+                  ),
+                ),
+                SizedBox(height: 24),
+                Text(
+                  'Authentication Required',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: _isDarkMode ? Colors.white : Colors.black,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'Please sign in or create an account to ${action}.',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: _isDarkMode ? Colors.white70 : Colors.grey[600],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 24),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: _isDarkMode ? Colors.white70 : Colors.grey[600],
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          // Navigate to profile screen for authentication
+                          Navigator.pushNamed(context, '/profile');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                        child: Text(
+                          'Sign In',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ).animate()
+          .fadeIn()
+          .scaleXY(begin: 0.8);
+      },
+    );
+  }
+
   String _getMonthName(int month) {
     switch (month) {
       case 1: return 'Jan';
@@ -2799,5 +2649,244 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
       case 12: return 'Dec';
       default: return '';
     }
+  }
+
+  void _showEditEventForm(Map<String, dynamic> event) {
+    if (FirebaseAuth.instance.currentUser?.uid != event['creatorId']) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("You don't have permission to edit this event")),
+      );
+      return;
+    }
+
+    final _formKey = GlobalKey<FormState>();
+    final _titleController = TextEditingController(text: event['title']);
+    final _descriptionController = TextEditingController(text: event['description']);
+    final _locationController = TextEditingController(text: event['location']);
+    final _priceController = TextEditingController(text: event['price'].toString());
+    final _pointsController = TextEditingController(text: event['points'].toString());
+    final _capacityController = TextEditingController(text: event['capacity'].toString());
+    String _selectedType = event['type'];
+    DateTime _selectedDate = (event['date'] as Timestamp).toDate();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              Icon(Icons.edit, color: Colors.blue[800]),
+              SizedBox(width: 8),
+              Text('Edit Event'),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildFormField(
+                    controller: _titleController,
+                    label: 'Event Title',
+                    icon: Icons.title,
+                    validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
+                  ),
+                  SizedBox(height: 16),
+                  DropdownButtonFormField<String>(
+                    value: _selectedType,
+                    decoration: InputDecoration(
+                      labelText: 'Event Type',
+                      prefixIcon: Icon(Icons.category),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    items: ['Workshop', 'Seminar', 'Conference', 'Hackathon']
+                        .map((type) => DropdownMenuItem(value: type, child: Text(type)))
+                        .toList(),
+                    onChanged: (value) => _selectedType = value!,
+                  ),
+                  SizedBox(height: 16),
+                  _buildFormField(
+                    controller: _descriptionController,
+                    label: 'Description',
+                    icon: Icons.description,
+                    maxLines: 3,
+                    validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
+                  ),
+                  SizedBox(height: 16),
+                  ListTile(
+                    leading: Icon(Icons.calendar_today),
+                    title: Text('Event Date: ${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}'),
+                    onTap: () async {
+                      final DateTime? picked = await showDatePicker(
+                        context: context,
+                        initialDate: _selectedDate,
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime.now().add(Duration(days: 365)),
+                      );
+                      if (picked != null) {
+                        _selectedDate = picked;
+                      }
+                    },
+                  ),
+                  SizedBox(height: 16),
+                  _buildFormField(
+                    controller: _locationController,
+                    label: 'Location',
+                    icon: Icons.location_on,
+                    validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
+                  ),
+                  SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildFormField(
+                          controller: _priceController,
+                          label: 'Price',
+                          icon: Icons.currency_rupee,
+                          keyboardType: TextInputType.number,
+                          validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: _buildFormField(
+                          controller: _pointsController,
+                          label: 'Points',
+                          icon: Icons.star,
+                          keyboardType: TextInputType.number,
+                          validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16),
+                  _buildFormField(
+                    controller: _capacityController,
+                    label: 'Capacity',
+                    icon: Icons.people,
+                    keyboardType: TextInputType.number,
+                    validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  try {
+                    // Update event in Firestore
+                    await _firestore.collection('events').doc(event['id']).update({
+                      'title': _titleController.text,
+                      'type': _selectedType,
+                      'description': _descriptionController.text,
+                      'date': Timestamp.fromDate(_selectedDate),
+                      'location': _locationController.text,
+                      'price': int.parse(_priceController.text),
+                      'points': int.parse(_pointsController.text),
+                      'capacity': int.parse(_capacityController.text),
+                    });
+
+                    Navigator.pop(context);
+                    _showSuccessMessage('Event updated successfully!', Icons.check_circle);
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Error updating event: $e')),
+                    );
+                  }
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue[800],
+              ),
+              child: Text('Update Event'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showDeleteEventConfirmation(Map<String, dynamic> event) {
+    if (FirebaseAuth.instance.currentUser?.uid != event['creatorId']) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("You don't have permission to delete this event")),
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete Event'),
+          content: Text('Are you sure you want to delete this event? This action cannot be undone.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                try {
+                  await _firestore.collection('events').doc(event['id']).delete();
+                  Navigator.pop(context); // Close confirmation dialog
+                  Navigator.pop(context); // Close event details dialog
+                  _showSuccessMessage('Event deleted successfully!', Icons.check_circle);
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Error deleting event: $e')),
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+              ),
+              child: Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showSuccessMessage(String message, IconData icon) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(
+              icon,
+              color: Colors.white,
+              size: 24,
+            ),
+            SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                message,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        margin: EdgeInsets.all(16),
+      ),
+    );
   }
 }

@@ -10,7 +10,7 @@ import 'package:flutter/services.dart'; // Import SharedPreferences
 import 'package:flutter_animate/flutter_animate.dart'; // Import the flutter_animate package
 import 'package:flutter/rendering.dart'; // Import flutter rendering
 import 'package:flutter/services.dart'; // Add this import for HapticFeedback
-import 'dart:ui';
+import 'package:url_launcher/url_launcher.dart'; // Add this import for URL launching
 
 class ProfileScreen extends StatefulWidget {
     @override
@@ -22,26 +22,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final TextEditingController emailController = TextEditingController(); // Controller for email
     final TextEditingController passwordController = TextEditingController(); // Controller for password
     final TextEditingController phoneController = TextEditingController(); // Controller for phone number
-    final TextEditingController addressController = TextEditingController(); // Controller for address
-    final TextEditingController majorController = TextEditingController(); // Controller for major
     final TextEditingController universityController = TextEditingController(); // Controller for university
     final TextEditingController yearController = TextEditingController(); // Controller for year of study
-    final TextEditingController bioController = TextEditingController(); // Controller for bio
-    final TextEditingController interestsController = TextEditingController(); // Controller for interests
-    final TextEditingController socialMediaController = TextEditingController(); // Controller for social media links
     final TextEditingController departmentController = TextEditingController(); // Controller for department
 
     bool isSignUp = true; // Toggle between sign-up and sign-in
     String? username; // Store username
     String? email; // Store email
     String? phone; // Store phone number
-    String? address; // Store address
-    String? major; // Store major
     String? university; // Store university
     String? year; // Store year of study
-    String? bio; // Store bio
-    String? interests; // Store interests
-    String? socialMedia; // Store social media links
     String? selectedCollege; // Variable to hold the selected college
     String? selectedDepartment; // Variable to hold the selected department
     String? selectedYear; // Variable to hold the selected year of study
@@ -135,13 +125,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     'Rajadhani Institute of Engineering and Technology, Thiruvananthapuram',
     'Rajagiri School of Engineering and Technology, Kochi',
     'Rajiv Gandhi Institute of Technology, Kottayam',
-    'Royal College of Engineering and Technology, Thrissur',
+    'Royal College of Engineering and Technology, Thirussur',
     'SB College of Engineering, Bangalore',
     'SCMS School of Engineering and Technology, Ernakulam',
     'SNG College of Engineering, Kolenchery',
     'SNM Institute of Management and Technology, Ernakulam',
     'SNS College of Engineering, Coimbatore',
-    'Sahrdaya College of Engineering and Technology, Thrissur',
+    'Sahrdaya College of Engineering and Technology, Thiruvananthapuram',
     'Saintgits College of Engineering, Kottayam',
     'Sarabhai Institute of Science and Technology, Thiruvananthapuram',
     'Sherlock Institute of Engineering and Technology, Ernakulam',
@@ -152,11 +142,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     'St. Joseph\'s College of Engineering and Technology, Palai',
     'St. Thomas College of Engineering and Technology, Kannur',
     'TKM College of Engineering, Kollam',
-    'Thejus Engineering College, Thrissur',
+    'Thejus Engineering College, Thiruvananthapuram',
     'Travancore Engineering College, Kollam',
     'UKF College of Engineering and Technology, Kollam',
     'University College of Engineering, Kariavattom',
-    'Vidya Academy of Science and Technology, Thrissur',
+    'Vidya Academy of Science and Technology, Thiruvananthapuram',
 ];
 
 
@@ -266,14 +256,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 email = emailInput;
                 // Initialize other fields as null
                 phone = null;
-                address = null;
-                major = null;
                 university = null;
                 department = null;
                 year = null;
-                bio = null;
-                interests = null;
-                socialMedia = null;
             });
 
             // Show success message
@@ -343,25 +328,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     username = data['username'] ?? '';
                     email = data['email'] ?? '';
                     phone = data['phone'];
-                    address = data['address'];
-                    major = data['major'];
                     university = data['university'];
                     department = data['department'];
                     year = data['year'];
-                    bio = data['bio'];
-                    interests = data['interests'];
-                    socialMedia = data['socialMedia'];
-
-                    // Update controllers
-                    phoneController.text = phone ?? '';
-                    addressController.text = address ?? '';
-                    majorController.text = major ?? '';
-                    selectedCollege = university;
-                    selectedDepartment = department;
-                    selectedYear = year;
-                    bioController.text = bio ?? '';
-                    interestsController.text = interests ?? '';
-                    socialMediaController.text = socialMedia ?? '';
                 });
 
                 // Show success message
@@ -450,14 +419,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // Update the document with new values
             await userDoc.update({
                 'phone': phoneController.text.trim(),
-                'address': addressController.text.trim(),
-                'major': majorController.text.trim(),
                 'university': selectedCollege,
                 'department': selectedDepartment,
                 'year': selectedYear,
-                'bio': bioController.text.trim(),
-                'interests': interestsController.text.trim(),
-                'socialMedia': socialMediaController.text.trim(),
             });
 
             // Fetch updated data
@@ -467,14 +431,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // Update state with new values
             setState(() {
                 phone = data['phone'];
-                address = data['address'];
-                major = data['major'];
                 university = data['university'];
                 department = data['department'];
                 year = data['year'];
-                bio = data['bio'];
-                interests = data['interests'];
-                socialMedia = data['socialMedia'];
             });
 
             // Show success message
@@ -656,20 +615,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                     .fadeIn(delay: 400.ms)
                                                     .slideX(begin: 0.2),
                                                 SizedBox(height: 16),
-                                                _buildBioSection()
+                                                _buildEventsSection()
                                                     .animate()
-                                                    .fadeIn(delay: 600.ms)
-                                                    .slideX(begin: -0.2),
-                                                SizedBox(height: 16),
-                                                _buildInterestsSection()
-                                                    .animate()
-                                                    .fadeIn(delay: 800.ms)
+                                                    .fadeIn(delay: 1200.ms)
                                                     .slideX(begin: 0.2),
-                                                SizedBox(height: 16),
-                                                _buildContactSection()
-                                                    .animate()
-                                                    .fadeIn(delay: 1000.ms)
-                                                    .slideX(begin: -0.2),
                                                 SizedBox(height: 24),
                                                 _buildLogoutButton(),
                                             ],
@@ -698,7 +647,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             [
                 _buildInfoTile(Icons.email, 'Email', email ?? 'Not provided'),
                 _buildInfoTile(Icons.phone, 'Phone', phone ?? 'Not provided'),
-                _buildInfoTile(Icons.location_on, 'Address', address ?? 'Not provided'),
             ],
         );
     }
@@ -723,85 +671,359 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     'Year', 
                     year ?? 'Not provided'
                 ),
-                _buildInfoTile(
-                    Icons.book, 
-                    'Major', 
-                    major ?? 'Not provided'
-                ),
             ],
         );
     }
 
-    Widget _buildBioSection() {
-        return _buildSection(
-            'About Me',
-            Icons.info_outline,
-            [
-                Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                        bio ?? 'No bio provided',
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: isDarkMode ? Colors.grey[300] : Colors.grey[800],
-                        ),
-                    ),
-                ),
-            ],
-        );
-    }
+    Widget _buildEventsSection() {
+        return StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('events')
+                .where('registeredUsers', arrayContains: FirebaseAuth.instance.currentUser?.uid)
+                .snapshots(),
+            builder: (context, registeredSnapshot) {
+                if (registeredSnapshot.hasError) {
+                    return _buildSection(
+                        'My Events',
+                        Icons.event,
+                        [Text('Error loading events')],
+                    );
+                }
 
-    Widget _buildInterestsSection() {
-        List<String> interestsList = (interests ?? '')
-            .split(',')
-            .where((interest) => interest.trim().isNotEmpty)
-            .toList();
+                return StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('events')
+                        .where('creatorId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+                        .snapshots(),
+                    builder: (context, createdSnapshot) {
+                        if (createdSnapshot.hasError) {
+                            return _buildSection(
+                                'My Events',
+                                Icons.event,
+                                [Text('Error loading events')],
+                            );
+                        }
 
-        return _buildSection(
-            'Interests',
-            Icons.favorite_outline,
-            [
-                Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: interestsList.isEmpty
-                        ? Text(
-                            'No interests added',
-                            style: TextStyle(
-                                color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
-                            ),
-                        )
-                        : Wrap(
-                        spacing: 8.0,
-                        runSpacing: 8.0,
-                            children: interestsList
-                            .map((interest) => Chip(
-                                    label: Text(
-                                        interest.trim(),
-                                        style: TextStyle(
-                                            color: isDarkMode 
-                                                ? Colors.white 
-                                                : Colors.blue[800],
+                        List<Widget> eventWidgets = [];
+                        DateTime now = DateTime.now();
+
+                        // Process registered events
+                        if (registeredSnapshot.hasData) {
+                            List<DocumentSnapshot> registeredEvents = registeredSnapshot.data!.docs;
+                            List<DocumentSnapshot> pastEvents = [];
+                            List<DocumentSnapshot> upcomingEvents = [];
+
+                            for (var event in registeredEvents) {
+                                Map<String, dynamic> eventData = event.data() as Map<String, dynamic>;
+                                DateTime eventDate = (eventData['date'] as Timestamp).toDate();
+                                if (eventDate.isBefore(now)) {
+                                    pastEvents.add(event);
+                                } else {
+                                    upcomingEvents.add(event);
+                                }
+                            }
+
+                            if (upcomingEvents.isNotEmpty) {
+                                eventWidgets.add(
+                                    Padding(
+                                        padding: EdgeInsets.all(16),
+                                        child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                                Text(
+                                                    'Upcoming Registered Events',
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: isDarkMode ? Colors.white : Colors.black,
+                                                    ),
+                                                ),
+                                                SizedBox(height: 8),
+                                                ...upcomingEvents.map((event) => _buildEventTile(event.data() as Map<String, dynamic>)),
+                                            ],
                                         ),
                                     ),
-                                    backgroundColor: isDarkMode 
-                                        ? Colors.blue[900]!.withOpacity(0.2)
-                                        : Colors.blue[50],
-                                ))
-                            .toList(),
-                    ),
-                ),
-            ],
+                                );
+                            }
+
+                            if (pastEvents.isNotEmpty) {
+                                eventWidgets.add(
+                                    Padding(
+                                        padding: EdgeInsets.all(16),
+                                        child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                                Text(
+                                                    'Past Registered Events',
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: isDarkMode ? Colors.white : Colors.black,
+                                                    ),
+                                                ),
+                                                SizedBox(height: 8),
+                                                ...pastEvents.map((event) => _buildEventTile(event.data() as Map<String, dynamic>)),
+                                            ],
+                                        ),
+                                    ),
+                                );
+                            }
+                        }
+
+                        // Process created events
+                        if (createdSnapshot.hasData && createdSnapshot.data!.docs.isNotEmpty) {
+                            eventWidgets.add(
+                                Padding(
+                                    padding: EdgeInsets.all(16),
+                                    child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                            Text(
+                                                'Created Events',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: isDarkMode ? Colors.white : Colors.black,
+                                                ),
+                                            ),
+                                            SizedBox(height: 8),
+                                            ...createdSnapshot.data!.docs.map(
+                                                (event) {
+                                                    Map<String, dynamic> eventData = event.data() as Map<String, dynamic>;
+                                                    // Add the event ID to the event data
+                                                    eventData['id'] = event.id;
+                                                    return _buildEventTile(
+                                                        eventData,
+                                                    isCreated: true,
+                                                    );
+                                                },
+                                            ),
+                                        ],
+                                    ),
+                                ),
+                            );
+                        }
+
+                        return _buildSection(
+                            'My Events',
+                            Icons.event,
+                            eventWidgets,
+                        );
+                    },
+                );
+            },
         );
     }
 
-    Widget _buildContactSection() {
-        return _buildSection(
-            'Social Media',
-            Icons.link,
-            [
-                _buildInfoTile(Icons.link, 'Social Links', socialMedia ?? 'Not provided'),
-            ],
+    Widget _buildEventTile(Map<String, dynamic> eventData, {bool isCreated = false}) {
+        String title = eventData['title'] ?? 'Untitled Event';
+        DateTime date = (eventData['date'] as Timestamp).toDate();
+        String location = eventData['location'] ?? 'No location';
+        int registeredCount = (eventData['registeredUsers'] as List?)?.length ?? 0;
+        int capacity = eventData['capacity'] ?? 0;
+        bool isFull = registeredCount >= capacity;
+        String type = eventData['type'] ?? 'Event';
+        int points = eventData['points'] ?? 0;
+        int price = eventData['price'] ?? 0;
+
+        return Card(
+            margin: EdgeInsets.symmetric(vertical: 8),
+            color: isDarkMode ? Colors.grey[900] : Colors.white,
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: BorderSide(
+                    color: isDarkMode ? Colors.grey[800]! : Colors.grey[300]!,
+                    width: 1,
+                ),
+            ),
+            child: InkWell(
+                onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EventDetailsScreen(
+                                eventData: eventData,
+                                isCreated: isCreated,
+                                isDarkMode: isDarkMode,
+                            ),
+                        ),
+                    );
+                },
+                borderRadius: BorderRadius.circular(12),
+                child: Column(
+                    children: [
+                        // Event Image
+                        ClipRRect(
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                            child: Image.network(
+                                eventData['image'] ?? 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678',
+                                height: 120,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) => Container(
+                                    height: 120,
+                                    color: isDarkMode ? Colors.grey[800] : Colors.grey[200],
+                                    child: Icon(Icons.image_not_supported, color: Colors.grey),
+                                ),
+                            ),
+                        ),
+                        Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                    Row(
+                                        children: [
+                                            Container(
+                                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                                decoration: BoxDecoration(
+                                                    color: _getEventTypeColor(type).withOpacity(0.1),
+                                                    borderRadius: BorderRadius.circular(8),
+                                                ),
+                                                child: Text(
+                                                    type,
+                                                    style: TextStyle(
+                                                        color: _getEventTypeColor(type),
+                                                        fontWeight: FontWeight.bold,
+                                                        fontSize: 12,
+                                                    ),
+                                                ),
+                                            ),
+                                            Spacer(),
+                                            if (isCreated)
+                                                Container(
+                                                    padding: EdgeInsets.all(4),
+                                                    decoration: BoxDecoration(
+                                                        color: isDarkMode ? Colors.blue[900]!.withOpacity(0.2) : Colors.blue[50],
+                                                        borderRadius: BorderRadius.circular(8),
+                                                    ),
+                                                    child: Icon(
+                                                        Icons.edit,
+                                                        size: 16,
+                                                        color: isDarkMode ? Colors.blue[400] : Colors.blue[800],
+                                                    ),
+                                                ),
+                                        ],
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                        title,
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: isDarkMode ? Colors.white : Colors.black,
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                    ),
+                                    SizedBox(height: 8),
+                                    Row(
+                                        children: [
+                                            Icon(
+                                                Icons.calendar_today,
+                                                size: 16,
+                                                color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                                            ),
+                                            SizedBox(width: 4),
+                                            Text(
+                                                '${date.day}/${date.month}/${date.year}',
+                                                style: TextStyle(
+                                                    color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                                                ),
+                                            ),
+                                            SizedBox(width: 16),
+                                            Icon(
+                                                Icons.location_on,
+                                                size: 16,
+                                                color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                                            ),
+                                            SizedBox(width: 4),
+                                            Expanded(
+                                                child: Text(
+                                                    location,
+                                                    style: TextStyle(
+                                                        color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                                                    ),
+                                                    overflow: TextOverflow.ellipsis,
+                                                ),
+                                            ),
+                                        ],
+                                    ),
+                                    SizedBox(height: 8),
+                                    Row(
+                                        children: [
+                                            Icon(
+                                                Icons.star,
+                                                size: 16,
+                                                color: Colors.amber,
+                                            ),
+                                            SizedBox(width: 4),
+                                            Text(
+                                                '$points pts',
+                                                style: TextStyle(
+                                                    color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                                                    fontWeight: FontWeight.bold,
+                                                ),
+                                            ),
+                                            SizedBox(width: 16),
+                                            Icon(
+                                                Icons.currency_rupee,
+                                                size: 16,
+                                                color: Colors.green[400],
+                                            ),
+                                            SizedBox(width: 4),
+                                            Text(
+                                                '$price',
+                                                style: TextStyle(
+                                                    color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                                                    fontWeight: FontWeight.bold,
+                                                ),
+                                            ),
+                                            Spacer(),
+                                            Container(
+                                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                                decoration: BoxDecoration(
+                                                    color: isFull
+                                                        ? Colors.red.withOpacity(0.1)
+                                                        : Colors.green.withOpacity(0.1),
+                                                    borderRadius: BorderRadius.circular(8),
+                                                ),
+                                                child: Text(
+                                                    '$registeredCount/$capacity',
+                                                    style: TextStyle(
+                                                        color: isFull
+                                                            ? Colors.red
+                                                            : Colors.green,
+                                                        fontWeight: FontWeight.bold,
+                                                        fontSize: 12,
+                                                    ),
+                                                ),
+                                            ),
+                                        ],
+                                    ),
+                                ],
+                            ),
+                        ),
+                    ],
+                ),
+            ),
         );
+    }
+
+    Color _getEventTypeColor(String type) {
+        switch (type.toLowerCase()) {
+            case 'workshop':
+                return Colors.orange;
+            case 'seminar':
+                return Colors.green;
+            case 'conference':
+                return Colors.purple;
+            case 'hackathon':
+                return Colors.red;
+            default:
+                return Colors.blue;
+        }
     }
 
     Widget _buildSection(String title, IconData icon, List<Widget> children) {
@@ -1063,13 +1285,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                                 _buildEditField('Phone Number', phoneController, Icons.phone),
-                                _buildEditField('Major', majorController, Icons.book),
                                 _buildCollegeDropdown(),
                                 _buildDepartmentDropdown(),
                                 _buildYearDropdown(),
-                                _buildEditField('Bio', bioController, Icons.info_outline, maxLines: 3),
-                                _buildEditField('Interests (comma-separated)', interestsController, Icons.favorite_outline),
-                                _buildEditField('Social Media Links', socialMediaController, Icons.link),
                             ],
                         ),
                     ),
@@ -1094,7 +1312,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
     }
 
-    Widget _buildEditField(String label, TextEditingController controller, IconData icon, {int maxLines = 1}) {
+    Widget _buildEditField(
+        String label,
+        TextEditingController controller,
+        IconData icon, {
+        int maxLines = 1,
+        String? hintText,
+    }) {
         return Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: TextField(
@@ -1103,6 +1327,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 decoration: InputDecoration(
                     labelText: label,
                     prefixIcon: Icon(icon),
+                    hintText: hintText,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                     ),
@@ -1541,4 +1766,621 @@ class DotPatternPainter extends CustomPainter {
     
     @override
     bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+class EventDetailsScreen extends StatelessWidget {
+    final Map<String, dynamic> eventData;
+    final bool isCreated;
+    final bool isDarkMode;
+
+    EventDetailsScreen({
+        required this.eventData,
+        required this.isCreated,
+        required this.isDarkMode,
+    });
+
+    Color _getEventTypeColor(String type) {
+        switch (type.toLowerCase()) {
+            case 'workshop':
+                return Colors.orange;
+            case 'seminar':
+                return Colors.green;
+            case 'conference':
+                return Colors.purple;
+            case 'hackathon':
+                return Colors.red;
+            default:
+                return Colors.blue;
+        }
+    }
+
+    @override
+    Widget build(BuildContext context) {
+        String title = eventData['title'] ?? 'Untitled Event';
+        DateTime date = (eventData['date'] as Timestamp).toDate();
+        String location = eventData['location'] ?? 'No location';
+        int registeredCount = (eventData['registeredUsers'] as List?)?.length ?? 0;
+        int capacity = eventData['capacity'] ?? 0;
+        bool isFull = registeredCount >= capacity;
+        String type = eventData['type'] ?? 'Event';
+        int points = eventData['points'] ?? 0;
+        int price = eventData['price'] ?? 0;
+        String description = eventData['description'] ?? 'No description available';
+
+        return Scaffold(
+            backgroundColor: isDarkMode ? Color(0xFF1A1A2E) : Colors.blue[50],
+            body: CustomScrollView(
+                slivers: [
+                    SliverAppBar(
+                        expandedHeight: 200,
+                        pinned: true,
+                        flexibleSpace: FlexibleSpaceBar(
+                            background: Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                    Image.network(
+                                        eventData['image'] ?? 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678',
+                                        fit: BoxFit.cover,
+                                    ),
+                                    Container(
+                                        decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                                begin: Alignment.topCenter,
+                                                end: Alignment.bottomCenter,
+                                                colors: [
+                                                    Colors.transparent,
+                                                    Colors.black.withOpacity(0.7),
+                                                ],
+                                            ),
+                                        ),
+                                    ),
+                                    Positioned(
+                                        bottom: 16,
+                                        left: 16,
+                                        right: 16,
+                                        child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                                Container(
+                                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                                    decoration: BoxDecoration(
+                                                        color: _getEventTypeColor(type).withOpacity(0.2),
+                                                        borderRadius: BorderRadius.circular(8),
+                                                    ),
+                                                    child: Text(
+                                                        type,
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight: FontWeight.bold,
+                                                        ),
+                                                    ),
+                                                ),
+                                                SizedBox(height: 8),
+                                                Text(
+                                                    title,
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 24,
+                                                        fontWeight: FontWeight.bold,
+                                                    ),
+                                                ),
+                                            ],
+                                        ),
+                                    ),
+                                ],
+                            ),
+                        ),
+                        actions: isCreated ? [
+                            IconButton(
+                                icon: Icon(Icons.edit),
+                                onPressed: () {
+                                    // Show edit dialog
+                                    _showEditEventDialog(context, eventData);
+                                },
+                            ),
+                            IconButton(
+                                icon: Icon(Icons.delete),
+                                onPressed: () {
+                                    // Show delete confirmation
+                                    _showDeleteConfirmation(context, eventData);
+                                },
+                            ),
+                        ] : null,
+                    ),
+                    SliverToBoxAdapter(
+                        child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                    _buildInfoCard(
+                                        isDarkMode: isDarkMode,
+                                        title: 'Event Details',
+                                        content: Column(
+                                            children: [
+                                                _buildDetailRow(
+                                                    icon: Icons.calendar_today,
+                                                    label: 'Date',
+                                                    value: '${date.day}/${date.month}/${date.year}',
+                                                    isDarkMode: isDarkMode,
+                                                ),
+                                                _buildDetailRow(
+                                                    icon: Icons.location_on,
+                                                    label: 'Location',
+                                                    value: location,
+                                                    isDarkMode: isDarkMode,
+                                                ),
+                                                _buildDetailRow(
+                                                    icon: Icons.star,
+                                                    label: 'Points',
+                                                    value: '$points pts',
+                                                    isDarkMode: isDarkMode,
+                                                ),
+                                                _buildDetailRow(
+                                                    icon: Icons.currency_rupee,
+                                                    label: 'Price',
+                                                    value: '₹$price',
+                                                    isDarkMode: isDarkMode,
+                                                ),
+                                                _buildDetailRow(
+                                                    icon: Icons.people,
+                                                    label: 'Capacity',
+                                                    value: '$registeredCount/$capacity',
+                                                    isDarkMode: isDarkMode,
+                                                    isCapacity: true,
+                                                    isFull: isFull,
+                                                ),
+                                            ],
+                                        ),
+                                    ),
+                                    SizedBox(height: 16),
+                                    _buildInfoCard(
+                                        isDarkMode: isDarkMode,
+                                        title: 'Description',
+                                        content: Text(
+                                            description,
+                                            style: TextStyle(
+                                                color: isDarkMode ? Colors.grey[300] : Colors.grey[800],
+                                                height: 1.5,
+                                            ),
+                                        ),
+                                    ),
+                                    if (isCreated) ...[
+                                        SizedBox(height: 16),
+                                        _buildInfoCard(
+                                            isDarkMode: isDarkMode,
+                                            title: 'Registrations',
+                                            content: StreamBuilder<QuerySnapshot>(
+                                                stream: FirebaseFirestore.instance
+                                                    .collection('events')
+                                                    .doc(eventData['id'])
+                                                    .collection('registrations')
+                                                    .snapshots(),
+                                                builder: (context, snapshot) {
+                                                    if (snapshot.hasError) {
+                                                        return Text('Error loading registrations');
+                                                    }
+
+                                                    if (!snapshot.hasData) {
+                                                        return Center(child: CircularProgressIndicator());
+                                                    }
+
+                                                    List<DocumentSnapshot> registrations = snapshot.data!.docs;
+                                                    
+                                                    // Filter out the '_info' document
+                                                    registrations = registrations.where((doc) => doc.id != '_info').toList();
+                                                    
+                                                    if (registrations.isEmpty) {
+                                                        return Center(
+                                                            child: Column(
+                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                children: [
+                                                                    Icon(
+                                                                        Icons.person_off_outlined,
+                                                                        size: 48,
+                                                                        color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                                                                    ),
+                                                                    SizedBox(height: 16),
+                                                                    Text(
+                                                            'No registrations yet',
+                                                            style: TextStyle(
+                                                                            fontSize: 16,
+                                                                color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                                                                        ),
+                                                                    ),
+                                                                ],
+                                                            ),
+                                                        );
+                                                    }
+
+                                                    return Column(
+                                                        children: [
+                                                            // Registration Stats
+                                                            Container(
+                                                                padding: EdgeInsets.all(16),
+                                                                decoration: BoxDecoration(
+                                                                    color: isDarkMode 
+                                                                        ? Colors.blue[900]!.withOpacity(0.2) 
+                                                                        : Colors.blue[50],
+                                                                    borderRadius: BorderRadius.circular(12),
+                                                                ),
+                                                                child: Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                                    children: [
+                                                                        _buildStatItem(
+                                                                            icon: Icons.people,
+                                                                            label: 'Total',
+                                                                            value: '${registrations.length}',
+                                                                            isDarkMode: isDarkMode,
+                                                                        ),
+                                                                        Container(
+                                                                            height: 40,
+                                                                            width: 1,
+                                                                            color: isDarkMode 
+                                                                                ? Colors.white24 
+                                                                                : Colors.black12,
+                                                                        ),
+                                                                        _buildStatItem(
+                                                                            icon: Icons.school,
+                                                                            label: 'Colleges',
+                                                                            value: '${_getUniqueColleges(registrations).length}',
+                                                                            isDarkMode: isDarkMode,
+                                                                        ),
+                                                                        Container(
+                                                                            height: 40,
+                                                                            width: 1,
+                                                                            color: isDarkMode 
+                                                                                ? Colors.white24 
+                                                                                : Colors.black12,
+                                                                        ),
+                                                                        _buildStatItem(
+                                                                            icon: Icons.category,
+                                                                            label: 'Departments',
+                                                                            value: '${_getUniqueDepartments(registrations).length}',
+                                                                            isDarkMode: isDarkMode,
+                                                                        ),
+                                                                    ],
+                                                                ),
+                                                            ),
+                                                            SizedBox(height: 16),
+                                                            // Registration List
+                                                            ...registrations.map((reg) {
+                                                            Map<String, dynamic> data = reg.data() as Map<String, dynamic>;
+                                                                return Container(
+                                                                    margin: EdgeInsets.only(bottom: 12),
+                                                                    decoration: BoxDecoration(
+                                                                        color: isDarkMode 
+                                                                            ? Colors.grey[900]!.withOpacity(0.5) 
+                                                                            : Colors.white,
+                                                                        borderRadius: BorderRadius.circular(12),
+                                                                        border: Border.all(
+                                                                            color: isDarkMode 
+                                                                                ? Colors.grey[800]! 
+                                                                                : Colors.grey[300]!,
+                                                                            width: 1,
+                                                                        ),
+                                                                    ),
+                                                                    child: ExpansionTile(
+                                                                        leading: CircleAvatar(
+                                                                            backgroundColor: isDarkMode 
+                                                                                ? Colors.blue[900]!.withOpacity(0.2) 
+                                                                                : Colors.blue[50],
+                                                                            child: Text(
+                                                                                data['userName']?[0].toUpperCase() ?? 'U',
+                                                                                style: TextStyle(
+                                                                                    color: isDarkMode 
+                                                                                        ? Colors.blue[400] 
+                                                                                        : Colors.blue[800],
+                                                                                    fontWeight: FontWeight.bold,
+                                                                                ),
+                                                                            ),
+                                                                        ),
+                                                                title: Text(
+                                                                    data['userName'] ?? 'Unknown User',
+                                                                    style: TextStyle(
+                                                                        color: isDarkMode ? Colors.white : Colors.black,
+                                                                                fontWeight: FontWeight.bold,
+                                                                    ),
+                                                                ),
+                                                                subtitle: Text(
+                                                                            data['college'] ?? 'No College',
+                                                                    style: TextStyle(
+                                                                        color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                                                                    ),
+                                                                            maxLines: 1,
+                                                                            overflow: TextOverflow.ellipsis,
+                                                                        ),
+                                                                        children: [
+                                                                            Padding(
+                                                                                padding: EdgeInsets.all(16),
+                                                                                child: Column(
+                                                                                    children: [
+                                                                                        _buildRegistrationDetailRow(
+                                                                                            icon: Icons.school,
+                                                                                            label: 'Department',
+                                                                                            value: data['department'] ?? 'Not specified',
+                                                                                            isDarkMode: isDarkMode,
+                                                                                        ),
+                                                                                        SizedBox(height: 8),
+                                                                                        _buildRegistrationDetailRow(
+                                                                                            icon: Icons.calendar_today,
+                                                                                            label: 'Year',
+                                                                                            value: data['year'] ?? 'Not specified',
+                                                                                            isDarkMode: isDarkMode,
+                                                                                        ),
+                                                                                        SizedBox(height: 8),
+                                                                                        _buildRegistrationDetailRow(
+                                                                                            icon: Icons.phone,
+                                                                                            label: 'Phone',
+                                                                                            value: data['phone'] ?? 'Not provided',
+                                                                                            isDarkMode: isDarkMode,
+                                                                                        ),
+                                                                                        SizedBox(height: 8),
+                                                                                        _buildRegistrationDetailRow(
+                                                                                            icon: Icons.access_time,
+                                                                                            label: 'Registered On',
+                                                                                            value: _formatTimestamp(data['registeredAt']),
+                                                                                            isDarkMode: isDarkMode,
+                                                                                        ),
+                                                                                    ],
+                                                                                ),
+                                                                            ),
+                                                                        ],
+                                                                ),
+                                                            );
+                                                        }).toList(),
+                                                        ],
+                                                    );
+                                                },
+                                            ),
+                                        ),
+                                    ],
+                                ],
+                            ),
+                        ),
+                    ),
+                ],
+            ),
+        );
+    }
+
+    Widget _buildInfoCard({
+        required bool isDarkMode,
+        required String title,
+        required Widget content,
+    }) {
+        return Container(
+            decoration: BoxDecoration(
+                color: isDarkMode ? Color(0xFF252542) : Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                    BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 10,
+                        offset: Offset(0, 4),
+                    ),
+                ],
+            ),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                    Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Text(
+                            title,
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: isDarkMode ? Colors.white : Colors.black,
+                            ),
+                        ),
+                    ),
+                    Divider(
+                        color: isDarkMode ? Colors.white10 : Colors.grey[200],
+                        height: 1,
+                    ),
+                    Padding(
+                        padding: EdgeInsets.all(16),
+                        child: content,
+                    ),
+                ],
+            ),
+        );
+    }
+
+    Widget _buildDetailRow({
+        required IconData icon,
+        required String label,
+        required String value,
+        required bool isDarkMode,
+        bool isCapacity = false,
+        bool isFull = false,
+    }) {
+        return Padding(
+            padding: EdgeInsets.symmetric(vertical: 8),
+            child: Row(
+                children: [
+                    Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                            color: isDarkMode 
+                                ? Colors.blue[900]!.withOpacity(0.2)
+                                : Colors.blue[50],
+                            borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                            icon,
+                            size: 20,
+                            color: isDarkMode ? Colors.blue[400] : Colors.blue[800],
+                        ),
+                    ),
+                    SizedBox(width: 16),
+                    Text(
+                        label,
+                        style: TextStyle(
+                            color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                        ),
+                    ),
+                    Spacer(),
+                    Text(
+                        value,
+                        style: TextStyle(
+                            color: isCapacity
+                                ? (isFull
+                                    ? Colors.red
+                                    : Colors.green)
+                                : (isDarkMode ? Colors.white : Colors.black),
+                            fontWeight: FontWeight.bold,
+                        ),
+                    ),
+                ],
+            ),
+        );
+    }
+
+    void _showEditEventDialog(BuildContext context, Map<String, dynamic> eventData) {
+        // Implement edit dialog similar to the one in event_screen.dart
+        // You can reuse the _showEditEventForm method from there
+    }
+
+    void _showDeleteConfirmation(BuildContext context, Map<String, dynamic> eventData) {
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                title: Text('Delete Event'),
+                content: Text('Are you sure you want to delete this event? This action cannot be undone.'),
+                actions: [
+                    TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text('Cancel'),
+                    ),
+                    ElevatedButton(
+                        onPressed: () async {
+                            try {
+                                await FirebaseFirestore.instance
+                                    .collection('events')
+                                    .doc(eventData['id'])
+                                    .delete();
+                                
+                                Navigator.pop(context); // Close dialog
+                                Navigator.pop(context); // Go back to profile
+                                
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Event deleted successfully')),
+                                );
+                            } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Error deleting event: $e')),
+                                );
+                            }
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                        ),
+                        child: Text('Delete'),
+                    ),
+                ],
+            ),
+        );
+    }
+
+    // Helper methods for registration stats
+    Set<String> _getUniqueColleges(List<DocumentSnapshot> registrations) {
+        return registrations
+            .map((reg) => (reg.data() as Map<String, dynamic>)['college'] as String?)
+            .where((college) => college != null)
+            .map((college) => college!)  // Convert String? to String
+            .toSet();
+    }
+
+    Set<String> _getUniqueDepartments(List<DocumentSnapshot> registrations) {
+        return registrations
+            .map((reg) => (reg.data() as Map<String, dynamic>)['department'] as String?)
+            .where((dept) => dept != null)
+            .map((dept) => dept!)  // Convert String? to String
+            .toSet();
+    }
+
+    Widget _buildStatItem({
+        required IconData icon,
+        required String label,
+        required String value,
+        required bool isDarkMode,
+    }) {
+        return Column(
+            children: [
+                Icon(
+                    icon,
+                    color: isDarkMode ? Colors.blue[400] : Colors.blue[800],
+                    size: 24,
+                ),
+                SizedBox(height: 4),
+                Text(
+                    value,
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: isDarkMode ? Colors.white : Colors.black,
+                    ),
+                ),
+                Text(
+                    label,
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                    ),
+                ),
+            ],
+        );
+    }
+
+    Widget _buildRegistrationDetailRow({
+        required IconData icon,
+        required String label,
+        required String value,
+        required bool isDarkMode,
+    }) {
+        return Row(
+            children: [
+                Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                        color: isDarkMode 
+                            ? Colors.blue[900]!.withOpacity(0.2)
+                            : Colors.blue[50],
+                        borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                        icon,
+                        size: 16,
+                        color: isDarkMode ? Colors.blue[400] : Colors.blue[800],
+                    ),
+                ),
+                SizedBox(width: 12),
+                Text(
+                    '$label:',
+                    style: TextStyle(
+                        color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                    ),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                    child: Text(
+                        value,
+                        style: TextStyle(
+                            color: isDarkMode ? Colors.white : Colors.black,
+                            fontWeight: FontWeight.w500,
+                        ),
+                        textAlign: TextAlign.right,
+                    ),
+                ),
+            ],
+        );
+    }
+
+    String _formatTimestamp(dynamic timestamp) {
+        if (timestamp == null) return 'Not available';
+        DateTime dateTime = (timestamp as Timestamp).toDate();
+        return '${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute}';
+    }
 }
