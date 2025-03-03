@@ -78,7 +78,7 @@ class _ProfilePageState extends State<ProfilePage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // User profile section
+              // User profile section n
               Container(
                 padding: EdgeInsets.all(30),
                 child: Row(
