@@ -90,6 +90,10 @@ import '../MECH/sem8/mech_sem8_screen.dart';
 // Replace with actual path
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 

@@ -12,6 +12,10 @@ import 'package:Nexia/ER/sem3/SSVIL/ssvil.dart';// Import the correct file for u
 import 'package:Nexia/ER/sem3/DELD/deld.dart';
 import 'package:Nexia/widgets/profiledark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 
 class ECSem3Screen extends StatefulWidget {
   final String fullName;

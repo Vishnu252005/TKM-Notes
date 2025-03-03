@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:Nexia/widgets/profile.dart';
 import 'package:Nexia/widgets/pdfviewer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class Mmt1 extends StatefulWidget {

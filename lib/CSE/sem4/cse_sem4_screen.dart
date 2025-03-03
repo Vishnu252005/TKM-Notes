@@ -8,6 +8,10 @@ import 'package:Nexia/CSE/sem4/OS/os.dart';// Import the correct file for units
 import 'package:Nexia/CSE/sem4/ES/es.dart';
 import 'package:Nexia/widgets/profiledark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 
 class CSESem4Screen extends StatefulWidget {
   final String fullName;

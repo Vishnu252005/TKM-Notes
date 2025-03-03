@@ -15,6 +15,10 @@ import 'package:Nexia/CSE/sem2/UHV/uhv%20-%20Copy.dart';
 import 'package:Nexia/CSE/sem2/UHV/uhv.dart'; // Import the profile.dart file
 import 'package:Nexia/widgets/profiledark.dart'; // Import the profile.dart file
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 class CSESem2Screen extends StatefulWidget {
   final String fullName;
   final String branch;

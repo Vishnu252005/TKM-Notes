@@ -7,6 +7,10 @@ import 'package:Nexia/CHEMICAL/sem3/PS/ps.dart'; // Import the correct file for 
 import 'package:Nexia/CHEMICAL/sem3/LSPE/lspe.dart';
 import 'package:Nexia/widgets/profiledark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 
 class CHEMICALSem3Screen extends StatefulWidget {
   final String fullName;

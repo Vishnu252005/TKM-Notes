@@ -66,6 +66,10 @@ import '../MECH/sem8/mech_sem8_screen.dart';
 
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -85,6 +89,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
     'Third Year': ['Sem5', 'Sem6'],
     'Fourth Year': ['Sem7', 'Sem8'],
   };
+
+  // Updated color scheme
+  final Color primaryBlue = Color(0xFF2563EB);
+  final Color darkBlue = Color(0xFF1E40AF);
+  final Color lightBlue = Color(0xFF60A5FA);
+  final Color surfaceBlue = Color(0xFF0F172A);
+  final Color inputBlue = Color(0xFF1E293B);
+  final Color accentBlue = Color(0xFF38BDF8);
+  final Color errorRed = Color(0xFFDC2626);
 
   @override
   void initState() {
@@ -152,177 +165,395 @@ class _SignUpScreenState extends State<SignUpScreen> {
     double padding = screenWidth * 0.05;
 
     return Scaffold(
-      backgroundColor: Color(0xFF4C4DDC),
+      backgroundColor: surfaceBlue,
       body: SafeArea(
         child: Stack(
           children: [
-            Column(
-              children: [
-                SizedBox(height: screenHeight * 0.05),
-                Text(
-                  'Sign Up',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                  textAlign: TextAlign.center,
+            // Background gradient with pattern
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [darkBlue.withOpacity(0.8), surfaceBlue],
                 ),
-                SizedBox(height: screenHeight * 0.05),
-                Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(padding),
-                    decoration: BoxDecoration(
-                      color: Color( 0xFF101010),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(16),
-                        topRight: Radius.circular(16),
-                      ),
+              ),
+              child: ShaderMask(
+                shaderCallback: (rect) {
+                  return LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Colors.black, Colors.transparent],
+                  ).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
+                },
+                blendMode: BlendMode.dstIn,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    backgroundBlendMode: BlendMode.overlay,
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/pattern.png'), // Add a subtle pattern image
+                      repeat: ImageRepeat.repeat,
+                      opacity: 0.05,
                     ),
-                    child: Form(
-                      key: _formKey,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Full Name', style: TextStyle(color: Colors.white)),
-                            ),
-                            TextFormField(
-                              decoration: InputDecoration(
-                                hintText: 'Full Name',
-                                fillColor: Color.fromARGB(255, 58, 58, 58),
-                                filled: true,
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                              ),
-                              style: TextStyle(color: Colors.white),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter your full name';
-                                }
-                                return null;
-                              },
-                              onSaved: (value) => _fullName = value,
-                            ),
-                            SizedBox(height: 16),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Branch', style: TextStyle(color: Colors.white)),
-                            ),
-                            DropdownButtonFormField(
-                              items: _branchOptions.map((String branch) {
-                                return DropdownMenuItem(value: branch, child: Text(branch));
-                              }).toList(),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  _branch = newValue;
-                                });
-                              },
-                              decoration: InputDecoration(
-                                hintText: ' Select Branch',
-                                fillColor: Colors.grey[800],
-                                filled: true,
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                              ),
-                              style: TextStyle(color: Colors.white),
-                              dropdownColor: Colors.grey[800],
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please select your branch';
-                                }
-                                return null;
-                              },
-                            ),
-                            SizedBox(height: 16),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Year', style: TextStyle(color: Colors.white)),
-                            ),
-                            DropdownButtonFormField(
-                              items: _yearOptions.map((String year) {
-                                return DropdownMenuItem(value: year, child: Text(year));
-                              }).toList(),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  _year = newValue;
-                                  _semester = null;
-                                });
-                              },
-                              decoration: InputDecoration(
-                                fillColor: Colors.grey[800],
-                                filled: true,
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                              ),
-                              style: TextStyle(color: Colors.white),
-                              dropdownColor: Colors.grey[800],
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please select your year';
-                                }
-                                return null;
-                              },
-                            ),
-                            SizedBox(height: 16),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Semester', style: TextStyle(color: Colors.white)),
-                            ),
-                            if (_year != null)
-                              Row(
-                                children: _semesterOptions[_year]!.map((String sem) {
-                                  return Expanded(
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 4),
-                                      child: ElevatedButton(
-                                        child: Text(sem, style: TextStyle(fontSize: 16, color: Color.fromARGB(255, 249, 246, 246))),
-                                        onPressed: () {
-                                          setState(() {
-                                            _semester = sem;
-                                          });
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: _semester == sem ? Colors.deepPurple : Colors.grey[800],
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  child: Text('Save Profile', style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 249, 246, 246))),
-                  onPressed: _saveProfile,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF4C4DDC),
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    elevation: 0,
-                    shadowColor: Colors.transparent,
-                    minimumSize: Size.fromHeight(10),
                   ),
                 ),
               ),
+            ),
+            
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: screenHeight * 0.04),
+                    child: Column(
+                      children: [
+                        // Animated logo container
+                        TweenAnimationBuilder(
+                          duration: Duration(milliseconds: 800),
+                          tween: Tween<double>(begin: 0, end: 1),
+                          builder: (context, double value, child) {
+                            return Transform.scale(
+                              scale: value,
+                              child: Container(
+                                padding: EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: primaryBlue.withOpacity(0.1),
+                                  border: Border.all(
+                                    color: primaryBlue.withOpacity(0.3),
+                                    width: 2,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: primaryBlue.withOpacity(0.2),
+                                      blurRadius: 20,
+                                      spreadRadius: 5,
+                                    ),
+                                  ],
+                                ),
+                                child: Icon(
+                                  Icons.school_rounded,
+                                  size: 48,
+                                  color: accentBlue,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        SizedBox(height: 24),
+                        // Animated text
+                        TweenAnimationBuilder(
+                          duration: Duration(milliseconds: 800),
+                          tween: Tween<double>(begin: 0, end: 1),
+                          builder: (context, double value, child) {
+                            return Opacity(
+                              opacity: value,
+                              child: child,
+                            );
+                          },
+                          child: Column(
+                            children: [
+                              Text(
+                                'Student Registration',
+                                style: TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                'Enter your academic details below',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: lightBlue.withOpacity(0.7),
+                                  letterSpacing: 0.3,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Form Container
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: padding),
+                    padding: EdgeInsets.all(padding),
+                    decoration: BoxDecoration(
+                      color: surfaceBlue.withOpacity(0.7),
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(
+                        color: primaryBlue.withOpacity(0.1),
+                        width: 1,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: darkBlue.withOpacity(0.3),
+                          blurRadius: 20,
+                          offset: Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          _buildFormField('Full Name', Icons.person_outline),
+                          SizedBox(height: 24),
+                          _buildBranchDropdown(),
+                          SizedBox(height: 24),
+                          _buildYearDropdown(),
+                          SizedBox(height: 24),
+                          _buildSemesterSelection(),
+                          SizedBox(height: 32),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 100), // Space for the button
+                ],
+              ),
+            ),
+
+            // Submit Button
+            Positioned(
+              bottom: 20,
+              left: 20,
+              right: 20,
+              child: _buildSubmitButton(),
             ),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildFormField(String label, IconData icon) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildLabel(label),
+        _buildAnimatedContainer(
+          child: TextFormField(
+            decoration: _buildInputDecoration(label, icon),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              letterSpacing: 0.5,
+            ),
+            validator: (value) => value?.isEmpty ?? true ? 'This field is required' : null,
+            onSaved: (value) => _fullName = value,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSubmitButton() {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: primaryBlue.withOpacity(0.3),
+            blurRadius: 20,
+            offset: Offset(0, 5),
+          ),
+        ],
+      ),
+      child: ElevatedButton(
+        onPressed: _saveProfile,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: primaryBlue,
+          padding: EdgeInsets.symmetric(vertical: 20),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Complete Registration',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                letterSpacing: 0.5,
+              ),
+            ),
+            SizedBox(width: 8),
+            Icon(Icons.arrow_forward_rounded, color: Colors.white),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAnimatedContainer({required Widget child}) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            inputBlue.withOpacity(0.5),
+            inputBlue,
+          ],
+        ),
+        border: Border.all(
+          color: primaryBlue.withOpacity(0.1),
+          width: 1,
+        ),
+      ),
+      child: child,
+    );
+  }
+
+  Widget _buildLabel(String label) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4, bottom: 8),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: accentBlue,
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          letterSpacing: 0.5,
+        ),
+      ),
+    );
+  }
+
+  InputDecoration _buildInputDecoration(String hint, IconData icon) {
+    return InputDecoration(
+      hintText: hint,
+      hintStyle: TextStyle(
+        color: accentBlue.withOpacity(0.5),
+        fontSize: 16,
+      ),
+      prefixIcon: Icon(icon, color: accentBlue),
+      filled: true,
+      fillColor: Colors.transparent,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: primaryBlue, width: 1),
+      ),
+      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+    );
+  }
+
+  Widget _buildBranchDropdown() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildLabel('Branch'),
+        _buildAnimatedContainer(
+          child: DropdownButtonFormField(
+            items: _branchOptions.map((String branch) {
+              return DropdownMenuItem(value: branch, child: Text(branch));
+            }).toList(),
+            onChanged: (String? newValue) {
+              setState(() {
+                _branch = newValue;
+              });
+            },
+            decoration: _buildInputDecoration('Select Branch', Icons.school_outlined),
+            style: TextStyle(color: Colors.white, fontSize: 16),
+            dropdownColor: inputBlue,
+            icon: Icon(Icons.arrow_drop_down, color: accentBlue),
+            validator: (value) => value == null ? 'Please select your branch' : null,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildYearDropdown() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildLabel('Year'),
+        _buildAnimatedContainer(
+          child: DropdownButtonFormField(
+            items: _yearOptions.map((String year) {
+              return DropdownMenuItem(value: year, child: Text(year));
+            }).toList(),
+            onChanged: (String? newValue) {
+              setState(() {
+                _year = newValue;
+                _semester = null;
+              });
+            },
+            decoration: _buildInputDecoration('Select Year', Icons.calendar_today_outlined),
+            style: TextStyle(color: Colors.white, fontSize: 16),
+            dropdownColor: inputBlue,
+            icon: Icon(Icons.arrow_drop_down, color: accentBlue),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSemesterSelection() {
+    if (_year != null) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildLabel('Semester'),
+          Container(
+            height: 55,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: _semesterOptions[_year]!.map((String sem) {
+                bool isSelected = _semester == sem;
+                return Padding(
+                  padding: EdgeInsets.only(right: 12),
+                  child: _buildAnimatedContainer(
+                    child: ElevatedButton(
+                      child: Text(
+                        sem,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: isSelected ? Colors.white : accentBlue,
+                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      onPressed: () => setState(() => _semester = sem),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isSelected ? primaryBlue : inputBlue,
+                        padding: EdgeInsets.symmetric(horizontal: 28, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: isSelected ? 8 : 0,
+                        shadowColor: isSelected ? primaryBlue.withOpacity(0.5) : Colors.transparent,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      );
+    } else {
+      return SizedBox.shrink();
+    }
   }
 }

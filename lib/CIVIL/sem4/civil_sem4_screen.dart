@@ -8,6 +8,10 @@ import 'package:Nexia/CIVIL/sem4/SM/sm.dart';
 import 'package:Nexia/CIVIL/sem4/TE/te.dart';
 import 'package:Nexia/widgets/profiledark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 
 class CIVILSem4Screen extends StatefulWidget {
   final String fullName;

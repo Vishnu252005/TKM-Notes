@@ -4,6 +4,10 @@ import 'dart:math';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:lottie/lottie.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class VoiceChat extends StatefulWidget {
   @override
@@ -34,6 +38,32 @@ class _VoiceChatState extends State<VoiceChat>
     "https://seeklogo.com/images/G/google-gemini-logo-A5787B2669-seeklogo.com.png",
   );
 
+  final ScrollController _scrollController = ScrollController();
+  double _confidenceLevel = 0.0;
+
+  // Update API key handling
+  String get _huggingFaceApiKey => dotenv.env['HUGGING_FACE_TOKEN'] ?? '';
+  String get _geminiApiKey => dotenv.env['GEMINI_API_KEY'] ?? '';
+
+  // Add new variables for Hugging Face
+  bool useHuggingFace = false;
+  String huggingFaceModel = 'microsoft/Phi-4-multimodal-instruct';
+  
+  ChatUser huggingFaceUser = ChatUser(
+    id: "2",
+    firstName: "HuggingFace",
+    profileImage:
+        "https://huggingface.co/front/assets/huggingface_logo-noborder.svg",
+  );
+
+  // Add model options
+  final List<String> availableModels = [
+    'microsoft/Phi-4-multimodal-instruct',
+    'facebook/blenderbot-400M-distill',
+    'microsoft/DialoGPT-medium',
+    'EleutherAI/gpt-neo-1.3B'
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -62,59 +92,94 @@ class _VoiceChatState extends State<VoiceChat>
     flutterTts.setPitch(1.0);
     flutterTts.setSpeechRate(0.5);
     _listen();
+
+    // Initialize confidence level listener
+    speechToText.statusListener = (status) {
+      if (status == 'listening') {
+        setState(() => _confidenceLevel = 0.0);
+      }
+    };
+
+    // Initialize Gemini with API key and set default model
+    Gemini.init(apiKey: _geminiApiKey);
+    huggingFaceModel = 'microsoft/Phi-4-multimodal-instruct';
+    useHuggingFace = true;  // Set HuggingFace as default
   }
 
-  void _sendMessage(ChatMessage chatMessage) {
+  void _sendMessage(ChatMessage chatMessage) async {
     setState(() {
       messages = [chatMessage, ...messages];
+      isGenerating = true;
     });
 
     try {
-      String question = chatMessage.text;
-      StringBuffer responseBuffer = StringBuffer();
-
-      setState(() {
-        isGenerating = true;
-      });
-
-      gemini
-          .streamGenerateContent(
-        question,
-      )
-          .listen((event) async {
-        String responsePart = event.content?.parts?.fold(
-            "", (previous, current) => "$previous ${current.text}") ?? "";
-
-        responseBuffer.write(_cleanResponse(responsePart));
-
+      String response;
+      if (useHuggingFace) {
+        response = await _getHuggingFaceResponse(chatMessage.text);
         setState(() {
-          if (messages.isNotEmpty && messages.first.user == geminiUser) {
-            messages[0] = ChatMessage(
-              user: geminiUser,
+          messages = [
+            ChatMessage(
+              user: huggingFaceUser,
               createdAt: DateTime.now(),
-              text: responseBuffer.toString(),
-            );
-          } else {
-            messages = [
-              ChatMessage(
-                user: geminiUser,
-                createdAt: DateTime.now(),
-                text: responseBuffer.toString(),
-              ),
-              ...messages,
-            ];
-          }
+              text: _cleanResponse(response),
+            ),
+            ...messages,
+          ];
+          isGenerating = false;
         });
-      }, onDone: () async {
-        String finalResponse = responseBuffer.toString();
-        await flutterTts.speak(finalResponse);
-
+        
+        await flutterTts.speak(response);
         flutterTts.setCompletionHandler(() {
           _listen();
         });
-      });
+      } else {
+        // Existing Gemini implementation
+        StringBuffer responseBuffer = StringBuffer();
+        await for (final event in gemini.streamGenerateContent(chatMessage.text)) {
+          String responsePart = event.content?.parts?.fold(
+              "", (previous, current) => "$previous ${current.text}") ?? "";
+
+          responseBuffer.write(_cleanResponse(responsePart));
+
+          setState(() {
+            if (messages.isNotEmpty && messages.first.user == geminiUser) {
+              messages[0] = ChatMessage(
+                user: geminiUser,
+                createdAt: DateTime.now(),
+                text: responseBuffer.toString(),
+              );
+            } else {
+              messages = [
+                ChatMessage(
+                  user: geminiUser,
+                  createdAt: DateTime.now(),
+                  text: responseBuffer.toString(),
+                ),
+                ...messages,
+              ];
+            }
+          });
+        }
+
+        String finalResponse = responseBuffer.toString();
+        await flutterTts.speak(finalResponse);
+        flutterTts.setCompletionHandler(() {
+          _listen();
+        });
+      }
     } catch (e) {
-      print(e);
+      print('Error generating response: $e');
+      setState(() {
+        isGenerating = false;
+        messages = [
+          ChatMessage(
+            user: useHuggingFace ? huggingFaceUser : geminiUser,
+            createdAt: DateTime.now(),
+            text: 'Sorry, I encountered an error. Please try again.',
+          ),
+          ...messages,
+        ];
+      });
     }
   }
 
@@ -211,41 +276,125 @@ class _VoiceChatState extends State<VoiceChat>
     super.dispose();
   }
 
+  Widget _buildTypingIndicator() {
+    return Container(
+      padding: EdgeInsets.all(16),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: NetworkImage(geminiUser.profileImage!),
+              ),
+            ),
+          ),
+          SizedBox(width: 12),
+          Lottie.network(
+            'https://assets1.lottiefiles.com/packages/lf20_b88nh30c.json',
+            width: 60,
+            height: 40,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMessageList() {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: ListView.builder(
+          controller: _scrollController,
+          reverse: true,
+          itemCount: messages.length + (isGenerating ? 1 : 0),
+          itemBuilder: (context, index) {
+            if (isGenerating && index == 0) {
+              return _buildTypingIndicator();
+            }
+            
+            final messageIndex = isGenerating ? index - 1 : index;
+            final message = messages[messageIndex];
+            final isUser = message.user == currentUser;
+            
+            return Padding(
+              padding: EdgeInsets.only(bottom: 16),
+              child: Row(
+                mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+                children: [
+                  if (!isUser) ...[
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(geminiUser.profileImage!),
+                      radius: 20,
+                    ),
+                    SizedBox(width: 8),
+                  ],
+                  Flexible(
+                    child: Container(
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: isUser 
+                            ? (isDarkMode ? Colors.blue[700] : Colors.blue[100])
+                            : (isDarkMode ? Colors.grey[800] : Colors.grey[200]),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Text(
+                        message.text,
+                        style: TextStyle(
+                          color: isDarkMode ? Colors.white : Colors.black87,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: isDarkMode ? Colors.grey[900] : Colors.white,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: isDarkMode ? Colors.white : Colors.black),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          tooltip: 'Back',
+          onPressed: () => Navigator.pop(context),
         ),
+        title: _buildModelSelector(),
         actions: [
           IconButton(
             onPressed: () {
-              setState(() => isDarkMode = !isDarkMode);
+              setState(() => messages.clear());
             },
+            icon: Icon(
+              Icons.delete_outline,
+              color: isDarkMode ? Colors.white : Colors.black,
+            ),
+            tooltip: 'Clear Chat',
+          ),
+          IconButton(
+            onPressed: () => setState(() => isDarkMode = !isDarkMode),
             icon: Icon(
               isDarkMode ? Icons.wb_sunny : Icons.nights_stay,
               color: isDarkMode ? Colors.white : Colors.black,
             ),
-            tooltip: 'Toggle Theme',
           ),
         ],
       ),
       body: Container(
-        width: double.infinity,
-        height: double.infinity,
         decoration: BoxDecoration(
           gradient: isDarkMode
               ? LinearGradient(
-                  colors: [Colors.black87, Colors.black54],
+                  colors: [Colors.grey[900]!, Colors.black87],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 )
@@ -255,121 +404,205 @@ class _VoiceChatState extends State<VoiceChat>
                   end: Alignment.bottomCenter,
                 ),
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: 20),
-
-              SizedBox(
-                width: 250,
-                height: 250,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Box(0.8, 0.8, 4, _controller, Colors.grey.withOpacity(0.2)),
-                    Box(0.6, 0.6, 3, _controller, Colors.grey.withOpacity(0.4)),
-                    Box(0.4, 0.4, 2, _controller, Colors.grey.withOpacity(0.6)),
-                    Box(0.2, 0.2, 1, _controller, Colors.grey.withOpacity(0.8)),
-                    Box(0.1, 0.1, 0, _controller, Colors.grey),
-                    LogoBox(_controller),
-                  ],
-                ),
-              ),
-
-              SizedBox(height: 20),
-
-              // Move the listening/generating indicator below the animation stack
-              Center(
-                child: FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: Text(
-                    _isListening ? 'Listening...' : (isGenerating ? 'Generating...' : ''),
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: isDarkMode ? Colors.white : Colors.black,
-                      decoration: TextDecoration.none,
-                    ),
-                  ),
-                ),
-              ),
-
-              SizedBox(height: 20),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
+          children: [
+            _buildMessageList(),
+            Container(
+              padding: EdgeInsets.all(16),
+              child: Column(
                 children: [
-                  Column(
+                  if (_isListening)
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      child: LinearProgressIndicator(
+                        value: _confidenceLevel,
+                        backgroundColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          isDarkMode ? Colors.blue[700]! : Colors.blue,
+                        ),
+                      ),
+                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      ScaleTransition(
-                        scale: _buttonAnimation,
-                        child: IconButton(
-                          icon: Icon(Icons.stop, color: Colors.red),
-                          onPressed: isGenerating ? _stopTTS : null,
-                          tooltip: 'Stop',
-                          iconSize: 28,
-                        ),
+                      _buildActionButton(
+                        icon: Icons.stop,
+                        color: Colors.red,
+                        onPressed: isGenerating ? _stopTTS : null,
+                        label: "Stop",
                       ),
-                      Text(
-                        "Stop",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontStyle: FontStyle.italic,
-                          fontWeight: FontWeight.w600,
-                          color: isDarkMode ? Colors.white : Colors.black,
-                          decoration: TextDecoration.none,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(width: 40),
-                  Column(
-                    children: [
-                      ScaleTransition(
-                        scale: _buttonAnimation,
-                        child: IconButton(
-                          icon: Icon(Icons.mic, color: Colors.green),
-                          onPressed: !_isListening && !isGenerating ? _listen : null,
-                          tooltip: 'Start Listening',
-                          iconSize: 28,
-                        ),
-                      ),
-                      Text(
-                        "Start",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontStyle: FontStyle.italic,
-                          fontWeight: FontWeight.w600,
-                          color: isDarkMode ? Colors.white : Colors.black,
-                          decoration: TextDecoration.none,
-                        ),
+                      _buildActionButton(
+                        icon: Icons.mic,
+                        color: _isListening ? Colors.red : Colors.green,
+                        onPressed: !isGenerating ? _listen : null,
+                        label: _isListening ? "Listening..." : "Start",
                       ),
                     ],
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (ctx) => AlertDialog(
-              title: Text("Help"),
-              content: Text("You can toggle Dark/Light mode, start or stop speech recognition, and chat here."),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(ctx),
-                  child: Text("Close"),
+    );
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required Color color,
+    required VoidCallback? onPressed,
+    required String label,
+  }) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ScaleTransition(
+          scale: _buttonAnimation,
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: isDarkMode ? Colors.grey[800] : Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 8,
+                  offset: Offset(0, 2),
                 ),
               ],
             ),
-          );
+            child: IconButton(
+              icon: Icon(icon, color: color),
+              onPressed: onPressed,
+              iconSize: 28,
+              padding: EdgeInsets.all(12),
+            ),
+          ),
+        ),
+        SizedBox(height: 8),
+        Text(
+          label,
+          style: TextStyle(
+            color: isDarkMode ? Colors.white70 : Colors.black87,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Add model selection
+  void _toggleModel() {
+    setState(() {
+      useHuggingFace = !useHuggingFace;
+    });
+  }
+
+  // Add Hugging Face API call with improved error handling
+  Future<String> _getHuggingFaceResponse(String input) async {
+    try {
+      final response = await http.post(
+        Uri.parse('https://api-inference.huggingface.co/models/$huggingFaceModel'),
+        headers: {
+          'Authorization': 'Bearer $_huggingFaceApiKey',
+          'Content-Type': 'application/json',
         },
-        backgroundColor: isDarkMode ? Colors.grey[800] : Colors.blue,
-        child: Icon(Icons.help),
+        body: jsonEncode({
+          'inputs': input,
+          'parameters': {
+            'max_length': 1000,
+            'temperature': 0.7,
+            'top_p': 0.9,
+            'repetition_penalty': 1.2,
+          }
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data is List && data.isNotEmpty) {
+          return data[0]['generated_text'] ?? 'No response generated';
+        }
+        return 'Invalid response format';
+      } else {
+        print('Error response: ${response.body}');
+        throw Exception('Failed to generate response: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Exception details: $e');
+      return 'Error: Unable to generate response. Please try again.';
+    }
+  }
+
+  // Add model selection dialog
+  void _showModelSelector() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Select Model'),
+        content: Container(
+          width: double.maxFinite,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: availableModels.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(availableModels[index]),
+                selected: huggingFaceModel == availableModels[index],
+                onTap: () {
+                  setState(() {
+                    huggingFaceModel = availableModels[index];
+                  });
+                  Navigator.pop(context);
+                },
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Update the AppBar title to include model selection
+  Widget _buildModelSelector() {
+    return GestureDetector(
+      onTap: _toggleModel,
+      onLongPress: useHuggingFace ? _showModelSelector : null,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CircleAvatar(
+            backgroundImage: NetworkImage(
+              useHuggingFace 
+                  ? huggingFaceUser.profileImage!
+                  : geminiUser.profileImage!,
+            ),
+            radius: 15,
+          ),
+          SizedBox(width: 8),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                useHuggingFace ? 'HuggingFace' : 'Gemini',
+                style: TextStyle(
+                  color: isDarkMode ? Colors.white : Colors.black,
+                  fontSize: 16,
+                ),
+              ),
+              if (useHuggingFace)
+                Text(
+                  huggingFaceModel.split('/').last,
+                  style: TextStyle(
+                    color: isDarkMode ? Colors.white70 : Colors.black54,
+                    fontSize: 12,
+                  ),
+                ),
+            ],
+          ),
+        ],
       ),
     );
   }

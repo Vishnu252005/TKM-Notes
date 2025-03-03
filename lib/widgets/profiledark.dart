@@ -8,6 +8,10 @@ import '../widgets/sgpa.dart';
 import '../widgets/signup.dart';
 import '../widgets/calcu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import '../widgets/syllabus.dart';
 import 'package:Nexia/widgets/pdfviewer.dart';
 
@@ -253,174 +257,493 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _isDarkMode ? Color(0xFF101010) : Colors.white,
-      appBar: AppBar(
-        backgroundColor: _isDarkMode ? Color(0xFF101010) : Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: _isDarkMode ? Colors.white : Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
+      backgroundColor: _isDarkMode ? Color(0xFF1A1A2E) : Color(0xFFF0F8FF),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.all(30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(widget.fullName, 
-                              style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black, fontSize: 18, fontWeight: FontWeight.bold)),
-                          SizedBox(height: 4),
-                          Text('${widget.year} - ${widget.branch}', style: TextStyle(color: Colors.grey)),
-                          SizedBox(height: 2),
-                          Text('${widget.semester}', style: TextStyle(color: Colors.grey)),
-                          SizedBox(height: 8),
-                        ],
-                      ),   
-                    ),
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Colors.blue,
-                      child: Text(
-                        widget.fullName[0].toUpperCase(),
-                        style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+        child: Stack(
+          children: [
+            // Add decorative background pattern
+            Positioned.fill(
+              child: _isDarkMode
+                  ? CustomPaint(
+                      painter: DotPatternPainter(
+                        color: Colors.white.withOpacity(0.03),
+                      ),
+                    )
+                  : CustomPaint(
+                      painter: DotPatternPainter(
+                        color: Colors.blue.withOpacity(0.05),
                       ),
                     ),
-                  ],
-                ),
-              ),
-              
-              Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      child: Text('Features', style: TextStyle(color: Colors.grey)),
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.book, color: _isDarkMode ? Colors.white : Colors.black),
-                      title: Text('Syllabus', style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black)),
-                      trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.black),
-                      // onTap: _launchPDFViewer,
-                    ),
-                    // navigate to syllabus page
-                    
-                    
-                    ListTile(
-                      leading: Icon(Icons.calendar_today, color: _isDarkMode ? Colors.white : Colors.black),
-                      title: Text('Exam Timetable', style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black)),
-                      trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.black),
-                      onTap: () {
-                        if (_examTimetableLink == null || _examTimetableLink!.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('No exams dude, just be chill!')),
-                          );
-                        } else {
-                          _launchURL(_examTimetableLink!);
-                        }
-                      },
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.calculate, color: _isDarkMode ? Colors.white : Colors.black),
-                      title: Text('Nexia AI', style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black)),
-                      trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.black),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => GeminiChat(),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              
-              SwitchListTile(
-                secondary: Icon(Icons.dark_mode, color: _isDarkMode ? Colors.white : Colors.black),
-                title: Text('Dark Mode', style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black)),
-                value: _isDarkMode,
-                onChanged: (bool value) {
-                  _toggleTheme(value);
-                },
-              ),
-              
-              ListTile(
-                leading: Icon(Icons.language, color: _isDarkMode ? Colors.white : Colors.black),
-                title: Text('Website', style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black)),
-                trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.black),
-                onTap: () async {
-                       _launchURL(Uri.https('nexianotes.vercel.app', ''));
-                 },
-                
-                ),
-             
-              ListTile(
-                leading: Icon(Icons.info, color: _isDarkMode ? Colors.white : Colors.black),
-                title: Text('About Us', style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black)),
-                trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.black),
-                onTap: _showAboutUsPopup,
-              ),
-              ListTile(
-                leading: Icon(Icons.support, color: _isDarkMode ? Colors.white : Colors.black),
-                title: Text('Support Us', style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black)),
-                trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.black),
-                onTap: _showSupportUsPopup,
-              ),
-              ListTile(
-                leading: Icon(Icons.share, color: _isDarkMode ? Colors.white : Colors.black),
-                title: Text('Share App', style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black)),
-                trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.black),
-                onTap: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => PdfChat(),
-                        //   ),
-                        // );
-                      },
-              ),
-              
-              Padding(
-                padding: EdgeInsets.all(16),
-                child: ElevatedButton.icon(
-                  icon: Icon(Icons.logout, color: Colors.white),
-                  label: Text('Logout', style: TextStyle(fontSize: 20, color: Colors.white)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    minimumSize: Size(double.infinity, 50),
-                  ),
-                  onPressed: () {
-                    _logout(context);
-                  },
-                ),
-              ),
-              
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+            ),
+            
+            SingleChildScrollView(
+              child: Column(
                 children: [
-                  Text('Terms & Condition', style: TextStyle(color: Colors.grey)),
-                  SizedBox(width: 16),
-                  Text('Privacy Policy', style: TextStyle(color: Colors.grey)),
+                  // Enhanced Header with Glass Effect
+                  ClipRRect(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(30),
+                      bottomRight: Radius.circular(30),
+                    ),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                      child: Container(
+                        padding: EdgeInsets.all(24.0),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: _isDarkMode 
+                                ? [
+                                    Color(0xFF4C4DDC).withOpacity(0.9),
+                                    Color(0xFF1A1A2E).withOpacity(0.9),
+                                  ]
+                                : [
+                                    Colors.blue[400]!.withOpacity(0.9),
+                                    Colors.blue[100]!.withOpacity(0.9),
+                                  ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.arrow_back, color: Colors.white),
+                                  onPressed: () => Navigator.of(context).pop(),
+                                ),
+                                Text(
+                                  'Profile',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(width: 40), // Balance the header
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                            Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                // Decorative circles behind avatar
+                                Container(
+                                  width: 100,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Colors.white.withOpacity(0.2),
+                                        Colors.white.withOpacity(0.1),
+                                      ],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  width: 90,
+                                  height: 90,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        blurRadius: 12,
+                                        spreadRadius: 2,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      widget.fullName[0].toUpperCase(),
+                                      style: TextStyle(
+                                        color: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[800],
+                                        fontSize: 36,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 16),
+                            Text(
+                              widget.fullName,
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.15),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(0.2),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.school,
+                                    color: Colors.white,
+                                    size: 16,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    '${widget.year} - ${widget.branch}',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.15),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(0.2),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.calendar_today,
+                                    color: Colors.white,
+                                    size: 16,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    widget.semester,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Features Section
+                  Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Features',
+                          style: TextStyle(
+                            color: _isDarkMode ? Colors.white70 : Colors.grey[700],
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        _buildFeatureCard(
+                          icon: Icons.book,
+                          title: 'Syllabus',
+                          onTap: _launchPDFViewer,
+                        ),
+                        _buildFeatureCard(
+                          icon: Icons.calendar_today,
+                          title: 'Exam Timetable',
+                          onTap: () {
+                            if (_examTimetableLink == null || _examTimetableLink!.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('No exams dude, just be chill!')),
+                              );
+                            } else {
+                              _launchURL(_examTimetableLink!);
+                            }
+                          },
+                        ),
+                        _buildFeatureCard(
+                          icon: Icons.calculate,
+                          title: 'Nexia AI',
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => GeminiChat()),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Settings Section
+                  Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Settings',
+                          style: TextStyle(
+                            color: _isDarkMode ? Colors.white70 : Colors.grey[700],
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        _buildSettingsCard(
+                          icon: Icons.dark_mode,
+                          title: 'Dark Mode',
+                          isSwitch: true,
+                          value: _isDarkMode,
+                          onChanged: _toggleTheme,
+                        ),
+                        _buildFeatureCard(
+                          icon: Icons.language,
+                          title: 'Website',
+                          onTap: () => _launchURL(Uri.https('nexianotes.vercel.app', '')),
+                        ),
+                        _buildFeatureCard(
+                          icon: Icons.info,
+                          title: 'About Us',
+                          onTap: _showAboutUsPopup,
+                        ),
+                        _buildFeatureCard(
+                          icon: Icons.support,
+                          title: 'Support Us',
+                          onTap: _showSupportUsPopup,
+                        ),
+                        _buildFeatureCard(
+                          icon: Icons.share,
+                          title: 'Share App',
+                          onTap: () {},
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Logout Button
+                  Padding(
+                    padding: EdgeInsets.all(16),
+                    child: ElevatedButton(
+                      onPressed: () => _logout(context),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red[400],
+                        minimumSize: Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.logout, color: Colors.white),
+                          SizedBox(width: 8),
+                          Text(
+                            'Logout',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Footer
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextButton(
+                              onPressed: () {},
+                              child: Text(
+                                'Terms & Conditions',
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ),
+                            Text('|', style: TextStyle(color: Colors.grey)),
+                            TextButton(
+                              onPressed: () {},
+                              child: Text(
+                                'Privacy Policy',
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Text('v1.0.0', style: TextStyle(color: Colors.grey)),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-              SizedBox(height: 8),
-              Text('v1.0.0', style: TextStyle(color: Colors.grey)),
-              SizedBox(height: 16),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFeatureCard({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return Card(
+      elevation: 0,
+      color: _isDarkMode ? Color(0xFF252542) : Colors.white,
+      margin: EdgeInsets.only(bottom: 12),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+        side: BorderSide(
+          color: _isDarkMode 
+              ? Color(0xFF4C4DDC).withOpacity(0.2)
+              : Colors.blue.withOpacity(0.1),
+        ),
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(15),
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: _isDarkMode 
+                      ? Color(0xFF4C4DDC).withOpacity(0.1)
+                      : Colors.blue.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  icon,
+                  color: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[700],
+                ),
+              ),
+              SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    color: _isDarkMode ? Colors.white : Colors.black87,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              Icon(
+                Icons.chevron_right,
+                color: _isDarkMode ? Colors.white70 : Colors.black54,
+              ),
             ],
           ),
         ),
       ),
     );
   }
+
+  Widget _buildSettingsCard({
+    required IconData icon,
+    required String title,
+    required bool isSwitch,
+    required bool value,
+    required Function(bool) onChanged,
+  }) {
+    return Card(
+      elevation: 0,
+      color: _isDarkMode ? Color(0xFF252542) : Colors.white,
+      margin: EdgeInsets.only(bottom: 12),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+        side: BorderSide(
+          color: _isDarkMode 
+              ? Color(0xFF4C4DDC).withOpacity(0.2)
+              : Colors.blue.withOpacity(0.1),
+        ),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: _isDarkMode 
+                    ? Color(0xFF4C4DDC).withOpacity(0.1)
+                    : Colors.blue.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                icon,
+                color: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[700],
+              ),
+            ),
+            SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  color: _isDarkMode ? Colors.white : Colors.black87,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            Switch(
+              value: value,
+              onChanged: onChanged,
+              activeColor: Color(0xFF4C4DDC),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Add the DotPatternPainter class at the end of the file
+class DotPatternPainter extends CustomPainter {
+  final Color color;
+  
+  DotPatternPainter({required this.color});
+  
+  @override
+  void paint(Canvas canvas, Size size) {
+    final double spacing = 20;
+    final double radius = 1;
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+      
+    for (double x = 0; x < size.width; x += spacing) {
+      for (double y = 0; y < size.height; y += spacing) {
+        canvas.drawCircle(Offset(x, y), radius, paint);
+      }
+    }
+  }
+  
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }

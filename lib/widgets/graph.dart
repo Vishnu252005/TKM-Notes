@@ -5,8 +5,22 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:universal_html/html.dart' as html;
+import 'package:share_plus/share_plus.dart';
+import 'package:open_file/open_file.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'dart:ui';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class GraphPlotter extends StatefulWidget {
   @override
@@ -51,18 +65,32 @@ class _GraphPlotterState extends State<GraphPlotter> {
 
   void _updateGraph() {
     setState(() {
-      _spots = _pointController.text
-          .split(';')
-          .map((point) {
-            List<double> values = point
-                .split(',')
-                .map((v) => double.tryParse(v) ?? 0)
-                .toList();
-            return FlSpot(values[0], values[1]);
-          })
-          .toList();
+      try {
+        _spots = _pointController.text
+            .split(';')
+            .where((point) => point.trim().isNotEmpty) // Filter empty entries
+            .map((point) {
+              final values = point.split(',');
+              if (values.length != 2) return null;
+              final x = double.tryParse(values[0].trim());
+              final y = double.tryParse(values[1].trim());
+              if (x == null || y == null) return null;
+              return FlSpot(x, y);
+            })
+            .where((spot) => spot != null)
+            .cast<FlSpot>()
+            .toList();
 
-      _adjustAxisRanges();
+        _adjustAxisRanges();
+      } catch (e) {
+        print('Error updating graph: $e');
+        // Set default values if parsing fails
+        _spots = [];
+        _xMin = 0;
+        _xMax = 10;
+        _yMin = 0;
+        _yMax = 10;
+      }
     });
   }
 
@@ -82,19 +110,226 @@ class _GraphPlotterState extends State<GraphPlotter> {
 
   Future<void> _capturePng() async {
     try {
-      RenderRepaintBoundary boundary =
-          _globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData? byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
-      Uint8List pngBytes = byteData!.buffer.asUint8List();
-      final directory = await getExternalStorageDirectory();
-      final imagePath = File('${directory!.path}/graph.png');
-      await imagePath.writeAsBytes(pngBytes);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Image saved to ${imagePath.path}')),
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Center(child: CircularProgressIndicator());
+        },
       );
+
+      // Create a temporary widget with black text for PDF
+      final pdfGraph = RepaintBoundary(
+        key: _globalKey,
+        child: Container(
+          color: Colors.white,
+          child: LineChart(
+            LineChartData(
+              gridData: FlGridData(
+                show: true,
+                getDrawingHorizontalLine: (value) {
+                  return FlLine(
+                    color: Colors.grey[300]!,
+                    strokeWidth: 1,
+                  );
+                },
+                getDrawingVerticalLine: (value) {
+                  return FlLine(
+                    color: Colors.grey[300]!,
+                    strokeWidth: 1,
+                  );
+                },
+              ),
+              titlesData: FlTitlesData(
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 30,
+                    getTitlesWidget: (value, meta) {
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          value.toStringAsFixed(1),
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 45,
+                    getTitlesWidget: (value, meta) {
+                      return Text(
+                        value.toStringAsFixed(1),
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                topTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                rightTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+              ),
+              lineBarsData: [
+                LineChartBarData(
+                  spots: _spots,
+                  isCurved: true,
+                  color: Color(0xFF4C4DDC),
+                  dotData: FlDotData(
+                    show: true,
+                    getDotPainter: (spot, percent, barData, index) {
+                      return FlDotCirclePainter(
+                        radius: 6,
+                        color: Color(0xFF4C4DDC),
+                        strokeWidth: 2,
+                        strokeColor: Colors.white,
+                      );
+                    },
+                  ),
+                  belowBarData: BarAreaData(
+                    show: true,
+                    color: Color(0xFF4C4DDC).withOpacity(0.1),
+                  ),
+                ),
+              ],
+              borderData: FlBorderData(
+                show: true,
+                border: Border.all(
+                  color: Colors.grey[400]!,
+                  width: 2,
+                ),
+              ),
+              minX: _xMin,
+              maxX: _xMax,
+              minY: _yMin,
+              maxY: _yMax,
+              backgroundColor: Colors.white,
+            ),
+          ),
+        ),
+      );
+
+      // Render the PDF graph
+      final RenderRepaintBoundary boundary = 
+          _globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      final ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+      final ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      final Uint8List pngBytes = byteData!.buffer.asUint8List();
+
+      // Create PDF document
+      final pdf = pw.Document();
+
+      pdf.addPage(
+        pw.Page(
+          pageFormat: PdfPageFormat.a4,
+          build: (pw.Context context) {
+            return pw.Center(
+              child: pw.Column(
+                mainAxisAlignment: pw.MainAxisAlignment.center,
+                children: [
+                  pw.Text(
+                    'Graph Plot',
+                    style: pw.TextStyle(
+                      fontSize: 24,
+                      fontWeight: pw.FontWeight.bold,
+                    ),
+                  ),
+                  pw.SizedBox(height: 20),
+                  pw.Image(pw.MemoryImage(pngBytes), height: 400),
+                  pw.SizedBox(height: 20),
+                  pw.Text(
+                    'Points: ${_pointController.text}',
+                    style: const pw.TextStyle(fontSize: 12),
+                  ),
+                  pw.Text(
+                    'X Range: $_xMin to $_xMax, Y Range: $_yMin to $_yMax',
+                    style: const pw.TextStyle(fontSize: 12),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      );
+
+      // Close loading dialog
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+
+      if (kIsWeb) {
+        final bytes = await pdf.save();
+        final blob = html.Blob([bytes], 'application/pdf');
+        final url = html.Url.createObjectUrlFromBlob(blob);
+        final anchor = html.AnchorElement()
+          ..href = url
+          ..style.display = 'none'
+          ..download = 'graph_plot.pdf';
+        html.document.body?.children.add(anchor);
+        anchor.click();
+        html.document.body?.children.remove(anchor);
+        html.Url.revokeObjectUrl(url);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Graph PDF downloaded successfully')),
+        );
+      } else {
+        final directory = await getApplicationDocumentsDirectory();
+        final file = File('${directory.path}/graph_plot.pdf');
+        await file.writeAsBytes(await pdf.save());
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Graph PDF Generated'),
+              content: Text('What would you like to do with the PDF?'),
+              actions: [
+                TextButton(
+                  onPressed: () async {
+                    await OpenFile.open(file.path);
+                    Navigator.pop(context);
+                  },
+                  child: Text('Open'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    await Share.shareXFiles([XFile(file.path)], text: 'Graph Plot');
+                    Navigator.pop(context);
+                  },
+                  child: Text('Share'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('Cancel'),
+                ),
+              ],
+            );
+          },
+        );
+      }
     } catch (e) {
+      // Make sure to close loading dialog if there's an error
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to generate PDF: ${e.toString()}')),
+      );
       print(e);
     }
   }
@@ -105,112 +340,259 @@ class _GraphPlotterState extends State<GraphPlotter> {
     final isPortrait = screenSize.height > screenSize.width;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Graph Plotter',
-          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[800]),
-        ),
-        backgroundColor: _isDarkMode ? Colors.black : Colors.white,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: _isDarkMode ? Colors.white : Colors.blue[800]),
-          onPressed: () {
-            Navigator.of(context).pop(); // Go back to the previous screen
-          },
-        ),
-        actions: [
+      backgroundColor: _isDarkMode ? Color(0xFF1A1A2E) : Colors.blue[50],
+      body: Stack(
+        children: [
+          // Background pattern
+          Positioned.fill(
+            child: CustomPaint(
+              painter: DotPatternPainter(
+                color: _isDarkMode 
+                    ? Colors.white.withOpacity(0.03)
+                    : Colors.blue.withOpacity(0.05),
+              ),
+            ),
+          ),
+
+          CustomScrollView(
+            physics: BouncingScrollPhysics(),
+            slivers: [
+              SliverAppBar(
+                automaticallyImplyLeading: true,
+                floating: false,
+                pinned: false,
+                expandedHeight: 200,
+                backgroundColor: Colors.transparent,
+                flexibleSpace: ClipRRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: FlexibleSpaceBar(
+                      background: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: _isDarkMode 
+                                ? [Color(0xFF4C4DDC), Color(0xFF1A1A2E)]
+                                : [Colors.blue[400]!, Colors.blue[100]!],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                        child: SafeArea(
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 8,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.15),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.show_chart,
+                                            color: Colors.white,
+                                            size: 16,
+                                          ),
+                                          SizedBox(width: 8),
+                                          Text(
+                                            'PLOTTER',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              letterSpacing: 0.3,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
           IconButton(
             icon: Icon(
-              _isDarkMode ? Icons.wb_sunny : Icons.nightlight_round,
-              color: _isDarkMode ? Colors.white : Colors.blue[800],
+                                            _isDarkMode ? Icons.light_mode : Icons.dark_mode,
+                                            color: Colors.white,
             ),
             onPressed: _toggleTheme,
           ),
           IconButton(
-            icon: Icon(Icons.save_alt, color: _isDarkMode ? Colors.white : Colors.blue[800]),
+                                          icon: Icon(
+                                            Icons.save_alt,
+                                            color: Colors.white,
+                                          ),
             onPressed: _capturePng,
           ),
         ],
       ),
-      backgroundColor: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue[50],
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.all(isPortrait ? 24.0 : 16.0),
-              child: Align(
-                alignment: Alignment.topRight,
-                child: Text(
-                  'X: ($_xMin - $_xMax), Y: ($_yMin - $_yMax)',
+                                  ],
+                                ),
+                                SizedBox(height: 20),
+                                Text(
+                                  'Graph\nPlotter',
                   style: TextStyle(
-                    color: Colors.deepPurple,
+                                    color: Colors.white,
+                                    fontSize: 28,
                     fontWeight: FontWeight.bold,
+                                    height: 1.2,
+                                  ),
+                                ),
+                              ],
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: _isDarkMode ? Colors.black : Colors.white,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(24),
-                    topRight: Radius.circular(24),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: _isDarkMode ? Colors.black12 : Colors.blue.withOpacity(0.1),
-                      blurRadius: 10,
-                      spreadRadius: 5,
                     ),
-                  ],
+                  ),
                 ),
+              ),
+
+              // Content
+              SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      // Input for XY Graph Points
+                      Container(
+                        decoration: BoxDecoration(
+                          color: _isDarkMode ? Color(0xFF252542) : Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: _isDarkMode 
+                                ? Color(0xFF4C4DDC).withOpacity(0.2)
+                                : Colors.blue.withOpacity(0.1),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: _isDarkMode 
+                                  ? Colors.black.withOpacity(0.3)
+                                  : Colors.blue.withOpacity(0.1),
+                              offset: Offset(4, 4),
+                              blurRadius: 15,
+                              spreadRadius: 1,
+                            ),
+                          ],
+                        ),
+                        padding: EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Enter Points',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: _isDarkMode ? Colors.white : Colors.black87,
+                              ),
+                            ),
+                            SizedBox(height: 12),
                       TextField(
                         controller: _pointController,
                         decoration: InputDecoration(
                           labelText: 'Enter Points (x,y) separated by ";"',
-                          border: OutlineInputBorder(),
-                          hintText: 'E.g. 1,2;3,4;5,6',
-                          hintStyle: TextStyle(color: _isDarkMode ? Colors.white54 : Colors.black54),
+                                labelStyle: TextStyle(
+                                  color: _isDarkMode ? Colors.white70 : Colors.blueAccent,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                filled: true,
+                                fillColor: _isDarkMode ? Colors.black12 : Colors.grey[100],
+                              ),
+                              style: TextStyle(
+                                color: _isDarkMode ? Colors.white : Colors.black,
+                              ),
+                              onChanged: (value) => _updateGraph(),
+                            ),
+                          ],
                         ),
-                        style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black),
-                        onChanged: (value) => _updateGraph(),
-                      ),
+                      ).animate().fadeIn().slideY(),
+
                       SizedBox(height: 16),
 
-                      // Graph Plot
-                      Expanded(
-                        child: RepaintBoundary(
-                          key: _globalKey,
-                          child: Card(
-                            elevation: 5,
-                            shadowColor: Colors.deepPurpleAccent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: _isDarkMode ? Color(0xFF252542) : Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: _isDarkMode 
+                                ? Color(0xFF4C4DDC).withOpacity(0.2)
+                                : Colors.blue.withOpacity(0.1),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: _isDarkMode 
+                                  ? Colors.black.withOpacity(0.3)
+                                  : Colors.blue.withOpacity(0.1),
+                              offset: Offset(4, 4),
+                              blurRadius: 15,
+                              spreadRadius: 1,
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
+                          ],
+                        ),
+                        padding: EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Graph',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: _isDarkMode ? Colors.white : Colors.black87,
+                              ),
+                            ),
+                            SizedBox(height: 12),
+                            AspectRatio(
+                              aspectRatio: 1,
+                              child: RepaintBoundary(
+                                key: _globalKey,
                               child: LineChart(
                                 LineChartData(
-                                  gridData: FlGridData(show: true),
+                                    gridData: FlGridData(
+                                      show: true,
+                                      getDrawingHorizontalLine: (value) {
+                                        return FlLine(
+                                          color: _isDarkMode 
+                                              ? Colors.white.withOpacity(0.2)
+                                              : Colors.grey[300]!,
+                                          strokeWidth: 1,
+                                        );
+                                      },
+                                      getDrawingVerticalLine: (value) {
+                                        return FlLine(
+                                          color: _isDarkMode 
+                                              ? Colors.white.withOpacity(0.2)
+                                              : Colors.grey[300]!,
+                                          strokeWidth: 1,
+                                        );
+                                      },
+                                    ),
                                   titlesData: FlTitlesData(
                                     bottomTitles: AxisTitles(
                                       sideTitles: SideTitles(
                                         showTitles: true,
+                                          reservedSize: 30,
                                         getTitlesWidget: (value, meta) {
-                                          return Text(
+                                            return Padding(
+                                              padding: const EdgeInsets.only(top: 8.0),
+                                              child: Text(
                                             value.toStringAsFixed(1),
                                             style: TextStyle(
-                                              color: Colors.deepPurple,
+                                                  color: _isDarkMode 
+                                                      ? Colors.white 
+                                                      : Colors.black87,
                                               fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                             ),
                                           );
                                         },
@@ -219,49 +601,107 @@ class _GraphPlotterState extends State<GraphPlotter> {
                                     leftTitles: AxisTitles(
                                       sideTitles: SideTitles(
                                         showTitles: true,
+                                          reservedSize: 45,
                                         getTitlesWidget: (value, meta) {
                                           return Text(
                                             value.toStringAsFixed(1),
                                             style: TextStyle(
-                                              color: Colors.deepPurple,
+                                                color: _isDarkMode 
+                                                    ? Colors.white 
+                                                    : Colors.black87,
                                               fontSize: 12,
+                                                fontWeight: FontWeight.bold,
                                             ),
                                           );
                                         },
+                                        ),
                                       ),
+                                      topTitles: AxisTitles(
+                                        sideTitles: SideTitles(showTitles: false),
+                                      ),
+                                      rightTitles: AxisTitles(
+                                        sideTitles: SideTitles(showTitles: false),
                                     ),
                                   ),
                                   lineBarsData: [
                                     LineChartBarData(
                                       spots: _spots,
                                       isCurved: true,
-                                      color: _lineColor,
-                                      dotData: FlDotData(show: true),
-                                      belowBarData: BarAreaData(show: false),
+                                        color: Color(0xFF4C4DDC),
+                                        dotData: FlDotData(
+                                          show: true,
+                                          getDotPainter: (spot, percent, barData, index) {
+                                            return FlDotCirclePainter(
+                                              radius: 6,
+                                              color: Color(0xFF4C4DDC),
+                                              strokeWidth: 2,
+                                              strokeColor: _isDarkMode 
+                                                  ? Colors.white 
+                                                  : Colors.white,
+                                            );
+                                          },
+                                        ),
+                                        belowBarData: BarAreaData(
+                                          show: true,
+                                          color: Color(0xFF4C4DDC).withOpacity(0.1),
+                                        ),
                                     ),
                                   ],
                                   borderData: FlBorderData(
                                     show: true,
-                                    border: Border.all(color: Colors.deepPurple, width: 2),
+                                      border: Border.all(
+                                        color: _isDarkMode 
+                                            ? Colors.white.withOpacity(0.5)
+                                            : Colors.grey[400]!,
+                                        width: 2,
+                                      ),
                                   ),
                                   minX: _xMin,
                                   maxX: _xMax,
                                   minY: _yMin,
                                   maxY: _yMax,
+                                    backgroundColor: _isDarkMode 
+                                        ? Color(0xFF252542)
+                                        : Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
+                          ],
                         ),
-                      ),
+                      ).animate().fadeIn().slideY(delay: 200.ms),
                     ],
                   ),
                 ),
               ),
+            ],
             ),
           ],
-        ),
       ),
     );
   }
+}
+
+class DotPatternPainter extends CustomPainter {
+  final Color color;
+  
+  DotPatternPainter({required this.color});
+  
+  @override
+  void paint(Canvas canvas, Size size) {
+    final double spacing = 20;
+    final double radius = 1;
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+      
+    for (double x = 0; x < size.width; x += spacing) {
+      for (double y = 0; y < size.height; y += spacing) {
+        canvas.drawCircle(Offset(x, y), radius, paint);
+      }
+    }
+  }
+  
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }

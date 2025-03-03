@@ -1,4 +1,3 @@
-```markdown
 # Flutter App Management and Troubleshooting Guide
 
 ## Managing App Versions
@@ -167,5 +166,88 @@ e: C:/Users/vishn/.gradle/caches/transforms-3/9cb715769913d0a55e978e7366b82d6a/t
   keyAlias=upload
   keyPassword=321456987
   ```
+
+## Firebase Authentication and Firestore Issues
+
+### Error: Firestore Access Denied
+If Firebase Authentication is working but you're unable to read/write to Firestore (getting permission denied errors), this is likely due to incorrect Firestore security rules.
+
+#### Solution:
+Update your Firestore security rules in the Firebase Console:
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow create: if request.auth != null;
+      allow read, update: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
+  }
+}
+```
+
+These rules:
+1. Allow authenticated users to create new documents
+2. Allow users to read and update only their own data
+3. Ensure proper security by checking the user's ID against the document
+
+### Complex Firestore Rules for Event Management
+If you're building an event management system with Firebase and need to set up proper security rules for events, registrations, and users, use these comprehensive rules:
+
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Events collection rules
+    match /events/{eventId} {
+      allow read: if true;  // Anyone can read events
+      allow create: if request.auth != null;  // Only authenticated users can create events
+      allow update: if request.auth != null && (
+        resource.data.creatorId == request.auth.uid || // Creator can edit everything
+        (!request.resource.data.diff(resource.data).affectedKeys().hasAny([
+          'creatorId', 'title', 'description', 'type', 'date', 'location', 'price', 'points', 'capacity'
+        ])) // Others can only update registration-related fields
+      );
+      allow delete: if request.auth != null && resource.data.creatorId == request.auth.uid;  // Only creator can delete their event
+
+      // Rules for registrations subcollection
+      match /registrations/{registrationId} {
+        allow read: if true;  // Anyone can read registrations
+        allow create: if request.auth != null;  // Authenticated users can create registrations
+        allow update, delete: if request.auth != null && (
+          get(/databases/$(database)/documents/events/$(eventId)).data.creatorId == request.auth.uid || // Event creator can update/delete any registration
+          registrationId == request.auth.uid  // Users can update/delete their own registration
+        );
+      }
+    }
+    
+    // User collection rules
+    match /users/{userId} {
+      allow create: if request.auth != null;
+      allow read, update: if request.auth != null && request.auth.uid == resource.data.userId;
+    
+      // Rules for user's registrations subcollection
+      match /registrations/{eventId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+  }  
+}
+```
+
+These rules implement a secure permission system that:
+1. Allows public read access to events and registrations
+2. Restricts event creation to authenticated users
+3. Limits event updates based on user roles
+4. Protects user data with proper authentication checks
+5. Manages registration permissions for both event creators and participants
+
+To apply these rules:
+1. Go to Firebase Console
+2. Navigate to Firestore Database
+3. Click on "Rules" tab
+4. Replace existing rules with the above code
+5. Click "Publish"
+
 ---
 ```
