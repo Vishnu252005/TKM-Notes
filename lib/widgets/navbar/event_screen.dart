@@ -1651,7 +1651,7 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
             width: double.infinity,
             constraints: BoxConstraints(
               maxHeight: MediaQuery.of(context).size.height * 0.85,
-              maxWidth: 400,
+              maxWidth: 600,
             ),
             decoration: BoxDecoration(
               color: _isDarkMode ? Color(0xFF252542) : Colors.white,
@@ -1825,6 +1825,223 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                                   ],
                                 ),
                               ),
+                              SizedBox(height: 24),
+                              // Registered Users Section
+                              Text(
+                                'Registered Users',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: _isDarkMode ? Colors.white : Colors.black,
+                                ),
+                              ),
+                              SizedBox(height: 16),
+                              StreamBuilder<QuerySnapshot>(
+                                stream: FirebaseFirestore.instance
+                                    .collection('events')
+                                    .doc(event['id'])
+                                    .collection('registrations')
+                                    .where('userName', isNull: false)  // Only get actual registrations, not info doc
+                                    .snapshots(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasError) {
+                                    print('Error fetching registrations: ${snapshot.error}');
+                                    return Text('Error loading registrations');
+                                  }
+
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return Center(child: CircularProgressIndicator());
+                                  }
+
+                                  final registrations = snapshot.data?.docs ?? [];
+                                  print('Number of registrations found: ${registrations.length}');
+                                  
+                                  // Debug print all registrations
+                                  for (var reg in registrations) {
+                                    print('Registration data: ${reg.data()}');
+                                  }
+                                  
+                                  if (registrations.isEmpty) {
+                                    return Container(
+                                      padding: EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                        color: _isDarkMode ? Colors.black.withOpacity(0.2) : Colors.grey[50],
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          'No registrations yet',
+                                          style: TextStyle(
+                                            color: _isDarkMode ? Colors.white60 : Colors.grey[600],
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }
+
+                                  return ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: registrations.length,
+                                    itemBuilder: (context, index) {
+                                      final registration = registrations[index].data() as Map<String, dynamic>;
+                                      
+                                      // Skip the _info document if it somehow got through
+                                      if (registrations[index].id == '_info') return SizedBox();
+                                      
+                                      return Container(
+                                        margin: EdgeInsets.only(bottom: 12),
+                                        padding: EdgeInsets.all(16),
+                                        decoration: BoxDecoration(
+                                          color: _isDarkMode ? Colors.black.withOpacity(0.2) : Colors.grey[50],
+                                          borderRadius: BorderRadius.circular(16),
+                                          border: Border.all(
+                                            color: _isDarkMode ? Colors.white10 : Colors.grey[200]!,
+                                          ),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.person,
+                                                  color: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                                                  size: 20,
+                                                ),
+                                                SizedBox(width: 8),
+                                                Text(
+                                                  registration['userName'] ?? 'Unknown',
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: _isDarkMode ? Colors.white : Colors.black,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 8),
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.email,
+                                                  color: _isDarkMode ? Colors.white38 : Colors.grey[600],
+                                                  size: 16,
+                                                ),
+                                                SizedBox(width: 8),
+                                                Text(
+                                                  registration['email'] ?? 'No email',
+                                                  style: TextStyle(
+                                                    color: _isDarkMode ? Colors.white60 : Colors.grey[600],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 8),
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.phone,
+                                                        color: _isDarkMode ? Colors.white38 : Colors.grey[600],
+                                                        size: 16,
+                                                      ),
+                                                      SizedBox(width: 8),
+                                                      Text(
+                                                        registration['phone'] ?? 'No phone',
+                                                        style: TextStyle(
+                                                          color: _isDarkMode ? Colors.white60 : Colors.grey[600],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Text(
+                                                  '|',
+                                                  style: TextStyle(
+                                                    color: _isDarkMode ? Colors.white38 : Colors.grey[400],
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                    children: [
+                                                      Icon(
+                                                        Icons.school,
+                                                        color: _isDarkMode ? Colors.white38 : Colors.grey[600],
+                                                        size: 16,
+                                                      ),
+                                                      SizedBox(width: 8),
+                                                      Text(
+                                                        registration['college'] ?? 'No college',
+                                                        style: TextStyle(
+                                                          color: _isDarkMode ? Colors.white60 : Colors.grey[600],
+                                                        ),
+                                                        overflow: TextOverflow.ellipsis,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 8),
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.business,
+                                                        color: _isDarkMode ? Colors.white38 : Colors.grey[600],
+                                                        size: 16,
+                                                      ),
+                                                      SizedBox(width: 8),
+                                                      Text(
+                                                        registration['department'] ?? 'No department',
+                                                        style: TextStyle(
+                                                          color: _isDarkMode ? Colors.white60 : Colors.grey[600],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Text(
+                                                  '|',
+                                                  style: TextStyle(
+                                                    color: _isDarkMode ? Colors.white38 : Colors.grey[400],
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                    children: [
+                                                      Icon(
+                                                        Icons.calendar_today,
+                                                        color: _isDarkMode ? Colors.white38 : Colors.grey[600],
+                                                        size: 16,
+                                                      ),
+                                                      SizedBox(width: 8),
+                                                      Text(
+                                                        registration['year'] ?? 'No year',
+                                                        style: TextStyle(
+                                                          color: _isDarkMode ? Colors.white60 : Colors.grey[600],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
                             ],
                           ),
                         ),
@@ -1962,6 +2179,7 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
   void _showRegistrationForm(Map<String, dynamic> event) {
     final _formKey = GlobalKey<FormState>();
     final _nameController = TextEditingController();
+    final _emailController = TextEditingController();  // Add email controller
     final _phoneController = TextEditingController();
     final _collegeController = TextEditingController();
     final _deptController = TextEditingController();
@@ -2040,6 +2258,22 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your name';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 16),
+                          _buildFormField(
+                            controller: _emailController,  // Add email field
+                            label: 'Email Address',
+                            icon: Icons.email,
+                            keyboardType: TextInputType.emailAddress,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your email address';
+                              }
+                              if (!value.contains('@') || !value.contains('.')) {
+                                return 'Please enter a valid email address';
                               }
                               return null;
                             },
@@ -2167,6 +2401,7 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                                 final registrationData = {
                                   'userId': user.uid,
                                   'userName': _nameController.text,
+                                  'email': _emailController.text,
                                   'phone': _phoneController.text,
                                   'college': _collegeController.text,
                                   'department': _deptController.text,
@@ -2187,15 +2422,17 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                                 });
 
                                 // 2. Create registration document in event's registrations subcollection
-                                final registrationRef = eventRef.collection('registrations').doc(user.uid);
+                                // Generate a unique ID for this registration
+                                final registrationRef = eventRef.collection('registrations').doc();
                                 batch.set(registrationRef, registrationData);
 
                                 // 3. Create registration document in user's registrations collection
+                                // Use the same registration ID in the user's collection
                                 final userRegistrationRef = FirebaseFirestore.instance
                                     .collection('users')
                                     .doc(user.uid)
                                     .collection('registrations')
-                                    .doc(event['id']);
+                                    .doc(registrationRef.id);
                                 batch.set(userRegistrationRef, registrationData);
 
                                 // Commit the batch

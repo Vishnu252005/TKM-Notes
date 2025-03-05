@@ -175,7 +175,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [darkBlue.withOpacity(0.8), surfaceBlue],
+                  colors: [
+                    Colors.white.withOpacity(0.05),
+                    Colors.white.withOpacity(0.02),
+                  ],
                 ),
               ),
               child: ShaderMask(
@@ -191,11 +194,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   decoration: BoxDecoration(
                     color: Colors.transparent,
                     backgroundBlendMode: BlendMode.overlay,
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/pattern.png'), // Add a subtle pattern image
-                      repeat: ImageRepeat.repeat,
-                      opacity: 0.05,
-                    ),
                   ),
                 ),
               ),
