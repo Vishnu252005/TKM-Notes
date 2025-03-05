@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 import '../../../firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';  // Add this import for clipboard
 import 'event_create.dart';
 
 class EventScreen extends StatefulWidget {
@@ -2179,11 +2180,13 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
   void _showRegistrationForm(Map<String, dynamic> event) {
     final _formKey = GlobalKey<FormState>();
     final _nameController = TextEditingController();
-    final _emailController = TextEditingController();  // Add email controller
+    final _emailController = TextEditingController();
     final _phoneController = TextEditingController();
     final _collegeController = TextEditingController();
     final _deptController = TextEditingController();
+    final _transactionIdController = TextEditingController();
     String _selectedYear = '1st Year';
+    String _needsAccommodation = 'No';  // Default value
 
     showDialog(
       context: context,
@@ -2220,11 +2223,7 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                   ),
                   child: Row(
                     children: [
-                      Icon(
-                        Icons.app_registration,
-                        color: Colors.white,
-                        size: 24,
-                      ),
+                      Icon(Icons.app_registration, color: Colors.white, size: 24),
                       SizedBox(width: 12),
                       Text(
                         'Registration Form',
@@ -2243,7 +2242,7 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                   ),
                 ),
                 // Form content
-                Flexible(
+                Expanded(
                   child: SingleChildScrollView(
                     padding: EdgeInsets.all(24),
                     child: Form(
@@ -2251,6 +2250,59 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          // Event Details Section
+                          Text(
+                            'Event Details',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: _isDarkMode ? Colors.white : Colors.black,
+                            ),
+                          ),
+                          SizedBox(height: 16),
+                          Container(
+                            padding: EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: _isDarkMode ? Colors.black.withOpacity(0.2) : Colors.grey[50],
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: _isDarkMode ? Colors.white10 : Colors.grey[200]!,
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  event['title'],
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: _isDarkMode ? Colors.white : Colors.black,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  'Price: ₹${event['price']}',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: _isDarkMode ? Colors.white70 : Colors.grey[700],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 24),
+
+                          // Personal Details Section
+                          Text(
+                            'Personal Details',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: _isDarkMode ? Colors.white : Colors.black,
+                            ),
+                          ),
+                          SizedBox(height: 16),
                           _buildFormField(
                             controller: _nameController,
                             label: 'Full Name',
@@ -2264,7 +2316,7 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                           ),
                           SizedBox(height: 16),
                           _buildFormField(
-                            controller: _emailController,  // Add email field
+                            controller: _emailController,
                             label: 'Email Address',
                             icon: Icons.email,
                             keyboardType: TextInputType.emailAddress,
@@ -2293,6 +2345,17 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                               }
                               return null;
                             },
+                          ),
+                          SizedBox(height: 24),
+
+                          // Institution Details Section
+                          Text(
+                            'Institution Details',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: _isDarkMode ? Colors.white : Colors.black,
+                            ),
                           ),
                           SizedBox(height: 16),
                           _buildFormField(
@@ -2323,10 +2386,26 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                             value: _selectedYear,
                             decoration: InputDecoration(
                               labelText: 'Year of Study',
-                              prefixIcon: Icon(Icons.calendar_today),
+                              labelStyle: TextStyle(
+                                color: _isDarkMode ? Colors.white70 : Colors.grey[700],
+                              ),
+                              prefixIcon: Icon(
+                                Icons.calendar_today,
+                                color: _isDarkMode ? Colors.white38 : Colors.grey[400],
+                              ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: _isDarkMode ? Colors.white24 : Colors.grey[300]!,
+                                ),
+                              ),
+                            ),
+                            dropdownColor: _isDarkMode ? Color(0xFF252542) : Colors.white,
+                            style: TextStyle(
+                              color: _isDarkMode ? Colors.white : Colors.black,
                             ),
                             items: [
                               '1st Year',
@@ -2337,7 +2416,12 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                             ].map((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
-                                child: Text(value),
+                                child: Text(
+                                  value,
+                                  style: TextStyle(
+                                    color: _isDarkMode ? Colors.white : Colors.black,
+                                  ),
+                                ),
                               );
                             }).toList(),
                             onChanged: (String? newValue) {
@@ -2352,6 +2436,317 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                               return null;
                             },
                           ),
+                          SizedBox(height: 24),
+
+                          // Payment Section
+                          if (event['requiresPayment']) ...[
+                            Text(
+                              'Payment Details',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: _isDarkMode ? Colors.white : Colors.black,
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            Container(
+                              padding: EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: _isDarkMode ? Colors.black.withOpacity(0.2) : Colors.grey[50],
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: _isDarkMode ? Colors.white10 : Colors.grey[200]!,
+                                ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Amount to Pay: ₹${event['price']}',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: _isDarkMode ? Colors.white : Colors.black,
+                                    ),
+                                  ),
+                                  SizedBox(height: 16),
+                                  Text(
+                                    'Pay using any of these methods:',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: _isDarkMode ? Colors.white70 : Colors.grey[600],
+                                    ),
+                                  ),
+                                  SizedBox(height: 16),
+                                  Container(
+                                    padding: EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: _isDarkMode ? Colors.black.withOpacity(0.3) : Colors.blue.withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: _isDarkMode ? Colors.white24 : Colors.blue.withOpacity(0.2),
+                                      ),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.all(8),
+                                              decoration: BoxDecoration(
+                                                color: _isDarkMode ? Colors.white10 : Colors.blue.withOpacity(0.1),
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                              child: Icon(
+                                                Icons.phone_android,
+                                                color: _isDarkMode ? Colors.white70 : Colors.blue,
+                                                size: 20,
+                                              ),
+                                            ),
+                                            SizedBox(width: 12),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    'Phone Pay / GPay',
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: _isDarkMode ? Colors.white70 : Colors.grey[600],
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 4),
+                                                  Text(
+                                                    event['paymentDetails']['phoneNumber'],
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: _isDarkMode ? Colors.white : Colors.black,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            IconButton(
+                                              icon: Icon(
+                                                Icons.copy,
+                                                color: _isDarkMode ? Colors.white70 : Colors.blue,
+                                              ),
+                                              onPressed: () async {
+                                                await Clipboard.setData(ClipboardData(
+                                                  text: event['paymentDetails']['phoneNumber'],
+                                                ));
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      'Phone number copied!',
+                                                      style: TextStyle(color: Colors.white),
+                                                    ),
+                                                    backgroundColor: Colors.green,
+                                                    behavior: SnackBarBehavior.floating,
+                                                    margin: EdgeInsets.all(16),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(12),
+                                                    ),
+                                                    duration: Duration(seconds: 2),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        if (event['paymentDetails']['hasUpiId']) ...[
+                                          SizedBox(height: 12),
+                                          Divider(
+                                            color: _isDarkMode ? Colors.white10 : Colors.grey[300],
+                                          ),
+                                          SizedBox(height: 12),
+                                          Row(
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.all(8),
+                                                decoration: BoxDecoration(
+                                                  color: _isDarkMode ? Colors.white10 : Colors.blue.withOpacity(0.1),
+                                                  borderRadius: BorderRadius.circular(8),
+                                                ),
+                                                child: Icon(
+                                                  Icons.account_balance_wallet,
+                                                  color: _isDarkMode ? Colors.white70 : Colors.blue,
+                                                  size: 20,
+                                                ),
+                                              ),
+                                              SizedBox(width: 12),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'UPI ID',
+                                                      style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: _isDarkMode ? Colors.white70 : Colors.grey[600],
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 4),
+                                                    Text(
+                                                      event['paymentDetails']['upiId'],
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: _isDarkMode ? Colors.white : Colors.black,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              IconButton(
+                                                icon: Icon(
+                                                  Icons.copy,
+                                                  color: _isDarkMode ? Colors.white70 : Colors.blue,
+                                                ),
+                                                onPressed: () async {
+                                                  await Clipboard.setData(ClipboardData(
+                                                    text: event['paymentDetails']['upiId'],
+                                                  ));
+                                                  ScaffoldMessenger.of(context).showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        'UPI ID copied!',
+                                                        style: TextStyle(color: Colors.white),
+                                                      ),
+                                                      backgroundColor: Colors.green,
+                                                      behavior: SnackBarBehavior.floating,
+                                                      margin: EdgeInsets.all(16),
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(12),
+                                                      ),
+                                                      duration: Duration(seconds: 2),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 16),
+                                  Text(
+                                    'After payment, enter the transaction ID below:',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: _isDarkMode ? Colors.white70 : Colors.grey[600],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            _buildFormField(
+                              controller: _transactionIdController,
+                              label: 'Transaction ID',
+                              icon: Icons.receipt_long,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter the transaction ID';
+                                }
+                                return null;
+                              },
+                              hintText: 'Enter your payment transaction ID',
+                            ),
+                          ],
+
+                          // Accommodation Section
+                          if (event['accommodation']['available']) ...[
+                            SizedBox(height: 24),
+                            Text(
+                              'Accommodation',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: _isDarkMode ? Colors.white : Colors.black,
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            Container(
+                              padding: EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: _isDarkMode ? Colors.black.withOpacity(0.2) : Colors.grey[50],
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: _isDarkMode ? Colors.white10 : Colors.grey[200]!,
+                                ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (event['accommodation']['hasPricing']) ...[
+                                    Text(
+                                      'Price: ₹${event['accommodation']['price']}',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: _isDarkMode ? Colors.white : Colors.black,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                  ],
+                                  if (event['accommodation']['hasDetails'])
+                                    Text(
+                                      event['accommodation']['details'],
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: _isDarkMode ? Colors.white70 : Colors.grey[700],
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            DropdownButtonFormField<String>(
+                              value: _needsAccommodation,
+                              decoration: InputDecoration(
+                                labelText: 'Need Accommodation?',
+                                labelStyle: TextStyle(
+                                  color: _isDarkMode ? Colors.white70 : Colors.grey[700],
+                                ),
+                                prefixIcon: Icon(
+                                  Icons.hotel,
+                                  color: _isDarkMode ? Colors.white38 : Colors.grey[400],
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: _isDarkMode ? Colors.white24 : Colors.grey[300]!,
+                                  ),
+                                ),
+                              ),
+                              dropdownColor: _isDarkMode ? Color(0xFF252542) : Colors.white,
+                              style: TextStyle(
+                                color: _isDarkMode ? Colors.white : Colors.black,
+                              ),
+                              items: ['Yes', 'No'].map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    value,
+                                    style: TextStyle(
+                                      color: _isDarkMode ? Colors.white : Colors.black,
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                if (newValue != null) {
+                                  _needsAccommodation = newValue;
+                                }
+                              },
+                            ),
+                          ],
                         ],
                       ),
                     ),
@@ -2410,6 +2805,13 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                                   'eventId': event['id'],
                                   'eventTitle': event['title'],
                                   'eventDate': event['date'],
+                                  'transactionId': event['requiresPayment'] ? _transactionIdController.text : null,
+                                  'paymentStatus': event['requiresPayment'] ? 'pending_verification' : 'not_required',
+                                  'accommodation': event['accommodation']['available'] ? {
+                                    'needed': _needsAccommodation == 'Yes',
+                                    'price': event['accommodation']['price'],
+                                    'status': _needsAccommodation == 'Yes' ? 'requested' : 'not_needed',
+                                  } : null,
                                 };
 
                                 // Start a batch write
@@ -2422,12 +2824,10 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                                 });
 
                                 // 2. Create registration document in event's registrations subcollection
-                                // Generate a unique ID for this registration
                                 final registrationRef = eventRef.collection('registrations').doc();
                                 batch.set(registrationRef, registrationData);
 
                                 // 3. Create registration document in user's registrations collection
-                                // Use the same registration ID in the user's collection
                                 final userRegistrationRef = FirebaseFirestore.instance
                                     .collection('users')
                                     .doc(user.uid)
@@ -2445,7 +2845,7 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                                 // Show success message
                                 _showRegistrationDialog(
                                   'Registration Successful!',
-                                  'You have successfully registered for ${event["title"]}. We look forward to seeing you!',
+                                  'You have successfully registered for ${event["title"]}. Your payment will be verified shortly.',
                                   true
                                 );
                               } catch (e) {
@@ -2505,6 +2905,7 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
     TextInputType? keyboardType,
     String? Function(String?)? validator,
     int? maxLines,
+    String? hintText,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -2514,7 +2915,7 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w500,
-            color: _isDarkMode ? Colors.white70 : Colors.grey[700],
+            color: _isDarkMode ? Colors.white : Colors.grey[700],
           ),
         ),
         SizedBox(height: 8),
@@ -2546,7 +2947,7 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide(
-                color: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                color: _isDarkMode ? Colors.white : Colors.blue,
                 width: 2,
               ),
             ),
@@ -2562,6 +2963,13 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                 color: Colors.red,
                 width: 2,
               ),
+            ),
+            hintText: hintText,
+            hintStyle: TextStyle(
+              color: _isDarkMode ? Colors.white38 : Colors.grey[400],
+            ),
+            labelStyle: TextStyle(
+              color: _isDarkMode ? Colors.white70 : Colors.grey[700],
             ),
           ),
           validator: validator,

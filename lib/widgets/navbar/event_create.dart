@@ -26,8 +26,14 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
   final _priceController = TextEditingController();
   final _pointsController = TextEditingController();
   final _capacityController = TextEditingController();
+  final _accommodationPriceController = TextEditingController();
+  final _paymentPhoneController = TextEditingController();
+  final _gpayIdController = TextEditingController();
   String _selectedType = 'Workshop';
   DateTime _selectedDate = DateTime.now();
+  bool _requiresPayment = true;
+  bool _hasAccommodation = false;
+  String _accommodationDetails = '';
   final List<String> _filters = ['Workshop', 'Seminar', 'Conference', 'Hackathon'];
 
   Future<void> _createEvent(Map<String, dynamic> eventData) async {
@@ -66,6 +72,8 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
     TextInputType? keyboardType,
     String? Function(String?)? validator,
     int? maxLines,
+    String? hintText,
+    void Function(String)? onChanged,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,9 +127,11 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide(color: Colors.red, width: 2),
             ),
+            hintText: hintText,
           ),
           validator: validator,
           maxLines: maxLines,
+          onChanged: onChanged,
         ),
       ],
     );
@@ -135,7 +145,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
       child: Container(
         width: double.infinity,
         constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.85,
+          maxHeight: MediaQuery.of(context).size.height * 0.9,
           maxWidth: 500,
         ),
         decoration: BoxDecoration(
@@ -338,6 +348,106 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                             return null;
                           },
                         ),
+                        SizedBox(height: 16),
+                        SwitchListTile(
+                          title: Text(
+                            'Requires Payment',
+                            style: TextStyle(
+                              color: widget.isDarkMode ? Colors.white : Colors.black87,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          subtitle: Text(
+                            'Toggle if this event requires payment',
+                            style: TextStyle(
+                              color: widget.isDarkMode ? Colors.white60 : Colors.grey[600],
+                            ),
+                          ),
+                          value: _requiresPayment,
+                          onChanged: (value) => setState(() => _requiresPayment = value),
+                          activeColor: widget.isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                        ),
+                        if (_requiresPayment) ...[
+                          SizedBox(height: 16),
+                          Text(
+                            'Payment Details',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: widget.isDarkMode ? Colors.white : Colors.black,
+                            ),
+                          ),
+                          SizedBox(height: 16),
+                          _buildFormField(
+                            controller: _paymentPhoneController,
+                            label: 'Payment Phone Number',
+                            icon: Icons.phone,
+                            keyboardType: TextInputType.phone,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) return 'Phone number is required';
+                              if (value.length != 10) return 'Enter valid 10-digit number';
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 16),
+                          _buildFormField(
+                            controller: _gpayIdController,
+                            label: 'UPI ID (Optional)',
+                            icon: Icons.payment,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) return null;  // Optional
+                              if (!value.contains('@')) return 'Enter valid UPI ID';
+                              return null;
+                            },
+                            hintText: 'example@upi (optional)',
+                          ),
+                        ],
+                        SizedBox(height: 16),
+                        SwitchListTile(
+                          title: Text(
+                            'Accommodation Available',
+                            style: TextStyle(
+                              color: widget.isDarkMode ? Colors.white : Colors.black87,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          subtitle: Text(
+                            'Toggle if accommodation is available for participants',
+                            style: TextStyle(
+                              color: widget.isDarkMode ? Colors.white60 : Colors.grey[600],
+                            ),
+                          ),
+                          value: _hasAccommodation,
+                          onChanged: (value) => setState(() => _hasAccommodation = value),
+                          activeColor: widget.isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                        ),
+                        if (_hasAccommodation) ...[
+                          SizedBox(height: 16),
+                          _buildFormField(
+                            controller: _accommodationPriceController,
+                            label: 'Accommodation Price (₹) (Optional)',
+                            icon: Icons.currency_rupee,
+                            keyboardType: TextInputType.number,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) return null;
+                              if (int.tryParse(value) == null) return 'Invalid price';
+                              return null;
+                            },
+                            hintText: 'Leave empty if accommodation is free',
+                          ),
+                          SizedBox(height: 16),
+                          _buildFormField(
+                            controller: TextEditingController(text: _accommodationDetails),
+                            label: 'Accommodation Details (Optional)',
+                            icon: Icons.hotel,
+                            maxLines: 3,
+                            onChanged: (value) {
+                              _accommodationDetails = value;
+                            },
+                            hintText: 'Enter accommodation details if available (location, facilities, contact person, etc.)',
+                            validator: (value) => null,
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -406,9 +516,28 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                               'description': _descriptionController.text,
                               'date': Timestamp.fromDate(_selectedDate),
                               'location': _locationController.text,
-                              'price': int.parse(_priceController.text),
+                              'price': _requiresPayment ? int.parse(_priceController.text) : 0,
                               'points': int.parse(_pointsController.text),
                               'capacity': int.parse(_capacityController.text),
+                              'requiresPayment': _requiresPayment,
+                              'paymentDetails': _requiresPayment ? {
+                                'phoneNumber': _paymentPhoneController.text,
+                                'upiId': _gpayIdController.text.isNotEmpty ? _gpayIdController.text : null,
+                                'hasUpiId': _gpayIdController.text.isNotEmpty,
+                                'availablePaymentMethods': [
+                                  'Phone Number',
+                                  if (_gpayIdController.text.isNotEmpty) 'UPI ID',
+                                ],
+                              } : null,
+                              'accommodation': {
+                                'available': _hasAccommodation,
+                                'price': _hasAccommodation && _accommodationPriceController.text.isNotEmpty 
+                                    ? int.parse(_accommodationPriceController.text) 
+                                    : 0,
+                                'details': _hasAccommodation ? _accommodationDetails.trim() : '',
+                                'hasPricing': _hasAccommodation && _accommodationPriceController.text.isNotEmpty,
+                                'hasDetails': _hasAccommodation && _accommodationDetails.trim().isNotEmpty,
+                              },
                               'registrations': 0,
                             };
 

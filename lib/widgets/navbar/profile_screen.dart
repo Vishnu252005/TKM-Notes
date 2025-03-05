@@ -793,7 +793,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 Expanded(
                                                     child: _buildStatCard(
                                                         'Total Revenue',
-                                                        '₹$totalRevenue',
+                                                        'Rs. $totalRevenue',
                                                         Icons.currency_rupee,
                                                         Colors.orange,
                                                     ),
@@ -1102,7 +1102,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             ),
                                             SizedBox(width: 4),
                                             Text(
-                                                '$price',
+                                                'Rs. $price',
                                                 style: TextStyle(
                                                     color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
                                                     fontWeight: FontWeight.bold,
@@ -1874,6 +1874,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
     }
 
+    // Add this method before the _downloadEventData method
+    String _formatTimestamp(dynamic timestamp) {
+        if (timestamp == null) return 'Not available';
+        DateTime dateTime = (timestamp as Timestamp).toDate();
+        return '${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+    }
+
     Future<void> _downloadEventData() async {
         try {
             showDialog(
@@ -1889,8 +1896,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 .collection('events')
                 .get();
 
-            print('Found ${eventsSnapshot.docs.length} total events');
-
             // Fetch all creators' details
             Map<String, Map<String, dynamic>> creatorDetailsMap = {};
             for (var doc in eventsSnapshot.docs) {
@@ -1904,7 +1909,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                         if (creatorDoc.docs.isNotEmpty) {
                             creatorDetailsMap[creatorId] = creatorDoc.docs.first.data();
-                            print('Found creator data: ${creatorDetailsMap[creatorId]}');
                         }
                     } catch (e) {
                         print('Error fetching creator data for $creatorId: $e');
@@ -1926,12 +1930,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     eventRegistrationsMap[eventId] = registrationsSnapshot.docs
                         .map((doc) => doc.data())
                         .toList();
-                    
-                    print('Event ID: $eventId');
-                    print('Registration data example:');
-                    if (eventRegistrationsMap[eventId]?.isNotEmpty ?? false) {
-                        print(eventRegistrationsMap[eventId]?.first);
-                    }
                 } catch (e) {
                     print('Error fetching registrations for event $eventId: $e');
                     eventRegistrationsMap[eventId] = [];
@@ -1940,164 +1938,225 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             final pdf = pw.Document();
 
+            // Define styles
             final baseStyle = pw.TextStyle(
                 font: pw.Font.helvetica(),
-                fontFallback: [pw.Font.courier(), pw.Font.helveticaBold()]
+                fontSize: 10,
+                color: PdfColors.black
             );
 
-            final titleStyle = baseStyle.copyWith(fontSize: 24, fontWeight: pw.FontWeight.bold);
-            final headerStyle = baseStyle.copyWith(fontSize: 18, fontWeight: pw.FontWeight.bold);
-            final subHeaderStyle = baseStyle.copyWith(fontSize: 14, fontWeight: pw.FontWeight.bold);
-            final normalStyle = baseStyle.copyWith(fontSize: 12);
+            final titleStyle = baseStyle.copyWith(
+                fontSize: 24,
+                fontWeight: pw.FontWeight.bold,
+                color: PdfColors.blue900
+            );
 
+            final headerStyle = baseStyle.copyWith(
+                fontSize: 18,
+                fontWeight: pw.FontWeight.bold,
+                color: PdfColors.blue800
+            );
+
+            final subHeaderStyle = baseStyle.copyWith(
+                fontSize: 14,
+                fontWeight: pw.FontWeight.bold,
+                color: PdfColors.blue700
+            );
+
+            final normalStyle = baseStyle;
+            final emphasisStyle = baseStyle.copyWith(fontWeight: pw.FontWeight.bold);
+
+            // Calculate total statistics
+            int totalRegistrations = 0;
+            int totalRevenue = 0;
+            Set<String> uniqueColleges = {};
+            Set<String> uniqueDepartments = {};
+
+            for (var eventDoc in eventsSnapshot.docs) {
+                final eventData = eventDoc.data();
+                final registrations = eventRegistrationsMap[eventDoc.id] ?? [];
+                final price = (eventData['price'] as num?)?.toInt() ?? 0;
+                totalRegistrations += registrations.length;
+                totalRevenue += price * registrations.length;
+
+                for (var reg in registrations) {
+                    if (reg['college'] != null) uniqueColleges.add(reg['college']);
+                    if (reg['department'] != null) uniqueDepartments.add(reg['department']);
+                }
+            }
+
+            // Create PDF
             pdf.addPage(
                 pw.MultiPage(
                     pageFormat: PdfPageFormat.a4,
-                    build: (pw.Context context) {
+                    margin: pw.EdgeInsets.all(40),
+                    header: (context) {
+                        return pw.Container(
+                            padding: pw.EdgeInsets.only(bottom: 20),
+                            decoration: pw.BoxDecoration(
+                                border: pw.Border(bottom: pw.BorderSide(color: PdfColors.blue200))
+                            ),
+                            child: pw.Row(
+                                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                                    pw.Text(
+                                        'Events Report',
+                                        style: titleStyle
+                                    ),
+                                    pw.Text(
+                                        DateTime.now().toString().split('.')[0],
+                                        style: baseStyle.copyWith(color: PdfColors.grey700)
+                                    ),
+                                ]
+                            )
+                        );
+                    },
+                    footer: (context) {
+                        return pw.Container(
+                            alignment: pw.Alignment.centerRight,
+                            margin: pw.EdgeInsets.only(top: 10),
+                            child: pw.Text(
+                                'Page ${context.pageNumber} of ${context.pagesCount}',
+                                style: baseStyle.copyWith(color: PdfColors.grey700)
+                            )
+                        );
+                    },
+                    build: (context) {
                         return [
-                            pw.Center(child: pw.Text('Complete Events Report', style: titleStyle)),
-                            pw.SizedBox(height: 20),
-                            pw.Text('Total Events: ${eventsSnapshot.docs.length}', style: headerStyle),
-                            pw.SizedBox(height: 20),
+                            // Executive Summary
+                            pw.Container(
+                                padding: pw.EdgeInsets.all(15),
+                                margin: pw.EdgeInsets.only(bottom: 20),
+                                decoration: pw.BoxDecoration(
+                                    color: PdfColors.blue50,
+                                    borderRadius: pw.BorderRadius.circular(8)
+                                ),
+                                child: pw.Column(
+                                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                                    children: [
+                                        pw.Text('Executive Summary', style: headerStyle),
+                                        pw.SizedBox(height: 10),
+                                        pw.Row(
+                                            mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
+                                            children: [
+                                                _buildSummaryItem('Total Events', '${eventsSnapshot.docs.length}', normalStyle, emphasisStyle),
+                                                _buildSummaryItem('Total Registrations', '$totalRegistrations', normalStyle, emphasisStyle),
+                                                _buildSummaryItem('Total Revenue', 'Rs. $totalRevenue', normalStyle, emphasisStyle),
+                                                _buildSummaryItem('Unique Colleges', '${uniqueColleges.length}', normalStyle, emphasisStyle),
+                                            ]
+                                        ),
+                                    ]
+                                )
+                            ),
+
+                            // Events Details
                             ...eventsSnapshot.docs.map((eventDoc) {
                                 final eventData = eventDoc.data();
                                 final eventId = eventDoc.id;
                                 final creatorId = eventData['creatorId'] ?? '';
                                 final creatorData = creatorDetailsMap[creatorId] ?? {};
                                 final registrations = eventRegistrationsMap[eventId] ?? [];
-                                final capacity = eventData['capacity'] ?? 0;
-                                final price = eventData['price'] ?? 0;
-                                final totalRevenue = price * registrations.length;
                                 final eventDate = (eventData['date'] as Timestamp).toDate();
 
                                 return [
                                     pw.Container(
+                                        margin: pw.EdgeInsets.only(bottom: 20),
                                         decoration: pw.BoxDecoration(
-                                            color: PdfColors.grey200,
+                                            border: pw.Border.all(color: PdfColors.blue200),
                                             borderRadius: pw.BorderRadius.circular(8)
                                         ),
-                                        padding: pw.EdgeInsets.all(15),
-                                        margin: pw.EdgeInsets.symmetric(vertical: 10),
                                         child: pw.Column(
                                             crossAxisAlignment: pw.CrossAxisAlignment.start,
                                             children: [
                                                 // Event Header
                                                 pw.Container(
-                                                    color: PdfColors.blue100,
                                                     padding: pw.EdgeInsets.all(10),
+                                                    decoration: pw.BoxDecoration(
+                                                        color: PdfColors.blue100,
+                                                        borderRadius: pw.BorderRadius.vertical(
+                                                            top: pw.Radius.circular(8)
+                                                        )
+                                                    ),
                                                     child: pw.Row(
                                                         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                                                         children: [
-                                                            pw.Text(eventData['title'] ?? 'Untitled Event', 
-                                                                style: headerStyle.copyWith(color: PdfColors.blue900)),
-                                                            pw.Text('Rs. $totalRevenue', 
-                                                                style: subHeaderStyle.copyWith(color: PdfColors.green700))
+                                                            pw.Text(
+                                                                eventData['title'] ?? 'Untitled Event',
+                                                                style: subHeaderStyle
+                                                            ),
+                                                            pw.Text(
+                                                                'Type: ${eventData['type'] ?? 'N/A'}',
+                                                                style: normalStyle.copyWith(color: PdfColors.blue700)
+                                                            ),
                                                         ]
                                                     )
                                                 ),
-                                                pw.SizedBox(height: 10),
 
-                                                // Event Details
-                                                pw.Text('Event Details:', style: subHeaderStyle),
-                                                pw.SizedBox(height: 5),
-                                                pw.Text('Type: ${eventData['type'] ?? 'N/A'}', style: normalStyle),
-                                                pw.Text('Date: ${eventDate.toString().split('.')[0]}', style: normalStyle),
-                                                pw.Text('Location: ${eventData['location'] ?? 'N/A'}', style: normalStyle),
-                                                pw.Text('Price: Rs.${eventData['price'] ?? 0}', style: normalStyle),
-                                                pw.Text('Points: ${eventData['points'] ?? 0}', style: normalStyle),
-                                                pw.Text('Capacity: $capacity', style: normalStyle),
-                                                pw.Text('Current Registrations: ${registrations.length}', style: normalStyle),
-                                                pw.SizedBox(height: 10),
-
-                                                // Creator Details
-                                                pw.Text('Created By:', style: subHeaderStyle),
-                                                pw.SizedBox(height: 5),
-                                                pw.Text('Name: ${creatorData['username'] ?? creatorData['userName'] ?? 'Unknown'}', style: normalStyle),
-                                                pw.Text('Email: ${creatorData['email'] ?? creatorData['userEmail'] ?? 'N/A'}', style: normalStyle),
-                                                pw.SizedBox(height: 10),
-
-                                                // Description
-                                                pw.Text('Description:', style: subHeaderStyle),
-                                                pw.SizedBox(height: 5),
-                                                pw.Text(eventData['description'] ?? 'No description available', style: normalStyle),
-                                                pw.SizedBox(height: 10),
-
-                                                // Registered Users
-                                                pw.Text('Registered Users (${registrations.length}/${eventData['capacity'] ?? 0}):', 
-                                                    style: subHeaderStyle.copyWith(color: PdfColors.blue900)),
-                                                pw.SizedBox(height: 10),
-                                                if (registrations.isEmpty)
-                                                    pw.Text('No users registered yet', style: normalStyle)
-                                                else
-                                                    ...registrations.map((regData) {
-                                                        // Debug print for registration data
-                                                        print('Registration Data: $regData');
-                                                        
-                                                        return pw.Container(
-                                                            margin: pw.EdgeInsets.only(bottom: 8),
-                                                            decoration: pw.BoxDecoration(
-                                                                color: PdfColors.grey50,
-                                                                borderRadius: pw.BorderRadius.circular(4)
-                                                            ),
-                                                            padding: pw.EdgeInsets.all(8),
-                                                            child: pw.Column(
-                                                                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                                                pw.Padding(
+                                                    padding: pw.EdgeInsets.all(10),
+                                                    child: pw.Column(
+                                                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                                                        children: [
+                                                            // Event Details Grid
+                                                            pw.Row(
+                                                                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                                                                 children: [
-                                                                    // Name and Email
-                                                                    pw.Row(
-                                                                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                                                                        children: [
-                                                                            pw.Text(
-                                                                                regData['userName'] ?? regData['name'] ?? regData['fullName'] ?? '',
-                                                                                style: normalStyle.copyWith(
-                                                                                    fontWeight: pw.FontWeight.bold,
-                                                                                    color: PdfColors.blue900
-                                                                                )
-                                                                            ),
-                                                                            pw.Text(
-                                                                                regData['userEmail'] ?? regData['email'] ?? regData['emailId'] ?? '',
-                                                                                style: normalStyle.copyWith(
-                                                                                    color: PdfColors.blue800
-                                                                                )
-                                                                            ),
-                                                                        ]
-                                                                    ),
-                                                                    pw.SizedBox(height: 4),
-                                                                    // Phone and College
-                                                                    pw.Row(
-                                                                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                                                                        children: [
-                                                                            pw.Text(
-                                                                                regData['phoneNumber'] ?? regData['phone'] ?? regData['mobile'] ?? '',
-                                                                                style: normalStyle
-                                                                            ),
-                                                                            pw.Text(
-                                                                                regData['collegeName'] ?? regData['college'] ?? regData['university'] ?? '',
-                                                                                style: normalStyle
-                                                                            ),
-                                                                        ]
-                                                                    ),
-                                                                    pw.SizedBox(height: 4),
-                                                                    // Department and Year
-                                                                    pw.Row(
-                                                                        children: [
-                                                                            pw.Expanded(
-                                                                                child: pw.Text(
-                                                                                    '${regData['departmentName'] ?? regData['department'] ?? ''} | ${regData['yearOfStudy'] ?? regData['year'] ?? ''}',
-                                                                                    style: normalStyle
-                                                                                )
-                                                                            ),
-                                                                        ]
-                                                                    ),
+                                                                    _buildEventDetail('Date', eventDate.toString().split('.')[0], normalStyle),
+                                                                    _buildEventDetail('Price', 'Rs. ${eventData['price'] ?? 0}', normalStyle),
+                                                                    _buildEventDetail('Points', '${eventData['points'] ?? 0}', normalStyle),
                                                                 ]
-                                                            )
-                                                        );
-                                                    }).toList(),
-                                                pw.SizedBox(height: 10),
+                                                            ),
+                                                            pw.SizedBox(height: 10),
+                                                            pw.Row(
+                                                                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                                                                children: [
+                                                                    _buildEventDetail('Location', eventData['location'] ?? 'N/A', normalStyle),
+                                                                    _buildEventDetail('Capacity', '${eventData['capacity'] ?? 0}', normalStyle),
+                                                                    _buildEventDetail('Registrations', '${registrations.length}', normalStyle),
+                                                                ]
+                                                            ),
+
+                                                            // Registrations Section
+                                                            if (registrations.isNotEmpty) ...[
+                                                                pw.SizedBox(height: 15),
+                                                                pw.Divider(color: PdfColors.blue200),
+                                                                pw.SizedBox(height: 10),
+                                                                pw.Text('Registrations', style: subHeaderStyle),
+                                                                pw.SizedBox(height: 10),
+                                                                pw.Table(
+                                                                    border: pw.TableBorder.all(color: PdfColors.blue200),
+                                                                    children: [
+                                                                        // Table Header
+                                                                        pw.TableRow(
+                                                                            decoration: pw.BoxDecoration(color: PdfColors.blue50),
+                                                                            children: [
+                                                                                _buildTableCell('Name', isHeader: true),
+                                                                                _buildTableCell('College', isHeader: true),
+                                                                                _buildTableCell('Department', isHeader: true),
+                                                                                _buildTableCell('Transaction ID', isHeader: true),
+                                                                                _buildTableCell('Registration Date', isHeader: true),
+                                                                            ]
+                                                                        ),
+                                                                        // Table Rows
+                                                                        ...registrations.map((reg) => pw.TableRow(
+                                                                            children: [
+                                                                                _buildTableCell(reg['userName'] ?? 'N/A'),
+                                                                                _buildTableCell(reg['college'] ?? 'N/A'),
+                                                                                _buildTableCell(reg['department'] ?? 'N/A'),
+                                                                                _buildTableCell(reg['transactionId'] ?? 'N/A'),
+                                                                                _buildTableCell(_formatTimestamp(reg['registeredAt'])),
+                                                                            ]
+                                                                        )).toList(),
+                                                                    ]
+                                                                ),
+                                                            ],
+                                                        ]
+                                                    )
+                                                ),
                                             ]
                                         )
                                     ),
-                                    pw.SizedBox(height: 10),
+                                    pw.SizedBox(height: 20),
                                 ];
                             }).expand((x) => x).toList(),
                         ];
@@ -2115,7 +2174,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 html.Url.revokeObjectUrl(url);
             } else {
                 final directory = await getApplicationDocumentsDirectory();
-                final file = File('${directory.path}/all_events_report.pdf');
+                final file = File('${directory.path}/events_report.pdf');
                 await file.writeAsBytes(bytes);
                 await OpenFile.open(file.path);
             }
@@ -2130,23 +2189,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     // Helper methods for PDF generation
-    pw.Widget _buildSummaryItem(String label, String value, pw.TextStyle normalStyle, pw.TextStyle boldStyle) {
+    pw.Widget _buildSummaryItem(String label, String value, pw.TextStyle normalStyle, pw.TextStyle emphasisStyle) {
         return pw.Container(
             padding: pw.EdgeInsets.all(10),
             decoration: pw.BoxDecoration(
                 color: PdfColors.white,
-                borderRadius: pw.BorderRadius.circular(5),
+                borderRadius: pw.BorderRadius.circular(4),
+                border: pw.Border.all(color: PdfColors.blue200)
             ),
             child: pw.Column(
                 children: [
-                    pw.Text(
-                        value,
-                        style: boldStyle,
-                    ),
-                    pw.Text(
-                        label,
-                        style: normalStyle,
-                    ),
+                    pw.Text(value, style: emphasisStyle.copyWith(fontSize: 16)),
+                    pw.SizedBox(height: 4),
+                    pw.Text(label, style: normalStyle),
                 ],
             ),
         );
@@ -2154,113 +2209,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     pw.Widget _buildEventDetail(String label, String value, pw.TextStyle style) {
         return pw.Container(
-            padding: pw.EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            width: 150,
+            padding: pw.EdgeInsets.all(8),
             decoration: pw.BoxDecoration(
                 color: PdfColors.grey100,
-                borderRadius: pw.BorderRadius.circular(5),
+                borderRadius: pw.BorderRadius.circular(4)
             ),
-            child: pw.Text(
-                '$label: $value',
-                style: style,
-            ),
-        );
-    }
-
-    int _calculateTotalRevenue(List<QueryDocumentSnapshot> events) {
-        int total = 0;
-        for (var event in events) {
-            final data = event.data() as Map<String, dynamic>;
-            List<dynamic> registeredUsers = data['registeredUsers'] ?? [];
-            int price = data['price'] ?? 0;
-            total += registeredUsers.length * price;
-        }
-        return total;
-    }
-
-    int _calculateTotalRegistrations(List<QueryDocumentSnapshot> events) {
-        int total = 0;
-        for (var event in events) {
-            final data = event.data() as Map<String, dynamic>;
-            List<dynamic> registeredUsers = data['registeredUsers'] ?? [];
-            total += registeredUsers.length;
-        }
-        return total;
-    }
-
-    // Helper method for profile details
-    pw.Widget _buildProfileDetail(String label, String value) {
-        return pw.Container(
-            padding: pw.EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
                     pw.Text(
                         label,
-                        style: pw.TextStyle(
-                            fontSize: 10,
-                            color: PdfColors.grey700,
-                            font: pw.Font.helvetica(),
-                        ),
+                        style: style.copyWith(color: PdfColors.grey700)
                     ),
                     pw.SizedBox(height: 2),
                     pw.Text(
                         value,
-                        style: pw.TextStyle(
-                            fontSize: 12,
-                            fontWeight: pw.FontWeight.bold,
-                            color: PdfColors.blue900,
-                            font: pw.Font.helvetica(),
-                        ),
+                        style: style.copyWith(fontWeight: pw.FontWeight.bold)
                     ),
-                ],
-            ),
+                ]
+            )
         );
     }
 
-    // Helper method for PDF event type colors
-    PdfColor _getPdfEventTypeColor(String type, {bool isBackground = false}) {
-        switch (type.toLowerCase()) {
-            case 'workshop':
-                return isBackground ? PdfColors.orange100 : PdfColors.orange;
-            case 'seminar':
-                return isBackground ? PdfColors.green100 : PdfColors.green;
-            case 'conference':
-                return isBackground ? PdfColors.purple100 : PdfColors.purple;
-            case 'hackathon':
-                return isBackground ? PdfColors.red100 : PdfColors.red;
-            default:
-                return isBackground ? PdfColors.blue100 : PdfColors.blue;
-        }
-    }
-}
-
-// New UserProfileScreen to display user information
-class UserProfileScreen extends StatelessWidget {
-    final String username;
-    final String email;
-
-    UserProfileScreen({required this.username, required this.email});
-
-    @override
-    Widget build(BuildContext context) {
-        return Scaffold(
-            appBar: AppBar(
-                title: Text('Profile'),
-            ),
-            body: Center(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                        CircleAvatar(
-                            radius: 50,
-                            child: Icon(Icons.person, size: 50), // Profile icon
-                        ),
-                        SizedBox(height: 20),
-                        Text('Hey $username', style: TextStyle(fontSize: 24)),
-                        SizedBox(height: 10),
-                        Text('Email: $email', style: TextStyle(fontSize: 18)),
-                    ],
-                ),
-            ),
+    pw.Widget _buildTableCell(String text, {bool isHeader = false}) {
+        return pw.Container(
+            padding: pw.EdgeInsets.all(6),
+            child: pw.Text(
+                text,
+                style: pw.TextStyle(
+                    fontSize: 9,
+                    fontWeight: isHeader ? pw.FontWeight.bold : pw.FontWeight.normal,
+                    color: isHeader ? PdfColors.blue900 : PdfColors.black
+                )
+            )
         );
     }
 }
@@ -2300,19 +2282,47 @@ class EventDetailsScreen extends StatelessWidget {
         required this.isDarkMode,
     });
 
-    Color _getEventTypeColor(String type) {
-        switch (type.toLowerCase()) {
-            case 'workshop':
-                return Colors.orange;
-            case 'seminar':
-                return Colors.green;
-            case 'conference':
-                return Colors.purple;
-            case 'hackathon':
-                return Colors.red;
-            default:
-                return Colors.blue;
-        }
+    pw.Widget _buildSummaryItem(String label, String value, pw.TextStyle normalStyle, pw.TextStyle emphasisStyle) {
+        return pw.Container(
+            padding: pw.EdgeInsets.all(10),
+            decoration: pw.BoxDecoration(
+                color: PdfColors.white,
+                borderRadius: pw.BorderRadius.circular(4),
+                border: pw.Border.all(color: PdfColors.blue200)
+            ),
+            child: pw.Column(
+                children: [
+                    pw.Text(value, style: emphasisStyle.copyWith(fontSize: 16)),
+                    pw.SizedBox(height: 4),
+                    pw.Text(label, style: normalStyle),
+                ],
+            ),
+        );
+    }
+
+    pw.Widget _buildEventDetail(String label, String value, pw.TextStyle style) {
+        return pw.Container(
+            width: 150,
+            padding: pw.EdgeInsets.all(8),
+            decoration: pw.BoxDecoration(
+                color: PdfColors.grey100,
+                borderRadius: pw.BorderRadius.circular(4)
+            ),
+            child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                    pw.Text(
+                        label,
+                        style: style.copyWith(color: PdfColors.grey700)
+                    ),
+                    pw.SizedBox(height: 2),
+                    pw.Text(
+                        value,
+                        style: style.copyWith(fontWeight: pw.FontWeight.bold)
+                    ),
+                ]
+            )
+        );
     }
 
     @override
@@ -2329,90 +2339,57 @@ class EventDetailsScreen extends StatelessWidget {
 
         return Scaffold(
             backgroundColor: isDarkMode ? Color(0xFF1A1A2E) : Colors.blue[50],
-            body: CustomScrollView(
-                slivers: [
-                    SliverAppBar(
-                        expandedHeight: 200,
-                        pinned: true,
-                        flexibleSpace: FlexibleSpaceBar(
-                            background: Stack(
-                                fit: StackFit.expand,
+            appBar: AppBar(
+                title: Text(title),
+                actions: isCreated ? [
+                    IconButton(
+                        icon: Icon(Icons.download),
+                        onPressed: () => _downloadEventReport(context, eventData),
+                        tooltip: 'Download Event Report',
+                    ),
+                    IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () => _showEditEventDialog(context, eventData),
+                    ),
+                    IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () => _showDeleteConfirmation(context, eventData),
+                    ),
+                ] : null,
+            ),
+            body: SingleChildScrollView(
+                child: Column(
                                 children: [
-                                    Image.network(
+                        // Event Image
+                        AspectRatio(
+                            aspectRatio: 16/9,
+                            child: Image.network(
                                         eventData['image'] ?? 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678',
                                         fit: BoxFit.cover,
                                     ),
-                                    Container(
-                                        decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                                begin: Alignment.topCenter,
-                                                end: Alignment.bottomCenter,
-                                                colors: [
-                                                    Colors.transparent,
-                                                    Colors.black.withOpacity(0.7),
-                                                ],
-                                            ),
-                                        ),
-                                    ),
-                                    Positioned(
-                                        bottom: 16,
-                                        left: 16,
-                                        right: 16,
+                        ),
+                        Padding(
+                            padding: EdgeInsets.all(16),
                                         child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
+                                    // Event Type Badge
                                                 Container(
                                                     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                                     decoration: BoxDecoration(
-                                                        color: _getEventTypeColor(type).withOpacity(0.2),
+                                            color: _getEventTypeColor(type).withOpacity(0.1),
                                                         borderRadius: BorderRadius.circular(8),
                                                     ),
                                                     child: Text(
                                                         type,
                                                         style: TextStyle(
-                                                            color: Colors.white,
+                                                color: _getEventTypeColor(type),
                                                             fontWeight: FontWeight.bold,
                                                         ),
                                                     ),
                                                 ),
-                                                SizedBox(height: 8),
-                                                Text(
-                                                    title,
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 24,
-                                                        fontWeight: FontWeight.bold,
-                                                    ),
-                                                ),
-                                            ],
-                                        ),
-                                    ),
-                                ],
-                            ),
-                        ),
-                        actions: isCreated ? [
-                            IconButton(
-                                icon: Icon(Icons.edit),
-                                onPressed: () {
-                                    // Show edit dialog
-                                    _showEditEventDialog(context, eventData);
-                                },
-                            ),
-                            IconButton(
-                                icon: Icon(Icons.delete),
-                                onPressed: () {
-                                    // Show delete confirmation
-                                    _showDeleteConfirmation(context, eventData);
-                                },
-                            ),
-                        ] : null,
-                    ),
-                    SliverToBoxAdapter(
-                        child: Padding(
-                            padding: EdgeInsets.all(16),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
+                                    SizedBox(height: 16),
+                                    // Event Details
                                     _buildInfoCard(
                                         isDarkMode: isDarkMode,
                                         title: 'Event Details',
@@ -2439,7 +2416,7 @@ class EventDetailsScreen extends StatelessWidget {
                                                 _buildDetailRow(
                                                     icon: Icons.currency_rupee,
                                                     label: 'Price',
-                                                    value: '₹$price',
+                                                    value: 'Rs. $price',
                                                     isDarkMode: isDarkMode,
                                                 ),
                                                 _buildDetailRow(
@@ -2454,6 +2431,7 @@ class EventDetailsScreen extends StatelessWidget {
                                         ),
                                     ),
                                     SizedBox(height: 16),
+                                    // Event Description
                                     _buildInfoCard(
                                         isDarkMode: isDarkMode,
                                         title: 'Description',
@@ -2463,205 +2441,30 @@ class EventDetailsScreen extends StatelessWidget {
                                                 color: isDarkMode ? Colors.grey[300] : Colors.grey[800],
                                                 height: 1.5,
                                             ),
-                                        ),
-                                    ),
-                                    if (isCreated) ...[
-                                        SizedBox(height: 16),
-                                        _buildInfoCard(
-                                            isDarkMode: isDarkMode,
-                                            title: 'Registrations',
-                                            content: StreamBuilder<QuerySnapshot>(
-                                                stream: FirebaseFirestore.instance
-                                                    .collection('events')
-                                                    .doc(eventData['id'])
-                                                    .collection('registrations')
-                                                    .snapshots(),
-                                                builder: (context, snapshot) {
-                                                    if (snapshot.hasError) {
-                                                        return Text('Error loading registrations');
-                                                    }
-
-                                                    if (!snapshot.hasData) {
-                                                        return Center(child: CircularProgressIndicator());
-                                                    }
-
-                                                    List<DocumentSnapshot> registrations = snapshot.data!.docs;
-                                                    
-                                                    // Filter out the '_info' document
-                                                    registrations = registrations.where((doc) => doc.id != '_info').toList();
-                                                    
-                                                    if (registrations.isEmpty) {
-                                                        return Center(
-                                                            child: Column(
-                                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                                children: [
-                                                                    Icon(
-                                                                        Icons.person_off_outlined,
-                                                                        size: 48,
-                                                                        color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
-                                                                    ),
-                                                                    SizedBox(height: 16),
-                                                                    Text(
-                                                            'No registrations yet',
-                                                            style: TextStyle(
-                                                                            fontSize: 16,
-                                                                color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
                                                                         ),
                                                                     ),
                                                                 ],
                                                             ),
-                                                        );
-                                                    }
-
-                                                    return Column(
-                                                        children: [
-                                                            // Registration Stats
-                                                            Container(
-                                                                padding: EdgeInsets.all(16),
-                                                                decoration: BoxDecoration(
-                                                                    color: isDarkMode 
-                                                                        ? Colors.blue[900]!.withOpacity(0.2) 
-                                                                        : Colors.blue[50],
-                                                                    borderRadius: BorderRadius.circular(12),
-                                                                ),
-                                                                child: Row(
-                                                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                                    children: [
-                                                                        _buildStatItem(
-                                                                            icon: Icons.people,
-                                                                            label: 'Total',
-                                                                            value: '${registrations.length}',
-                                                                            isDarkMode: isDarkMode,
-                                                                        ),
-                                                                        Container(
-                                                                            height: 40,
-                                                                            width: 1,
-                                                                            color: isDarkMode 
-                                                                                ? Colors.white24 
-                                                                                : Colors.black12,
-                                                                        ),
-                                                                        _buildStatItem(
-                                                                            icon: Icons.school,
-                                                                            label: 'Colleges',
-                                                                            value: '${_getUniqueColleges(registrations).length}',
-                                                                            isDarkMode: isDarkMode,
-                                                                        ),
-                                                                        Container(
-                                                                            height: 40,
-                                                                            width: 1,
-                                                                            color: isDarkMode 
-                                                                                ? Colors.white24 
-                                                                                : Colors.black12,
-                                                                        ),
-                                                                        _buildStatItem(
-                                                                            icon: Icons.category,
-                                                                            label: 'Departments',
-                                                                            value: '${_getUniqueDepartments(registrations).length}',
-                                                                            isDarkMode: isDarkMode,
                                                                         ),
                                                                     ],
                                                                 ),
-                                                            ),
-                                                            SizedBox(height: 16),
-                                                            // Registration List
-                                                            ...registrations.map((reg) {
-                                                            Map<String, dynamic> data = reg.data() as Map<String, dynamic>;
-                                                                return Container(
-                                                                    margin: EdgeInsets.only(bottom: 12),
-                                                                    decoration: BoxDecoration(
-                                                                        color: isDarkMode 
-                                                                            ? Colors.grey[900]!.withOpacity(0.5) 
-                                                                            : Colors.white,
-                                                                        borderRadius: BorderRadius.circular(12),
-                                                                        border: Border.all(
-                                                                            color: isDarkMode 
-                                                                                ? Colors.grey[800]! 
-                                                                                : Colors.grey[300]!,
-                                                                            width: 1,
-                                                                        ),
-                                                                    ),
-                                                                    child: ExpansionTile(
-                                                                        leading: CircleAvatar(
-                                                                            backgroundColor: isDarkMode 
-                                                                                ? Colors.blue[900]!.withOpacity(0.2) 
-                                                                                : Colors.blue[50],
-                                                                            child: Text(
-                                                                                data['userName']?[0].toUpperCase() ?? 'U',
-                                                                                style: TextStyle(
-                                                                                    color: isDarkMode 
-                                                                                        ? Colors.blue[400] 
-                                                                                        : Colors.blue[800],
-                                                                                    fontWeight: FontWeight.bold,
-                                                                                ),
-                                                                            ),
-                                                                        ),
-                                                                title: Text(
-                                                                    data['userName'] ?? 'Unknown User',
-                                                                    style: TextStyle(
-                                                                        color: isDarkMode ? Colors.white : Colors.black,
-                                                                                fontWeight: FontWeight.bold,
-                                                                    ),
-                                                                ),
-                                                                subtitle: Text(
-                                                                            data['college'] ?? 'No College',
-                                                                    style: TextStyle(
-                                                                        color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
-                                                                    ),
-                                                                            maxLines: 1,
-                                                                            overflow: TextOverflow.ellipsis,
-                                                                        ),
-                                                                        children: [
-                                                                            Padding(
-                                                                                padding: EdgeInsets.all(16),
-                                                                                child: Column(
-                                                                                    children: [
-                                                                                        _buildRegistrationDetailRow(
-                                                                                            icon: Icons.school,
-                                                                                            label: 'Department',
-                                                                                            value: data['department'] ?? 'Not specified',
-                                                                                            isDarkMode: isDarkMode,
-                                                                                        ),
-                                                                                        SizedBox(height: 8),
-                                                                                        _buildRegistrationDetailRow(
-                                                                                            icon: Icons.calendar_today,
-                                                                                            label: 'Year',
-                                                                                            value: data['year'] ?? 'Not specified',
-                                                                                            isDarkMode: isDarkMode,
-                                                                                        ),
-                                                                                        SizedBox(height: 8),
-                                                                                        _buildRegistrationDetailRow(
-                                                                                            icon: Icons.phone,
-                                                                                            label: 'Phone',
-                                                                                            value: data['phone'] ?? 'Not provided',
-                                                                                            isDarkMode: isDarkMode,
-                                                                                        ),
-                                                                                        SizedBox(height: 8),
-                                                                                        _buildRegistrationDetailRow(
-                                                                                            icon: Icons.access_time,
-                                                                                            label: 'Registered On',
-                                                                                            value: _formatTimestamp(data['registeredAt']),
-                                                                                            isDarkMode: isDarkMode,
-                                                                                        ),
-                                                                                    ],
-                                                                                ),
-                                                                            ),
-                                                                        ],
-                                                                ),
-                                                            );
-                                                        }).toList(),
-                                                        ],
-                                                    );
-                                                },
-                                            ),
-                                        ),
-                                    ],
-                                ],
-                            ),
-                        ),
-                    ),
-                ],
             ),
         );
+    }
+
+    Color _getEventTypeColor(String type) {
+        switch (type.toLowerCase()) {
+            case 'workshop':
+                return Colors.orange;
+            case 'seminar':
+                return Colors.green;
+            case 'conference':
+                return Colors.purple;
+            case 'hackathon':
+                return Colors.red;
+            default:
+                return Colors.blue;
+        }
     }
 
     Widget _buildInfoCard({
@@ -2759,8 +2562,7 @@ class EventDetailsScreen extends StatelessWidget {
     }
 
     void _showEditEventDialog(BuildContext context, Map<String, dynamic> eventData) {
-        // Implement edit dialog similar to the one in event_screen.dart
-        // You can reuse the _showEditEventForm method from there
+        // Implement edit dialog
     }
 
     void _showDeleteConfirmation(BuildContext context, Map<String, dynamic> eventData) {
@@ -2804,103 +2606,236 @@ class EventDetailsScreen extends StatelessWidget {
         );
     }
 
-    // Helper methods for registration stats
-    Set<String> _getUniqueColleges(List<DocumentSnapshot> registrations) {
-        return registrations
-            .map((reg) => (reg.data() as Map<String, dynamic>)['college'] as String?)
-            .where((college) => college != null)
-            .map((college) => college!)  // Convert String? to String
-            .toSet();
-    }
+    Future<void> _downloadEventReport(BuildContext context, Map<String, dynamic> eventData) async {
+        try {
+            showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                    return Center(child: CircularProgressIndicator());
+                },
+            );
 
-    Set<String> _getUniqueDepartments(List<DocumentSnapshot> registrations) {
-        return registrations
-            .map((reg) => (reg.data() as Map<String, dynamic>)['department'] as String?)
-            .where((dept) => dept != null)
-            .map((dept) => dept!)  // Convert String? to String
-            .toSet();
-    }
+            // Fetch registrations for this event
+            final registrationsSnapshot = await FirebaseFirestore.instance
+                .collection('events')
+                .doc(eventData['id'])
+                .collection('registrations')
+                .get();
 
-    Widget _buildStatItem({
-        required IconData icon,
-        required String label,
-        required String value,
-        required bool isDarkMode,
-    }) {
-        return Column(
+            final registrations = registrationsSnapshot.docs
+                .map((doc) => doc.data())
+                .where((data) => data['userName'] != null && data['email'] != null)
+                .toList();
+
+            final pdf = pw.Document();
+
+            // Define styles
+            final baseStyle = pw.TextStyle(
+                font: pw.Font.helvetica(),
+                fontSize: 10,
+                color: PdfColors.black
+            );
+
+            final titleStyle = baseStyle.copyWith(
+                fontSize: 24,
+                fontWeight: pw.FontWeight.bold,
+                color: PdfColors.blue900
+            );
+
+            final headerStyle = baseStyle.copyWith(
+                fontSize: 18,
+                fontWeight: pw.FontWeight.bold,
+                color: PdfColors.blue800
+            );
+
+            final subHeaderStyle = baseStyle.copyWith(
+                fontSize: 14,
+                fontWeight: pw.FontWeight.bold,
+                color: PdfColors.blue700
+            );
+
+            final normalStyle = baseStyle;
+            final emphasisStyle = baseStyle.copyWith(fontWeight: pw.FontWeight.bold);
+
+            // Calculate statistics
+            Set<String> uniqueColleges = {};
+            Set<String> uniqueDepartments = {};
+            final price = (eventData['price'] as num?)?.toInt() ?? 0;
+            final totalRevenue = registrations.length * price;
+
+            for (var reg in registrations) {
+                if (reg['college'] != null) uniqueColleges.add(reg['college']);
+                if (reg['department'] != null) uniqueDepartments.add(reg['department']);
+            }
+
+            // Create PDF
+            pdf.addPage(
+                pw.MultiPage(
+                    pageFormat: PdfPageFormat.a4,
+                    margin: pw.EdgeInsets.all(40),
+                    header: (context) {
+                        return pw.Container(
+                            padding: pw.EdgeInsets.only(bottom: 20),
+                            decoration: pw.BoxDecoration(
+                                border: pw.Border(bottom: pw.BorderSide(color: PdfColors.blue200))
+                            ),
+                            child: pw.Row(
+                                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
             children: [
-                Icon(icon,
-                    color: isDarkMode ? Colors.blue[400] : Colors.blue[800],
-                    size: 24,
-                ),
-                SizedBox(height: 4),
-                Text(
-                    value,
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: isDarkMode ? Colors.white : Colors.black,
-                    ),
-                ),
-                Text(
-                    label,
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
-                    ),
-                    textAlign: TextAlign.center,
-                ),
-            ],
-        );
+                                    pw.Text(
+                                        'Event Report: ${eventData['title']}',
+                                        style: titleStyle
+                                    ),
+                                    pw.Text(
+                                        DateTime.now().toString().split('.')[0],
+                                        style: baseStyle.copyWith(color: PdfColors.grey700)
+                                    ),
+                                ]
+                            )
+                        );
+                    },
+                    footer: (context) {
+                        return pw.Container(
+                            alignment: pw.Alignment.centerRight,
+                            margin: pw.EdgeInsets.only(top: 10),
+                            child: pw.Text(
+                                'Page ${context.pageNumber} of ${context.pagesCount}',
+                                style: baseStyle.copyWith(color: PdfColors.grey700)
+                            )
+                        );
+                    },
+                    build: (context) {
+                        return [
+                            // Event Summary
+                            pw.Container(
+                                padding: pw.EdgeInsets.all(15),
+                                margin: pw.EdgeInsets.only(bottom: 20),
+                                decoration: pw.BoxDecoration(
+                                    color: PdfColors.blue50,
+                                    borderRadius: pw.BorderRadius.circular(8)
+                                ),
+                                child: pw.Column(
+                                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                                    children: [
+                                        pw.Text('Event Summary', style: headerStyle),
+                                        pw.SizedBox(height: 10),
+                                        pw.Row(
+                                            mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
+                                            children: [
+                                                _buildSummaryItem('Total Registrations', '${registrations.length}', normalStyle, emphasisStyle),
+                                                _buildSummaryItem('Total Revenue', 'Rs. $totalRevenue', normalStyle, emphasisStyle),
+                                                _buildSummaryItem('Unique Colleges', '${uniqueColleges.length}', normalStyle, emphasisStyle),
+                                                _buildSummaryItem('Unique Departments', '${uniqueDepartments.length}', normalStyle, emphasisStyle),
+                                            ]
+                                        ),
+                                    ]
+                                )
+                            ),
+
+                            // Event Details
+                            pw.Container(
+                                margin: pw.EdgeInsets.only(bottom: 20),
+                                padding: pw.EdgeInsets.all(15),
+                                decoration: pw.BoxDecoration(
+                                    border: pw.Border.all(color: PdfColors.blue200),
+                                    borderRadius: pw.BorderRadius.circular(8)
+                                ),
+                                child: pw.Column(
+                                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                                    children: [
+                                        pw.Text('Event Details', style: subHeaderStyle),
+                                        pw.SizedBox(height: 10),
+                                        _buildEventDetail('Type', eventData['type'] ?? 'N/A', normalStyle),
+                                        _buildEventDetail('Date', (eventData['date'] as Timestamp).toDate().toString().split('.')[0], normalStyle),
+                                        _buildEventDetail('Location', eventData['location'] ?? 'N/A', normalStyle),
+                                        _buildEventDetail('Price', 'Rs. ${eventData['price'] ?? 0}', normalStyle),
+                                        _buildEventDetail('Points', '${eventData['points'] ?? 0}', normalStyle),
+                                        _buildEventDetail('Capacity', '${eventData['capacity'] ?? 0}', normalStyle),
+                                    ]
+                                )
+                            ),
+
+                            // Registrations
+                            if (registrations.isNotEmpty) ...[
+                                pw.Text('Registrations', style: headerStyle),
+                                pw.SizedBox(height: 10),
+                                pw.Table(
+                                    border: pw.TableBorder.all(color: PdfColors.blue200),
+                                    children: [
+                                        pw.TableRow(
+                                            decoration: pw.BoxDecoration(color: PdfColors.blue50),
+                                            children: [
+                                                _buildTableCell('Name', isHeader: true),
+                                                _buildTableCell('College', isHeader: true),
+                                                _buildTableCell('Department', isHeader: true),
+                                                _buildTableCell('Phone', isHeader: true),
+                                                _buildTableCell('Transaction ID', isHeader: true),
+                                                _buildTableCell('Accommodation', isHeader: true),
+                                                _buildTableCell('Registration Date', isHeader: true),
+                                            ]
+                                        ),
+                                        ...registrations.map((reg) => pw.TableRow(
+                                            children: [
+                                                _buildTableCell(reg['userName'] ?? 'N/A'),
+                                                _buildTableCell(reg['college'] ?? 'N/A'),
+                                                _buildTableCell(reg['department'] ?? 'N/A'),
+                                                _buildTableCell(reg['phone'] ?? 'N/A'),
+                                                _buildTableCell(reg['transactionId'] ?? 'N/A'),
+                                                _buildTableCell(reg['accommodation']?['needed'] == true ? 
+                                                    '${reg['accommodation']['status'] ?? 'Pending'}' : 'No'),
+                                                _buildTableCell(_formatTimestamp(reg['registeredAt'])),
+                                            ]
+                                        )).toList(),
+                                    ]
+                                ),
+                            ],
+                        ];
+                    }
+                )
+            );
+
+            final bytes = await pdf.save();
+            Navigator.pop(context); // Close loading dialog
+
+            if (kIsWeb) {
+                final blob = html.Blob([bytes], 'application/pdf');
+                final url = html.Url.createObjectUrlFromBlob(blob);
+                html.window.open(url, '_blank');
+                html.Url.revokeObjectUrl(url);
+            } else {
+                final directory = await getApplicationDocumentsDirectory();
+                final file = File('${directory.path}/${eventData['title']}_report.pdf');
+                await file.writeAsBytes(bytes);
+                await OpenFile.open(file.path);
+            }
+
+        } catch (e) {
+            print('Error generating PDF: $e');
+            Navigator.pop(context); // Close loading dialog
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Error generating PDF: $e'))
+            );
+        }
     }
 
-    Widget _buildRegistrationDetailRow({
-        required IconData icon,
-        required String label,
-        required String value,
-        required bool isDarkMode,
-    }) {
-        return Row(
-            children: [
-                Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                        color: isDarkMode 
-                            ? Colors.blue[900]!.withOpacity(0.2)
-                            : Colors.blue[50],
-                        borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Icon(
-                        icon,
-                        size: 16,
-                        color: isDarkMode ? Colors.blue[400] : Colors.blue[800],
-                    ),
-                ),
-                SizedBox(width: 12),
-                Text(
-                    '$label:',
-                    style: TextStyle(
-                        color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
-                    ),
-                ),
-                SizedBox(width: 8),
-                Expanded(
-                    child: Text(
-                        value,
-                        style: TextStyle(
-                            color: isDarkMode ? Colors.white : Colors.black,
-                            fontWeight: FontWeight.w500,
-                        ),
-                        textAlign: TextAlign.right,
-                    ),
-                ),
-            ],
+    pw.Widget _buildTableCell(String text, {bool isHeader = false}) {
+        return pw.Container(
+            padding: pw.EdgeInsets.all(6),
+            child: pw.Text(
+                text,
+                style: pw.TextStyle(
+                    fontSize: 9,
+                    fontWeight: isHeader ? pw.FontWeight.bold : pw.FontWeight.normal,
+                    color: isHeader ? PdfColors.blue900 : PdfColors.black
+                )
+            )
         );
     }
 
     String _formatTimestamp(dynamic timestamp) {
         if (timestamp == null) return 'Not available';
         DateTime dateTime = (timestamp as Timestamp).toDate();
-        return '${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute}';
+        return '${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
     }
 }
