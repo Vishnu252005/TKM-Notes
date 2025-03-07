@@ -1891,30 +1891,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
             );
 
-            // Fetch all events
+            // Get current user ID
+            final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
+            if (currentUserId == null) {
+                throw Exception('No user signed in');
+            }
+
+            // Fetch only events created by the current user
             final eventsSnapshot = await FirebaseFirestore.instance
                 .collection('events')
+                .where('creatorId', isEqualTo: currentUserId)
                 .get();
-
-            // Fetch all creators' details
-            Map<String, Map<String, dynamic>> creatorDetailsMap = {};
-            for (var doc in eventsSnapshot.docs) {
-                String creatorId = doc.data()['creatorId'] ?? '';
-                if (creatorId.isNotEmpty && !creatorDetailsMap.containsKey(creatorId)) {
-                    try {
-                        var creatorDoc = await FirebaseFirestore.instance
-                            .collection('users')
-                            .where('userId', isEqualTo: creatorId)
-                            .get();
-
-                        if (creatorDoc.docs.isNotEmpty) {
-                            creatorDetailsMap[creatorId] = creatorDoc.docs.first.data();
-                        }
-                    } catch (e) {
-                        print('Error fetching creator data for $creatorId: $e');
-                    }
-                }
-            }
 
             // Fetch registration details for each event
             Map<String, List<Map<String, dynamic>>> eventRegistrationsMap = {};
@@ -1925,6 +1912,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         .collection('events')
                         .doc(eventId)
                         .collection('registrations')
+                        .where(FieldPath.documentId, isNotEqualTo: '_info')  // Exclude _info document
                         .get();
 
                     eventRegistrationsMap[eventId] = registrationsSnapshot.docs
@@ -1998,9 +1986,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             child: pw.Row(
                                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
+                                children: [
                                     pw.Text(
-                                        'Events Report',
+                                        'My Events Report',
                                         style: titleStyle
                                     ),
                                     pw.Text(
@@ -2053,8 +2041,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ...eventsSnapshot.docs.map((eventDoc) {
                                 final eventData = eventDoc.data();
                                 final eventId = eventDoc.id;
-                                final creatorId = eventData['creatorId'] ?? '';
-                                final creatorData = creatorDetailsMap[creatorId] ?? {};
                                 final registrations = eventRegistrationsMap[eventId] ?? [];
                                 final eventDate = (eventData['date'] as Timestamp).toDate();
 
@@ -2131,19 +2117,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                                             decoration: pw.BoxDecoration(color: PdfColors.blue50),
                                                                             children: [
                                                                                 _buildTableCell('Name', isHeader: true),
+                                                                                _buildTableCell('Email', isHeader: true),
+                                                                                _buildTableCell('Phone', isHeader: true),
                                                                                 _buildTableCell('College', isHeader: true),
                                                                                 _buildTableCell('Department', isHeader: true),
+                                                                                _buildTableCell('Year', isHeader: true),
+                                                                                if (eventData['hasSpecialPrices'] == true)
+                                                                                    _buildTableCell('Price Category', isHeader: true),
+                                                                                if (eventData['hasReferralId'] == true)
+                                                                                    _buildTableCell('Referral ID', isHeader: true),
                                                                                 _buildTableCell('Transaction ID', isHeader: true),
+                                                                                _buildTableCell('Accommodation', isHeader: true),
                                                                                 _buildTableCell('Registration Date', isHeader: true),
                                                                             ]
                                                                         ),
                                                                         // Table Rows
                                                                         ...registrations.map((reg) => pw.TableRow(
                                                                             children: [
-                                                                                _buildTableCell(reg['userName'] ?? 'N/A'),
+                                                                                _buildTableCell(reg['name'] ?? 'N/A'),
+                                                                                _buildTableCell(reg['email'] ?? 'N/A'),
+                                                                                _buildTableCell(reg['phone'] ?? 'N/A'),
                                                                                 _buildTableCell(reg['college'] ?? 'N/A'),
                                                                                 _buildTableCell(reg['department'] ?? 'N/A'),
-                                                                                _buildTableCell(reg['transactionId'] ?? 'N/A'),
+                                                                                _buildTableCell(reg['year'] ?? 'N/A'),
+                                                                                if (eventData['hasSpecialPrices'] == true)
+                                                                                    _buildTableCell(reg['priceCategory']?['name'] ?? 'N/A'),
+                                                                                if (eventData['hasReferralId'] == true)
+                                                                                    _buildTableCell(reg['referralId'] ?? 'N/A'),
+                                                                                _buildTableCell(reg['transaction_id'] ?? 'N/A'),
+                                                                                _buildTableCell(reg['needsAccommodation'] == true ? 'Yes' : 'No'),
                                                                                 _buildTableCell(_formatTimestamp(reg['registeredAt'])),
                                                                             ]
                                                                         )).toList(),
@@ -2174,7 +2176,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 html.Url.revokeObjectUrl(url);
             } else {
                 final directory = await getApplicationDocumentsDirectory();
-                final file = File('${directory.path}/events_report.pdf');
+                final file = File('${directory.path}/my_events_report.pdf');
                 await file.writeAsBytes(bytes);
                 await OpenFile.open(file.path);
             }
@@ -2245,6 +2247,532 @@ class _ProfileScreenState extends State<ProfileScreen> {
             )
         );
     }
+
+    void _showEditEventDialog(BuildContext context, Map<String, dynamic> eventData) {
+        final _formKey = GlobalKey<FormState>();
+        final _titleController = TextEditingController(text: eventData['title']);
+        final _descriptionController = TextEditingController(text: eventData['description']);
+        final _locationController = TextEditingController(text: eventData['location']);
+        final _priceController = TextEditingController(text: eventData['price'].toString());
+        final _pointsController = TextEditingController(text: eventData['points'].toString());
+        final _capacityController = TextEditingController(text: eventData['capacity'].toString());
+        String _selectedType = eventData['type'];
+        DateTime _selectedDate = (eventData['date'] as Timestamp).toDate();
+        bool _hasSpecialPrices = eventData['hasSpecialPrices'] ?? false;
+        List<Map<String, dynamic>> _specialPrices = List<Map<String, dynamic>>.from(
+            eventData['specialPrices'] ?? [
+                {'name': 'IEEE Member', 'amount': 0},
+                {'name': 'Non IEEE Member', 'amount': 0}
+            ]
+        );
+
+        showDialog(
+            context: context,
+            builder: (context) {
+                return StatefulBuilder(
+                    builder: (context, setState) {
+                        return Dialog(
+                            backgroundColor: isDarkMode ? Color(0xFF252542) : Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Container(
+                                width: MediaQuery.of(context).size.width * 0.9,
+                                constraints: BoxConstraints(maxWidth: 600),
+                                child: SingleChildScrollView(
+                                    padding: EdgeInsets.all(24),
+                                    child: Form(
+                                        key: _formKey,
+                child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                    children: [
+                                                // Header
+                                                Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                        Text(
+                                                            'Edit Event',
+                                                            style: TextStyle(
+                                                                fontSize: 24,
+                                                                fontWeight: FontWeight.bold,
+                                                                color: isDarkMode ? Colors.white : Colors.black,
+                                                            ),
+                                                        ),
+                                                        IconButton(
+                                                            icon: Icon(Icons.close),
+                                                            onPressed: () => Navigator.pop(context),
+                                                            color: isDarkMode ? Colors.white60 : Colors.grey[600],
+                                                        ),
+                                                    ],
+                                                ),
+                                                SizedBox(height: 24),
+
+                                                // Basic Details Section
+                                                Text(
+                                                    'Basic Details',
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: isDarkMode ? Colors.white : Colors.black,
+                                                    ),
+                                                ),
+                                                SizedBox(height: 16),
+                                                _buildFormField(
+                                                    controller: _titleController,
+                                                    label: 'Event Title',
+                                                    icon: Icons.title,
+                                                    validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
+                                                    isDarkMode: isDarkMode,
+                                                ),
+                                                SizedBox(height: 16),
+                                                _buildFormField(
+                                                    controller: _descriptionController,
+                                                    label: 'Description',
+                                                    icon: Icons.description,
+                                                    maxLines: 3,
+                                                    validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
+                                                    isDarkMode: isDarkMode,
+                                                ),
+                                                SizedBox(height: 16),
+                                                _buildDropdownField(
+                                                    label: 'Event Type',
+                                                    value: _selectedType,
+                                                    items: ['Workshop', 'Seminar', 'Conference', 'Hackathon'],
+                                                    onChanged: (value) => setState(() => _selectedType = value!),
+                                                    icon: Icons.category,
+                                                    isDarkMode: isDarkMode,
+                                                ),
+                                                SizedBox(height: 16),
+                                                _buildDatePicker(
+                                                    context: context,
+                                                    selectedDate: _selectedDate,
+                                                    onDateSelected: (date) => setState(() => _selectedDate = date),
+                                                    isDarkMode: isDarkMode,
+                                                ),
+
+                                                SizedBox(height: 24),
+                                                // Location and Capacity Section
+                                                Text(
+                                                    'Location & Capacity',
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: isDarkMode ? Colors.white : Colors.black,
+                                                    ),
+                                                ),
+                                                SizedBox(height: 16),
+                                                _buildFormField(
+                                                    controller: _locationController,
+                                                    label: 'Location',
+                                                    icon: Icons.location_on,
+                                                    validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
+                                                    isDarkMode: isDarkMode,
+                                                ),
+                                                SizedBox(height: 16),
+                                                _buildFormField(
+                                                    controller: _capacityController,
+                                                    label: 'Capacity',
+                                                    icon: Icons.people,
+                                                    keyboardType: TextInputType.number,
+                                                    validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
+                                                    isDarkMode: isDarkMode,
+                                                ),
+
+                                                SizedBox(height: 24),
+                                                // Price and Points Section
+                                                Text(
+                                                    'Price & Points',
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: isDarkMode ? Colors.white : Colors.black,
+                                                    ),
+                                                ),
+                                                SizedBox(height: 16),
+                                                Row(
+                                                    children: [
+                                                        Expanded(
+                                                            child: _buildFormField(
+                                                                controller: _priceController,
+                                                                label: 'Price (₹)',
+                                                                icon: Icons.currency_rupee,
+                                                                keyboardType: TextInputType.number,
+                                                                validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
+                                                                isDarkMode: isDarkMode,
+                                                            ),
+                                                        ),
+                                                        SizedBox(width: 16),
+                                                        Expanded(
+                                                            child: _buildFormField(
+                                                                controller: _pointsController,
+                                                                label: 'Points',
+                                                                icon: Icons.star,
+                                                                keyboardType: TextInputType.number,
+                                                                validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
+                                                                isDarkMode: isDarkMode,
+                                                            ),
+                                                        ),
+                                                    ],
+                                                ),
+
+                                                // Special Prices Section
+                                                SizedBox(height: 24),
+                                                Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                        Text(
+                                                            'Special Prices',
+                                                            style: TextStyle(
+                                                                fontSize: 18,
+                                                                fontWeight: FontWeight.bold,
+                                                                color: isDarkMode ? Colors.white : Colors.black,
+                                                            ),
+                                                        ),
+                                                        Switch(
+                                                            value: _hasSpecialPrices,
+                                                            onChanged: (value) {
+                                                                setState(() {
+                                                                    _hasSpecialPrices = value;
+                                                                });
+                                                            },
+                                                            activeColor: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                                                        ),
+                                                    ],
+                                                ),
+                                                if (_hasSpecialPrices) ...[
+                                                    SizedBox(height: 16),
+                                                    ..._specialPrices.asMap().entries.map((entry) {
+                                                        int index = entry.key;
+                                                        Map<String, dynamic> price = entry.value;
+                                                        return Card(
+                                                            margin: EdgeInsets.only(bottom: 16),
+                                                            color: isDarkMode ? Color(0xFF1A1A2E) : Colors.grey[100],
+                                                            child: Padding(
+                                                                padding: EdgeInsets.all(16),
+                                                                child: Column(
+                                                                    children: [
+                                                                        Row(
+                                                                            children: [
+                                                                                Expanded(
+                                                                                    child: _buildFormField(
+                                                                                        controller: TextEditingController(text: price['name']),
+                                                                                        label: 'Category Name',
+                                                                                        icon: Icons.label,
+                                                                                        onChanged: (value) {
+                                                                                            setState(() {
+                                                                                                _specialPrices[index]['name'] = value;
+                                                                                            });
+                                                                                        },
+                                                                                        isDarkMode: isDarkMode,
+                                                                                    ),
+                                                                                ),
+                                                                                SizedBox(width: 8),
+                                                                                IconButton(
+                                                                                    icon: Icon(
+                                                                                        Icons.delete,
+                                                                                        color: Colors.red[400],
+                                                                                    ),
+                                                                                    onPressed: () {
+                                                                                        setState(() {
+                                                                                            _specialPrices.removeAt(index);
+                                                                                        });
+                                                                                    },
+                                                                                ),
+                                                                            ],
+                                                                        ),
+                                                                        SizedBox(height: 8),
+                                                                        _buildFormField(
+                                                                            controller: TextEditingController(text: price['amount'].toString()),
+                                                                            label: 'Amount',
+                                                                            icon: Icons.currency_rupee,
+                                                                            keyboardType: TextInputType.number,
+                                                                            onChanged: (value) {
+                                                                                setState(() {
+                                                                                    _specialPrices[index]['amount'] = int.tryParse(value) ?? 0;
+                                                                                });
+                                                                            },
+                                                                            isDarkMode: isDarkMode,
+                                                                        ),
+                                                                    ],
+                                                                ),
+                                                            ),
+                                                        );
+                                                    }).toList(),
+                                                    SizedBox(height: 16),
+                                                    Center(
+                                                        child: TextButton.icon(
+                                                            onPressed: () {
+                                                                setState(() {
+                                                                    _specialPrices.add({
+                                                                        'name': 'New Category',
+                                                                        'amount': 0
+                                                                    });
+                                                                });
+                                                            },
+                                                            icon: Icon(Icons.add),
+                                                            label: Text('Add Price Category'),
+                                                        ),
+                                                    ),
+                                                ],
+
+                                                // Action Buttons
+                                                SizedBox(height: 32),
+                                                Row(
+                                                    children: [
+                                                        Expanded(
+                                                            child: TextButton(
+                                                                onPressed: () => Navigator.pop(context),
+                                                                style: TextButton.styleFrom(
+                                                                    padding: EdgeInsets.symmetric(vertical: 16),
+                                                                    shape: RoundedRectangleBorder(
+                                                                        borderRadius: BorderRadius.circular(12),
+                                                                    ),
+                                                                ),
+                                                                child: Text(
+                                                                    'Cancel',
+                                                                    style: TextStyle(
+                                                                        fontSize: 16,
+                                                                        color: isDarkMode ? Colors.white70 : Colors.grey[700],
+                                                                    ),
+                                                                ),
+                                                            ),
+                                                        ),
+                                                        SizedBox(width: 16),
+                                                        Expanded(
+                                                            child: ElevatedButton(
+                                                                onPressed: () async {
+                                                                    if (_formKey.currentState!.validate()) {
+                                                                        try {
+                                                                            // Show loading
+                                                                            showDialog(
+                                                                                context: context,
+                                                                                barrierDismissible: false,
+                                                                                builder: (context) => Center(
+                                                                                    child: CircularProgressIndicator(),
+                                                                                ),
+                                                                            );
+
+                                                                            // Update event data
+                                                                            await FirebaseFirestore.instance
+                                                                                .collection('events')
+                                                                                .doc(eventData['id'])
+                                                                                .update({
+                                                                                    'title': _titleController.text,
+                                                                                    'description': _descriptionController.text,
+                                                                                    'type': _selectedType,
+                                                                                    'date': Timestamp.fromDate(_selectedDate),
+                                                                                    'location': _locationController.text,
+                                                                                    'price': int.parse(_priceController.text),
+                                                                                    'points': int.parse(_pointsController.text),
+                                                                                    'capacity': int.parse(_capacityController.text),
+                                                                                    'hasSpecialPrices': _hasSpecialPrices,
+                                                                                    'specialPrices': _hasSpecialPrices ? _specialPrices : null,
+                                                                                });
+
+                                                                            // Close dialogs and show success
+                                                                            Navigator.pop(context); // Close loading
+                                                                            Navigator.pop(context); // Close edit form
+                                                                            ScaffoldMessenger.of(context).showSnackBar(
+                                                                                SnackBar(
+                                                                                    content: Text('Event updated successfully'),
+                                                                                    backgroundColor: Colors.green,
+                                                                                ),
+                                                                            );
+                                                                        } catch (e) {
+                                                                            Navigator.pop(context); // Close loading
+                                                                            ScaffoldMessenger.of(context).showSnackBar(
+                                                                                SnackBar(
+                                                                                    content: Text('Error updating event: $e'),
+                                                                                    backgroundColor: Colors.red,
+                                                                                ),
+                                                                            );
+                                                                        }
+                                                                    }
+                                                                },
+                                                                style: ElevatedButton.styleFrom(
+                                                                    backgroundColor: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                                                                    padding: EdgeInsets.symmetric(vertical: 16),
+                                                                    shape: RoundedRectangleBorder(
+                                                                        borderRadius: BorderRadius.circular(12),
+                                                                    ),
+                                                                ),
+                                                                child: Text(
+                                                                    'Save Changes',
+                                                                    style: TextStyle(
+                                                                        fontSize: 16,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        color: Colors.white,
+                                                                    ),
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ],
+                                                ),
+                                            ],
+                                        ),
+                                    ),
+                                ),
+                            ),
+                        );
+                    },
+                );
+            },
+        );
+    }
+
+    Widget _buildFormField({
+        required TextEditingController controller,
+        required String label,
+        required IconData icon,
+        TextInputType? keyboardType,
+        String? Function(String?)? validator,
+        void Function(String)? onChanged,
+        int maxLines = 1,
+        required bool isDarkMode,
+    }) {
+        return TextFormField(
+            controller: controller,
+            keyboardType: keyboardType,
+            maxLines: maxLines,
+            validator: validator,
+            onChanged: onChanged,
+            style: TextStyle(
+                color: isDarkMode ? Colors.white : Colors.black,
+            ),
+            decoration: InputDecoration(
+                labelText: label,
+                labelStyle: TextStyle(
+                    color: isDarkMode ? Colors.white70 : Colors.grey[700],
+                ),
+                prefixIcon: Icon(
+                    icon,
+                    color: isDarkMode ? Colors.white38 : Colors.grey[600],
+                ),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                ),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                        color: isDarkMode ? Colors.white24 : Colors.grey[300]!,
+                    ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                        color: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                        width: 2,
+                    ),
+                ),
+                filled: true,
+                fillColor: isDarkMode ? Colors.black.withOpacity(0.2) : Colors.grey[100],
+            ),
+        );
+    }
+
+    Widget _buildDropdownField({
+        required String label,
+        required String value,
+        required List<String> items,
+        required void Function(String?) onChanged,
+        required IconData icon,
+        required bool isDarkMode,
+    }) {
+        return DropdownButtonFormField<String>(
+            value: value,
+            items: items.map((item) => DropdownMenuItem(
+                value: item,
+                child: Text(item),
+            )).toList(),
+            onChanged: onChanged,
+            style: TextStyle(
+                color: isDarkMode ? Colors.white : Colors.black,
+            ),
+            dropdownColor: isDarkMode ? Color(0xFF1A1A2E) : Colors.white,
+            decoration: InputDecoration(
+                labelText: label,
+                labelStyle: TextStyle(
+                    color: isDarkMode ? Colors.white70 : Colors.grey[700],
+                ),
+                prefixIcon: Icon(
+                    icon,
+                    color: isDarkMode ? Colors.white38 : Colors.grey[600],
+                ),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                ),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                        color: isDarkMode ? Colors.white24 : Colors.grey[300]!,
+                    ),
+                ),
+                filled: true,
+                fillColor: isDarkMode ? Colors.black.withOpacity(0.2) : Colors.grey[100],
+            ),
+        );
+    }
+
+    Widget _buildDatePicker({
+        required BuildContext context,
+        required DateTime selectedDate,
+        required Function(DateTime) onDateSelected,
+        required bool isDarkMode,
+    }) {
+        return InkWell(
+            onTap: () async {
+                final DateTime? picked = await showDatePicker(
+                    context: context,
+                    initialDate: selectedDate,
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime.now().add(Duration(days: 365)),
+                );
+                if (picked != null) {
+                    onDateSelected(picked);
+                }
+            },
+            child: Container(
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        color: isDarkMode ? Colors.white24 : Colors.grey[300]!,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                    color: isDarkMode ? Colors.black.withOpacity(0.2) : Colors.grey[100],
+                ),
+                child: Row(
+                    children: [
+                        Icon(
+                            Icons.calendar_today,
+                            color: isDarkMode ? Colors.white38 : Colors.grey[600],
+                        ),
+                        SizedBox(width: 12),
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                                Text(
+                                    'Event Date',
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        color: isDarkMode ? Colors.white70 : Colors.grey[700],
+                                    ),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                    '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: isDarkMode ? Colors.white : Colors.black,
+                                    ),
+                                ),
+                            ],
+                        ),
+                    ],
+                ),
+            ),
+        );
+    }
 }
 
 class DotPatternPainter extends CustomPainter {
@@ -2281,6 +2809,555 @@ class EventDetailsScreen extends StatelessWidget {
         required this.isCreated,
         required this.isDarkMode,
     });
+
+    static void _showEditEventDialog(BuildContext context, Map<String, dynamic> eventData) {
+        final _formKey = GlobalKey<FormState>();
+        final _titleController = TextEditingController(text: eventData['title']);
+        final _descriptionController = TextEditingController(text: eventData['description']);
+        final _locationController = TextEditingController(text: eventData['location']);
+        final _priceController = TextEditingController(text: eventData['price'].toString());
+        final _pointsController = TextEditingController(text: eventData['points'].toString());
+        final _capacityController = TextEditingController(text: eventData['capacity'].toString());
+        String _selectedType = eventData['type'];
+        DateTime _selectedDate = (eventData['date'] as Timestamp).toDate();
+        bool _hasSpecialPrices = eventData['hasSpecialPrices'] ?? false;
+        List<Map<String, dynamic>> _specialPrices = List<Map<String, dynamic>>.from(
+            eventData['specialPrices'] ?? [
+                {'name': 'IEEE Member', 'amount': 0},
+                {'name': 'Non IEEE Member', 'amount': 0}
+            ]
+        );
+
+        final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+        showDialog(
+            context: context,
+            builder: (context) {
+                return StatefulBuilder(
+                    builder: (context, setState) {
+                        return Dialog(
+                            backgroundColor: isDarkMode ? Color(0xFF252542) : Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Container(
+                                width: MediaQuery.of(context).size.width * 0.9,
+                                constraints: BoxConstraints(maxWidth: 600),
+                                child: SingleChildScrollView(
+                                    padding: EdgeInsets.all(24),
+                                    child: Form(
+                                        key: _formKey,
+                                        child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                children: [
+                                                // Header
+                                                Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                        Text(
+                                                            'Edit Event',
+                                                            style: TextStyle(
+                                                                fontSize: 24,
+                                                                fontWeight: FontWeight.bold,
+                                                                color: isDarkMode ? Colors.white : Colors.black,
+                                                            ),
+                                                        ),
+                                                        IconButton(
+                                                            icon: Icon(Icons.close),
+                                                            onPressed: () => Navigator.pop(context),
+                                                            color: isDarkMode ? Colors.white60 : Colors.grey[600],
+                                                        ),
+                                                    ],
+                                                ),
+                                                SizedBox(height: 24),
+
+                                                // Basic Details Section
+                                                Text(
+                                                    'Basic Details',
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: isDarkMode ? Colors.white : Colors.black,
+                                                    ),
+                                                ),
+                                                SizedBox(height: 16),
+                                                _buildFormField(
+                                                    controller: _titleController,
+                                                    label: 'Event Title',
+                                                    icon: Icons.title,
+                                                    validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
+                                                    isDarkMode: isDarkMode,
+                                                ),
+                                                SizedBox(height: 16),
+                                                _buildFormField(
+                                                    controller: _descriptionController,
+                                                    label: 'Description',
+                                                    icon: Icons.description,
+                                                    maxLines: 3,
+                                                    validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
+                                                    isDarkMode: isDarkMode,
+                                                ),
+                                                SizedBox(height: 16),
+                                                _buildDropdownField(
+                                                    label: 'Event Type',
+                                                    value: _selectedType,
+                                                    items: ['Workshop', 'Seminar', 'Conference', 'Hackathon'],
+                                                    onChanged: (value) => setState(() => _selectedType = value!),
+                                                    icon: Icons.category,
+                                                    isDarkMode: isDarkMode,
+                                                ),
+                                                SizedBox(height: 16),
+                                                _buildDatePicker(
+                                                    context: context,
+                                                    selectedDate: _selectedDate,
+                                                    onDateSelected: (date) => setState(() => _selectedDate = date),
+                                                    isDarkMode: isDarkMode,
+                                                ),
+
+                                                SizedBox(height: 24),
+                                                // Location and Capacity Section
+                                                Text(
+                                                    'Location & Capacity',
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: isDarkMode ? Colors.white : Colors.black,
+                                                    ),
+                                                ),
+                                                SizedBox(height: 16),
+                                                _buildFormField(
+                                                    controller: _locationController,
+                                                    label: 'Location',
+                                                    icon: Icons.location_on,
+                                                    validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
+                                                    isDarkMode: isDarkMode,
+                                                ),
+                                                SizedBox(height: 16),
+                                                _buildFormField(
+                                                    controller: _capacityController,
+                                                    label: 'Capacity',
+                                                    icon: Icons.people,
+                                                    keyboardType: TextInputType.number,
+                                                    validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
+                                                    isDarkMode: isDarkMode,
+                                                ),
+
+                                                SizedBox(height: 24),
+                                                // Price and Points Section
+                                                Text(
+                                                    'Price & Points',
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: isDarkMode ? Colors.white : Colors.black,
+                                                    ),
+                                                ),
+                                                SizedBox(height: 16),
+                                                Row(
+                                                    children: [
+                                                        Expanded(
+                                                            child: _buildFormField(
+                                                                controller: _priceController,
+                                                                label: 'Price (₹)',
+                                                                icon: Icons.currency_rupee,
+                                                                keyboardType: TextInputType.number,
+                                                                validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
+                                                                isDarkMode: isDarkMode,
+                                                            ),
+                                                        ),
+                                                        SizedBox(width: 16),
+                                                        Expanded(
+                                                            child: _buildFormField(
+                                                                controller: _pointsController,
+                                                                label: 'Points',
+                                                                icon: Icons.star,
+                                                                keyboardType: TextInputType.number,
+                                                                validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
+                                                                isDarkMode: isDarkMode,
+                                                            ),
+                                                        ),
+                                                    ],
+                                                ),
+
+                                                // Special Prices Section
+                                                SizedBox(height: 24),
+                                                Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                        Text(
+                                                            'Special Prices',
+                                                            style: TextStyle(
+                                                                fontSize: 18,
+                                                                fontWeight: FontWeight.bold,
+                                                                color: isDarkMode ? Colors.white : Colors.black,
+                                                            ),
+                                                        ),
+                                                        Switch(
+                                                            value: _hasSpecialPrices,
+                                                            onChanged: (value) {
+                                                                setState(() {
+                                                                    _hasSpecialPrices = value;
+                                                                });
+                                                            },
+                                                            activeColor: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                                                        ),
+                                                    ],
+                                                ),
+                                                if (_hasSpecialPrices) ...[
+                                                    SizedBox(height: 16),
+                                                    ..._specialPrices.asMap().entries.map((entry) {
+                                                        int index = entry.key;
+                                                        Map<String, dynamic> price = entry.value;
+                                                        return Card(
+                                                            margin: EdgeInsets.only(bottom: 16),
+                                                            color: isDarkMode ? Color(0xFF1A1A2E) : Colors.grey[100],
+                                                            child: Padding(
+                                                                padding: EdgeInsets.all(16),
+                                        child: Column(
+                                            children: [
+                                                                        Row(
+                                                                            children: [
+                                                                                Expanded(
+                                                                                    child: _buildFormField(
+                                                                                        controller: TextEditingController(text: price['name']),
+                                                                                        label: 'Category Name',
+                                                                                        icon: Icons.label,
+                                                                                        onChanged: (value) {
+                                                                                            setState(() {
+                                                                                                _specialPrices[index]['name'] = value;
+                                                                                            });
+                                                                                        },
+                                                                                        isDarkMode: isDarkMode,
+                                                                                    ),
+                                                                                ),
+                                                                                SizedBox(width: 8),
+                                                                                IconButton(
+                                                                                    icon: Icon(
+                                                                                        Icons.delete,
+                                                                                        color: Colors.red[400],
+                                                                                    ),
+                                                                                    onPressed: () {
+                                                                                        setState(() {
+                                                                                            _specialPrices.removeAt(index);
+                                                                                        });
+                                                                                    },
+                                                                                ),
+                                                                            ],
+                                                                        ),
+                                                                        SizedBox(height: 8),
+                                                                        _buildFormField(
+                                                                            controller: TextEditingController(text: price['amount'].toString()),
+                                                                            label: 'Amount',
+                                                                            icon: Icons.currency_rupee,
+                                                                            keyboardType: TextInputType.number,
+                                                                            onChanged: (value) {
+                                                                                setState(() {
+                                                                                    _specialPrices[index]['amount'] = int.tryParse(value) ?? 0;
+                                                                                });
+                                                                            },
+                                                                            isDarkMode: isDarkMode,
+                                                                        ),
+                                                                    ],
+                                                                ),
+                                                            ),
+                                                        );
+                                                    }).toList(),
+                                                    SizedBox(height: 16),
+                                                    Center(
+                                                        child: TextButton.icon(
+                                                            onPressed: () {
+                                                                setState(() {
+                                                                    _specialPrices.add({
+                                                                        'name': 'New Category',
+                                                                        'amount': 0
+                                                                    });
+                                                                });
+                                                            },
+                                                            icon: Icon(Icons.add),
+                                                            label: Text('Add Price Category'),
+                                                        ),
+                                                    ),
+                                                ],
+
+                                                // Action Buttons
+                                                SizedBox(height: 32),
+                                                Row(
+                                                    children: [
+                                                        Expanded(
+                                                            child: TextButton(
+                                                                onPressed: () => Navigator.pop(context),
+                                                                style: TextButton.styleFrom(
+                                                                    padding: EdgeInsets.symmetric(vertical: 16),
+                                                                    shape: RoundedRectangleBorder(
+                                                                        borderRadius: BorderRadius.circular(12),
+                                                                    ),
+                                                    ),
+                                                    child: Text(
+                                                                    'Cancel',
+                                                        style: TextStyle(
+                                                                        fontSize: 16,
+                                                                        color: isDarkMode ? Colors.white70 : Colors.grey[700],
+                                                                    ),
+                                                                ),
+                                                            ),
+                                                        ),
+                                                        SizedBox(width: 16),
+                                                        Expanded(
+                                                            child: ElevatedButton(
+                                                                onPressed: () async {
+                                                                    if (_formKey.currentState!.validate()) {
+                                                                        try {
+                                                                            // Show loading
+                                                                            showDialog(
+                                                                                context: context,
+                                                                                barrierDismissible: false,
+                                                                                builder: (context) => Center(
+                                                                                    child: CircularProgressIndicator(),
+                                                                                ),
+                                                                            );
+
+                                                                            // Create updated event data
+                                                                            Map<String, dynamic> updatedEventData = {
+                                                                                'title': _titleController.text,
+                                                                                'description': _descriptionController.text,
+                                                                                'type': _selectedType,
+                                                                                'date': Timestamp.fromDate(_selectedDate),
+                                                                                'location': _locationController.text,
+                                                                                'price': int.parse(_priceController.text),
+                                                                                'points': int.parse(_pointsController.text),
+                                                                                'capacity': int.parse(_capacityController.text),
+                                                                                'hasSpecialPrices': _hasSpecialPrices,
+                                                                                'specialPrices': _hasSpecialPrices ? _specialPrices : null,
+                                                                                'lastUpdated': FieldValue.serverTimestamp(),
+                                                                            };
+
+                                                                            // Update event in Firestore
+                                                                            await FirebaseFirestore.instance
+                                                                                .collection('events')
+                                                                                .doc(eventData['id'])
+                                                                                .update(updatedEventData);
+
+                                                                            // Update local event data
+                                                                            eventData.addAll(updatedEventData);
+
+                                                                            // Close dialogs
+                                                                            Navigator.pop(context); // Close loading
+                                                                            Navigator.pop(context); // Close edit form
+
+                                                                            // Refresh the event details screen
+                                                                            Navigator.pushReplacement(
+                                                                                context,
+                                                                                MaterialPageRoute(
+                                                                                    builder: (context) => EventDetailsScreen(
+                                                                                        eventData: eventData,
+                                                                                        isCreated: true,
+                                                                                        isDarkMode: isDarkMode,
+                                                                                    ),
+                                                                                ),
+                                                                            );
+
+                                                                            // Show success message
+                                                                            ScaffoldMessenger.of(context).showSnackBar(
+                                                                                SnackBar(
+                                                                                    content: Text('Event updated successfully'),
+                                                                                    backgroundColor: Colors.green,
+                                                                                ),
+                                                                            );
+                                                                        } catch (e) {
+                                                                            Navigator.pop(context); // Close loading
+                                                                            ScaffoldMessenger.of(context).showSnackBar(
+                                                                                SnackBar(
+                                                                                    content: Text('Error updating event: $e'),
+                                                                                    backgroundColor: Colors.red,
+                                                                                ),
+                                                                            );
+                                                                        }
+                                                                    }
+                                                                },
+                                                                style: ElevatedButton.styleFrom(
+                                                                    backgroundColor: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                                                                    padding: EdgeInsets.symmetric(vertical: 16),
+                                                                    shape: RoundedRectangleBorder(
+                                                                        borderRadius: BorderRadius.circular(12),
+                                                                    ),
+                                                                ),
+                                                                child: Text(
+                                                                    'Save Changes',
+                                                                    style: TextStyle(
+                                                                        fontSize: 16,
+                                                            fontWeight: FontWeight.bold,
+                                                                        color: Colors.white,
+                                                        ),
+                                                    ),
+                                                ),
+                                                        ),
+                                                    ],
+                                                ),
+                                            ],
+                                        ),
+                                    ),
+                                ),
+                            ),
+                        );
+                    },
+                );
+            },
+        );
+    }
+
+    static Widget _buildFormField({
+        required TextEditingController controller,
+        required String label,
+        required IconData icon,
+        TextInputType? keyboardType,
+        String? Function(String?)? validator,
+        void Function(String)? onChanged,
+        int maxLines = 1,
+        required bool isDarkMode,
+    }) {
+        return TextFormField(
+            controller: controller,
+            keyboardType: keyboardType,
+            maxLines: maxLines,
+            validator: validator,
+            onChanged: onChanged,
+            style: TextStyle(
+                color: isDarkMode ? Colors.white : Colors.black,
+            ),
+            decoration: InputDecoration(
+                labelText: label,
+                labelStyle: TextStyle(
+                    color: isDarkMode ? Colors.white70 : Colors.grey[700],
+                ),
+                prefixIcon: Icon(
+                    icon,
+                    color: isDarkMode ? Colors.white38 : Colors.grey[600],
+                ),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                ),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                        color: isDarkMode ? Colors.white24 : Colors.grey[300]!,
+                    ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                        color: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                        width: 2,
+                    ),
+                ),
+                filled: true,
+                fillColor: isDarkMode ? Colors.black.withOpacity(0.2) : Colors.grey[100],
+            ),
+        );
+    }
+
+    static Widget _buildDropdownField({
+        required String label,
+        required String value,
+        required List<String> items,
+        required void Function(String?) onChanged,
+        required IconData icon,
+        required bool isDarkMode,
+    }) {
+        return DropdownButtonFormField<String>(
+            value: value,
+            items: items.map((item) => DropdownMenuItem(
+                value: item,
+                child: Text(item),
+            )).toList(),
+            onChanged: onChanged,
+            style: TextStyle(
+                color: isDarkMode ? Colors.white : Colors.black,
+            ),
+            dropdownColor: isDarkMode ? Color(0xFF1A1A2E) : Colors.white,
+            decoration: InputDecoration(
+                labelText: label,
+                labelStyle: TextStyle(
+                    color: isDarkMode ? Colors.white70 : Colors.grey[700],
+                ),
+                prefixIcon: Icon(
+                    icon,
+                    color: isDarkMode ? Colors.white38 : Colors.grey[600],
+                ),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                ),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                        color: isDarkMode ? Colors.white24 : Colors.grey[300]!,
+                    ),
+                ),
+                filled: true,
+                fillColor: isDarkMode ? Colors.black.withOpacity(0.2) : Colors.grey[100],
+            ),
+        );
+    }
+
+    static Widget _buildDatePicker({
+        required BuildContext context,
+        required DateTime selectedDate,
+        required Function(DateTime) onDateSelected,
+        required bool isDarkMode,
+    }) {
+        return InkWell(
+            onTap: () async {
+                final DateTime? picked = await showDatePicker(
+                    context: context,
+                    initialDate: selectedDate,
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime.now().add(Duration(days: 365)),
+                );
+                if (picked != null) {
+                    onDateSelected(picked);
+                }
+            },
+            child: Container(
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        color: isDarkMode ? Colors.white24 : Colors.grey[300]!,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                    color: isDarkMode ? Colors.black.withOpacity(0.2) : Colors.grey[100],
+                ),
+                child: Row(
+                    children: [
+                        Icon(
+                            Icons.calendar_today,
+                            color: isDarkMode ? Colors.white38 : Colors.grey[600],
+                        ),
+                        SizedBox(width: 12),
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                                                Text(
+                                    'Event Date',
+                                                    style: TextStyle(
+                                        fontSize: 12,
+                                        color: isDarkMode ? Colors.white70 : Colors.grey[700],
+                                    ),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                    '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: isDarkMode ? Colors.white : Colors.black,
+                                                    ),
+                                                ),
+                                            ],
+                                        ),
+                    ],
+                ),
+            ),
+        );
+    }
 
     pw.Widget _buildSummaryItem(String label, String value, pw.TextStyle normalStyle, pw.TextStyle emphasisStyle) {
         return pw.Container(
@@ -2341,22 +3418,22 @@ class EventDetailsScreen extends StatelessWidget {
             backgroundColor: isDarkMode ? Color(0xFF1A1A2E) : Colors.blue[50],
             appBar: AppBar(
                 title: Text(title),
-                actions: isCreated ? [
+                        actions: isCreated ? [
                     IconButton(
                         icon: Icon(Icons.download),
                         onPressed: () => _downloadEventReport(context, eventData),
                         tooltip: 'Download Event Report',
                     ),
-                    IconButton(
-                        icon: Icon(Icons.edit),
+                            IconButton(
+                                icon: Icon(Icons.edit),
                         onPressed: () => _showEditEventDialog(context, eventData),
-                    ),
-                    IconButton(
-                        icon: Icon(Icons.delete),
+                            ),
+                            IconButton(
+                                icon: Icon(Icons.delete),
                         onPressed: () => _showDeleteConfirmation(context, eventData),
+                            ),
+                        ] : null,
                     ),
-                ] : null,
-            ),
             body: SingleChildScrollView(
                 child: Column(
                                 children: [
@@ -2370,9 +3447,9 @@ class EventDetailsScreen extends StatelessWidget {
                         ),
                         Padding(
                             padding: EdgeInsets.all(16),
-                                        child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
                                     // Event Type Badge
                                                 Container(
                                                     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -2394,6 +3471,7 @@ class EventDetailsScreen extends StatelessWidget {
                                         isDarkMode: isDarkMode,
                                         title: 'Event Details',
                                         content: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                                 _buildDetailRow(
                                                     icon: Icons.calendar_today,
@@ -2413,20 +3491,129 @@ class EventDetailsScreen extends StatelessWidget {
                                                     value: '$points pts',
                                                     isDarkMode: isDarkMode,
                                                 ),
+                                                // Price Section with Toggle
+                                                Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                        Text(
+                                                            'Special Price Mode',
+                                            style: TextStyle(
+                                                                fontSize: 16,
+                                                                fontWeight: FontWeight.bold,
+                                                                color: isDarkMode ? Colors.white : Colors.black,
+                                                            ),
+                                                        ),
+                                                        Switch(
+                                                            value: (eventData['hasSpecialPrices'] as bool?) ?? false,
+                                                            onChanged: isCreated ? (bool value) async {
+                                                                try {
+                                                                    await FirebaseFirestore.instance
+                                                    .collection('events')
+                                                    .doc(eventData['id'])
+                                                                        .update({
+                                                                            'hasSpecialPrices': value,
+                                                                            'specialPrices': value ? [
+                                                                                {'name': 'IEEE Member', 'amount': 0},
+                                                                                {'name': 'Non IEEE Member', 'amount': 0}
+                                                                            ] : null,
+                                                                        });
+                                                                    
+                                                                    if (value) {
+                                                                        // Show edit dialog when enabling special prices
+                                                                        _showEditEventDialog(context, {
+                                                                            ...eventData,
+                                                                            'hasSpecialPrices': true,
+                                                                            'specialPrices': [
+                                                                                {'name': 'IEEE Member', 'amount': 0},
+                                                                                {'name': 'Non IEEE Member', 'amount': 0}
+                                                                            ]
+                                                                        });
+                                                                    }
+                                                                } catch (e) {
+                                                                    ScaffoldMessenger.of(context).showSnackBar(
+                                                                        SnackBar(content: Text('Error updating special prices: $e')),
+                                                                    );
+                                                                }
+                                                            } : null,
+                                                            activeColor: Colors.blue,
+                                                        ),
+                                                    ],
+                                                ),
+                                                if (!(eventData['hasSpecialPrices'] as bool? ?? false))
                                                 _buildDetailRow(
                                                     icon: Icons.currency_rupee,
                                                     label: 'Price',
-                                                    value: 'Rs. $price',
+                                                        value: 'Rs. $price',
                                                     isDarkMode: isDarkMode,
                                                 ),
-                                                _buildDetailRow(
-                                                    icon: Icons.people,
-                                                    label: 'Capacity',
-                                                    value: '$registeredCount/$capacity',
-                                                    isDarkMode: isDarkMode,
-                                                    isCapacity: true,
-                                                    isFull: isFull,
-                                                ),
+                                                // Special Prices Section
+                                                if ((eventData['hasSpecialPrices'] as bool? ?? false) && 
+                                                    eventData['specialPrices'] != null && 
+                                                    (eventData['specialPrices'] as List).isNotEmpty) ...[
+                                                    Divider(
+                                                        color: isDarkMode ? Colors.white24 : Colors.grey[300],
+                                                        height: 24,
+                                                    ),
+                                                    Row(
+                                                        children: [
+                                                            Container(
+                                                                padding: EdgeInsets.all(8),
+                                                                decoration: BoxDecoration(
+                                                                    color: isDarkMode 
+                                                                        ? Colors.blue[900]!.withOpacity(0.2) 
+                                                                        : Colors.blue[50],
+                                                                    borderRadius: BorderRadius.circular(8),
+                                                                ),
+                                                                child: Icon(
+                                                                    Icons.sell_outlined,
+                                                                    size: 20,
+                                                                    color: isDarkMode ? Colors.blue[400] : Colors.blue[800],
+                                                                ),
+                                                            ),
+                                                            SizedBox(width: 16),
+                                                            Text(
+                                                                'Special Prices',
+                                                                style: TextStyle(
+                                                                    fontSize: 16,
+                                                                    fontWeight: FontWeight.bold,
+                                                                    color: isDarkMode ? Colors.white : Colors.black,
+                                                                ),
+                                                            ),
+                                                            if (isCreated) ...[
+                                                                Spacer(),
+                                                                IconButton(
+                                                                    icon: Icon(Icons.edit),
+                                                                    onPressed: () => _showEditEventDialog(context, eventData),
+                                                                    color: isDarkMode ? Colors.blue[400] : Colors.blue[800],
+                                                                ),
+                                                            ],
+                                                        ],
+                                                    ),
+                                                    SizedBox(height: 12),
+                                                    ...(eventData['specialPrices'] as List).map((price) => 
+                                                        Padding(
+                                                            padding: EdgeInsets.only(left: 48, bottom: 8),
+                                                            child: Row(
+                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                children: [
+                                                                    Text(
+                                                                        price['name'] ?? 'Category',
+                                                                                style: TextStyle(
+                                                                            color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                                                                                ),
+                                                                            ),
+                                                                    Text(
+                                                                        'Rs. ${price['amount'] ?? 0}',
+                                                                    style: TextStyle(
+                                                                        color: isDarkMode ? Colors.white : Colors.black,
+                                                                                fontWeight: FontWeight.bold,
+                                                                    ),
+                                                                ),
+                                                                ],
+                                                            ),
+                                                        ),
+                                                    ).toList(),
+                                                ],
                                             ],
                                         ),
                                     ),
@@ -2441,13 +3628,222 @@ class EventDetailsScreen extends StatelessWidget {
                                                 color: isDarkMode ? Colors.grey[300] : Colors.grey[800],
                                                 height: 1.5,
                                             ),
-                                                                        ),
-                                                                    ),
-                                                                ],
+                                        ),
+                                    ),
+                                        SizedBox(height: 16),
+                                    // Registered Users Section
+                                    StreamBuilder<QuerySnapshot>(
+                                                stream: FirebaseFirestore.instance
+                                                    .collection('events')
+                                                    .doc(eventData['id'])
+                                                    .collection('registrations')
+                                                    .where(FieldPath.documentId, isNotEqualTo: '_info')  // Exclude _info document
+                                                    .snapshots(),
+                                                builder: (context, registrationsSnapshot) {
+                                                    if (registrationsSnapshot.hasError) {
+                                                        return _buildInfoCard(
+                                                            isDarkMode: isDarkMode,
+                                                            title: 'Registered Users',
+                                                            content: Text(
+                                                                'Error loading registrations',
+                                                                style: TextStyle(color: Colors.red),
                                                             ),
+                                                        );
+                                                    }
+
+                                                    if (!registrationsSnapshot.hasData) {
+                                                        return _buildInfoCard(
+                                                            isDarkMode: isDarkMode,
+                                                            title: 'Registered Users',
+                                                            content: Center(child: CircularProgressIndicator()),
+                                                        );
+                                                    }
+
+                                                    final registrations = registrationsSnapshot.data!.docs;
+
+                                                    if (registrations.isEmpty) {
+                                                        return _buildInfoCard(
+                                                            isDarkMode: isDarkMode,
+                                                            title: 'Registered Users',
+                                                            content: Text(
+                                                                'No registrations yet',
+                                                                style: TextStyle(
+                                                                    color: isDarkMode ? Colors.grey[300] : Colors.grey[800],
+                                                                    fontStyle: FontStyle.italic,
+                                                                ),
+                                                            ),
+                                                        );
+                                                    }
+
+                                                    return _buildInfoCard(
+                                                        isDarkMode: isDarkMode,
+                                                        title: 'Registered Users',
+                                                        content: Column(
+                                                            children: registrations.map((reg) {
+                                                                return _buildRegistrationTile(reg.data() as Map<String, dynamic>, isDarkMode);
+                                                            }).toList(),
+                                                        ),
+                                                    );
+                                                },
+                                    ),
+                                ],
+                            ),
                                                                         ),
                                                                     ],
                                                                 ),
+                                                            ),
+        );
+    }
+
+    Widget _buildRegistrationTile(Map<String, dynamic> registration, bool isDarkMode) {
+        return ExpansionTile(
+                                                                title: Text(
+                registration['name'] ?? 'Unknown User',
+                                                                    style: TextStyle(
+                                                                        color: isDarkMode ? Colors.white : Colors.black,
+                                                                                fontWeight: FontWeight.bold,
+                                                                    ),
+                                                                ),
+                                                                subtitle: Text(
+                registration['email'] ?? 'No email',
+                                                                    style: TextStyle(
+                                                                        color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                                                                    ),
+            ),
+            leading: Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                    color: isDarkMode 
+                        ? Colors.blue[900]!.withOpacity(0.2)
+                        : Colors.blue[50],
+                    borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                    Icons.person,
+                    color: isDarkMode ? Colors.blue[400] : Colors.blue[800],
+                ),
+                                                                        ),
+                                                                        children: [
+                Container(
+                                                                                padding: EdgeInsets.all(16),
+                    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                        color: isDarkMode 
+                            ? Colors.black.withOpacity(0.2)
+                            : Colors.grey[100],
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                            color: isDarkMode 
+                                ? Colors.white24 
+                                : Colors.grey[300]!,
+                        ),
+                    ),
+                                                                                child: Column(
+                                                                                    children: [
+                            _buildDetailItem(
+                                'Phone',
+                                registration['phone'] ?? 'Not provided',
+                                Icons.phone,
+                                isDarkMode,
+                            ),
+                            _buildDetailItem(
+                                'College',
+                                registration['college'] ?? 'Not provided',
+                                Icons.school,
+                                isDarkMode,
+                            ),
+                            _buildDetailItem(
+                                'Department',
+                                registration['department'] ?? 'Not provided',
+                                Icons.business,
+                                isDarkMode,
+                            ),
+                            _buildDetailItem(
+                                'Year',
+                                registration['year'] ?? 'Not provided',
+                                Icons.calendar_today,
+                                isDarkMode,
+                            ),
+                            _buildDetailItem(
+                                'Transaction ID',
+                                registration['transaction_id'] ?? 'Not provided',
+                                Icons.receipt_long,
+                                isDarkMode,
+                            ),
+                            _buildDetailItem(
+                                'Accommodation',
+                                registration['needsAccommodation'] == true ? 'Yes' : 'No',
+                                Icons.hotel,
+                                isDarkMode,
+                            ),
+                            _buildDetailItem(
+                                'Registration Date',
+                                _formatTimestamp(registration['registeredAt']),
+                                Icons.access_time,
+                                isDarkMode,
+                            ),
+                            if (registration['priceCategory'] != null)
+                                _buildDetailItem(
+                                    'Price Category',
+                                    registration['priceCategory']['name'] ?? 'Not provided',
+                                    Icons.sell,
+                                    isDarkMode,
+                                ),
+                            if (registration['referralId'] != null)
+                                _buildDetailItem(
+                                    'Referral ID',
+                                    registration['referralId'],
+                                    Icons.person_add,
+                                    isDarkMode,
+                                                                            ),
+                                                                        ],
+                                                                ),
+                ),
+            ],
+        );
+    }
+
+    Widget _buildDetailItem(String label, String value, IconData icon, bool isDarkMode) {
+        return Padding(
+            padding: EdgeInsets.symmetric(vertical: 8),
+            child: Row(
+                children: [
+                    Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                            color: isDarkMode 
+                                ? Colors.blue[900]!.withOpacity(0.2)
+                                : Colors.blue[50],
+                            borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                            icon,
+                            size: 16,
+                            color: isDarkMode ? Colors.blue[400] : Colors.blue[800],
+                        ),
+                    ),
+                    SizedBox(width: 12),
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                            Text(
+                                label,
+                                style: TextStyle(
+                                    color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                                    fontSize: 12,
+                                ),
+                            ),
+                            SizedBox(height: 2),
+                            Text(
+                                value,
+                                style: TextStyle(
+                                    color: isDarkMode ? Colors.white : Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                ),
+                            ),
+                        ],
+                    ),
+                ],
             ),
         );
     }
@@ -2561,10 +3957,6 @@ class EventDetailsScreen extends StatelessWidget {
         );
     }
 
-    void _showEditEventDialog(BuildContext context, Map<String, dynamic> eventData) {
-        // Implement edit dialog
-    }
-
     void _showDeleteConfirmation(BuildContext context, Map<String, dynamic> eventData) {
         showDialog(
             context: context,
@@ -2621,11 +4013,11 @@ class EventDetailsScreen extends StatelessWidget {
                 .collection('events')
                 .doc(eventData['id'])
                 .collection('registrations')
+                .where(FieldPath.documentId, isNotEqualTo: '_info')  // Exclude _info document
                 .get();
 
             final registrations = registrationsSnapshot.docs
                 .map((doc) => doc.data())
-                .where((data) => data['userName'] != null && data['email'] != null)
                 .toList();
 
             final pdf = pw.Document();
@@ -2767,9 +4159,15 @@ class EventDetailsScreen extends StatelessWidget {
                                             decoration: pw.BoxDecoration(color: PdfColors.blue50),
                                             children: [
                                                 _buildTableCell('Name', isHeader: true),
+                                                _buildTableCell('Email', isHeader: true),
+                                                _buildTableCell('Phone', isHeader: true),
                                                 _buildTableCell('College', isHeader: true),
                                                 _buildTableCell('Department', isHeader: true),
-                                                _buildTableCell('Phone', isHeader: true),
+                                                _buildTableCell('Year', isHeader: true),
+                                                if (eventData['hasSpecialPrices'] == true)
+                                                    _buildTableCell('Price Category', isHeader: true),
+                                                if (eventData['hasReferralId'] == true)
+                                                    _buildTableCell('Referral ID', isHeader: true),
                                                 _buildTableCell('Transaction ID', isHeader: true),
                                                 _buildTableCell('Accommodation', isHeader: true),
                                                 _buildTableCell('Registration Date', isHeader: true),
@@ -2777,13 +4175,18 @@ class EventDetailsScreen extends StatelessWidget {
                                         ),
                                         ...registrations.map((reg) => pw.TableRow(
                                             children: [
-                                                _buildTableCell(reg['userName'] ?? 'N/A'),
+                                                _buildTableCell(reg['name'] ?? 'N/A'),
+                                                _buildTableCell(reg['email'] ?? 'N/A'),
+                                                _buildTableCell(reg['phone'] ?? 'N/A'),
                                                 _buildTableCell(reg['college'] ?? 'N/A'),
                                                 _buildTableCell(reg['department'] ?? 'N/A'),
-                                                _buildTableCell(reg['phone'] ?? 'N/A'),
-                                                _buildTableCell(reg['transactionId'] ?? 'N/A'),
-                                                _buildTableCell(reg['accommodation']?['needed'] == true ? 
-                                                    '${reg['accommodation']['status'] ?? 'Pending'}' : 'No'),
+                                                _buildTableCell(reg['year'] ?? 'N/A'),
+                                                if (eventData['hasSpecialPrices'] == true)
+                                                    _buildTableCell(reg['priceCategory']?['name'] ?? 'N/A'),
+                                                if (eventData['hasReferralId'] == true)
+                                                    _buildTableCell(reg['referralId'] ?? 'N/A'),
+                                                _buildTableCell(reg['transaction_id'] ?? 'N/A'),  // Use consistent field name
+                                                _buildTableCell(reg['needsAccommodation'] == true ? 'Yes' : 'No'),
                                                 _buildTableCell(_formatTimestamp(reg['registeredAt'])),
                                             ]
                                         )).toList(),
