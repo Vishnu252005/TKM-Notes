@@ -33,19 +33,22 @@ class _Graphics1State extends State<Graphics1> {
 
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: Introduction to Engineering Drawing',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_1',
+      title: 'Series I',
+      isAvailable: true,
+      pdfUrl:
+          'https://drive.google.com/uc?id=1TRzVaVLiFCRgruCLNdOCZxmHB6fcddx_&export=download',
     ),
     UnitItem(
-      title: 'MODULE II: Orthographic Projections',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_2',
+      title: 'Series II',
+      isAvailable: true,
+      pdfUrl:
+          'https://drive.google.com/uc?id=1AnX5ljsruR9r1fzdP-usGwfq29jEQKxE&export=download',
     ),
     UnitItem(
-      title: 'MODULE III: Projections of Regular Solids',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_3',
+      title: 'Semester Exam',
+      isAvailable: true,
+      pdfUrl:
+          'https://drive.google.com/uc?id=1Ev7ig5ajlraGbXnqbBWC-TjLMnJe--3d&export=download',
     ),
     UnitItem(
       title: 'MODULE IV: Sections and Sectional Views, Development of Surfaces',
@@ -89,7 +92,8 @@ class _Graphics1State extends State<Graphics1> {
 
   void _loadBannerAd() {
     _bannerAd = BannerAd(
-      adUnitId: 'ca-app-pub-1850470420397635/2911662464', // Replace with your Ad Unit ID
+      adUnitId:
+          'ca-app-pub-1850470420397635/2911662464', // Replace with your Ad Unit ID
       size: AdSize.banner,
       request: AdRequest(),
       listener: BannerAdListener(
@@ -115,7 +119,8 @@ class _Graphics1State extends State<Graphics1> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: _isDarkMode ? Colors.white : Colors.blue[900]),
+          icon: Icon(Icons.arrow_back,
+              color: _isDarkMode ? Colors.white : Colors.blue[900]),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -151,14 +156,17 @@ class _Graphics1State extends State<Graphics1> {
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
-                              color: _isDarkMode ? Colors.white : Colors.blue[900],
+                              color:
+                                  _isDarkMode ? Colors.white : Colors.blue[900],
                             ),
                           ),
                           Text(
                             'Select Chapter',
                             style: TextStyle(
                               fontSize: 18,
-                              color: _isDarkMode ? Colors.white70 : Colors.blue[700],
+                              color: _isDarkMode
+                                  ? Colors.white70
+                                  : Colors.blue[700],
                             ),
                           ),
                         ],
@@ -191,7 +199,10 @@ class _Graphics1State extends State<Graphics1> {
                     child: ListView(
                       children: [
                         _buildListItem(context, 'Textbooks', false, null),
-                        ...units.map((unit) => _buildListItem(context, unit.title, unit.isAvailable, unit.pdfUrl)).toList(),
+                        ...units
+                            .map((unit) => _buildListItem(context, unit.title,
+                                unit.isAvailable, unit.pdfUrl))
+                            .toList(),
                       ],
                     ),
                   ),
@@ -220,7 +231,8 @@ class _Graphics1State extends State<Graphics1> {
                 padding: const EdgeInsets.all(16.0),
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundColor: _isDarkMode ? Colors.blue[700] : Colors.blue[300],
+                  backgroundColor:
+                      _isDarkMode ? Colors.blue[700] : Colors.blue[300],
                   child: Text(
                     widget.fullName[0].toUpperCase(),
                     style: const TextStyle(color: Colors.white, fontSize: 24),
@@ -234,7 +246,8 @@ class _Graphics1State extends State<Graphics1> {
     );
   }
 
-  Widget _buildListItem(BuildContext context, String title, bool isAvailable, String? pdfUrl) {
+  Widget _buildListItem(
+      BuildContext context, String title, bool isAvailable, String? pdfUrl) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(
@@ -254,15 +267,18 @@ class _Graphics1State extends State<Graphics1> {
       child: ListTile(
         title: Text(
           title,
-          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[900]),
+          style:
+              TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[900]),
         ),
-        trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.blue[900]),
+        trailing: Icon(Icons.chevron_right,
+            color: _isDarkMode ? Colors.white : Colors.blue[900]),
         onTap: () {
           if (isAvailable && pdfUrl != null) {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PDFViewerPage(pdfUrl: pdfUrl, title: title),
+                builder: (context) =>
+                    PDFViewerPage(pdfUrl: pdfUrl, title: title),
               ),
             );
           } else {
@@ -289,5 +305,6 @@ class UnitItem {
   final bool isAvailable;
   final String pdfUrl;
 
-  UnitItem({required this.title, required this.isAvailable, required this.pdfUrl});
+  UnitItem(
+      {required this.title, required this.isAvailable, required this.pdfUrl});
 }

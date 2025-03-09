@@ -8,13 +8,18 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-class maths1 extends StatefulWidget { // Capitalized class name
+class maths1 extends StatefulWidget {
+  // Capitalized class name
   final String fullName;
   final String branch;
   final String year;
   final String semester;
 
-  maths1({required this.fullName, required this.branch, required this.year, required this.semester});
+  maths1(
+      {required this.fullName,
+      required this.branch,
+      required this.year,
+      required this.semester});
 
   @override
   _maths1State createState() => _maths1State();
@@ -28,29 +33,33 @@ class _maths1State extends State<maths1> {
 
   final List<UnitItem> units = [
     UnitItem(
-      title: 'Module I: Multivariable Calculus and Applications',
+      title: 'Series I',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=19VcJjEQ43bu9gV4lS4t-mV-Aj_jo7GjP',
+      pdfUrl: 'url_to_pdf',
     ),
     UnitItem(
-      title: 'Module II: Multiple Integrals and Applications',
+      title: 'Series II',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1hhHsiUv-XUQc6n9SR5gRb5rGT1bHUku5',
+      pdfUrl:
+          'https://drive.google.com/uc?id=1NcAG-ON4oxSkkXrNEo_2H7FEymFKIySM&export=download',
     ),
     UnitItem(
-      title: 'Module III: Vector Differentiation',
+      title: 'Semester Exam',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1IqUm0K-Zpz0TEQEut2s8CcVh5YJSoDGk',
+      pdfUrl:
+          'https://drive.google.com/uc?id=1z5ZOzDyCdRdmcLL6NyKGidkmY32bPHX4&export=download',
     ),
     UnitItem(
       title: 'Module IV: Vector Integration',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1ru1Hhfx0bpHNoN1JXx3sQqdzlVxLytJr',
+      pdfUrl:
+          'https://drive.google.com/uc?export=download&id=1ru1Hhfx0bpHNoN1JXx3sQqdzlVxLytJr',
     ),
     UnitItem(
       title: 'Module V: Linear Algebra',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1uv2dxXLwmBzWl2z0yQO8dWd3Mo4s57al',
+      pdfUrl:
+          'https://drive.google.com/uc?export=download&id=1uv2dxXLwmBzWl2z0yQO8dWd3Mo4s57al',
     ),
   ];
 
@@ -84,7 +93,8 @@ class _maths1State extends State<maths1> {
 
   void _loadBannerAd() {
     _bannerAd = BannerAd(
-      adUnitId: 'ca-app-pub-1850470420397635/2911662464', // Replace with your Ad Unit ID
+      adUnitId:
+          'ca-app-pub-1850470420397635/2911662464', // Replace with your Ad Unit ID
       size: AdSize.banner,
       request: AdRequest(),
       listener: BannerAdListener(
@@ -147,14 +157,17 @@ class _maths1State extends State<maths1> {
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
-                              color: _isDarkMode ? Colors.white : Colors.blue[900],
+                              color:
+                                  _isDarkMode ? Colors.white : Colors.blue[900],
                             ),
                           ),
                           Text(
                             'Select Chapter',
                             style: TextStyle(
                               fontSize: 18,
-                              color: _isDarkMode ? Colors.white70 : Colors.blue[700],
+                              color: _isDarkMode
+                                  ? Colors.white70
+                                  : Colors.blue[700],
                             ),
                           ),
                         ],
@@ -187,7 +200,10 @@ class _maths1State extends State<maths1> {
                     child: ListView(
                       children: [
                         _buildListItem(context, 'Textbooks', false, null),
-                        ...units.map((unit) => _buildListItem(context, unit.title, unit.isAvailable, unit.pdfUrl)).toList(),
+                        ...units
+                            .map((unit) => _buildListItem(context, unit.title,
+                                unit.isAvailable, unit.pdfUrl))
+                            .toList(),
                       ],
                     ),
                   ),
@@ -232,17 +248,18 @@ class _maths1State extends State<maths1> {
       ),
       bottomNavigationBar: _isBannerAdLoaded
           ? Container(
-               width: MediaQuery.of(context).size.width, // Full width of the screen
-               height: _bannerAd.size.height.toDouble(),
-               color: Colors.white, // Set background color to white
-               child: AdWidget(ad: _bannerAd),
+              width:
+                  MediaQuery.of(context).size.width, // Full width of the screen
+              height: _bannerAd.size.height.toDouble(),
+              color: Colors.white, // Set background color to white
+              child: AdWidget(ad: _bannerAd),
             )
           : null,
     );
   }
 
-
-  Widget _buildListItem(BuildContext context, String title, bool isAvailable, String? pdfUrl) {
+  Widget _buildListItem(
+      BuildContext context, String title, bool isAvailable, String? pdfUrl) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(
@@ -262,7 +279,8 @@ class _maths1State extends State<maths1> {
       child: ListTile(
         title: Text(
           title,
-          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[900]),
+          style:
+              TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[900]),
         ),
         trailing: const Icon(Icons.chevron_right, color: Colors.white),
         onTap: () {
@@ -270,7 +288,8 @@ class _maths1State extends State<maths1> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PDFViewerPage(pdfUrl: pdfUrl, title: title),
+                builder: (context) =>
+                    PDFViewerPage(pdfUrl: pdfUrl, title: title),
               ),
             );
           } else {
@@ -297,5 +316,6 @@ class UnitItem {
   final bool isAvailable;
   final String pdfUrl;
 
-  UnitItem({required this.title, required this.isAvailable, required this.pdfUrl});
+  UnitItem(
+      {required this.title, required this.isAvailable, required this.pdfUrl});
 }
