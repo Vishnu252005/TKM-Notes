@@ -48,40 +48,54 @@ class SyllabusData {
         'Sem8': 'https://vishnumeta.com/eee_sem8.pdf',
       },
       'CIVIL': {
-        'Sem1': 'https://vishnumeta.com/civil_sem1.pdf',
-        'Sem2': 'https://vishnumeta.com/civil_sem2.pdf',
-        'Sem3': 'https://vishnumeta.com/civil_sem3.pdf',
-        'Sem4': 'https://vishnumeta.com/civil_sem4.pdf',
+        'Sem1':
+            'https://drive.google.com/uc?id=1_XNZaPuxlol9czjI4jb-PVy3qsBCTZ2-&export=download',
+        'Sem2':
+            'https://drive.google.com/uc?id=112NzP1FT0R3sP_8cghFY_m1xdf80r4-B&export=download',
+        'Sem3':
+            'https://drive.google.com/uc?id=1JnqlCNeVdI58X3QYeQU49s-WufcdfLHQ&export=download',
+        'Sem4':
+            'https://drive.google.com/uc?id=1-bEjR2yn1FoNuO_SJ6Bt5GpJoCKXkFXL&export=download',
         'Sem5': 'https://vishnumeta.com/civil_sem5.pdf',
         'Sem6': 'https://vishnumeta.com/civil_sem6.pdf',
         'Sem7': 'https://vishnumeta.com/civil_sem7.pdf',
         'Sem8': 'https://vishnumeta.com/civil_sem8.pdf',
       },
       'CHEMICAL': {
-        'Sem1': 'https://vishnumeta.com/chemical_sem1.pdf',
-        'Sem2': 'https://vishnumeta.com/chemical_sem2.pdf',
-        'Sem3': 'https://vishnumeta.com/chemical_sem3.pdf',
-        'Sem4': 'https://vishnumeta.com/chemical_sem4.pdf',
+        'Sem1':
+            'https://drive.google.com/uc?id=1Xs7CFOs9upI-FsX6LyiJT04by9EPEy1E&export=download',
+        'Sem2':
+            'https://drive.google.com/uc?id=19aml3MjiF3daMVGeHJT4zOKSlbVVpWDA&export=download',
+        'Sem3': '',
+        'Sem4': '',
         'Sem5': 'https://vishnumeta.com/chemical_sem5.pdf',
         'Sem6': 'https://vishnumeta.com/chemical_sem6.pdf',
         'Sem7': 'https://vishnumeta.com/chemical_sem7.pdf',
         'Sem8': 'https://vishnumeta.com/chemical_sem8.pdf',
       },
       'EC': {
-        'Sem1': 'https://vishnumeta.com/ec_sem1.pdf',
-        'Sem2': 'https://vishnumeta.com/ec_sem2.pdf',
-        'Sem3': 'https://vishnumeta.com/ec_sem3.pdf',
-        'Sem4': 'https://vishnumeta.com/ec_sem4.pdf',
+        'Sem1':
+            'https://drive.google.com/uc?id=1FsmbwVAVAcCVj2DPykf60Jrh22ZXwtBr&export=download',
+        'Sem2':
+            'https://drive.google.com/uc?id=1aq_WG4QQlBcYqweXWe_wfzK1VlyCgRrD&export=download',
+        'Sem3':
+            'https://drive.google.com/uc?id=1XMpHH2luVqZ2Feq_8bUHmA7ojodPjLDp&export=download',
+        'Sem4':
+            'https://drive.google.com/uc?id=1X0zmiV8ZR2AYhPNqJEvNS3_pjP5H5iFq&export=download',
         'Sem5': 'https://vishnumeta.com/ec_sem5.pdf',
         'Sem6': 'https://vishnumeta.com/ec_sem6.pdf',
         'Sem7': 'https://vishnumeta.com/ec_sem7.pdf',
         'Sem8': 'https://vishnumeta.com/ec_sem8.pdf',
       },
       'ER': {
-        'Sem1': 'https://vishnumeta.com/er_sem1.pdf',
-        'Sem2': 'https://vishnumeta.com/er_sem2.pdf',
-        'Sem3': 'https://vishnumeta.com/er_sem3.pdf',
-        'Sem4': 'https://vishnumeta.com/er_sem4.pdf',
+        'Sem1':
+            'https://drive.google.com/uc?id=1MNDjaghtZPbLQwipH30JNkUAR0-t8Mzo&export=download',
+        'Sem2':
+            'https://drive.google.com/uc?id=1Z0Pk-q5yTQuKVQZw54lzEP60W0tr8zPh&export=download',
+        'Sem3':
+            'https://drive.google.com/uc?id=100mBmwetdAtT9tnORGhIw4qYGvVcTEFC&export=download',
+        'Sem4':
+            'https://drive.google.com/uc?id=1wdVyo77gGE4Ix-MIgHUoasG7GSeuji4V&export=download',
         'Sem5': 'https://vishnumeta.com/er_sem5.pdf',
         'Sem6': 'https://vishnumeta.com/er_sem6.pdf',
         'Sem7': 'https://vishnumeta.com/er_sem7.pdf',

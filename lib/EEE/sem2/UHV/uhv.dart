@@ -33,29 +33,35 @@ class _UhvState extends State<Uhv> {
 
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: Introduction to Value Education',
+      title: 'Series I',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1KxmDDyYEi4aR-FCh50FuyuLVFuryew0F',
+      pdfUrl:
+          'https://drive.google.com/uc?id=1Qh7R5YjxkeLdy0n6bU55YB6lD14W_-be&export=download',
     ),
     UnitItem(
-      title: 'MODULE II: Harmony in the Human Being',
+      title: 'Series II',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1_4hiEhdWrJrDPJHGlMl42J2uL9RA95NO',
+      pdfUrl:
+          'https://drive.google.com/uc?id=1GgsQ_HTRpOcHSC-D0dky4FsWilQUSTex&export=download',
     ),
     UnitItem(
-      title: 'MODULE III: Harmony in the Family and Society',
+      title: 'Semester Exam',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1c9SWhMVB5Oe0Xs1w85khkumZbkklVT_2',
+      pdfUrl:
+          'https://drive.google.com/uc?id=1p9qBLIRHf0mBmIxrpz5SmDR4bkmoy0Gn&export=download',
     ),
     UnitItem(
       title: 'MODULE IV: Harmony in the Nature/Existence',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1drnFkkEzQAjQKBhDZ96oB0UEB3PLyC02',
+      pdfUrl:
+          'https://drive.google.com/uc?export=download&id=1drnFkkEzQAjQKBhDZ96oB0UEB3PLyC02',
     ),
     UnitItem(
-      title: 'MODULE V: Implications of the Holistic Understanding – a Look at Professional Ethics',
+      title:
+          'MODULE V: Implications of the Holistic Understanding – a Look at Professional Ethics',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1ok4F1xf0D9xb5kusTLK0X6VfJW4sd3oC',
+      pdfUrl:
+          'https://drive.google.com/uc?export=download&id=1ok4F1xf0D9xb5kusTLK0X6VfJW4sd3oC',
     ),
   ];
 
@@ -89,7 +95,8 @@ class _UhvState extends State<Uhv> {
 
   void _loadBannerAd() {
     _bannerAd = BannerAd(
-      adUnitId: 'ca-app-pub-1850470420397635/2911662464', // Replace with your Ad Unit ID
+      adUnitId:
+          'ca-app-pub-1850470420397635/2911662464', // Replace with your Ad Unit ID
       size: AdSize.banner,
       request: AdRequest(),
       listener: BannerAdListener(
@@ -109,11 +116,14 @@ class _UhvState extends State<Uhv> {
 
   @override
   Widget build(BuildContext context) {
-    final Color backgroundColor = _isDarkMode ? const Color(0xFF4C4DDC) : Colors.blue[50]!;
-    final Color appBarIconColor = _isDarkMode ? Colors.white : Colors.blue[900]!;
+    final Color backgroundColor =
+        _isDarkMode ? const Color(0xFF4C4DDC) : Colors.blue[50]!;
+    final Color appBarIconColor =
+        _isDarkMode ? Colors.white : Colors.blue[900]!;
     final Color listTileColor = _isDarkMode ? Colors.grey[900]! : Colors.white;
     final Color titleColor = _isDarkMode ? Colors.white : Colors.blue[900]!;
-    final Color subtitleColor = _isDarkMode ? Colors.white70 : Colors.blue[700]!;
+    final Color subtitleColor =
+        _isDarkMode ? Colors.white70 : Colors.blue[700]!;
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -197,7 +207,10 @@ class _UhvState extends State<Uhv> {
                     child: ListView(
                       children: [
                         _buildListItem(context, 'Textbooks', false, null),
-                        ...units.map((unit) => _buildListItem(context, unit.title, unit.isAvailable, unit.pdfUrl)).toList(),
+                        ...units
+                            .map((unit) => _buildListItem(context, unit.title,
+                                unit.isAvailable, unit.pdfUrl))
+                            .toList(),
                       ],
                     ),
                   ),
@@ -226,7 +239,8 @@ class _UhvState extends State<Uhv> {
                 padding: const EdgeInsets.all(16.0),
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundColor: _isDarkMode ? Colors.blue[700] : Colors.blue[300],
+                  backgroundColor:
+                      _isDarkMode ? Colors.blue[700] : Colors.blue[300],
                   child: Text(
                     widget.fullName[0].toUpperCase(),
                     style: const TextStyle(color: Colors.white, fontSize: 24),
@@ -240,7 +254,8 @@ class _UhvState extends State<Uhv> {
     );
   }
 
-  Widget _buildListItem(BuildContext context, String title, bool isAvailable, String? pdfUrl) {
+  Widget _buildListItem(
+      BuildContext context, String title, bool isAvailable, String? pdfUrl) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(
@@ -260,15 +275,18 @@ class _UhvState extends State<Uhv> {
       child: ListTile(
         title: Text(
           title,
-          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[900]),
+          style:
+              TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[900]),
         ),
-        trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.blue[900]),
+        trailing: Icon(Icons.chevron_right,
+            color: _isDarkMode ? Colors.white : Colors.blue[900]),
         onTap: () {
           if (isAvailable && pdfUrl != null) {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PDFViewerPage(pdfUrl: pdfUrl, title: title),
+                builder: (context) =>
+                    PDFViewerPage(pdfUrl: pdfUrl, title: title),
               ),
             );
           } else {
@@ -295,5 +313,6 @@ class UnitItem {
   final bool isAvailable;
   final String pdfUrl;
 
-  UnitItem({required this.title, required this.isAvailable, required this.pdfUrl});
+  UnitItem(
+      {required this.title, required this.isAvailable, required this.pdfUrl});
 }

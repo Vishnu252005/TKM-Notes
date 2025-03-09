@@ -33,29 +33,34 @@ class _Psp1State extends State<Psp1> {
 
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: Basics of Computer Hardware and Software',
+      title: 'Series I',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1CAy9yrHksn3w6s91ZfHxG7zmf4oxcuSn',
+      pdfUrl:
+          'https://drive.google.com/uc?id=1i4fBJMpBYK1CnPAw0Tq6yA9DLyeKyOwn&export=download',
     ),
     UnitItem(
-      title: 'MODULE II: Program Basics',
+      title: 'Series II',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=19wFcQRs2SQo1cc3EB34cuiAAqFUZ581R',
+      pdfUrl:
+          'https://drive.google.com/uc?id=1v3gkGsvm-P4ziGqjRn_Ju22YlSFVAnBn&export=download',
     ),
     UnitItem(
-      title: 'MODULE III: Arrays and Strings',
+      title: 'Semester Exam',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=18B2R5vwarQF7EmH7OjeYGFNTjfXuHJH3',
+      pdfUrl:
+          'https://drive.google.com/uc?id=1ciWntB77o-2xahzoSXqHXCnuyy_F9Kac&export=download',
     ),
     UnitItem(
       title: 'MODULE IV: Working with Functions',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1Y2XLmTWCVf6zYDyK3dK70WHwEv4XnQz2',
+      pdfUrl:
+          'https://drive.google.com/uc?export=download&id=1Y2XLmTWCVf6zYDyK3dK70WHwEv4XnQz2',
     ),
     UnitItem(
       title: 'MODULE V: Pointers and Files',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1-l6EprZBLINB2MSVkEQaBSpzuOBZeuty',
+      pdfUrl:
+          'https://drive.google.com/uc?export=download&id=1-l6EprZBLINB2MSVkEQaBSpzuOBZeuty',
     ),
   ];
 
@@ -89,7 +94,8 @@ class _Psp1State extends State<Psp1> {
 
   void _loadBannerAd() {
     _bannerAd = BannerAd(
-      adUnitId: 'ca-app-pub-1850470420397635/2911662464', // Replace with your Ad Unit ID
+      adUnitId:
+          'ca-app-pub-1850470420397635/2911662464', // Replace with your Ad Unit ID
       size: AdSize.banner,
       request: AdRequest(),
       listener: BannerAdListener(
@@ -115,7 +121,8 @@ class _Psp1State extends State<Psp1> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: _isDarkMode ? Colors.white : Colors.blue[900]),
+          icon: Icon(Icons.arrow_back,
+              color: _isDarkMode ? Colors.white : Colors.blue[900]),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -151,14 +158,17 @@ class _Psp1State extends State<Psp1> {
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
-                              color: _isDarkMode ? Colors.white : Colors.blue[900],
+                              color:
+                                  _isDarkMode ? Colors.white : Colors.blue[900],
                             ),
                           ),
                           Text(
                             'Select Chapter',
                             style: TextStyle(
                               fontSize: 18,
-                              color: _isDarkMode ? Colors.white70 : Colors.blue[700],
+                              color: _isDarkMode
+                                  ? Colors.white70
+                                  : Colors.blue[700],
                             ),
                           ),
                         ],
@@ -191,7 +201,10 @@ class _Psp1State extends State<Psp1> {
                     child: ListView(
                       children: [
                         _buildListItem(context, 'Textbooks', false, null),
-                        ...units.map((unit) => _buildListItem(context, unit.title, unit.isAvailable, unit.pdfUrl)).toList(),
+                        ...units
+                            .map((unit) => _buildListItem(context, unit.title,
+                                unit.isAvailable, unit.pdfUrl))
+                            .toList(),
                       ],
                     ),
                   ),
@@ -220,7 +233,8 @@ class _Psp1State extends State<Psp1> {
                 padding: const EdgeInsets.all(16.0),
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundColor: _isDarkMode ? Colors.blue[700] : Colors.blue[300],
+                  backgroundColor:
+                      _isDarkMode ? Colors.blue[700] : Colors.blue[300],
                   child: Text(
                     widget.fullName[0].toUpperCase(),
                     style: const TextStyle(color: Colors.white, fontSize: 24),
@@ -234,7 +248,8 @@ class _Psp1State extends State<Psp1> {
     );
   }
 
-  Widget _buildListItem(BuildContext context, String title, bool isAvailable, String? pdfUrl) {
+  Widget _buildListItem(
+      BuildContext context, String title, bool isAvailable, String? pdfUrl) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(
@@ -254,15 +269,18 @@ class _Psp1State extends State<Psp1> {
       child: ListTile(
         title: Text(
           title,
-          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[900]),
+          style:
+              TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[900]),
         ),
-        trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.blue[900]),
+        trailing: Icon(Icons.chevron_right,
+            color: _isDarkMode ? Colors.white : Colors.blue[900]),
         onTap: () {
           if (isAvailable && pdfUrl != null) {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PDFViewerPage(pdfUrl: pdfUrl, title: title),
+                builder: (context) =>
+                    PDFViewerPage(pdfUrl: pdfUrl, title: title),
               ),
             );
           } else {
@@ -289,5 +307,6 @@ class UnitItem {
   final bool isAvailable;
   final String pdfUrl;
 
-  UnitItem({required this.title, required this.isAvailable, required this.pdfUrl});
+  UnitItem(
+      {required this.title, required this.isAvailable, required this.pdfUrl});
 }
