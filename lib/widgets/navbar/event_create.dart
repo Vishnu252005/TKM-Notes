@@ -31,6 +31,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
   final _gpayIdController = TextEditingController();
   final _contactPhoneController = TextEditingController();
   final _contactEmailController = TextEditingController();
+  final _whatsappLinkController = TextEditingController();
   String _selectedType = 'Workshop';
   DateTime _selectedDate = DateTime.now();
   bool _requiresPayment = true;
@@ -43,6 +44,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
     {'name': 'Non IEEE Member', 'amount': 0}
   ];
   bool _hasReferralId = false;
+  bool _hasWhatsappGroup = false;
 
   @override
   void dispose() {
@@ -57,6 +59,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
     _gpayIdController.dispose();
     _contactPhoneController.dispose();
     _contactEmailController.dispose();
+    _whatsappLinkController.dispose();
     super.dispose();
   }
 
@@ -190,6 +193,8 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
           'email': _contactEmailController.text,
         },
         'hasReferralId': _hasReferralId,
+        'hasWhatsappGroup': _hasWhatsappGroup,
+        'whatsappLink': _hasWhatsappGroup ? _whatsappLinkController.text : null,
       };
       
       // Add to Firestore and get the event reference
@@ -725,7 +730,44 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                             return null;
                           },
                         ),
-                        SizedBox(height: 24),
+                        SizedBox(height: 16),
+                        SwitchListTile(
+                          title: Text(
+                            'WhatsApp Group',
+                            style: TextStyle(
+                              color: widget.isDarkMode ? Colors.white : Colors.black87,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          subtitle: Text(
+                            'Toggle if this event has a WhatsApp group',
+                            style: TextStyle(
+                              color: widget.isDarkMode ? Colors.white60 : Colors.grey[600],
+                            ),
+                          ),
+                          value: _hasWhatsappGroup,
+                          onChanged: (value) => setState(() => _hasWhatsappGroup = value),
+                          activeColor: widget.isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                        ),
+                        if (_hasWhatsappGroup) ...[
+                          SizedBox(height: 16),
+                          _buildFormField(
+                            controller: _whatsappLinkController,
+                            label: 'WhatsApp Group Link',
+                            icon: Icons.link,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter WhatsApp group link';
+                              }
+                              if (!value.startsWith('https://chat.whatsapp.com/')) {
+                                return 'Please enter a valid WhatsApp group link';
+                              }
+                              return null;
+                            },
+                            hintText: 'https://chat.whatsapp.com/...',
+                          ),
+                        ],
+                        SizedBox(height: 16),
                         // Referral ID Section
                         Text(
                           'Referral ID',
@@ -845,6 +887,8 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                               'points': int.parse(_pointsController.text),
                               'capacity': int.parse(_capacityController.text),
                               'requiresPayment': _requiresPayment,
+                              'hasWhatsappGroup': _hasWhatsappGroup,
+                              'whatsappLink': _hasWhatsappGroup ? _whatsappLinkController.text : null,
                               'paymentDetails': _requiresPayment ? {
                                 'phoneNumber': _paymentPhoneController.text,
                                 'upiId': _gpayIdController.text.isNotEmpty ? _gpayIdController.text : null,

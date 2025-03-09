@@ -2,10 +2,16 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Helper function to check if user is an organizer
+    function isOrganizer() {
+      let organizerDocs = getAfter(/databases/$(database)/documents/organizers).where('email', '==', request.auth.token.email).limit(1);
+      return organizerDocs.size() > 0;
+    }
+
     // Events collection rules
     match /events/{eventId} {
       allow read: if true;  // Anyone can read events
-      allow create: if request.auth != null;  // Only authenticated users can create events
+      allow create: if request.auth != null && isOrganizer();  // Only organizers can create events
       // Allow update if user is authenticated and is the creator of the event
       allow update: if request.auth != null && (
         resource.data.creatorId == request.auth.uid || // Creator can edit everything
@@ -26,6 +32,12 @@ service cloud.firestore {
           registrationId == request.auth.uid  // Users can delete their own registration
         );
       }
+    }
+    
+    // Organizers collection rules
+    match /organizers/{organizerId} {
+      allow read: if true;  // Anyone can check if a user is an organizer
+      allow write: if false;  // Only admin can modify organizers through admin panel/backend
     }
     
     // User collection rules

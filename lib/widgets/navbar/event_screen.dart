@@ -9,6 +9,7 @@ import '../../../firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';  // Add this import for clipboard
 import 'event_create.dart';
+import 'event_details_screen.dart';
 
 class EventScreen extends StatefulWidget {
   const EventScreen({Key? key}) : super(key: key);
@@ -156,49 +157,59 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
 
                 // Featured Events Section
                 SliverToBoxAdapter(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(24, 24, 24, 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Featured Events',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: _isDarkMode ? Colors.white : Colors.black,
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                // Handle see all featured events
-                              },
-                              child: Text(
-                                'See All',
-                                style: TextStyle(
-                                  color: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 280,
-                        child: StreamBuilder<QuerySnapshot>(
-                          stream: _firestore.collection('events')
-                              .where('isFeatured', isEqualTo: true)
-                              .snapshots(),
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData) {
-                              return Center(child: CircularProgressIndicator());
-                            }
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: _firestore.collection('events')
+                        .where('isFeatured', isEqualTo: true)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      // If there's an error, return empty container
+                      if (snapshot.hasError) return Container();
 
-                            final featuredEvents = snapshot.data!.docs;
-                            return ListView.builder(
+                      // If loading, return empty container
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Container();
+                      }
+
+                      // Get featured events
+                      final featuredEvents = snapshot.data?.docs ?? [];
+
+                      // If no featured events, return empty container
+                      if (featuredEvents.isEmpty) return Container();
+
+                      // If there are featured events, show the section
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(24, 24, 24, 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Featured Events',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: _isDarkMode ? Colors.white : Colors.black,
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    // Handle see all featured events
+                                  },
+                                  child: Text(
+                                    'See All',
+                                    style: TextStyle(
+                                      color: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            height: 280,
+                            child: ListView.builder(
                               padding: EdgeInsets.symmetric(horizontal: 16),
                               scrollDirection: Axis.horizontal,
                               itemCount: featuredEvents.length,
@@ -206,13 +217,13 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                                 final event = featuredEvents[index].data() as Map<String, dynamic>;
                                 return _buildFeaturedEventCard(event);
                               },
-                            );
-                          },
-                        ),
-            ),
-          ],
-        ),
-      ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
 
                 // Categories Section
                 SliverToBoxAdapter(
@@ -348,6 +359,25 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
   }
 
   Widget _buildFeaturedEventCard(Map<String, dynamic> event) {
+    // Convert Timestamp to formatted date string
+    String formattedDate = '';
+    if (event['date'] != null) {
+        Timestamp timestamp = event['date'] as Timestamp;
+        DateTime dateTime = timestamp.toDate();
+        formattedDate = '${dateTime.day} ${_getMonthName(dateTime.month)}, ${dateTime.year}';
+    }
+
+    // Get registration info
+    int registrations = (event['registeredUsers'] as List?)?.length ?? 0;
+    int capacity = event['capacity'] ?? 0;
+    bool isFull = registrations >= capacity;
+    String type = event['type'] ?? 'Event';
+
+    // Add ID if not present
+    if (!event.containsKey('id')) {
+      event['id'] = event['id'] ?? '';
+    }
+
     return Container(
       width: 300,
       margin: EdgeInsets.symmetric(horizontal: 8),
@@ -370,10 +400,15 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
           ClipRRect(
             borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
             child: Image.network(
-              event['image'],
+              event['image'] ?? 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678',
               height: 160,
               width: double.infinity,
               fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                height: 160,
+                color: _isDarkMode ? Colors.grey[800] : Colors.grey[200],
+                child: Icon(Icons.image_not_supported, color: Colors.grey),
+              ),
             ),
           ),
 
@@ -405,7 +440,7 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: (_isDarkMode ? Color(0xFF4C4DDC) : Colors.blue).withOpacity(0.9),
+                color: Colors.yellow.withOpacity(0.9),
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
@@ -420,12 +455,51 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                 children: [
                   Icon(
                     Icons.star,
-                    color: Colors.white,
+                    color: Colors.black,
                     size: 14,
                   ),
                   SizedBox(width: 4),
                   Text(
                     'Featured',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Event Type Badge
+          Positioned(
+            top: 16,
+            right: 16,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: _getEventTypeColor(type).withOpacity(0.9),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 4,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    _getEventTypeIcon(type),
+                    color: Colors.white,
+                    size: 14,
+                  ),
+                  SizedBox(width: 4),
+                  Text(
+                    type,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 12,
@@ -452,7 +526,7 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    event['title'],
+                    event['title'] ?? 'Untitled Event',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -471,7 +545,7 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                       ),
                       SizedBox(width: 4),
                       Text(
-                        event['date'],
+                        formattedDate,
                         style: TextStyle(
                           fontSize: 12,
                           color: _isDarkMode ? Colors.white60 : Colors.grey[600],
@@ -486,7 +560,7 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                       SizedBox(width: 4),
                       Expanded(
                         child: Text(
-                          event['location'],
+                          event['location'] ?? 'No location',
                           style: TextStyle(
                             fontSize: 12,
                             color: _isDarkMode ? Colors.white60 : Colors.grey[600],
@@ -501,30 +575,88 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        '₹${event['price']}',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '₹${event['price'] ?? 0}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: isFull
+                                  ? Colors.red.withOpacity(0.1)
+                                  : Colors.green.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              isFull ? 'Full' : '$registrations/$capacity',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: isFull ? Colors.red : Colors.green,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      TextButton(
-                        onPressed: () => _showEventDetails(context, event),
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          backgroundColor: (_isDarkMode ? Color(0xFF4C4DDC) : Colors.blue).withOpacity(0.1),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                      Row(
+                        children: [
+                          ElevatedButton(
+                            onPressed: isFull ? null : () => _handleRegistration(event),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              disabledBackgroundColor: Colors.grey,
+                            ),
+                            child: Text(
+                              isFull ? 'Full' : 'Register',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
-                        ),
-                        child: Text(
-                          'View Details',
-                          style: TextStyle(
-                            color: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
-                            fontWeight: FontWeight.bold,
+                          SizedBox(width: 8),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: (_isDarkMode ? Color(0xFF4C4DDC) : Colors.blue).withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.info_outline,
+                                color: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                                size: 20,
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EventDetailsScreen(
+                                      eventData: {
+                                        ...event,
+                                        'date': formattedDate, // Pass the formatted date instead of Timestamp
+                                      },
+                                      isCreated: false,
+                                      isDarkMode: _isDarkMode,
+                                    ),
+                                  ),
+                                );
+                              },
+                              tooltip: 'View Details',
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ],
                   ),
@@ -2656,6 +2788,7 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
     final _referralIdController = TextEditingController();
     String _selectedYear = '1st Year';
     String _needsAccommodation = 'No';  // Default value
+    String _joinedWhatsappGroup = 'No';  // Default value for WhatsApp group status
     Map<String, dynamic>? _selectedPriceCategory;
 
     // Set Non-IEEE Member as default
@@ -3340,6 +3473,88 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                                   ),
                                 ],
                               ),
+
+                              if (event['hasWhatsappGroup'] == true) ...[
+                                SizedBox(height: 16),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'WhatsApp Group Link:',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: _isDarkMode ? Colors.white70 : Colors.grey[700],
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    InkWell(
+                                      onTap: () async {
+                                        final link = event['whatsappLink'];
+                                        if (link != null) {
+                                          await Clipboard.setData(ClipboardData(text: link));
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(content: Text('WhatsApp group link copied to clipboard')),
+                                          );
+                                        }
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.all(12),
+                                        decoration: BoxDecoration(
+                                          color: _isDarkMode ? Colors.black.withOpacity(0.2) : Colors.grey[100],
+                                          borderRadius: BorderRadius.circular(8),
+                                          border: Border.all(
+                                            color: _isDarkMode ? Colors.white24 : Colors.grey[300]!,
+                                          ),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                event['whatsappLink'] ?? 'No link available',
+                                                style: TextStyle(
+                                                  color: _isDarkMode ? Colors.blue[400] : Colors.blue[700],
+                                                  decoration: TextDecoration.underline,
+                                                ),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            Icon(
+                                              Icons.copy,
+                                              size: 20,
+                                              color: _isDarkMode ? Colors.white70 : Colors.grey[600],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 16),
+                                    DropdownButtonFormField<String>(
+                                      value: _joinedWhatsappGroup,
+                                      decoration: InputDecoration(
+                                        labelText: 'Have you joined the WhatsApp group?',
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                      ),
+                                      items: ['Yes', 'No'].map((String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                      onChanged: (String? newValue) {
+                                        if (newValue != null) {
+                                          setState(() {
+                                            _joinedWhatsappGroup = newValue;
+                                          });
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ],
                           ),
                         ),
@@ -3404,6 +3619,7 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                                     'ieeeId': _specialIdController.text,
                                   if (event['hasReferralId'] == true && _referralIdController.text.isNotEmpty)
                                     'referralId': _referralIdController.text,
+                                  'joinedWhatsappGroup': _joinedWhatsappGroup == 'Yes',
                                 };
 
                                 // Start a batch write
@@ -3659,13 +3875,50 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
     );
   }
 
-  void _showCreateEventForm() {
-    // Check if user is authenticated
+  // Add this function near the top of the _EventScreenState class
+  Future<bool> _isUserOrganizer() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null || user.email == null) return false;
+
+    try {
+      // Query the organizers collection for a document with matching email
+      final organizerDoc = await _firestore
+          .collection('organizers')
+          .doc(user.uid)  // Using user's UID as document ID
+          .get();
+
+      return organizerDoc.exists && organizerDoc.data()?['email'] == user.email;
+    } catch (e) {
+      print('Error checking organizer status: $e');
+      return false;
+    }
+  }
+
+  void _showCreateEventForm() async {
+    // First check if user is authenticated
     if (FirebaseAuth.instance.currentUser == null) {
       _showAuthRequiredDialog('create events');
       return;
     }
 
+    // Then check if user is an organizer
+    final isOrganizer = await _isUserOrganizer();
+    if (!isOrganizer) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Only organizers can create events'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      );
+      return;
+    }
+
+    // If user is an organizer, show the create event form
     showDialog(
       context: context,
       builder: (BuildContext context) {

@@ -623,11 +623,100 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                     .fadeIn(delay: 400.ms)
                                                     .slideX(begin: 0.2),
                                                 SizedBox(height: 16),
-                                                _buildManagementSection()
-                                                    .animate()
-                                                    .fadeIn(delay: 600.ms)
-                                                    .slideX(begin: -0.2),
-                                                SizedBox(height: 16),
+                                                // Management sections
+                                                FutureBuilder<bool>(
+                                                    future: _isUserSuperAdmin(),
+                                                    builder: (context, superAdminSnapshot) {
+                                                        if (superAdminSnapshot.connectionState == ConnectionState.waiting) {
+                                                            return Center(child: CircularProgressIndicator());
+                                                        }
+
+                                                        if (superAdminSnapshot.hasData && superAdminSnapshot.data!) {
+                                                            return Column(
+                                                                children: [
+                                                                    _buildManagementSection()
+                                                                        .animate()
+                                                                        .fadeIn(delay: 400.ms)
+                                                                        .slideX(begin: -0.2),
+                                                                    SizedBox(height: 16),
+                                                                    _buildSuperAdminSection()
+                                                                        .animate()
+                                                                        .fadeIn(delay: 500.ms)
+                                                                        .slideX(begin: -0.2),
+                                                                    SizedBox(height: 16),
+                                                                    _buildAdminManagementSection()
+                                                                        .animate()
+                                                                        .fadeIn(delay: 600.ms)
+                                                                        .slideX(begin: 0.2),
+                                                                    SizedBox(height: 16),
+                                                                    _buildOrganizerManagementSection()
+                                                                        .animate()
+                                                                        .fadeIn(delay: 700.ms)
+                                                                        .slideX(begin: 0.2),
+                                                                    SizedBox(height: 16),
+                                                                ],
+                                                            );
+                                                        }
+
+                                                        return FutureBuilder<bool>(
+                                                            future: _isUserAdmin(),
+                                                            builder: (context, adminSnapshot) {
+                                                                if (adminSnapshot.connectionState == ConnectionState.waiting) {
+                                                                    return Center(child: CircularProgressIndicator());
+                                                                }
+
+                                                                if (adminSnapshot.hasData && adminSnapshot.data!) {
+                                                                    return Column(
+                                                                        children: [
+                                                                            _buildManagementSection()
+                                                                                .animate()
+                                                                                .fadeIn(delay: 500.ms)
+                                                                                .slideX(begin: -0.2),
+                                                                            SizedBox(height: 16),
+                                                                            _buildAdminManagementSection()
+                                                                                .animate()
+                                                                                .fadeIn(delay: 600.ms)
+                                                                                .slideX(begin: -0.2),
+                                                                            SizedBox(height: 16),
+                                                                            _buildOrganizerManagementSection()
+                                                                                .animate()
+                                                                                .fadeIn(delay: 700.ms)
+                                                                                .slideX(begin: 0.2),
+                                                                            SizedBox(height: 16),
+                                                                        ],
+                                                                    );
+                                                                }
+
+                                                                return FutureBuilder<bool>(
+                                                                    future: _isUserOrganizer(),
+                                                                    builder: (context, organizerSnapshot) {
+                                                                        if (organizerSnapshot.connectionState == ConnectionState.waiting) {
+                                                                            return Center(child: CircularProgressIndicator());
+                                                                        }
+
+                                                                        if (organizerSnapshot.hasData && organizerSnapshot.data!) {
+                                                                            return Column(
+                                                                                children: [
+                                                                                    _buildManagementSection()
+                                                                                        .animate()
+                                                                                        .fadeIn(delay: 600.ms)
+                                                                                        .slideX(begin: -0.2),
+                                                                                    SizedBox(height: 16),
+                                                                                    _buildOrganizerManagementSection()
+                                                                                        .animate()
+                                                                                        .fadeIn(delay: 700.ms)
+                                                                                        .slideX(begin: 0.2),
+                                                                                    SizedBox(height: 16),
+                                                                                ],
+                                                                            );
+                                                                        }
+                                                                        return SizedBox.shrink();
+                                                                    },
+                                                                );
+                                                            },
+                                                        );
+                                                    },
+                                                ),
                                                 _buildEventsSection()
                                                     .animate()
                                                     .fadeIn(delay: 800.ms)
@@ -692,7 +781,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return Container(
             margin: EdgeInsets.symmetric(vertical: 8),
             decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDarkMode ? Color(0xFF252542) : Colors.white,
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                     BoxShadow(
@@ -706,22 +795,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                Padding(
+                    Padding(
                         padding: EdgeInsets.all(16),
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                                 Text(
-                                    'Management',
-                        style: TextStyle(
+                                    'Event Management',
+                                    style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
+                                        color: isDarkMode ? Colors.white : Colors.black,
                                     ),
                                 ),
                                 IconButton(
-                                    icon: Icon(Icons.download),
+                                    icon: Icon(
+                                        Icons.download,
+                                        color: isDarkMode ? Colors.white70 : Colors.grey[700],
+                                    ),
                                     onPressed: _downloadEventData,
-                                    tooltip: 'Download Report',
+                                    tooltip: 'Download Events Report',
                                 ),
                             ],
                         ),
@@ -729,107 +822,71 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     StreamBuilder<QuerySnapshot>(
                         stream: FirebaseFirestore.instance
                             .collection('events')
-                            .where('creatorId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
                             .snapshots(),
                         builder: (context, snapshot) {
                             if (snapshot.hasError) {
-                                return _buildSection(
-                                    'Event Management',
-                                    Icons.manage_accounts,
-                                    [Text('Error loading management data')],
+                                return Padding(
+                                    padding: EdgeInsets.all(16),
+                                    child: Text('Error loading events'),
                                 );
                             }
 
                             if (!snapshot.hasData) {
-                                return _buildSection(
-                                    'Event Management',
-                                    Icons.manage_accounts,
-                                    [Center(child: CircularProgressIndicator())],
-                                );
+                                return Center(child: CircularProgressIndicator());
                             }
 
-                            List<DocumentSnapshot> createdEvents = snapshot.data!.docs;
-                            int totalEvents = createdEvents.length;
+                            final events = snapshot.data!.docs;
+                            int totalEvents = events.length;
                             int totalRegistrations = 0;
-                            int totalRevenue = 0;
-                            DateTime now = DateTime.now();
+                            double totalRevenue = 0;
 
-                            // Calculate statistics
-                            for (var event in createdEvents) {
-                                Map<String, dynamic> eventData = event.data() as Map<String, dynamic>;
-                                List<dynamic> registeredUsers = eventData['registeredUsers'] ?? [];
-                                int price = eventData['price'] ?? 0;
-                                totalRegistrations += registeredUsers.length;
-                                totalRevenue += registeredUsers.length * price;
+                            for (var event in events) {
+                                final data = event.data() as Map<String, dynamic>;
+                                List<dynamic>? registeredUsers = data['registeredUsers'] as List<dynamic>?;
+                                totalRegistrations += registeredUsers?.length ?? 0;
+                                totalRevenue += (data['price'] ?? 0) * (registeredUsers?.length ?? 0);
                             }
 
-        return _buildSection(
-                                'Event Management',
-                                Icons.manage_accounts,
-            [
-                                    // Statistics Cards
-                Padding(
+                            return Column(
+                                children: [
+                                    Padding(
                                         padding: EdgeInsets.all(16),
                                         child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                                             children: [
-                                                Expanded(
-                                                    child: _buildStatCard(
-                                                        'Total Events',
-                                                        totalEvents.toString(),
-                                                        Icons.event,
-                                                        Colors.blue,
-                                                    ),
+                                                _buildStatCard(
+                                                    'Total Events',
+                                                    totalEvents.toString(),
+                                                    Icons.event,
+                                                    isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
                                                 ),
-                                                SizedBox(width: 16),
-                                                Expanded(
-                                                    child: _buildStatCard(
-                                                        'Total Registrations',
-                                                        totalRegistrations.toString(),
-                                                        Icons.people,
-                                                        Colors.green,
-                                                    ),
+                                                _buildStatCard(
+                                                    'Registrations',
+                                                    totalRegistrations.toString(),
+                                                    Icons.people,
+                                                    isDarkMode ? Color(0xFF4C4DDC) : Colors.green,
                                                 ),
-                                                SizedBox(width: 16),
-                                                Expanded(
-                                                    child: _buildStatCard(
-                                                        'Total Revenue',
-                                                        'Rs. $totalRevenue',
-                                                        Icons.currency_rupee,
-                                                        Colors.orange,
-                                                    ),
+                                                _buildStatCard(
+                                                    'Revenue',
+                                                    '₹${totalRevenue.toStringAsFixed(2)}',
+                                                    Icons.currency_rupee,
+                                                    isDarkMode ? Color(0xFF4C4DDC) : Colors.orange,
                                                 ),
                                             ],
                                         ),
                                     ),
-                                    Divider(color: isDarkMode ? Colors.white24 : Colors.grey[300]),
-                                    // Created Events List
-                                    Padding(
-                                        padding: EdgeInsets.all(16),
-                                        child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                                Text(
-                                                    'Created Events',
-                                        style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight: FontWeight.bold,
-                                                        color: isDarkMode ? Colors.white : Colors.black,
-                                                    ),
-                                                ),
-                                                SizedBox(height: 8),
-                                                ...createdEvents.map((event) {
-                                                    Map<String, dynamic> eventData = event.data() as Map<String, dynamic>;
-                                                    eventData['id'] = event.id;
-                                                    return _buildEventTile(
-                                                        eventData,
-                                                        isCreated: true,
-                                                    );
-                                                }).toList(),
-                                            ],
-                    ),
-                ),
-            ],
-        );
+                                    ListView.builder(
+                                        shrinkWrap: true,
+                                        physics: NeverScrollableScrollPhysics(),
+                                        itemCount: events.length,
+                                        itemBuilder: (context, index) {
+                                            final event = events[index].data() as Map<String, dynamic>;
+                                            event['id'] = events[index].id;
+                                            return _buildEventListTile(event);
+                                        },
+                                    ),
+                                ],
+                            );
                         },
                     ),
                 ],
@@ -1843,15 +1900,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return Container(
             padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
-                color: isDarkMode ? Color(0xFF2A2A40) : Colors.white,
+                color: color.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                    color: isDarkMode ? Colors.white24 : Colors.grey[300]!,
-                ),
             ),
             child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                    Icon(icon, color: color, size: 24),
+                    Icon(icon, color: color),
                     SizedBox(height: 8),
                     Text(
                         value,
@@ -1861,13 +1916,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             color: isDarkMode ? Colors.white : Colors.black,
                         ),
                     ),
+                    SizedBox(height: 4),
                     Text(
                         title,
                         style: TextStyle(
                             fontSize: 12,
-                            color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                            color: isDarkMode ? Colors.white70 : Colors.grey[600],
                         ),
-                        textAlign: TextAlign.center,
                     ),
                 ],
             ),
@@ -1891,16 +1946,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
             );
 
-            // Get current user ID
-            final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
-            if (currentUserId == null) {
-                throw Exception('No user signed in');
-            }
-
-            // Fetch only events created by the current user
+            // Get all events
             final eventsSnapshot = await FirebaseFirestore.instance
                 .collection('events')
-                .where('creatorId', isEqualTo: currentUserId)
                 .get();
 
             // Fetch registration details for each event
@@ -1956,7 +2004,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             // Calculate total statistics
             int totalRegistrations = 0;
-            int totalRevenue = 0;
+            double totalRevenue = 0;
             Set<String> uniqueColleges = {};
             Set<String> uniqueDepartments = {};
 
@@ -1988,7 +2036,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                                 children: [
                                     pw.Text(
-                                        'My Events Report',
+                                        'Events Report',
                                         style: titleStyle
                                     ),
                                     pw.Text(
@@ -2029,7 +2077,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             children: [
                                                 _buildSummaryItem('Total Events', '${eventsSnapshot.docs.length}', normalStyle, emphasisStyle),
                                                 _buildSummaryItem('Total Registrations', '$totalRegistrations', normalStyle, emphasisStyle),
-                                                _buildSummaryItem('Total Revenue', 'Rs. $totalRevenue', normalStyle, emphasisStyle),
+                                                _buildSummaryItem('Total Revenue', 'Rs. ${totalRevenue.toStringAsFixed(2)}', normalStyle, emphasisStyle),
                                                 _buildSummaryItem('Unique Colleges', '${uniqueColleges.length}', normalStyle, emphasisStyle),
                                             ]
                                         ),
@@ -2167,7 +2215,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
 
             final bytes = await pdf.save();
-            Navigator.pop(context);
+            Navigator.pop(context); // Close loading dialog
 
             if (kIsWeb) {
                 final blob = html.Blob([bytes], 'application/pdf');
@@ -2176,14 +2224,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 html.Url.revokeObjectUrl(url);
             } else {
                 final directory = await getApplicationDocumentsDirectory();
-                final file = File('${directory.path}/my_events_report.pdf');
+                final file = File('${directory.path}/events_report.pdf');
                 await file.writeAsBytes(bytes);
                 await OpenFile.open(file.path);
             }
 
         } catch (e) {
             print('Error generating PDF: $e');
-            Navigator.pop(context);
+            Navigator.pop(context); // Close loading dialog
             ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Error generating PDF: $e'))
             );
@@ -2773,6 +2821,834 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
         );
     }
+
+    // Add this function to check if user is an organizer
+    Future<bool> _isUserOrganizer() async {
+        final user = FirebaseAuth.instance.currentUser;
+        if (user == null || user.email == null) return false;
+
+        try {
+            final organizerSnapshot = await FirebaseFirestore.instance
+                .collection('organizers')
+                .where('email', isEqualTo: user.email)
+                .get();
+
+            return organizerSnapshot.docs.isNotEmpty;
+        } catch (e) {
+            print('Error checking organizer status: $e');
+            return false;
+        }
+    }
+
+    // Add this function to handle adding new organizers
+    void _showAddOrganizerDialog() {
+        final _nameController = TextEditingController();
+        final _emailController = TextEditingController();
+        final _formKey = GlobalKey<FormState>();
+
+        showDialog(
+            context: context,
+            builder: (context) => Dialog(
+                backgroundColor: isDarkMode ? Color(0xFF252542) : Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                child: Container(
+                    padding: EdgeInsets.all(24),
+                    child: Form(
+                        key: _formKey,
+                        child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                                // Header
+                                Row(
+                                    children: [
+                                        Icon(Icons.admin_panel_settings, 
+                                            color: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                                        ),
+                                        SizedBox(width: 12),
+                                        Text(
+                                            'Add New Organizer',
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                                color: isDarkMode ? Colors.white : Colors.black,
+                                            ),
+                                        ),
+                                    ],
+                                ),
+                                SizedBox(height: 24),
+
+                                // Name Field
+                                TextFormField(
+                                    controller: _nameController,
+                                    decoration: InputDecoration(
+                                        labelText: 'Organizer Name',
+                                        prefixIcon: Icon(Icons.person),
+                                        border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(12),
+                                        ),
+                                    ),
+                                    validator: (value) => 
+                                        value?.isEmpty ?? true ? 'Please enter organizer name' : null,
+                                ),
+                                SizedBox(height: 16),
+
+                                // Email Field
+                                TextFormField(
+                                    controller: _emailController,
+                                    decoration: InputDecoration(
+                                        labelText: 'Organizer Email',
+                                        prefixIcon: Icon(Icons.email),
+                                        border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(12),
+                                        ),
+                                    ),
+                                    validator: (value) {
+                                        if (value?.isEmpty ?? true) {
+                                            return 'Please enter organizer email';
+                                        }
+                                        if (!value!.contains('@')) {
+                                            return 'Please enter a valid email';
+                                        }
+                                        return null;
+                                    },
+                                ),
+                                SizedBox(height: 24),
+
+                                // Buttons
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                        TextButton(
+                                            onPressed: () => Navigator.pop(context),
+                                            child: Text('Cancel'),
+                                        ),
+                                        SizedBox(width: 12),
+                                        ElevatedButton(
+                                            onPressed: () async {
+                                                if (_formKey.currentState!.validate()) {
+                                                    try {
+                                                        // Add organizer to Firestore
+                                                        await FirebaseFirestore.instance
+                                                            .collection('organizers')
+                                                            .add({
+                                                                'name': _nameController.text.trim(),
+                                                                'email': _emailController.text.trim(),
+                                                                'addedAt': FieldValue.serverTimestamp(),
+                                                                'addedBy': FirebaseAuth.instance.currentUser?.email,
+                                                            });
+
+                                                        Navigator.pop(context);
+                                                        ScaffoldMessenger.of(context).showSnackBar(
+                                                            SnackBar(
+                                                                content: Text('Organizer added successfully!'),
+                                                                backgroundColor: Colors.green,
+                                                            ),
+                                                        );
+                                                    } catch (e) {
+                                                        ScaffoldMessenger.of(context).showSnackBar(
+                                                            SnackBar(
+                                                                content: Text('Error adding organizer: $e'),
+                                                                backgroundColor: Colors.red,
+                                                            ),
+                                                        );
+                                                    }
+                                                }
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                                                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(12),
+                                                ),
+                                            ),
+                                            child: Text('Add Organizer'),
+                                        ),
+                                    ],
+                                ),
+                            ],
+                        ),
+                    ),
+                ),
+            ),
+        );
+    }
+
+    Widget _buildOrganizerManagementSection() {
+        return Container(
+            margin: EdgeInsets.symmetric(vertical: 8),
+            decoration: BoxDecoration(
+                color: isDarkMode ? Color(0xFF252542) : Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 4,
+                        offset: Offset(0, 2),
+                    ),
+                ],
+            ),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                    Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                                Text(
+                                    'Organizer Management',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: isDarkMode ? Colors.white : Colors.black,
+                                    ),
+                                ),
+                                IconButton(
+                                    icon: Icon(Icons.person_add),
+                                    onPressed: _showAddOrganizerDialog,
+                                    tooltip: 'Add New Organizer',
+                                ),
+                            ],
+                        ),
+                    ),
+                    StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('organizers')
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                                return Padding(
+                                    padding: EdgeInsets.all(16),
+                                    child: Text('Error loading organizers'),
+                                );
+                            }
+
+                            if (!snapshot.hasData) {
+                                return Center(child: CircularProgressIndicator());
+                            }
+
+                            final organizers = snapshot.data!.docs;
+
+                            return Column(
+                                children: [
+                                    Padding(
+                                        padding: EdgeInsets.all(16),
+                                        child: Text(
+                                            'Current Organizers',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: isDarkMode ? Colors.white70 : Colors.grey[700],
+                                            ),
+                                        ),
+                                    ),
+                                    ListView.builder(
+                                        shrinkWrap: true,
+                                        physics: NeverScrollableScrollPhysics(),
+                                        itemCount: organizers.length,
+                                        itemBuilder: (context, index) {
+                                            final organizer = organizers[index].data() as Map<String, dynamic>;
+                                            return ListTile(
+                                                leading: CircleAvatar(
+                                                    backgroundColor: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                                                    child: Text(
+                                                        organizer['name']?[0].toUpperCase() ?? 'O',
+                                                        style: TextStyle(color: Colors.white),
+                                                    ),
+                                                ),
+                                                title: Text(
+                                                    organizer['name'] ?? 'Unknown',
+                                                    style: TextStyle(
+                                                        color: isDarkMode ? Colors.white : Colors.black,
+                                                    ),
+                                                ),
+                                                subtitle: Text(
+                                                    organizer['email'] ?? '',
+                                                    style: TextStyle(
+                                                        color: isDarkMode ? Colors.white70 : Colors.grey[600],
+                                                    ),
+                                                ),
+                                            );
+                                        },
+                                    ),
+                                ],
+                            );
+                        },
+                    ),
+                ],
+            ),
+        );
+    }
+
+    // Add this function to check if user is an admin
+    Future<bool> _isUserAdmin() async {
+        final user = FirebaseAuth.instance.currentUser;
+        if (user == null || user.email == null) return false;
+
+        try {
+            print('Checking admin status for email: ${user.email}'); // Debug print
+            final adminSnapshot = await FirebaseFirestore.instance
+                .collection('admin')  // Changed from 'admins' to 'admin'
+                .where('email', isEqualTo: user.email)
+                .get();
+
+            print('Admin docs found: ${adminSnapshot.docs.length}'); // Debug print
+            return adminSnapshot.docs.isNotEmpty;
+        } catch (e) {
+            print('Error checking admin status: $e');
+            return false;
+        }
+    }
+
+    // Add this function to handle adding new admins
+    void _showAddAdminDialog() {
+        final _emailController = TextEditingController();
+        final _formKey = GlobalKey<FormState>();
+
+        showDialog(
+            context: context,
+            builder: (context) => Dialog(
+                backgroundColor: isDarkMode ? Color(0xFF252542) : Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                child: Container(
+                    padding: EdgeInsets.all(24),
+                    child: Form(
+                        key: _formKey,
+                        child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                                // Header
+                                Row(
+                                    children: [
+                                        Icon(Icons.admin_panel_settings, 
+                                            color: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                                        ),
+                                        SizedBox(width: 12),
+                                        Text(
+                                            'Add New Admin',
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                                color: isDarkMode ? Colors.white : Colors.black,
+                                            ),
+                                        ),
+                                    ],
+                                ),
+                                SizedBox(height: 24),
+
+                                // Email Field
+                                TextFormField(
+                                    controller: _emailController,
+                                    decoration: InputDecoration(
+                                        labelText: 'Admin Email',
+                                        prefixIcon: Icon(Icons.email),
+                                        border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(12),
+                                        ),
+                                    ),
+                                    validator: (value) {
+                                        if (value?.isEmpty ?? true) {
+                                            return 'Please enter admin email';
+                                        }
+                                        if (!value!.contains('@')) {
+                                            return 'Please enter a valid email';
+                                        }
+                                        return null;
+                                    },
+                                ),
+                                SizedBox(height: 24),
+
+                                // Buttons
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                        TextButton(
+                                            onPressed: () => Navigator.pop(context),
+                                            child: Text('Cancel'),
+                                        ),
+                                        SizedBox(width: 12),
+                                        ElevatedButton(
+                                            onPressed: () async {
+                                                if (_formKey.currentState!.validate()) {
+                                                    try {
+                                                        // Add admin to Firestore with just email
+                                                        await FirebaseFirestore.instance
+                                                            .collection('admin')  // Changed from 'admins' to 'admin'
+                                                            .add({
+                                                                'email': _emailController.text.trim(),
+                                                            });
+
+                                                        Navigator.pop(context);
+                                                        ScaffoldMessenger.of(context).showSnackBar(
+                                                            SnackBar(
+                                                                content: Text('Admin added successfully!'),
+                                                                backgroundColor: Colors.green,
+                                                            ),
+                                                        );
+                                                    } catch (e) {
+                                                        ScaffoldMessenger.of(context).showSnackBar(
+                                                            SnackBar(
+                                                                content: Text('Error adding admin: $e'),
+                                                                backgroundColor: Colors.red,
+                                                            ),
+                                                        );
+                                                    }
+                                                }
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                                                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(12),
+                                                ),
+                                            ),
+                                            child: Text('Add Admin'),
+                                        ),
+                                    ],
+                                ),
+                            ],
+                        ),
+                    ),
+                ),
+            ),
+        );
+    }
+
+    Widget _buildAdminManagementSection() {
+        return Container(
+            margin: EdgeInsets.symmetric(vertical: 8),
+            decoration: BoxDecoration(
+                color: isDarkMode ? Color(0xFF252542) : Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 4,
+                        offset: Offset(0, 2),
+                    ),
+                ],
+            ),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                    Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                                Text(
+                                    'Admin Management',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: isDarkMode ? Colors.white : Colors.black,
+                                    ),
+                                ),
+                                IconButton(
+                                    icon: Icon(Icons.person_add),
+                                    onPressed: _showAddAdminDialog,
+                                    tooltip: 'Add New Admin',
+                                ),
+                            ],
+                        ),
+                    ),
+                    StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('admin')  // Changed from 'admins' to 'admin'
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                                return Padding(
+                                    padding: EdgeInsets.all(16),
+                                    child: Text('Error loading admins'),
+                                );
+                            }
+
+                            if (!snapshot.hasData) {
+                                return Center(child: CircularProgressIndicator());
+                            }
+
+                            final admins = snapshot.data!.docs;
+
+                            return Column(
+                                children: [
+                                    Padding(
+                                        padding: EdgeInsets.all(16),
+                                        child: Text(
+                                            'Current Admins',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: isDarkMode ? Colors.white70 : Colors.grey[700],
+                                            ),
+                                        ),
+                                    ),
+                                    ListView.builder(
+                                        shrinkWrap: true,
+                                        physics: NeverScrollableScrollPhysics(),
+                                        itemCount: admins.length,
+                                        itemBuilder: (context, index) {
+                                            final adminEmail = admins[index].get('email') as String;
+                                            return ListTile(
+                                                leading: CircleAvatar(
+                                                    backgroundColor: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                                                    child: Text(
+                                                        adminEmail[0].toUpperCase(),
+                                                        style: TextStyle(color: Colors.white),
+                                                    ),
+                                                ),
+                                                title: Text(
+                                                    adminEmail,
+                                                    style: TextStyle(
+                                                        color: isDarkMode ? Colors.white : Colors.black,
+                                                    ),
+                                                ),
+                                            );
+                                        },
+                                    ),
+                                ],
+                            );
+                        },
+                    ),
+                ],
+            ),
+        );
+    }
+
+    // Add superadmin check function
+    Future<bool> _isUserSuperAdmin() async {
+        final user = FirebaseAuth.instance.currentUser;
+        if (user == null || user.email == null) return false;
+
+        try {
+            print('Checking superadmin status for email: ${user.email}'); // Debug print
+            final superAdminSnapshot = await FirebaseFirestore.instance
+                .collection('superadmin')
+                .where('email', isEqualTo: user.email)
+                .get();
+
+            print('SuperAdmin docs found: ${superAdminSnapshot.docs.length}'); // Debug print
+            return superAdminSnapshot.docs.isNotEmpty;
+        } catch (e) {
+            print('Error checking superadmin status: $e');
+            return false;
+        }
+    }
+
+    // Add SuperAdmin Section Widget
+    Widget _buildSuperAdminSection() {
+        return Container(
+            margin: EdgeInsets.symmetric(vertical: 8),
+            decoration: BoxDecoration(
+                color: isDarkMode ? Color(0xFF252542) : Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 4,
+                        offset: Offset(0, 2),
+                    ),
+                ],
+            ),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                    Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                                Text(
+                                    'Super Admin Dashboard',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: isDarkMode ? Colors.white : Colors.black,
+                                    ),
+                                ),
+                            ],
+                        ),
+                    ),
+                    // All Events Section with Edit Capability
+                    StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('events')
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                                return Padding(
+                                    padding: EdgeInsets.all(16),
+                                    child: Text('Error loading events'),
+                                );
+                            }
+
+                            if (!snapshot.hasData) {
+                                return Center(child: CircularProgressIndicator());
+                            }
+
+                            final events = snapshot.data!.docs;
+
+                            return Column(
+                                children: [
+                                    Padding(
+                                        padding: EdgeInsets.all(16),
+                                        child: Text(
+                                            'All Events (${events.length})',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: isDarkMode ? Colors.white70 : Colors.grey[700],
+                                            ),
+                                        ),
+                                    ),
+                                    ListView.builder(
+                                        shrinkWrap: true,
+                                        physics: NeverScrollableScrollPhysics(),
+                                        itemCount: events.length,
+                                        itemBuilder: (context, index) {
+                                            final event = events[index].data() as Map<String, dynamic>;
+                                            event['id'] = events[index].id;
+                                            return _buildEventListTile(event);
+                                        },
+                                    ),
+                                ],
+                            );
+                        },
+                    ),
+                ],
+            ),
+        );
+    }
+
+    // Add helper method to show event edit dialog
+    void _showEventEditDialog(Map<String, dynamic> event) {
+        // Navigate to EventDetailsScreen with edit mode
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => EventDetailsScreen(
+                    eventData: event,
+                    isCreated: true,
+                    isDarkMode: isDarkMode,
+                ),
+            ),
+        );
+    }
+
+    // Add helper method to show delete confirmation
+    void _showDeleteEventConfirmation(Map<String, dynamic> event) {
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                title: Text('Delete Event'),
+                content: Text('Are you sure you want to delete "${event['title']}"? This action cannot be undone.'),
+                actions: [
+                    TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text('Cancel'),
+                    ),
+                    ElevatedButton(
+                        onPressed: () async {
+                            try {
+                                await FirebaseFirestore.instance
+                                    .collection('events')
+                                    .doc(event['id'])
+                                    .delete();
+                                
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text('Event deleted successfully'),
+                                        backgroundColor: Colors.green,
+                                    ),
+                                );
+                            } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text('Error deleting event: $e'),
+                                        backgroundColor: Colors.red,
+                                    ),
+                                );
+                            }
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                        ),
+                        child: Text('Delete'),
+                    ),
+                ],
+            ),
+        );
+    }
+
+    // Add this method to toggle featured status
+    Future<void> _toggleFeaturedStatus(Map<String, dynamic> event) async {
+        try {
+            final bool currentStatus = event['isFeatured'] ?? false;
+            await FirebaseFirestore.instance
+                .collection('events')
+                .doc(event['id'])
+                .update({
+                    'isFeatured': !currentStatus,
+                });
+
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                    content: Text(currentStatus ? 'Event removed from featured' : 'Event marked as featured'),
+                    backgroundColor: Colors.green,
+                ),
+            );
+        } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                    content: Text('Error updating featured status: $e'),
+                    backgroundColor: Colors.red,
+                ),
+            );
+        }
+    }
+
+    // Add this method to build event list tile
+    Widget _buildEventListTile(Map<String, dynamic> event) {
+        final bool isFeatured = event['isFeatured'] ?? false;
+        final String title = event['title'] ?? 'Untitled Event';
+        final String creatorEmail = event['creatorInfo']?['email'] ?? 'Unknown';
+        final Timestamp timestamp = event['date'] as Timestamp;
+        final String date = '${timestamp.toDate().day}/${timestamp.toDate().month}/${timestamp.toDate().year}';
+        
+        return ListTile(
+            leading: CircleAvatar(
+                backgroundColor: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                        Icon(Icons.event, color: Colors.white),
+                        if (isFeatured)
+                            Positioned(
+                                right: -4,
+                                bottom: -4,
+                                child: Container(
+                                    width: 16,
+                                    height: 16,
+                                    decoration: BoxDecoration(
+                                        color: Colors.yellow,
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            color: isDarkMode ? Color(0xFF252542) : Colors.white,
+                                            width: 1.5,
+                                        ),
+                                    ),
+                                    child: Icon(
+                                        Icons.star,
+                                        size: 10,
+                                        color: Colors.black,
+                                    ),
+                                ),
+                            ),
+                    ],
+                ),
+            ),
+            title: Text(
+                title,
+                style: TextStyle(
+                    color: isDarkMode ? Colors.white : Colors.black,
+                    fontWeight: FontWeight.w500,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+            ),
+            subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                    Text(
+                        'Created by: $creatorEmail',
+                        style: TextStyle(
+                            color: isDarkMode ? Colors.white70 : Colors.grey[600],
+                            fontSize: 12,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                        'Date: $date',
+                        style: TextStyle(
+                            color: isDarkMode ? Colors.white70 : Colors.grey[600],
+                            fontSize: 12,
+                        ),
+                    ),
+                ],
+            ),
+            trailing: Container(
+                width: 100,  // Reduced from 120 to 100
+                child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                        SizedBox(
+                            width: 32,  // Fixed width for each button container
+                            height: 32,
+                            child: IconButton(
+                                padding: EdgeInsets.zero,
+                                visualDensity: VisualDensity.compact,
+                                icon: Icon(
+                                    isFeatured ? Icons.star : Icons.star_border,
+                                    color: isFeatured 
+                                        ? Colors.yellow[700]
+                                        : (isDarkMode ? Colors.white70 : Colors.grey[600]),
+                                    size: 18,  // Reduced from 20 to 18
+                                ),
+                                onPressed: () => _toggleFeaturedStatus(event),
+                                tooltip: isFeatured ? 'Remove from featured' : 'Mark as featured',
+                            ),
+                        ),
+                        SizedBox(
+                            width: 32,  // Fixed width for each button container
+                            height: 32,
+                            child: IconButton(
+                                padding: EdgeInsets.zero,
+                                visualDensity: VisualDensity.compact,
+                                icon: Icon(
+                                    Icons.edit,
+                                    color: isDarkMode ? Colors.white70 : Colors.grey[600],
+                                    size: 18,  // Reduced from 20 to 18
+                                ),
+                                onPressed: () => _showEventEditDialog(event),
+                            ),
+                        ),
+                        SizedBox(
+                            width: 32,  // Fixed width for each button container
+                            height: 32,
+                            child: IconButton(
+                                padding: EdgeInsets.zero,
+                                visualDensity: VisualDensity.compact,
+                                icon: Icon(
+                                    Icons.delete,
+                                    color: Colors.red[400],
+                                    size: 18,  // Reduced from 20 to 18
+                                ),
+                                onPressed: () => _showDeleteEventConfirmation(event),
+                            ),
+                        ),
+                    ],
+                ),
+            ),
+            onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EventDetailsScreen(
+                            eventData: event,
+                            isCreated: true,
+                            isDarkMode: isDarkMode,
+                        ),
+                    ),
+                );
+            },
+        );
+    }
 }
 
 class DotPatternPainter extends CustomPainter {
@@ -3014,8 +3890,8 @@ class EventDetailsScreen extends StatelessWidget {
                                                             color: isDarkMode ? Color(0xFF1A1A2E) : Colors.grey[100],
                                                             child: Padding(
                                                                 padding: EdgeInsets.all(16),
-                                        child: Column(
-                                            children: [
+                                                                child: Column(
+                                                                    children: [
                                                                         Row(
                                                                             children: [
                                                                                 Expanded(
@@ -3697,18 +4573,20 @@ class EventDetailsScreen extends StatelessWidget {
 
     Widget _buildRegistrationTile(Map<String, dynamic> registration, bool isDarkMode) {
         return ExpansionTile(
-                                                                title: Text(
+            title: Text(
                 registration['name'] ?? 'Unknown User',
-                                                                    style: TextStyle(
-                                                                        color: isDarkMode ? Colors.white : Colors.black,
-                                                                                fontWeight: FontWeight.bold,
-                                                                    ),
-                                                                ),
-                                                                subtitle: Text(
+                style: TextStyle(
+                    color: isDarkMode ? Colors.white : Colors.black,
+                    fontWeight: FontWeight.bold,
+                ),
+                overflow: TextOverflow.ellipsis,
+            ),
+            subtitle: Text(
                 registration['email'] ?? 'No email',
-                                                                    style: TextStyle(
-                                                                        color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
-                                                                    ),
+                style: TextStyle(
+                    color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                ),
+                overflow: TextOverflow.ellipsis,
             ),
             leading: Container(
                 padding: EdgeInsets.all(8),
@@ -3722,10 +4600,10 @@ class EventDetailsScreen extends StatelessWidget {
                     Icons.person,
                     color: isDarkMode ? Colors.blue[400] : Colors.blue[800],
                 ),
-                                                                        ),
-                                                                        children: [
+            ),
+            children: [
                 Container(
-                                                                                padding: EdgeInsets.all(16),
+                    padding: EdgeInsets.all(16),
                     margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
                         color: isDarkMode 
@@ -3738,8 +4616,9 @@ class EventDetailsScreen extends StatelessWidget {
                                 : Colors.grey[300]!,
                         ),
                     ),
-                                                                                child: Column(
-                                                                                    children: [
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                             _buildDetailItem(
                                 'Phone',
                                 registration['phone'] ?? 'Not provided',
@@ -3795,9 +4674,9 @@ class EventDetailsScreen extends StatelessWidget {
                                     registration['referralId'],
                                     Icons.person_add,
                                     isDarkMode,
-                                                                            ),
-                                                                        ],
-                                                                ),
+                                ),
+                        ],
+                    ),
                 ),
             ],
         );
@@ -3807,6 +4686,7 @@ class EventDetailsScreen extends StatelessWidget {
         return Padding(
             padding: EdgeInsets.symmetric(vertical: 8),
             child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                     Container(
                         padding: EdgeInsets.all(8),
@@ -3823,25 +4703,28 @@ class EventDetailsScreen extends StatelessWidget {
                         ),
                     ),
                     SizedBox(width: 12),
-                    Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                            Text(
-                                label,
-                                style: TextStyle(
-                                    color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
-                                    fontSize: 12,
+                    Expanded(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                                Text(
+                                    label,
+                                    style: TextStyle(
+                                        color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                                        fontSize: 12,
+                                    ),
                                 ),
-                            ),
-                            SizedBox(height: 2),
-                            Text(
-                                value,
-                                style: TextStyle(
-                                    color: isDarkMode ? Colors.white : Colors.black,
-                                    fontWeight: FontWeight.w500,
+                                SizedBox(height: 2),
+                                Text(
+                                    value,
+                                    style: TextStyle(
+                                        color: isDarkMode ? Colors.white : Colors.black,
+                                        fontWeight: FontWeight.w500,
+                                    ),
+                                    softWrap: true,
                                 ),
-                            ),
-                        ],
+                            ],
+                        ),
                     ),
                 ],
             ),
