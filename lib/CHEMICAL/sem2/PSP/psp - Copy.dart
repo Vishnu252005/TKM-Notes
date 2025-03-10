@@ -50,18 +50,6 @@ class _Psp1State extends State<Psp1> {
       pdfUrl:
           'https://drive.google.com/uc?id=1ciWntB77o-2xahzoSXqHXCnuyy_F9Kac&export=download',
     ),
-    UnitItem(
-      title: 'MODULE IV: Working with Functions',
-      isAvailable: true,
-      pdfUrl:
-          'https://drive.google.com/uc?export=download&id=1Y2XLmTWCVf6zYDyK3dK70WHwEv4XnQz2',
-    ),
-    UnitItem(
-      title: 'MODULE V: Pointers and Files',
-      isAvailable: true,
-      pdfUrl:
-          'https://drive.google.com/uc?export=download&id=1-l6EprZBLINB2MSVkEQaBSpzuOBZeuty',
-    ),
   ];
 
   @override

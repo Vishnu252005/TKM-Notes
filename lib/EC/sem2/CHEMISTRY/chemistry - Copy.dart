@@ -45,22 +45,10 @@ class _Chemistry1State extends State<Chemistry1> {
           'https://drive.google.com/uc?id=1n2f54DojAdOz0fo0EoaukjbVQ6LX7gIp&export=download',
     ),
     UnitItem(
-      title: 'MODULE III: Electrochemistry1 and Corrosion',
+      title: 'Semester Exam',
       isAvailable: true,
       pdfUrl:
           'https://drive.google.com/uc?export=download&id=1vCCka805M7WjigrNfVyUG0057YbPRIh9',
-    ),
-    UnitItem(
-      title: 'MODULE IV: Molecular Electronics',
-      isAvailable: true,
-      pdfUrl:
-          'https://drive.google.com/uc?export=download&id=11HwDaT5klLAmk3SjUGobsj7ZEvEXpyDe',
-    ),
-    UnitItem(
-      title: 'MODULE V: Nanomaterials',
-      isAvailable: true,
-      pdfUrl:
-          'https://drive.google.com/uc?export=download&id=1cvATBMe9RH7lwvbCwGeVv_r0FtHC1R40',
     ),
   ];
 

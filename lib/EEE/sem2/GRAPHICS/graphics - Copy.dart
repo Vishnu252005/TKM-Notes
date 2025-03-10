@@ -50,16 +50,6 @@ class _Graphics1State extends State<Graphics1> {
       pdfUrl:
           'https://drive.google.com/uc?id=1Ev7ig5ajlraGbXnqbBWC-TjLMnJe--3d&export=download',
     ),
-    UnitItem(
-      title: 'MODULE IV: Sections and Sectional Views, Development of Surfaces',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_4',
-    ),
-    UnitItem(
-      title: 'MODULE V: Isometric Projections',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_5',
-    ),
   ];
 
   @override
