@@ -29,7 +29,6 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
   RangeValues _pointsRange = RangeValues(0, 30);
   String _selectedCapacity = 'All';
   String _selectedDate = 'All';
-  bool _showOnlyMyEvents = false;  // Add this line
   
   // Firebase instances
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -65,14 +64,9 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
 
   // Add this new method to update the events stream based on filter
   void _updateEventsStream() {
-    final user = FirebaseAuth.instance.currentUser;
-    var query = _firestore.collection('events').orderBy('date', descending: true);
-    
-    if (_showOnlyMyEvents && user != null) {
-      query = query.where('creatorId', isEqualTo: user.uid);
-    }
-    
-    _eventsStream = query.snapshots();
+    _eventsStream = _firestore.collection('events')
+        .orderBy('date', descending: true)
+        .snapshots();
   }
 
   Future<void> _createEvent(Map<String, dynamic> eventData) async {
@@ -166,29 +160,6 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
                   child: Column(
                     children: [
                       _buildSearchBar(),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 24),
-                        child: Row(
-                          children: [
-                            Text(
-                              'My Events Only',
-                              style: TextStyle(
-                                color: _isDarkMode ? Colors.white70 : Colors.grey[700],
-                              ),
-                            ),
-                            Switch(
-                              value: _showOnlyMyEvents,
-                              onChanged: (value) {
-                                setState(() {
-                                  _showOnlyMyEvents = value;
-                                  _updateEventsStream();
-                                });
-                              },
-                              activeColor: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
-                            ),
-                          ],
-                        ),
-                      ),
                     ],
                   ),
                 ),

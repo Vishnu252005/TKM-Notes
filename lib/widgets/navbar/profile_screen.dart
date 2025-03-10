@@ -2946,29 +2946,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     Widget _buildOrganizerManagementSection() {
-        return Container(
-            margin: EdgeInsets.symmetric(vertical: 8),
-            decoration: BoxDecoration(
-                color: isDarkMode ? Color(0xFF252542) : Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
-                        spreadRadius: 1,
-                        blurRadius: 4,
-                        offset: Offset(0, 2),
+        return FutureBuilder<bool>(
+            future: Future.wait([_isUserAdmin(), _isUserSuperAdmin()])
+                .then((results) => results[0] || results[1]),
+            builder: (context, snapshot) {
+                if (!snapshot.hasData || !snapshot.data!) {
+                    return SizedBox.shrink(); // Don't show for regular organizers
+                }
+
+                return Container(
+                    margin: EdgeInsets.symmetric(vertical: 8),
+                    decoration: BoxDecoration(
+                        color: isDarkMode ? Color(0xFF252542) : Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.1),
+                                spreadRadius: 1,
+                                blurRadius: 4,
+                                offset: Offset(0, 2),
+                            ),
+                        ],
                     ),
-                ],
-            ),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                    Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                                Text(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                            Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Text(
                                     'Organizer Management',
                                     style: TextStyle(
                                         fontSize: 18,
@@ -2976,77 +2981,115 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         color: isDarkMode ? Colors.white : Colors.black,
                                     ),
                                 ),
-                                IconButton(
-                                    icon: Icon(Icons.person_add),
-                                    onPressed: _showAddOrganizerDialog,
-                                    tooltip: 'Add New Organizer',
-                                ),
-                            ],
-                        ),
+                            ),
+                            StreamBuilder<QuerySnapshot>(
+                                stream: FirebaseFirestore.instance
+                                    .collection('organizers')
+                                    .snapshots(),
+                                builder: (context, snapshot) {
+                                    if (snapshot.hasError) {
+                                        return Padding(
+                                            padding: EdgeInsets.all(16),
+                                            child: Text('Error loading organizers'),
+                                        );
+                                    }
+
+                                    if (!snapshot.hasData) {
+                                        return Center(child: CircularProgressIndicator());
+                                    }
+
+                                    final organizers = snapshot.data!.docs;
+
+                                    return Column(
+                                        children: [
+                                            Padding(
+                                                padding: EdgeInsets.all(16),
+                                                child: Text(
+                                                    'Current Organizers',
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: isDarkMode ? Colors.white70 : Colors.grey[700],
+                                                    ),
+                                                ),
+                                            ),
+                                            ListView.builder(
+                                                shrinkWrap: true,
+                                                physics: NeverScrollableScrollPhysics(),
+                                                itemCount: organizers.length,
+                                                itemBuilder: (context, index) {
+                                                    final organizer = organizers[index].data() as Map<String, dynamic>;
+                                                    return ListTile(
+                                                        leading: CircleAvatar(
+                                                            backgroundColor: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                                                            child: Text(
+                                                                organizer['name']?[0].toUpperCase() ?? 'O',
+                                                                style: TextStyle(color: Colors.white),
+                                                            ),
+                                                        ),
+                                                        title: Text(
+                                                            organizer['name'] ?? 'Unknown',
+                                                            style: TextStyle(
+                                                                color: isDarkMode ? Colors.white : Colors.black,
+                                                            ),
+                                                        ),
+                                                        subtitle: Text(
+                                                            organizer['email'] ?? '',
+                                                            style: TextStyle(
+                                                                color: isDarkMode ? Colors.white70 : Colors.grey[600],
+                                                            ),
+                                                        ),
+                                                    );
+                                                },
+                                            ),
+                                        ],
+                                    );
+                                },
+                            ),
+                        ],
                     ),
-                    StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection('organizers')
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                            if (snapshot.hasError) {
-                                return Padding(
-                                    padding: EdgeInsets.all(16),
-                                    child: Text('Error loading organizers'),
+                );
+            },
+        );
+    }
+
+    // Add this method to handle organizer deletion
+    void _showDeleteOrganizerDialog(Map<String, dynamic> organizer) {
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                title: Text('Delete Organizer'),
+                content: Text('Are you sure you want to remove ${organizer['name']} as an organizer?'),
+                actions: [
+                    TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text('Cancel'),
+                    ),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                        onPressed: () async {
+                            try {
+                                // Get the document reference using a query
+                                final querySnapshot = await FirebaseFirestore.instance
+                                    .collection('organizers')
+                                    .where('email', isEqualTo: organizer['email'])
+                                    .get();
+
+                                if (querySnapshot.docs.isNotEmpty) {
+                                    await querySnapshot.docs.first.reference.delete();
+                                    Navigator.pop(context);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text('Organizer removed successfully')),
+                                    );
+                                }
+                            } catch (e) {
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Error removing organizer: $e')),
                                 );
                             }
-
-                            if (!snapshot.hasData) {
-                                return Center(child: CircularProgressIndicator());
-                            }
-
-                            final organizers = snapshot.data!.docs;
-
-                            return Column(
-                                children: [
-                                    Padding(
-                                        padding: EdgeInsets.all(16),
-                                        child: Text(
-                                            'Current Organizers',
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: isDarkMode ? Colors.white70 : Colors.grey[700],
-                                            ),
-                                        ),
-                                    ),
-                                    ListView.builder(
-                                        shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
-                                        itemCount: organizers.length,
-                                        itemBuilder: (context, index) {
-                                            final organizer = organizers[index].data() as Map<String, dynamic>;
-                                            return ListTile(
-                                                leading: CircleAvatar(
-                                                    backgroundColor: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
-                                                    child: Text(
-                                                        organizer['name']?[0].toUpperCase() ?? 'O',
-                                                        style: TextStyle(color: Colors.white),
-                                                    ),
-                                                ),
-                                                title: Text(
-                                                    organizer['name'] ?? 'Unknown',
-                                                    style: TextStyle(
-                                                        color: isDarkMode ? Colors.white : Colors.black,
-                                                    ),
-                                                ),
-                                                subtitle: Text(
-                                                    organizer['email'] ?? '',
-                                                    style: TextStyle(
-                                                        color: isDarkMode ? Colors.white70 : Colors.grey[600],
-                                                    ),
-                                                ),
-                                            );
-                                        },
-                                    ),
-                                ],
-                            );
                         },
+                        child: Text('Delete'),
                     ),
                 ],
             ),
@@ -3188,101 +3231,157 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     Widget _buildAdminManagementSection() {
-        return Container(
-            margin: EdgeInsets.symmetric(vertical: 8),
-            decoration: BoxDecoration(
-                color: isDarkMode ? Color(0xFF252542) : Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
-                        spreadRadius: 1,
-                        blurRadius: 4,
-                        offset: Offset(0, 2),
+        return FutureBuilder<bool>(
+            future: _isUserSuperAdmin(),
+            builder: (context, snapshot) {
+                if (!snapshot.hasData || !snapshot.data!) {
+                    return SizedBox.shrink(); // Only show for superadmin
+                }
+
+                return Container(
+                    margin: EdgeInsets.symmetric(vertical: 8),
+                    decoration: BoxDecoration(
+                        color: isDarkMode ? Color(0xFF252542) : Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.1),
+                                spreadRadius: 1,
+                                blurRadius: 4,
+                                offset: Offset(0, 2),
+                            ),
+                        ],
                     ),
-                ],
-            ),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                    Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                                Text(
-                                    'Admin Management',
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: isDarkMode ? Colors.white : Colors.black,
-                                    ),
-                                ),
-                                IconButton(
-                                    icon: Icon(Icons.person_add),
-                                    onPressed: _showAddAdminDialog,
-                                    tooltip: 'Add New Admin',
-                                ),
-                            ],
-                        ),
-                    ),
-                    StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection('admin')  // Changed from 'admins' to 'admin'
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                            if (snapshot.hasError) {
-                                return Padding(
-                                    padding: EdgeInsets.all(16),
-                                    child: Text('Error loading admins'),
-                                );
-                            }
-
-                            if (!snapshot.hasData) {
-                                return Center(child: CircularProgressIndicator());
-                            }
-
-                            final admins = snapshot.data!.docs;
-
-                            return Column(
-                                children: [
-                                    Padding(
-                                        padding: EdgeInsets.all(16),
-                                        child: Text(
-                                            'Current Admins',
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                            Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                        Text(
+                                            'Admin Management',
                                             style: TextStyle(
-                                                fontSize: 16,
+                                                fontSize: 18,
                                                 fontWeight: FontWeight.bold,
-                                                color: isDarkMode ? Colors.white70 : Colors.grey[700],
+                                                color: isDarkMode ? Colors.white : Colors.black,
                                             ),
                                         ),
-                                    ),
-                                    ListView.builder(
-                                        shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
-                                        itemCount: admins.length,
-                                        itemBuilder: (context, index) {
-                                            final adminEmail = admins[index].get('email') as String;
-                                            return ListTile(
-                                                leading: CircleAvatar(
-                                                    backgroundColor: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
-                                                    child: Text(
-                                                        adminEmail[0].toUpperCase(),
-                                                        style: TextStyle(color: Colors.white),
-                                                    ),
-                                                ),
-                                                title: Text(
-                                                    adminEmail,
+                                        IconButton(
+                                            icon: Icon(Icons.person_add),
+                                            onPressed: _showAddAdminDialog,
+                                            tooltip: 'Add New Admin',
+                                        ),
+                                    ],
+                                ),
+                            ),
+                            StreamBuilder<QuerySnapshot>(
+                                stream: FirebaseFirestore.instance
+                                    .collection('admin')
+                                    .snapshots(),
+                                builder: (context, snapshot) {
+                                    if (snapshot.hasError) {
+                                        return Padding(
+                                            padding: EdgeInsets.all(16),
+                                            child: Text('Error loading admins'),
+                                        );
+                                    }
+
+                                    if (!snapshot.hasData) {
+                                        return Center(child: CircularProgressIndicator());
+                                    }
+
+                                    final admins = snapshot.data!.docs;
+
+                                    return Column(
+                                        children: [
+                                            Padding(
+                                                padding: EdgeInsets.all(16),
+                                                child: Text(
+                                                    'Current Admins',
                                                     style: TextStyle(
-                                                        color: isDarkMode ? Colors.white : Colors.black,
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: isDarkMode ? Colors.white70 : Colors.grey[700],
                                                     ),
                                                 ),
-                                            );
-                                        },
-                                    ),
-                                ],
-                            );
+                                            ),
+                                            ListView.builder(
+                                                shrinkWrap: true,
+                                                physics: NeverScrollableScrollPhysics(),
+                                                itemCount: admins.length,
+                                                itemBuilder: (context, index) {
+                                                    final adminEmail = admins[index].get('email') as String;
+                                                    return ListTile(
+                                                        leading: CircleAvatar(
+                                                            backgroundColor: isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                                                            child: Text(
+                                                                adminEmail[0].toUpperCase(),
+                                                                style: TextStyle(color: Colors.white),
+                                                            ),
+                                                        ),
+                                                        title: Text(
+                                                            adminEmail,
+                                                            style: TextStyle(
+                                                                color: isDarkMode ? Colors.white : Colors.black,
+                                                            ),
+                                                        ),
+                                                        trailing: IconButton(
+                                                            icon: Icon(Icons.delete, color: Colors.red),
+                                                            onPressed: () => _showDeleteAdminDialog(adminEmail),
+                                                        ),
+                                                    );
+                                                },
+                                            ),
+                                        ],
+                                    );
+                                },
+                            ),
+                        ],
+                    ),
+                );
+            },
+        );
+    }
+
+    // Add this method to handle admin deletion
+    void _showDeleteAdminDialog(String adminEmail) {
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                title: Text('Delete Admin'),
+                content: Text('Are you sure you want to remove $adminEmail as an admin?'),
+                actions: [
+                    TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text('Cancel'),
+                    ),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                        onPressed: () async {
+                            try {
+                                // Get the document reference using a query
+                                final querySnapshot = await FirebaseFirestore.instance
+                                    .collection('admin')
+                                    .where('email', isEqualTo: adminEmail)
+                                    .get();
+
+                                if (querySnapshot.docs.isNotEmpty) {
+                                    await querySnapshot.docs.first.reference.delete();
+                                    Navigator.pop(context);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text('Admin removed successfully')),
+                                    );
+                                }
+                            } catch (e) {
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Error removing admin: $e')),
+                                );
+                            }
                         },
+                        child: Text('Delete'),
                     ),
                 ],
             ),
