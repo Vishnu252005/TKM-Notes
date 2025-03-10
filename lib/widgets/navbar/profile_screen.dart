@@ -822,6 +822,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     StreamBuilder<QuerySnapshot>(
                         stream: FirebaseFirestore.instance
                             .collection('events')
+                            .where(Filter.or(
+                                Filter('creatorInfo.email', isEqualTo: email),
+                                Filter('organizers', arrayContains: email)
+                            ))
                             .snapshots(),
                         builder: (context, snapshot) {
                             if (snapshot.hasError) {
@@ -898,10 +902,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
                 .collection('events')
-                .where('registeredUsers', arrayContains: FirebaseAuth.instance.currentUser?.uid)
+                .where('creatorInfo.email', isEqualTo: email)  // Filter by organizer's email
                 .snapshots(),
-            builder: (context, registeredSnapshot) {
-                if (registeredSnapshot.hasError) {
+            builder: (context, snapshot) {
+                if (snapshot.hasError) {
                     return _buildSection(
                         'My Events',
                         Icons.event,
@@ -909,92 +913,60 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     );
                 }
 
-                return StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance
-                        .collection('events')
-                        .where('creatorId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-                        .snapshots(),
-                    builder: (context, createdSnapshot) {
-                        if (createdSnapshot.hasError) {
-                            return _buildSection(
-                                'My Events',
-                                Icons.event,
-                                [Text('Error loading events')],
-                            );
-                        }
+                if (!snapshot.hasData) {
+                    return _buildSection(
+                        'My Events',
+                        Icons.event,
+                        [Center(child: CircularProgressIndicator())],
+                    );
+                }
 
-                        List<Widget> eventWidgets = [];
-                        DateTime now = DateTime.now();
+                List<Widget> eventWidgets = [];
+                final events = snapshot.data!.docs;
 
-                        // Process registered events
-                        if (registeredSnapshot.hasData) {
-                            List<DocumentSnapshot> registeredEvents = registeredSnapshot.data!.docs;
-                            List<DocumentSnapshot> pastEvents = [];
-                            List<DocumentSnapshot> upcomingEvents = [];
-
-                            for (var event in registeredEvents) {
-                                Map<String, dynamic> eventData = event.data() as Map<String, dynamic>;
-                                DateTime eventDate = (eventData['date'] as Timestamp).toDate();
-                                if (eventDate.isBefore(now)) {
-                                    pastEvents.add(event);
-                                } else {
-                                    upcomingEvents.add(event);
-                                }
-                            }
-
-                            if (upcomingEvents.isNotEmpty) {
-                                eventWidgets.add(
-                                    Padding(
-                                        padding: EdgeInsets.all(16),
-                                        child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                                Text(
-                                                    'Upcoming Registered Events',
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight: FontWeight.bold,
-                                                        color: isDarkMode ? Colors.white : Colors.black,
-                                                    ),
-                                                ),
-                                                SizedBox(height: 8),
-                                                ...upcomingEvents.map((event) => _buildEventTile(event.data() as Map<String, dynamic>)),
-                                            ],
+                if (events.isEmpty) {
+                    eventWidgets.add(
+                        Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Text(
+                                'No events created yet',
+                                style: TextStyle(
+                                    color: isDarkMode ? Colors.white70 : Colors.grey[600],
+                                ),
+                            ),
+                        ),
+                    );
+                } else {
+                    eventWidgets.add(
+                        Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                    Text(
+                                        'Created Events (${events.length})',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: isDarkMode ? Colors.white : Colors.black,
                                         ),
                                     ),
-                                );
-                            }
+                                    SizedBox(height: 8),
+                                    ...events.map((event) {
+                                        final eventData = event.data() as Map<String, dynamic>;
+                                        eventData['id'] = event.id;
+                                        return _buildEventTile(eventData);
+                                    }),
+                                ],
+                            ),
+                        ),
+                    );
+                }
 
-                            if (pastEvents.isNotEmpty) {
-                                eventWidgets.add(
-                                    Padding(
-                                        padding: EdgeInsets.all(16),
-                                        child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                                Text(
-                                                    'Past Registered Events',
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight: FontWeight.bold,
-                                                        color: isDarkMode ? Colors.white : Colors.black,
-                                                    ),
-                                                ),
-                                                SizedBox(height: 8),
-                                                ...pastEvents.map((event) => _buildEventTile(event.data() as Map<String, dynamic>)),
-                                            ],
-                                        ),
-                                    ),
-                                );
-                            }
-                        }
-
-                        return _buildSection(
-                            'My Events',
-                            Icons.event,
-                            eventWidgets,
-                        );
-                    },
+                return _buildSection(
+                    'My Events',
+                    Icons.event,
+                    eventWidgets,
                 );
             },
         );
