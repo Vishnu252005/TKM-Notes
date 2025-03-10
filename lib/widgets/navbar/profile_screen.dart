@@ -26,6 +26,21 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+    final _formKey = GlobalKey<FormState>();
+    final _titleController = TextEditingController();
+    final _descriptionController = TextEditingController();
+    final _locationController = TextEditingController();
+    final _priceController = TextEditingController();
+    final _pointsController = TextEditingController();
+    final _capacityController = TextEditingController();
+    final _accommodationPriceController = TextEditingController();
+    final _paymentPhoneController = TextEditingController();
+    final _gpayIdController = TextEditingController();
+    final _contactPhoneController = TextEditingController();
+    final _contactEmailController = TextEditingController();
+    final _whatsappLinkController = TextEditingController();
+    bool _exist = true; // Add this line for exist status
+    String _selectedType = 'Workshop';
     final TextEditingController usernameController = TextEditingController(); // Controller for username
     final TextEditingController emailController = TextEditingController(); // Controller for email
     final TextEditingController passwordController = TextEditingController(); // Controller for password
@@ -181,6 +196,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         super.initState();
         _loadUserCredentials(); // Load user credentials on app launch
         _loadThemePreference(); // Load theme preference
+        _loadExistState(); // Load global exist state
     }
 
     // Method to load user credentials from SharedPreferences
@@ -3427,21 +3443,83 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                    // Super Admin Header
                     Padding(
                         padding: EdgeInsets.all(16),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                                Text(
-                                    'Super Admin Dashboard',
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: isDarkMode ? Colors.white : Colors.black,
-                                    ),
-                                ),
-                            ],
+                        child: Text(
+                            'Super Admin Dashboard',
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: isDarkMode ? Colors.white : Colors.black,
+                            ),
                         ),
+                    ),
+                    // Global Exist Toggle Button
+                    StreamBuilder<DocumentSnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('globalState')
+                            .doc('eventSystem')
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                                final data = snapshot.data!.data() as Map<String, dynamic>?;
+                                final globalExist = data?['exist'] ?? true;
+                                return Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                    child: Container(
+                                        width: double.infinity,
+                                        child: ElevatedButton.icon(
+                                            icon: Icon(
+                                                globalExist ? Icons.toggle_on : Icons.toggle_off,
+                                                size: 24,
+                                            ),
+                                            label: Text(
+                                                'Event System: ${globalExist ? "ON" : "OFF"}',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500,
+                                                ),
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor: globalExist 
+                                                    ? (isDarkMode ? Color(0xFF4C4DDC) : Colors.blue)
+                                                    : Colors.grey,
+                                                padding: EdgeInsets.symmetric(vertical: 12),
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(12),
+                                                ),
+                                            ),
+                                            onPressed: () async {
+                                                try {
+                                                    // Update global state
+                                                    await FirebaseFirestore.instance
+                                                        .collection('globalState')
+                                                        .doc('eventSystem')
+                                                        .update({
+                                                            'exist': !globalExist,
+                                                            'lastUpdated': FieldValue.serverTimestamp(),
+                                                            'updatedBy': FirebaseAuth.instance.currentUser?.email,
+                                                        });
+
+                                                    // Show success message
+                                                    _showSuccessMessage(
+                                                        "Event system ${!globalExist ? 'enabled' : 'disabled'} globally!",
+                                                        Icons.check_circle_outline,
+                                                    );
+                                                } catch (e) {
+                                                    print('Error updating global exist state: $e');
+                                                    ScaffoldMessenger.of(context).showSnackBar(
+                                                        SnackBar(content: Text('Error updating system state: $e')),
+                                                    );
+                                                }
+                                            },
+                                        ),
+                                    ),
+                                );
+                            }
+                            return Center(child: CircularProgressIndicator());
+                        },
                     ),
                     // All Events Section with Edit Capability
                     StreamBuilder<QuerySnapshot>(
@@ -3719,6 +3797,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 );
             },
         );
+    }
+
+    // Add this method to load global exist state
+    Future<void> _loadExistState() async {
+        try {
+            final globalStateDoc = await FirebaseFirestore.instance
+                .collection('globalState')
+                .doc('eventSystem')
+                .get();
+
+            if (globalStateDoc.exists) {
+                final data = globalStateDoc.data() as Map<String, dynamic>;
+                setState(() {
+                    _exist = data['exist'] ?? true;
+                });
+            } else {
+                // Create the document if it doesn't exist
+                await FirebaseFirestore.instance
+                    .collection('globalState')
+                    .doc('eventSystem')
+                    .set({
+                        'exist': true,
+                        'lastUpdated': FieldValue.serverTimestamp(),
+                        'updatedBy': FirebaseAuth.instance.currentUser?.email ?? 'system',
+                    });
+                setState(() {
+                    _exist = true;
+                });
+            }
+        } catch (e) {
+            print('Error loading global exist state: $e');
+            // Default to true in case of error
+            setState(() {
+                _exist = true;
+            });
+        }
     }
 }
 

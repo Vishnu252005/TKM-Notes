@@ -29,6 +29,7 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
   RangeValues _pointsRange = RangeValues(0, 30);
   String _selectedCapacity = 'All';
   String _selectedDate = 'All';
+  bool _exist = true; // Add this line to track exist state
   
   // Firebase instances
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -40,8 +41,141 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
   @override
   void initState() {
     super.initState();
+    _initializeGlobalState();
     _tabController = TabController(length: 3, vsync: this);
     _initializeFirebase();
+  }
+
+  // Add this method to initialize the global state if it doesn't exist
+  Future<void> _initializeGlobalState() async {
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('globalState')
+          .doc('eventSystem')
+          .get();
+
+      if (!doc.exists) {
+        await FirebaseFirestore.instance
+            .collection('globalState')
+            .doc('eventSystem')
+            .set({
+              'exist': false, // Default to false when creating
+              'lastUpdated': FieldValue.serverTimestamp(),
+              'updatedBy': 'system_initialization',
+            });
+      }
+    } catch (e) {
+      print('Error initializing global state: $e');
+    }
+  }
+
+  // Add this method to load exist state
+  Future<void> _loadExistState() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final superAdminSnapshot = await FirebaseFirestore.instance
+            .collection('superadmin')
+            .where('email', isEqualTo: user.email)
+            .get();
+
+        if (superAdminSnapshot.docs.isNotEmpty) {
+          final data = superAdminSnapshot.docs.first.data();
+          setState(() {
+            _exist = data['exist'] ?? true;
+          });
+        }
+      }
+    } catch (e) {
+      print('Error loading exist state: $e');
+    }
+  }
+
+  // Add this widget for Coming Soon screen
+  Widget _buildComingSoonScreen() {
+    return Scaffold(
+      backgroundColor: _isDarkMode ? Color(0xFF1A1A2E) : Color(0xFFF0F8FF),
+      body: Center(
+        child: Container(
+          padding: EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Animated Icon
+              Container(
+                padding: EdgeInsets.all(32),
+                decoration: BoxDecoration(
+                  color: _isDarkMode ? Color(0xFF252542) : Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 20,
+                      offset: Offset(0, 10),
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  Icons.rocket_launch,
+                  size: 64,
+                  color: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                ).animate(onPlay: (controller) => controller.repeat())
+                  .shake(duration: Duration(seconds: 2))
+                  .then()
+                  .scale(
+                    begin: Offset(1, 1),
+                    end: Offset(1.2, 1.2),
+                    duration: Duration(seconds: 1),
+                  )
+                  .then()
+                  .scale(
+                    begin: Offset(1.2, 1.2),
+                    end: Offset(1, 1),
+                    duration: Duration(seconds: 1),
+                  ),
+              ),
+              SizedBox(height: 40),
+              // Coming Soon Text
+              Text(
+                'Coming Soon!',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: _isDarkMode ? Colors.white : Colors.black,
+                ),
+              ).animate()
+                .fadeIn(duration: Duration(milliseconds: 600))
+                .slideY(begin: 0.3, end: 0),
+              SizedBox(height: 16),
+              // Description
+              Text(
+                'We\'re working on something awesome.\nStay tuned!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: _isDarkMode ? Colors.white70 : Colors.grey[600],
+                  height: 1.5,
+                ),
+              ).animate()
+                .fadeIn(delay: Duration(milliseconds: 200))
+                .slideY(begin: 0.3, end: 0),
+              SizedBox(height: 40),
+              // Animated Progress Indicator
+              Container(
+                width: 200,
+                child: LinearProgressIndicator(
+                  backgroundColor: _isDarkMode ? Colors.white10 : Colors.grey[200],
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                  ),
+                ),
+              ).animate(onPlay: (controller) => controller.repeat())
+                .shimmer(duration: Duration(seconds: 2)),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Future<void> _initializeFirebase() async {
@@ -123,6 +257,88 @@ class _EventScreenState extends State<EventScreen> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
+    // Always check the global state directly from Firestore
+    return StreamBuilder<DocumentSnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('globalState')
+          .doc('eventSystem')
+          .snapshots(),
+      builder: (context, snapshot) {
+        // Handle loading state
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            backgroundColor: _isDarkMode ? Color(0xFF1A1A2E) : Color(0xFFF0F8FF),
+            body: SafeArea(
+              child: Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: _isDarkMode 
+                            ? [Color(0xFF1A1A2E), Color(0xFF1A1A2E)]
+                            : [Colors.blue.shade50, Colors.white],
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: _isDarkMode ? Color(0xFF252542) : Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 10,
+                                offset: Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: CircularProgressIndicator(
+                            color: _isDarkMode ? Color(0xFF4C4DDC) : Colors.blue,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        // Handle error state
+        if (snapshot.hasError) {
+          print('Error getting global state: ${snapshot.error}');
+          return _buildComingSoonScreen(); // Show coming soon on error
+        }
+
+        // If document doesn't exist, show coming soon
+        if (!snapshot.hasData || !snapshot.data!.exists) {
+          return _buildComingSoonScreen();
+        }
+
+        // Get the global state
+        final data = snapshot.data!.data() as Map<String, dynamic>;
+        final globalExist = data['exist']; // No default value
+        
+        print('Global Event System Status: $globalExist'); // Debug print
+        print('Last Updated By: ${data['updatedBy']}'); // Debug print
+        print('Last Updated: ${data['lastUpdated']}'); // Debug print
+        
+        // Return appropriate screen based on global state
+        return globalExist == true ? _buildEventScreen() : _buildComingSoonScreen();
+      },
+    );
+  }
+
+  // Rename the original build content to _buildEventScreen
+  Widget _buildEventScreen() {
     return Scaffold(
       backgroundColor: _isDarkMode ? Color(0xFF1A1A2E) : Color(0xFFF0F8FF),
       body: SafeArea(
