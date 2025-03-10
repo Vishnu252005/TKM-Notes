@@ -45,21 +45,9 @@ class _Sports1State extends State<Sports1> {
           'https://drive.google.com/uc?id=1rqpj_atFcXo8jVc20HIigkBAyEI718UO&export=download',
     ),
     UnitItem(
-      title:
-          'MODULE III: Fundamentals of Anatomy and physiology in physical education, Postures and nutrition',
+      title: 'Semester exam',
       isAvailable: true,
-      pdfUrl:
-          'https://drive.google.com/uc?export=download&id=1VWUJNv-vr5P2s9rSiFS87KwL47-vNziE',
-    ),
-    UnitItem(
-      title: 'MODULE IV: Sports1 and games',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_4',
-    ),
-    UnitItem(
-      title: 'MODULE V: Yoga & Lifestyle',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_5',
+      pdfUrl: 'url_to_pdf',
     ),
   ];
 

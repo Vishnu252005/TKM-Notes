@@ -49,18 +49,6 @@ class _maths1State extends State<maths1> {
       pdfUrl:
           'https://drive.google.com/uc?id=1z5ZOzDyCdRdmcLL6NyKGidkmY32bPHX4&export=download',
     ),
-    UnitItem(
-      title: 'Module IV: Vector Integration',
-      isAvailable: true,
-      pdfUrl:
-          'https://drive.google.com/uc?export=download&id=1ru1Hhfx0bpHNoN1JXx3sQqdzlVxLytJr',
-    ),
-    UnitItem(
-      title: 'Module V: Linear Algebra',
-      isAvailable: true,
-      pdfUrl:
-          'https://drive.google.com/uc?export=download&id=1uv2dxXLwmBzWl2z0yQO8dWd3Mo4s57al',
-    ),
   ];
 
   @override

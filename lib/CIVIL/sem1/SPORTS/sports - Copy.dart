@@ -33,29 +33,21 @@ class _Sports1State extends State<Sports1> {
 
   final List<UnitItem> units = [
     UnitItem(
-      title: 'MODULE I: Physical fitness, wellness and exercise programmes',
+      title: 'Series I',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=11xbal8G0Gcs_SoCcp7Le2PuRF6RCN-Ra',
+      pdfUrl:
+          'https://drive.google.com/uc?id=1XLujuABjxz45xZqRRlrHG86TcnZZxgw9&export=download',
     ),
     UnitItem(
-      title: 'MODULE II: First aid',
+      title: 'Series II',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=11skd-eBIySyszuqsp0I8bl2T1J4X0Cj9',
+      pdfUrl:
+          'https://drive.google.com/uc?id=1rqpj_atFcXo8jVc20HIigkBAyEI718UO&export=download',
     ),
     UnitItem(
-      title: 'MODULE III: Fundamentals of Anatomy and physiology in physical education, Postures and nutrition',
+      title: 'Semester Exam',
       isAvailable: true,
-      pdfUrl: 'https://drive.google.com/uc?export=download&id=1VWUJNv-vr5P2s9rSiFS87KwL47-vNziE',
-    ),
-    UnitItem(
-      title: 'MODULE IV: Sports1 and games',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_4',
-    ),
-    UnitItem(
-      title: 'MODULE V: Yoga & Lifestyle',
-      isAvailable: false,
-      pdfUrl: 'url_to_pdf_5',
+      pdfUrl: 'url_to_pdf',
     ),
   ];
 
@@ -89,7 +81,8 @@ class _Sports1State extends State<Sports1> {
 
   void _loadBannerAd() {
     _bannerAd = BannerAd(
-      adUnitId: 'ca-app-pub-1850470420397635/2911662464', // Replace with your Ad Unit ID
+      adUnitId:
+          'ca-app-pub-1850470420397635/2911662464', // Replace with your Ad Unit ID
       size: AdSize.banner,
       request: AdRequest(),
       listener: BannerAdListener(
@@ -115,7 +108,8 @@ class _Sports1State extends State<Sports1> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: _isDarkMode ? Colors.white : Colors.blue[900]),
+          icon: Icon(Icons.arrow_back,
+              color: _isDarkMode ? Colors.white : Colors.blue[900]),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -151,14 +145,17 @@ class _Sports1State extends State<Sports1> {
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
-                              color: _isDarkMode ? Colors.white : Colors.blue[900],
+                              color:
+                                  _isDarkMode ? Colors.white : Colors.blue[900],
                             ),
                           ),
                           Text(
                             'Select Chapter',
                             style: TextStyle(
                               fontSize: 18,
-                              color: _isDarkMode ? Colors.white70 : Colors.blue[700],
+                              color: _isDarkMode
+                                  ? Colors.white70
+                                  : Colors.blue[700],
                             ),
                           ),
                         ],
@@ -191,7 +188,10 @@ class _Sports1State extends State<Sports1> {
                     child: ListView(
                       children: [
                         _buildListItem(context, 'Textbooks', false, null),
-                        ...units.map((unit) => _buildListItem(context, unit.title, unit.isAvailable, unit.pdfUrl)).toList(),
+                        ...units
+                            .map((unit) => _buildListItem(context, unit.title,
+                                unit.isAvailable, unit.pdfUrl))
+                            .toList(),
                       ],
                     ),
                   ),
@@ -220,7 +220,8 @@ class _Sports1State extends State<Sports1> {
                 padding: const EdgeInsets.all(16.0),
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundColor: _isDarkMode ? Colors.blue[700] : Colors.blue[300],
+                  backgroundColor:
+                      _isDarkMode ? Colors.blue[700] : Colors.blue[300],
                   child: Text(
                     widget.fullName[0].toUpperCase(),
                     style: const TextStyle(color: Colors.white, fontSize: 24),
@@ -234,7 +235,8 @@ class _Sports1State extends State<Sports1> {
     );
   }
 
-  Widget _buildListItem(BuildContext context, String title, bool isAvailable, String? pdfUrl) {
+  Widget _buildListItem(
+      BuildContext context, String title, bool isAvailable, String? pdfUrl) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(
@@ -254,15 +256,18 @@ class _Sports1State extends State<Sports1> {
       child: ListTile(
         title: Text(
           title,
-          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[900]),
+          style:
+              TextStyle(color: _isDarkMode ? Colors.white : Colors.blue[900]),
         ),
-        trailing: Icon(Icons.chevron_right, color: _isDarkMode ? Colors.white : Colors.blue[900]),
+        trailing: Icon(Icons.chevron_right,
+            color: _isDarkMode ? Colors.white : Colors.blue[900]),
         onTap: () {
           if (isAvailable && pdfUrl != null) {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PDFViewerPage(pdfUrl: pdfUrl, title: title),
+                builder: (context) =>
+                    PDFViewerPage(pdfUrl: pdfUrl, title: title),
               ),
             );
           } else {
@@ -289,5 +294,6 @@ class UnitItem {
   final bool isAvailable;
   final String pdfUrl;
 
-  UnitItem({required this.title, required this.isAvailable, required this.pdfUrl});
+  UnitItem(
+      {required this.title, required this.isAvailable, required this.pdfUrl});
 }

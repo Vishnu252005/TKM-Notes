@@ -49,18 +49,6 @@ class _Maths1State extends State<Maths1> {
       pdfUrl:
           'https://drive.google.com/uc?id=1z5ZOzDyCdRdmcLL6NyKGidkmY32bPHX4&export=download',
     ),
-    UnitItem(
-      title: 'MODULE IV: Fourier Transforms',
-      isAvailable: true,
-      pdfUrl:
-          'https://drive.google.com/uc?export=download&id=1x85MVc8ldigtGbehPtkxlXbsF6JnbKJJ',
-    ),
-    UnitItem(
-      title: 'MODULE V: Z-Transforms',
-      isAvailable: true,
-      pdfUrl:
-          'https://drive.google.com/uc?export=download&id=1IBxeg9vTeIYekGv6RN3Scht1GBom8vtl',
-    ),
   ];
 
   @override

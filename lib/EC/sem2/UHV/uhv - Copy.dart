@@ -50,19 +50,6 @@ class _Uhv1State extends State<Uhv1> {
       pdfUrl:
           'https://drive.google.com/uc?id=1p9qBLIRHf0mBmIxrpz5SmDR4bkmoy0Gn&export=download',
     ),
-    UnitItem(
-      title: 'MODULE IV: Harmony in the Nature/Existence',
-      isAvailable: true,
-      pdfUrl:
-          'https://drive.google.com/uc?export=download&id=1drnFkkEzQAjQKBhDZ96oB0UEB3PLyC02',
-    ),
-    UnitItem(
-      title:
-          'MODULE V: Implications of the Holistic Understanding – a Look at Professional Ethics',
-      isAvailable: true,
-      pdfUrl:
-          'https://drive.google.com/uc?export=download&id=1ok4F1xf0D9xb5kusTLK0X6VfJW4sd3oC',
-    ),
   ];
 
   @override
